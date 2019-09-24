@@ -38,9 +38,11 @@ class Animal():
         self._buffs = buffs
 
     def getName(self):
+        """Returns the name of the animal."""
         return self._name
 
     def rename(self, name):
+        """Resets the name of the animal."""
         self._name = name
 
     def getHealth(self):
@@ -59,14 +61,40 @@ class Animal():
         self._health = health
 
     def heal(self, health):
+        """
+        Increments the health counter.
+
+        Parameters
+        ----------
+        -> int: health
+            The amount of health to increment character health by
+
+        Will increment the health of the animal up to its maximum health by
+        inputted health amount. 
+        """
         while self._health < self._baseHealth and health > 0:
             self._health += 1
             health -= 1
 
     def loseHealth(self, health):
+        """
+        Decrements the health counter.
+
+        Parameters
+        ----------
+        -> int: health
+            The amount of health to increment character health by
+
+        Will decrease the health of the animal up to its maximum health by
+        inputted health amount.
+        """
         self._health -= health
 
     def isDead(self):
+        """
+        Returns boolean if the animal has less than 0 health. Will be False
+        if less than 0.
+        """
         return self._health <= 0
 
     def getXP(self):
@@ -118,6 +146,15 @@ class Animal():
         self._baseDamage += damage
 
     def getCurrentDamageRange(self):
+        """
+        Outputs an interval of possible damage. Checks if there is a tool in
+        hand. If no tool, then animal punches.
+
+        The method will generate an interval of plus/minus 10% to the current
+        damage.
+
+        Will return a tuple of the damage interval. 
+        """
         if self.hasToolInHand():
             damage = self._inhand.getDamage()
         else:
@@ -126,12 +163,19 @@ class Animal():
         return (damage-margin, damage+margin)
 
     def dealDamage(self):
-        if self.hasToolInHand():
-            damage = self._inhand.getDamage()
+        """
+        Outputs an integer with the damage that will be dealt by the weapon.
+
+        Takes an adjusted damage from the damageRange and then multiples it
+        by a fraction in the range of 1/4 to 3/4. That will be the damage
+        returned.
+        """
+        damageRange = self.getCurrentDamageRange()
+        adjustedDamage = random.randint(damageRange[0],damageRange[1])
+        if adjustedDamage < 0: # Damage cannot be negative
+            return 0
         else:
-            damage = self._baseDamage
-        margin = round(damage * .1)
-        return round(abs(damage + random.randint(-margin,margin)) * (random.randint(25,75)/100))
+            return round(adjustedDamage* (random.randint(25,75)/100))
 
     def getAttackSpeed(self):
         return self._attackSpeed
@@ -149,6 +193,15 @@ class Animal():
         self._defensiveStat = defense
 
     def getCurrentProtectionRange(self):
+        """
+        Outputs an interval of possible damage absorption based on armor.
+        Checks if animal has armor.
+
+        The method will generate an interval of plus/minus 10% to the current
+        damage.
+
+        Will return a tuple of the damage interval. 
+        """
         if self.hasArmor():
             protect = self._armor.getProtection()
         else:
@@ -157,8 +210,19 @@ class Animal():
         return (protect-margin, protect+margin)
 
     def defend(self):
-        margin = round(self._defensiveStat * .1)
-        return round(abs(self._defensiveStat + random.randint(-margin,margin)) * (random.randint(25,75)/100))
+        """
+        Outputs an intenger for the amount of protection an animal has.
+
+        Takes an adjusted defend from the defend and then multiples it
+        by a fraction in the range of 1/4 to 3/4. That will be the defend
+        number returned.
+        """
+        defendRange = self.getCurrentProtectionRange()
+        adjustedProtect = random.randint(defendRange[0],defendRange[1])
+        if adjustedProtect < 0: # Damage cannot be negative
+            return 0
+        else:
+            return round(adjustedProtect* (random.randint(25,75)/100))        
 
     def getEquipment(self):
         return self._equipment
