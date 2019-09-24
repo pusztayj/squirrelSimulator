@@ -46,8 +46,8 @@ class Pack():
         """Removes dead pack members and updates the leader accordingly"""
         self._members = [m for m in self._members if not m.isDead()]
         if self._leader.isDead():
-            if self.getSize > 0:
-                self._resetLeader(self._members[0])
+            if self.getSize() > 0:
+                self.resetLeader(self._members[0])
 
     def __repr__(self):
         """Representation of the pack class"""
@@ -57,5 +57,12 @@ class Pack():
         """Iterator for the pack class"""
         for member in self._members:
             yield member
+
+    def __getitem__(self, index):
+        """Allow for the indexing of a pack"""
+        return self._members[index]
+
+    def __len__(self):
+        return len(self._members)
                 
             

@@ -135,13 +135,13 @@ class Animal():
         if self.hasToolInHand():
             return self._inhand.getStaminaCost() # Need to add getStamina()
         else:
-            return = 0
+            return 0
 
     def loseStamina(self,stamina):
         """
         Uses the stamina to lose the stamina. 
         """
-        if self._stamina -= stamina < 0:
+        if self._stamina - stamina < 0:
             self._stamina = 0
         else:
             self._stamina -= stamina
@@ -267,10 +267,9 @@ class Animal():
         """
         defendRange = self.getCurrentProtectionRange()
         adjustedProtect = random.randint(defendRange[0],defendRange[1])
-        if adjustedProtect < 0: # Defend cannot be negative
-            return 0
-        else:
-            return round(adjustedProtect* (random.randint(25,75)/100))        
+        adjustedProtect += (((adjustedProtect * 0.01) * self._defensiveStat) * \
+                           random.randint(0,1))
+        return max(0,round(adjustedProtect))        
 
     def getInventory(self):
         return self._inventory
