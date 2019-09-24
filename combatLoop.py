@@ -4,7 +4,7 @@ from chipmunk import Chipmunk
 from fox import Fox
 from bear import Bear
 from deer import Deer
-import item, random, buff
+import item, random, buff, pack
 from utils import *
 
 def fight(entityOne, entityTwo):
