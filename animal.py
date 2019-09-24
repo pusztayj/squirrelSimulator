@@ -1,3 +1,8 @@
+"""
+@authors: Justn Pusztay, Trevor Stalnaker
+
+The animal class.
+"""
 
 import random
 
@@ -95,7 +100,7 @@ class Animal():
         Returns boolean if the animal has less than 0 health. Will be False
         if less than 0.
         """
-        return self._health <= 0
+        return self._health <= 0 
 
     def getXP(self):
         return self._xp
@@ -219,7 +224,7 @@ class Animal():
         """
         defendRange = self.getCurrentProtectionRange()
         adjustedProtect = random.randint(defendRange[0],defendRange[1])
-        if adjustedProtect < 0: # Damage cannot be negative
+        if adjustedProtect < 0: # Defend cannot be negative
             return 0
         else:
             return round(adjustedProtect* (random.randint(25,75)/100))        
@@ -263,7 +268,7 @@ class Animal():
 
     def getToolInHandsName(self):
         if self._inhand == None:
-            return "Nothing"
+            return "Nothing" # Empty string might be better
         else:
             return type(self._inhand).__name__
 
