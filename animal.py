@@ -5,6 +5,7 @@ The animal class.
 """
 
 import random
+from inventory import Inventory
 
 class Animal():
 
@@ -34,8 +35,8 @@ class Animal():
         self._intelligence = intelligence
 
         #Equipment Carried by Animal
-        self._equipment = equipment
-        self._inventory_size = inventorySize
+        self._inventory = Inventory(inventorySize)
+        self._inventory.addItems(equipment)
         self._inhand = inHand
         self._armor = armor
 
@@ -229,30 +230,19 @@ class Animal():
         else:
             return round(adjustedProtect* (random.randint(25,75)/100))        
 
-    def getEquipment(self):
-        return self._equipment
-
-    def hasItem(self, item):
-        return item in self._equipment
-
-    def addItem(self, item):
-        self._equipment.append(item)
-
-    def removeItem(self, item):
-        self._equipment.remove(item)
-
-    def getItems(self):
-        return self._equipment
-
-    def getInventorySpace(self):
-        return self._inventory_space
+    def getInventory(self):
+        return self._inventory
 
     def equipTool(self, tool):
         self._inhand = tool
 
     def unEquipTool(self):
-        self._equipment.append(self._inhand)
+        self._inventory.addItem(self._inhand)
         self._inhand = None
+
+    def unEquipArmor(self):
+        self._inventory.addItem(self._armor)
+        self._armor = None
         
     def equipArmor(self, armor):
         self._armor = armor
@@ -316,6 +306,6 @@ class Animal():
                "\nDefense:       " + prange + \
                "\nHolding:       " + self.getToolInHandsName() + \
                "\nArmor:         " + self.getArmorsName() + \
-               "\nInventory:     " + str(self._equipment) + \
+               "\nInventory:     " + str(self._inventory) + \
                "\nBuffs:         " + str([type(x).__name__ for x in self._buffs])
                
