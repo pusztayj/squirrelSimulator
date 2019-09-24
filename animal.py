@@ -9,9 +9,9 @@ from inventory import Inventory
 
 class Animal():
 
-    def __init__(self, name="", health=100, xp=0, speed=1, endurance=1, combatDamage=10,
-                 attackSpeed=1, defensiveStat=10, strength=1, intelligence=1,
-                 equipment=[], inventorySize=10,
+    def __init__(self, name="", health=100, stamina = 100,xp=0, speed=1, endurance=1,
+                 combatDamage=10, attackSpeed=1, defensiveStat=10, strength=1,
+                 intelligence=1, equipment=[], inventorySize=10,
                  inHand=None, armor=None, buffs=[]):
 
         self._name = name
@@ -20,6 +20,8 @@ class Animal():
         self._baseHealth = health
         self._health = health
         self._xp = xp
+        self._baseStamina = stamina
+        self._stamina = stamina
 
         #Movement Stats
         self._speed = speed
@@ -50,7 +52,8 @@ class Animal():
     def rename(self, name):
         """Resets the name of the animal."""
         self._name = name
-
+        
+    # Basic Stats
     def getHealth(self):
         return self._health
 
@@ -101,7 +104,47 @@ class Animal():
         Returns boolean if the animal has less than 0 health. Will be False
         if less than 0.
         """
-        return self._health <= 0 
+        return self._health <= 0
+    
+    def getBaseStamina(self):
+        """Returns the base stamina of the animal."""
+        return self._baseStamina
+
+    def setBaseStamina(self,newBaseStamina):
+        """Returns the base stamina of the animal."""
+        self._baseStamina = newBaseStamina
+
+    def getStamina(self):
+        """Returns the stamina of the animal."""
+        return self._stamina
+
+    def setStamina(self,stamina):
+        """Can update the stamina."""
+        self._stamina = stamina
+
+    def getStaminaCost(self):
+        """
+        Outputs an interval of possible stamina usage.
+        Checks if there is a tool in hand. If no tool, then no stamina used.
+
+        The method will generate an interval of plus/minus 10% to the current
+        stamina.
+
+        Will return a tuple of the stamina interval. 
+        """
+        if self.hasToolInHand():
+            return self._inhand.getStaminaCost() # Need to add getStamina()
+        else:
+            return = 0
+
+    def loseStamina(self,stamina):
+        """
+        Uses the stamina to lose the stamina. 
+        """
+        if self._stamina -= stamina < 0:
+            self._stamina = 0
+        else:
+            self._stamina -= stamina
 
     def getXP(self):
         return self._xp
@@ -181,7 +224,7 @@ class Animal():
         if adjustedDamage < 0: # Damage cannot be negative
             return 0
         else:
-            return round(adjustedDamage* (random.randint(25,75)/100))
+            return round(adjustedDamage * (random.randint(25,75)/100))
 
     def getAttackSpeed(self):
         return self._attackSpeed
@@ -294,10 +337,13 @@ class Animal():
             prange = str(protectRange[0])
         else:
             prange = str(protectRange[0]) + "-" + str(protectRange[1])
+
+        
             
         return "Name:          " + self._name + \
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
+               "\nStamina:       " + str(self._stamina) + "/" + str(self._baseStamina) + \
                "\nXP:            " + str(self._xp) + \
                "\nSpeed:         " + str(self._speed) + \
                "\nEndurance:     " + str(self._endurance) + \

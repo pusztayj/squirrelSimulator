@@ -57,15 +57,19 @@ class Item():
 
 class Weapon(Item):
     
-    def __init__(self, name, damage, level, requirements):
+    def __init__(self, name, damage, level, requirements,staminaCost = 10):
         super().__init__(name, requirements, level)
         self._damage = damage
+        self._staminaCost = staminaCost
         self._causesBleeding = False
 
     def getDamage(self):
         """Calculate the damage done by the weapon"""
         return round((self._damage + (self._level * (self._damage * (.05)))) *
                      (self._durability / self._maxDurability))
+
+    def getStaminaCost(self):
+        return self._staminaCost    
 
     def __repr__(self):
         return super().__repr__() + \
