@@ -221,10 +221,9 @@ class Animal():
         """
         damageRange = self.getCurrentDamageRange()
         adjustedDamage = random.randint(damageRange[0],damageRange[1])
-        if adjustedDamage < 0: # Damage cannot be negative
-            return 0
-        else:
-            return round(adjustedDamage * (random.randint(25,75)/100))
+        adjustedDamage += (((adjustedDamage * 0.01) * self._baseDamage) * \
+                           random.randint(0,1))
+        return max(0, round(adjustedDamage))
 
     def getAttackSpeed(self):
         return self._attackSpeed
