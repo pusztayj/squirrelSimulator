@@ -11,7 +11,7 @@ DEFENSE      = (6,8)
 
 class Fox(NPC):
 
-    def __init__(self, name):
+    def __init__(self, name=""):
 
         super().__init__(name, AGGRESSION, HEALTH, SPEED,
                          ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)

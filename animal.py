@@ -4,7 +4,7 @@
 The animal class.
 """
 
-import random
+import random, shelve
 from inventory import Inventory
 
 class Animal():
@@ -14,6 +14,11 @@ class Animal():
                  intelligence=1, equipment=[], inventorySize=10,
                  inHand=None, armor=None, buffs=[]):
 
+        #Give the animal a random name if none was provided
+        if name == "":
+            shelf = shelve.open("data")
+            name = random.choice(shelf["names"])
+            shelf.close()
         self._name = name
 
         #Basic Stats
