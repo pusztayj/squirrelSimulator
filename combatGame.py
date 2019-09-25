@@ -10,11 +10,13 @@ from utils import *
 class CombatGame():
 
     def __init__(self, allies, enemies):
+        """Initializes a combat minigame"""
         self._player = allies.getLeader()
         self._allies = allies
         self._enemies = enemies
 
     def gameLoop(self):
+        """The main loop for the combat minigame"""
         while (not self._player.isDead()) and \
               (not self._enemies.getSize()==0):
             self.gameCycle()
@@ -24,9 +26,9 @@ class CombatGame():
             print("All enemies have been defeated")
 
     def gameCycle(self):
+        """An individual game cycle"""
         
         # Player Attack
-        
         target = int(input("Choose a target " + str([x+1 for x in range(len(self._enemies))]) + ": "))
         assert type(target)==int
         target = self._enemies[target-1]
@@ -53,6 +55,7 @@ class CombatGame():
         ##Increase stamina back here
 
     def fight(self, entityOne, entityTwo):
+        """Simulates a fight between two enemies"""
         attackStat = entityOne.dealDamage()
         defenseStat = entityTwo.defend()
         damageDealt = max(0, attackStat - defenseStat)
@@ -82,8 +85,12 @@ if __name__=="__main__":
     allies.addMember(c3)
 
     # Create the enemies
-    b = Chipmunk("Monk of Ages")
-    enemies = pack.Pack(b)
+    b1 = Chipmunk("Monk of Ages")
+    b2 = Fox("Mr. Fox")
+    b3 = Chipmunk("The Chunk Munk")
+    enemies = pack.Pack(b1)
+    enemies.addMember(b2)
+    enemies.addMember(b3)
 
     #Begin the game
     game = CombatGame(allies, enemies)
