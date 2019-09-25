@@ -6,11 +6,18 @@ A class that models a pack or clan of animals
 """
 class Pack():
 
-    def __init__(self, leader, size=3):
+    def __init__(self, leader, size=3, name=""):
         """Initialize the pack with a leader and a max size"""
         self._maxSize = size
         self._members = [leader]
         self._leader = leader
+        self._name = name
+
+    def getPackName(self):
+        return self._name
+
+    def setPackName(self, name):
+        self._name = name
 
     def getLeader(self):
         """Return the leader of the pack"""
