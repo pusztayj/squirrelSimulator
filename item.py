@@ -3,13 +3,16 @@ import random, math
 
 class Item():
 
-    def __init__(self, name, requirements=None, level=1, durability=100):
+    def __init__(self, name, requirements=None, level=1, durability=100,
+                 isBuyable = True, isSellable = True):
         self._name = name
         self._level = level
         self._skillRequirements = requirements
         self._maxDurability = durability
         self._durability = durability
-
+        self._isBuyable = True
+        self._isSellable = True
+        
     def getName(self):
         """Return the item's name"""
         return self._name
@@ -17,6 +20,18 @@ class Item():
     def rename(self, name):
         """Rename an item"""
         self._name = name
+
+    def isBuyable(self):
+        """
+        Returns if an item is buyable from the presepctive of the player.
+        """
+        return self._isBuyable
+
+    def isSellable(self):
+        """
+        Returns if an item is buyable from the presepctive of the player.
+        """
+        return self._isSellable
 
     def getRequirements(self):
         """Display the requirements for the item"""

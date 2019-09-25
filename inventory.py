@@ -40,7 +40,7 @@ class Inventory():
         """Adds multiple items"""
         assert len(items) < self.getAvailableSpace()
         for item in items:
-            addItem(item)
+            self.addItem(item)
 
     def removeItem(self, item):
         """Removes an item from the inventory if possible"""
