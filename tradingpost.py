@@ -6,6 +6,7 @@ Creates a trading post class.
 
 import random
 from inventory import Inventory
+from item import Item
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
@@ -18,8 +19,9 @@ class TradingPost(object):
         """
         self._merchantName = merchantName
         self._race = random.choice(races)
-        self._money = random.randint(2000,3000)
+        self._money = random.randint(500,1500)
         self._inventory = Inventory(100)
+        self._openForBuying = True
         #self.generateInventory()
 
     def __iter__(self):
@@ -59,7 +61,8 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(cost) == int
-        if self._money >= cost and item.isBuyable():
+        if self._money >= cost and item.isBuyable() and \
+           self._openForBuying == True:
             self._inventory.addItem(item)
             self._money = self._money - cost
 
@@ -78,6 +81,22 @@ class TradingPost(object):
         if item in self._inventory and item.isSellable():
             self._inventory.removeItem(item)
             self._money = self._money + price
+
+    def moneyGeneration(self,rate = 1.01):
+        """
+        Merchants will generate money back as they will do business
+        with other animals at a rate of 1% of their current amount.
+        """
+        self._money = round(self._money * rate)
+
+    def minimumMoney(self):
+        """
+        When the merchant has less than a uniquely random generated number
+        of acorns, the merchant will simply not buy any items.
+        """
+        if self._money < random.randint(450,700):
+            self._openForBuying = False
+            
 
         
             
