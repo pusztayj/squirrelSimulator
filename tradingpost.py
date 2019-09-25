@@ -59,13 +59,13 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(cost) == int
-        if self._money >= cost:
+        if self._money >= cost and item.isBuyable():
             self._inventory.addItem(item)
             self._money = self._money - cost
 
     def sellItem(self,item,price):
         """
-        Sells an item tp the player and removes it to the merchant's
+        Sells an item to the player and removes it to the merchant's
         inventory.
 
         Parameters
@@ -75,7 +75,7 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(price) == int
-        if item in self._inventory:
+        if item in self._inventory and item.isSellable():
             self._inventory.removeItem(item)
             self._money = self._money + price
 

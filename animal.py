@@ -35,6 +35,7 @@ class Animal():
         #Other Stats
         self._strength = strength
         self._intelligence = intelligence
+        self._money = 0
 
         #Equipment Carried by Animal
         self._inventory = Inventory(inventorySize)
@@ -169,6 +170,44 @@ class Animal():
 
     def setEndurance(self, endurance):
         self._endurance = endurance
+
+    def getMoney(self):
+        return self._money
+
+    def setMoney(self,money):
+        self._money = money
+
+    def buyItem(self,item,cost):
+        """
+        Buys an item from the merchant and adds it to the players's
+        inventory.
+
+        Parameters
+        ----------
+        item: an Item object
+        cost: an integer representing the cost
+        """
+        assert issubclass(type(item),Item)
+        assert type(cost) == int
+        if self._money >= cost and item.isBuyable():
+            self._inventory.addItem(item)
+            self._money = self._money - cost
+
+    def sellItem(self,item,price):
+        """
+        Sells an item to the merchant and removes it to the players's
+        inventory.
+
+        Parameters
+        ----------
+        item: an Item object
+        cost: an integer representing the cost
+        """
+        assert issubclass(type(item),Item)
+        assert type(price) == int
+        if item in self._inventory and item.isSellable():
+            self._inventory.removeItem(item)
+            self._money = self._money + price
 
     def getStrength(self):
         return self._strength
