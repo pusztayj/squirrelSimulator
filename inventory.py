@@ -61,6 +61,10 @@ class Inventory():
         for item in self._items:
             yield item
 
+    def __len__(self):
+        """Returns the lenght of the inventory."""
+        return len(self._items)
+
     def __getitem__(self, index):
         """Allows indexing of the inventory"""
         return self._items[index]

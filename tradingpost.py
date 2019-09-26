@@ -7,6 +7,7 @@ Creates a trading post class.
 import random
 from inventory import Inventory
 from item import Item
+import itertools
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
@@ -48,7 +49,7 @@ class TradingPost(object):
     def getMoney(self):
         """Returns the money of the merchant."""
         return self._money
-        
+
     def buyItem(self,item,cost):
         """
         Buys an item from the player and adds it to the merchant's
@@ -61,10 +62,34 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(cost) == int
-        if self._money >= cost and item.isBuyable() and \
-           self._openForBuying == True:
+        
+        self.minimumMoney() # Checks if merchant has enough money
+        # In theory the user can persist and buy an item because
+        # miniumum acorn threshold can be below lowered due to random generator
+        
+        if self._money >= cost and item.isBuyable() == True and \
+           self._openForBuying == True and \
+           item.getUtility() >= random.randint(30,50):
+            item.setUtility(100)
             self._inventory.addItem(item)
             self._money = self._money - cost
+            return "Item bought"
+        else:
+            conditions = (lambda: self._money >= cost,
+                          lambda: item.isBuyable() == True,
+                          lambda: self._openForBuying == True,
+                          lambda: item.getUtility() >= random.randint(30,50))
+            first_failed = sum(1 for _ in itertools.takewhile(lambda f: f(), conditions))
+            if first_failed == 0:
+                return "Merchant did not have enough money."
+            elif first_failed == 1:
+                return "Item is not buyable."
+            elif first_failed == 2:
+                return "Merchant does not want to spend too many acorns."
+            elif first_failed == 3:
+                return "The item did not have enough utility"
+            
+            
 
     def sellItem(self,item,price):
         """
@@ -96,6 +121,9 @@ class TradingPost(object):
         """
         if self._money < random.randint(450,700):
             self._openForBuying = False
+        else:
+            self._openForBuying = True
+            
             
 
         

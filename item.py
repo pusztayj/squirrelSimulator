@@ -4,12 +4,15 @@ import random, math
 class Item():
 
     def __init__(self, name, requirements=None, level=1, durability=100,
+                 utility = 100,
                  isBuyable = True, isSellable = True):
         self._name = name
         self._level = level
         self._skillRequirements = requirements
         self._maxDurability = durability
         self._durability = durability
+        self._maxUtility = 100
+        self._utility = utility
         self._isBuyable = True
         self._isSellable = True
         
@@ -55,6 +58,24 @@ class Item():
         """Return the durability of the item"""
         return self._durability
 
+    def setDurability(self,durability):
+        """
+        Sets a new durability less than the maximum durability.
+        """
+        if durability <= self._maxDurability:
+            self._durability = durability
+
+    def getUtility(self):
+        """Return the durability of the item"""
+        return self._utility
+
+    def setUtility(self,utility):
+        """
+        Sets a new utility less than the maximum utility.
+        """
+        if utility <= self._maxUtility:
+            self._utility = utility
+
     def decrementDurability(self):
         """Decreases durability by one"""
         self._durability -= 1
@@ -67,7 +88,8 @@ class Item():
         return "Name: " + self._name + \
                "\nType: " + type(self).__name__ + \
                "\nLevel: " + str(self._level) + \
-               "\nDurability: " + str(self._durability) + "/" + str(self._maxDurability)
+               "\nDurability: " + str(self._durability) + "/" + str(self._maxDurability) + \
+               "\nUtility: " + str(self._utility) + "/" + str(self._maxUtility)
 
 
 class Weapon(Item):
