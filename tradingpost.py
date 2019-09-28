@@ -22,7 +22,8 @@ class TradingPost(object):
         self._race = random.choice(races)
         self._money = random.randint(500,1500)
         self._inventory = Inventory(100)
-        self._openForBuying = True
+        self._willTrade = True
+        self._merchantSpeak = str()
         #self.generateInventory()
 
     def __iter__(self):
@@ -63,33 +64,14 @@ class TradingPost(object):
         assert issubclass(type(item),Item)
         assert type(cost) == int
         
-        self.minimumMoney() # Checks if merchant has enough money
-        # In theory the user can persist and buy an item because
-        # miniumum acorn threshold can be below lowered due to random generator
-        
-        if self._money >= cost and item.isBuyable() == True and \
-           self._openForBuying == True and \
-           item.getUtility() >= random.randint(30,50):
+        if self.__merchantLogic(item,cost):
             item.setUtility(100)
             self._inventory.addItem(item)
             self._money = self._money - cost
-            return "Item bought"
+            self._merchantSpeak = "Item bought"
+            return self._merchantSpeak
         else:
-            conditions = (lambda: self._money >= cost,
-                          lambda: item.isBuyable() == True,
-                          lambda: self._openForBuying == True,
-                          lambda: item.getUtility() >= random.randint(30,50))
-            first_failed = sum(1 for _ in itertools.takewhile(lambda f: f(), conditions))
-            if first_failed == 0:
-                return "Merchant did not have enough money."
-            elif first_failed == 1:
-                return "Item is not buyable."
-            elif first_failed == 2:
-                return "Merchant does not want to spend too many acorns."
-            elif first_failed == 3:
-                return "The item did not have enough utility"
-            
-            
+            return self._merchantSpeak
 
     def sellItem(self,item,price):
         """
@@ -114,15 +96,30 @@ class TradingPost(object):
         """
         self._money = round(self._money * rate)
 
-    def minimumMoney(self):
+    def __merchantLogic(self,item,cost):
         """
-        When the merchant has less than a uniquely random generated number
-        of acorns, the merchant will simply not buy any items.
+        In this method we will determine the logic of the merchant
+        and will return a boolean
         """
-        if self._money < random.randint(450,700):
-            self._openForBuying = False
+        minimumMoney = random.randint(450,700)
+        minimumUtility = random.randint(30,50)
+        if self._money >= cost:
+            if item.isBuyable() == True:
+                if self._money - cost >= minimumMoney:
+                    if item.getUtility() >= minimumUtility:
+                        return True
+                    else:
+                        self._merchantSpeak = "The item did not have enough utility"
+                        return False 
+                else:
+                    self._merchantSpeak = "Merchant does not want to spend too many acorns"
+                    return False
+            else:
+                self._merchantSpeak = "Item is not buyable."
+                return False 
         else:
-            self._openForBuying = True
+            self._merchantSpeak = "Merchant did not have enough money."
+            return False 
             
             
 

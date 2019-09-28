@@ -13,9 +13,9 @@ class Item():
         self._durability = durability
         self._maxUtility = 100
         self._utility = utility
-        self._isBuyable = True
-        self._isSellable = True
-        
+        self._isBuyable = isBuyable
+        self._isSellable = isSellable
+
     def getName(self):
         """Return the item's name"""
         return self._name
