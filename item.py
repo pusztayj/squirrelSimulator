@@ -5,7 +5,7 @@ class Item():
 
     def __init__(self, name, requirements=None, level=1, durability=100,
                  utility = 100,
-                 isBuyable = True, isSellable = True):
+                 isBuyable = True, isSellable = True, value = 10):
         self._name = name
         self._level = level
         self._skillRequirements = requirements
@@ -15,6 +15,11 @@ class Item():
         self._utility = utility
         self._isBuyable = isBuyable
         self._isSellable = isSellable
+        self._value = value
+
+    def getValue(self):
+        """Returns the value of the item in acorns."""
+        return self._value
 
     def getName(self):
         """Return the item's name"""

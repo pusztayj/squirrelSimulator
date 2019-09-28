@@ -51,6 +51,10 @@ class TradingPost(object):
         """Returns the money of the merchant."""
         return self._money
 
+    def getMerchantSpeak(self):
+        """Returns the buying logic of the merchant."""
+        return self._merchantSpeak
+
     def buyItem(self,item,cost):
         """
         Buys an item from the player and adds it to the merchant's
@@ -63,15 +67,10 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(cost) == int
-        
-        if self.__merchantLogic(item,cost):
-            item.setUtility(100)
-            self._inventory.addItem(item)
-            self._money = self._money - cost
-            self._merchantSpeak = "Item bought"
-            return self._merchantSpeak
-        else:
-            return self._merchantSpeak
+        item.setUtility(100)
+        self._inventory.addItem(item)
+        self._money = self._money - cost
+    
 
     def sellItem(self,item,price):
         """
@@ -85,9 +84,8 @@ class TradingPost(object):
         """
         assert issubclass(type(item),Item)
         assert type(price) == int
-        if item in self._inventory and item.isSellable():
-            self._inventory.removeItem(item)
-            self._money = self._money + price
+        self._inventory.removeItem(item)
+        self._money = self._money + price
 
     def moneyGeneration(self,rate = 1.01):
         """
@@ -96,7 +94,7 @@ class TradingPost(object):
         """
         self._money = round(self._money * rate)
 
-    def __merchantLogic(self,item,cost):
+    def buyLogic(self,item,cost):
         """
         In this method we will determine the logic of the merchant
         and will return a boolean
@@ -107,6 +105,7 @@ class TradingPost(object):
             if item.isBuyable() == True:
                 if self._money - cost >= minimumMoney:
                     if item.getUtility() >= minimumUtility:
+                        self._merchantSpeak = "Item bought" 
                         return True
                     else:
                         self._merchantSpeak = "The item did not have enough utility"
@@ -119,7 +118,15 @@ class TradingPost(object):
                 return False 
         else:
             self._merchantSpeak = "Merchant did not have enough money."
-            return False 
+            return False
+
+    def sellLogic(self,item,cost):
+        """Returns a boolean whether or not the tradiing post wants
+        to sell."""
+        if item in self._inventory and item.isSellable():
+            return True
+        else:
+            return False
             
             
 

@@ -182,6 +182,13 @@ class Animal():
     def setMoney(self,money):
         self._money = money
 
+    def buyLogic(self,item,cost):
+        """Returns boolean if animal wants to buy item."""
+        if self._money >= item.getValue() and item.isBuyable():
+            return True
+        else:
+            return False
+
     def buyItem(self,item,cost):
         """
         Buys an item from the merchant and adds it to the players's
@@ -194,9 +201,15 @@ class Animal():
         """
         assert issubclass(type(item),Item)
         assert type(cost) == int
-        if self._money >= cost and item.isBuyable():
-            self._inventory.addItem(item)
-            self._money = self._money - cost
+        self._inventory.addItem(item)
+        self._money = self._money - cost
+
+    def sellLogic(self,item,price):
+        """Returns boolean if animal wants to sell item."""
+        if item in self._inventory and item.isSellable():
+            return True
+        else:
+            return False
 
     def sellItem(self,item,price):
         """
@@ -210,9 +223,8 @@ class Animal():
         """
         assert issubclass(type(item),Item)
         assert type(price) == int
-        if item in self._inventory and item.isSellable():
-            self._inventory.removeItem(item)
-            self._money = self._money + price
+        self._inventory.removeItem(item)
+        self._money = self._money + price
 
     def getStrength(self):
         return self._strength
