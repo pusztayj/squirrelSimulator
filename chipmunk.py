@@ -1,5 +1,6 @@
 
 from npc import NPC
+from animated import Animated
 
 AGGRESSION   = (0,2)
 HEALTH       = (10,15)
@@ -9,9 +10,10 @@ DAMAGE       = (4,6)
 ATTACK_SPEED = (1,2)
 DEFENSE      = (5,7)
 
-class Chipmunk(NPC):
+class Chipmunk(NPC, Animated):
 
-    def __init__(self, name=""):
+    def __init__(self, name="", pos=(0,0)):
 
-        super().__init__(name, AGGRESSION, HEALTH, SPEED,
+        NPC.__init__(self, name, AGGRESSION, HEALTH, SPEED,
                          ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
+        Animated.__init__(self, "tempChipmunk.png", pos)

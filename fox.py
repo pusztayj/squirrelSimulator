@@ -1,5 +1,6 @@
 
 from npc import NPC
+from animated import Animated
 
 AGGRESSION   = (0,5)
 HEALTH       = (25,30)
@@ -9,9 +10,10 @@ DAMAGE       = (12,15)
 ATTACK_SPEED = (3,4)
 DEFENSE      = (6,8)
 
-class Fox(NPC):
+class Fox(NPC, Animated):
 
-    def __init__(self, name=""):
+    def __init__(self, name="", pos=(0,0)):
 
-        super().__init__(name, AGGRESSION, HEALTH, SPEED,
+        NPC.__init__(self,name, AGGRESSION, HEALTH, SPEED,
                          ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
+        Animated.__init__(self, "tempFox.png", pos)

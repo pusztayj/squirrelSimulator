@@ -31,8 +31,12 @@ class FrameManager(object):
          "rose-anim.png" :  (114,116),
          "water-lilly.png" : (47,49),
          "tempSquirrel.png" : (128,128),
-         "background.png" : (2400,500)
-         
+         "background.png" : (2400,500),
+         "tempChipmunk.png":(128,128),
+         "tempFox.png":(128,128),
+         "tempBear.png":(128,128),
+         "tempSnake.png":(128,128),
+         "combatBackground":(1200,500)     
       }
       
       # A default frame size
@@ -42,7 +46,8 @@ class FrameManager(object):
       _TRANSPARENCY = []
       
       # A list of images that require to be loaded with a color key
-      _COLOR_KEY = ["tempSquirrel.png"]
+      _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
+                    "tempBear.png", "tempSnake.png"]
       
       
       

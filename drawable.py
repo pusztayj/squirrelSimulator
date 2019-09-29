@@ -47,8 +47,9 @@ class Drawable():
         is true, a color key is set from the pixel at position (0,0), otherwise no
         transparency key is set.
         """
-        self._imageName = imageName
-        self._image = FRAMES.getFrame(self._imageName, offset)  
+        if imageName != "":
+            self._imageName = imageName
+            self._image = FRAMES.getFrame(self._imageName, offset)  
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
 
@@ -66,7 +67,7 @@ class Drawable():
 
     def setPosition(self, newPosition):
         """Updates the position of the drawable to a new position"""
-        self._position = newPosisition
+        self._position = newPosition
 
     def getX(self):
         """Returns the x coordinate of the current position"""
@@ -93,4 +94,8 @@ class Drawable():
         else:
             (x,y) = self._position
         surface.blit(self._image, (x,y))
+
+    def flip(self):
+        self._image = pygame.transform.flip(self._image, True, False)
+        
      

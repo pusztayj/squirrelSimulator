@@ -15,6 +15,12 @@ class CombatGame():
         self._allies = allies
         self._enemies = enemies
 
+    def getAllies(self):
+        return self._allies
+
+    def getEnemies(self):
+        return self._enemies
+
     def gameLoop(self):
         """The main loop for the combat minigame"""
         while (not self._player.isDead()) and \

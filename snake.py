@@ -10,11 +10,11 @@ DAMAGE       = (20,24)
 ATTACK_SPEED = (6,8)
 DEFENSE      = (10,12)
 
-class Bear(NPC, Animated):
+class Snake(NPC, Animated):
 
     def __init__(self, name="", pos=(0,0)):
 
         NPC.__init__(self, name, AGGRESSION, HEALTH, SPEED,
                          ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
 
-        Animated.__init__(self, "tempBear.png", pos)
+        Animated.__init__(self, "tempSnake.png", pos)
