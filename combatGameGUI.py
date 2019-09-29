@@ -9,6 +9,7 @@ from fox import Fox
 from bear import Bear
 from snake import Snake
 from textbox import TextBox
+from button import Button
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -58,6 +59,8 @@ def main():
     #Begin the game
     game = CombatGame(allies, enemies)
 
+    player = allies.getLeader()
+
     #Load the background image
     background = Drawable("combatBackground.png", Vector2(0,0))
 
@@ -75,8 +78,11 @@ def main():
         textBoxes.append(box)
         y += 160
 
-    instructions = TextBox("Combat Mode", (500,450), font, (0,0,0))
+    instructions = TextBox("Select a Target", (500,450), font, (0,0,0))
     title = TextBox("Combat Mode", (500,10), font, (0,0,0))
+
+    confirmButton = Button("Confirm", (750,440), font, (0,0,0), (200,200,200), 40, 125,
+                           (0,0,0), 5)
 
     #Create an instance of the game clock
     gameClock = pygame.time.Clock()
@@ -87,12 +93,16 @@ def main():
 
     RUNNING = True
 
+    target = None
+
     while RUNNING:
         #Increment the clock
         gameClock.tick()
 
         #Draw the background to the screen
         background.draw(screen)
+
+        confirmButton.draw(screen)
 
         #Draw textboxes to the screen
         for box in textBoxes:
@@ -122,83 +132,23 @@ def main():
                 (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 # change the value to False, to exit the main loop
                 RUNNING = False
+            if (event.type == pygame.MOUSEBUTTONDOWN and event.button==1):
+                for animal in enemies:
+                    if animal.getCollideRect().collidepoint(event.pos):
+                        instructions.setText(animal.getName() + " selected...")
+                        target = animal
+                if confirmButton.getCollideRect().collidepoint(event.pos) and \
+                   target != None:
+                    instructions.setText("Begin the Fight!")
                 
         #Calculate ticks
         ticks = gameClock.get_time() / 1000
 
+        if player.isDead():
+            RUNNING =False
+
     #Close the pygame window and quit pygame
     pygame.quit()
-
-
-    
-
-def main1():
-   """
-   Main loop for the program
-   """
-   #Initialize the module
-   pygame.init()
-
-   #Store the pygame key codes for simplicity later
-   movement_keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]
-
-   #Update the title for the window
-   pygame.display.set_caption('Squirrel Simulator')
-   
-   #Get the screen
-   screen = pygame.display.set_mode(SCREEN_SIZE)
-
-   #Load the background image
-   background = Drawable("background.png", Vector2(0,0))
-
-   #Create an instance of the game clock
-   gameClock = pygame.time.Clock()
-
-   player = Squirrel()
-
-   chip = Chipmunk(pos=(100,100))
-
-   RUNNING = True
-
-   while RUNNING:
-
-      #Increment the clock
-      gameClock.tick()
-
-      #Draw the background to the screen
-      background.draw(screen)
-
-      #Draw the player to the screen
-      player.draw(screen)
-
-      chip.draw(screen)
-
-      pygame.display.flip()
-
-      # event handling, gets all event from the eventqueue
-      for event in pygame.event.get():
-         # only do something if the event is of type QUIT or K_ESCAPE
-         if (event.type == pygame.QUIT) or \
-             (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            # change the value to False, to exit the main loop
-            RUNNING = False
-            
-         elif (event.type == pygame.KEYDOWN or event.type == pygame.KEYUP) \
-            and event.key in movement_keys:
-            player.move(event)
-            
-      #Calculate ticks
-      ticks = gameClock.get_time() / 1000
-
-      #Update the player's position
-      player.update(WORLD_SIZE, ticks)
-      
-      #Update the offset based on the player's location
-      player.updateOffset(player, SCREEN_SIZE, WORLD_SIZE)
-
-
-   #Close the pygame window and quit pygame
-   pygame.quit()
 
 if __name__ == "__main__":
 
