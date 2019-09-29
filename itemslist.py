@@ -51,18 +51,54 @@ class Food(Item):
 class Berries(Food):
 
     def __init__(self):
-        super.__init__("Berries",5)
+        super.__init__("Berries",5,value = 15)
 
 class NutSoup(Food):
 
     def __init__(self):
-        super.__init__("Nut Soup",8)
+        super.__init__("Nut Soup",8,value = 20)
 
 class PecanPie(Food):
 
     def __init__(self):
-        super.__init__("Pecan Pie",13)
+        super.__init__("Pecan Pie",13, value = 45)
 
 ########################################################
+
+class Tool(Item):
+
+    def __init__(self,name,damage, level):
+        super(). __init__(name,level)
+        self._damage = damage
+
+def Shovel(Tool):
+
+    def __init__(self):
+        super(). __init__("Shovel",3,1,value = 40)
+
+    def acornModifier(self):
+        return 1.1 + self._level*.1
+
+def PickAx(Tool):
+
+    def __init__(self):
+        super(). __init__("Pick ax",5,1,value = 65)
+
+    def acornModifier(self):
+        return 1.2 + self._level*.1
+
+def Crowbar(Tool):
+
+    def __init__(self):
+        super(). __init__("Crowbar",8,1,value = 95)
+
+    def acornModifier(self):
+        return 1.3 + self._level*.1
+
+########################################################
+
+
+
+
 
     
