@@ -398,6 +398,7 @@ class Animal():
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
                "\nStamina:       " + str(self._stamina) + "/" + str(self._baseStamina) + \
+               "\nAcorns:        " + str(self._money) + \
                "\nXP:            " + str(self._xp) + \
                "\nSpeed:         " + str(self._speed) + \
                "\nEndurance:     " + str(self._endurance) + \
