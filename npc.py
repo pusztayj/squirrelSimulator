@@ -18,3 +18,5 @@ class NPC(Animal):
         
         self._aggressionLevel = agression
 
+
+

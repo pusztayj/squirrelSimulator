@@ -6,6 +6,7 @@ The animal class.
 
 import random, shelve
 from inventory import Inventory
+from item import Item
 
 class Animal():
 

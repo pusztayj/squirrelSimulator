@@ -5,7 +5,7 @@ class Item():
 
     def __init__(self, name, requirements=None, level=1, durability=100,
                  utility = 100,
-                 isBuyable = True, isSellable = True, value = 10):
+                 isBuyable = True, isSellable = True, value = 50):
         self._name = name
         self._level = level
         self._skillRequirements = requirements
@@ -141,6 +141,7 @@ class Stick(Weapon):
 
     def __init__(self, level=1):
         super().__init__("stick", 8, level, None)
+
 
 class SharpStick(Weapon):
 
