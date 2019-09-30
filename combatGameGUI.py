@@ -127,14 +127,17 @@ def main():
     # Create Decorative Banners
     banner = Banner((300,430), (120,120,120), (150, 615), (0,0,0), 2)
 
-    s = pygame.Surface((400,400))
-    Chipmunk((0,0)).draw(s)
-    TextBox("This is Chip", (0,150), font, (255,255,255)).draw(s)
-    guiUtils.makeMultiLineTextBox("Chip is a friendly chipmunk, who loves to steal acorns.\n" +
-            "Watch your acorns carefully when Chip is around...", (0,250),
-            font2, (255,255,255)).draw(s)
-    s = MySurface(s)
-    scroll = ScrollBox((400,100),(200,400), s)
+##    s = pygame.Surface((400,400))
+##    s.fill((255,0,0))
+##    Chipmunk((0,0)).draw(s)
+##    TextBox("This is Chip", (0,150), font, (255,255,255)).draw(s)
+##    guiUtils.makeMultiLineTextBox("Chip is a friendly chipmunk, who loves to steal acorns.\n" +
+##            "Watch your acorns carefully when Chip is around...", (0,200),
+##            font2, (255,255,255), (255,0,0)).draw(s)
+##    s = MySurface(s)
+##    scroll = ScrollBox((400,100),(200,400), s, (0,0,0), 2)
+
+    scroll = None #guiUtils.getInfoCard(allies[0], (400,100))
 
     #Create an instance of the game clock
     gameClock = pygame.time.Clock()
@@ -180,7 +183,9 @@ def main():
         useItemButton.draw(screen)
         retreatButton.draw(screen)
         backButton.draw(screen)
-        scroll.draw(screen)
+        
+        if scroll != None:
+            scroll.draw(screen)
 
 
         pygame.display.flip()
@@ -195,8 +200,12 @@ def main():
             if (event.type == pygame.MOUSEBUTTONDOWN and event.button==1):
                 for animal in enemies:
                     if animal.getCollideRect().collidepoint(event.pos):
+                        scroll = guiUtils.getInfoCard(animal, (400,100))
                         instructions.setText(animal.getName() + " selected...")
                         target = animal
+                for animal in allies:
+                    if animal.getCollideRect().collidepoint(event.pos):
+                        scroll = guiUtils.getInfoCard(animal, (400,100))
                 if confirmButton.getCollideRect().collidepoint(event.pos) and \
                    target != None:
                     instructions.setText("Begin the Fight!")
@@ -206,7 +215,8 @@ def main():
             useItemButton.move(event, useItemButtonFunc)
             retreatButton.move(event, retreatButtonFunc)
             backButton.move(event, backButtonFunc)
-            scroll.move(event)
+            if scroll != None:
+                scroll.move(event)
                 
         #Calculate ticks
         ticks = gameClock.get_time() / 1000

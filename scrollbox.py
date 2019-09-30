@@ -22,6 +22,9 @@ class ScrollBox(Drawable):
         # Used to allow the scrollbox to appear around the screen
         self._offset = position
 
+        # Calculate slide step
+        self._step = self._internalSurface.getHeight() // self._height
+
         self._scrollOffset = 0
 
         self._slider = Banner((self._width-self._sidebarWidth,0),self._sliderColor,
@@ -38,7 +41,6 @@ class ScrollBox(Drawable):
             y -= self._offset[1]
             
             if y > 0 and y < (self._height - self._sliderHeight):
-                print(y)
                 self._slider.setPosition((self._slider.getX(), y))
                 self._scrollOffset = prevY - y
                 self.__updateScrollBox()
@@ -62,7 +64,7 @@ class ScrollBox(Drawable):
         if issubclass(type(self._internalSurface), Drawable):
             self._internalSurface.setPosition((self._internalSurface.getX(),
                                               self._internalSurface.getY() +
-                                              self._scrollOffset))
+                                              self._scrollOffset * self._step))
             self._internalSurface.draw(displaySurf)
         sideBar = Banner((self._width-self._sidebarWidth,0),self._sidebarColor,
                          (self._height,self._sidebarWidth))

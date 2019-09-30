@@ -52,6 +52,7 @@ class Drawable():
             self._image = FRAMES.getFrame(self._imageName, offset)  
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
+        self._isFlipped = False
 
     def getWidth(self):
         """Returns the width of the image surface"""
@@ -96,6 +97,10 @@ class Drawable():
         surface.blit(self._image, (x,y))
 
     def flip(self):
+        self._isFlipped = not self._isFlipped
         self._image = pygame.transform.flip(self._image, True, False)
+
+    def isFlipped(self):
+        return self._isFlipped
         
      
