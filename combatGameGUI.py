@@ -17,6 +17,7 @@ from scrollbox import ScrollBox
 from shmoo import Shmoo
 from mysurface import MySurface
 import guiUtils
+from items import *
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -58,15 +59,15 @@ def main():
     a1 = random.choice(animals)()
     a2 = random.choice(animals)()
     a3 = random.choice(animals)()
-##    stick1 = item.Stick(20)
-##    stick1.rename("Breath Taker")
-##    stick2 = item.Stick(10)
-##    stick2.rename("Call of the Wild")
-##    stick3 = item.Stick(15)
-##    stick3.rename("Bane of Bears")
-##    a1.equipTool(stick1)
-##    a2.equipTool(stick2)
-##    a3.equipTool(stick3)
+    stick1 = Stick(level=20)
+    stick1.rename("Breath Taker")
+    stick2 = Stick(level=10)
+    stick2.rename("Call of the Wild")
+    stick3 = Stick(level=15)
+    stick3.rename("Bane of Bears")
+    a1.equipTool(stick1)
+    a2.equipTool(stick2)
+    a3.equipTool(stick3)
     allies = pack.Pack(a1)
     allies.addMember(a2)
     allies.addMember(a3)
@@ -197,15 +198,15 @@ def main():
                 (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 # change the value to False, to exit the main loop
                 RUNNING = False
-            if (event.type == pygame.MOUSEBUTTONDOWN and event.button==1):
+            if (event.type == pygame.MOUSEBUTTONDOWN and event.button==3):
                 for animal in enemies:
                     if animal.getCollideRect().collidepoint(event.pos):
-                        scroll = guiUtils.getInfoCard(animal, (400,100))
+                        scroll = guiUtils.getInfoCard(animal, (450,100))
                         instructions.setText(animal.getName() + " selected...")
                         target = animal
                 for animal in allies:
                     if animal.getCollideRect().collidepoint(event.pos):
-                        scroll = guiUtils.getInfoCard(animal, (400,100))
+                        scroll = guiUtils.getInfoCard(animal, (450,100))
                 if confirmButton.getCollideRect().collidepoint(event.pos) and \
                    target != None:
                     instructions.setText("Begin the Fight!")

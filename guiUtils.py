@@ -43,7 +43,7 @@ def getInfoCard(animal, position):
     makeMultiLineTextBox(str(a), (10,200), detailsFont,
                          (255,255,255), (0,0,0)).draw(s)
     s = MySurface(s)
-    return ScrollBox(position, (200,400), s, borderWidth=2)
+    return ScrollBox(position, (200,300), s, borderWidth=2)
     
     
 
