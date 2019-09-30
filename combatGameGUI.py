@@ -4,17 +4,35 @@ from vector2D import Vector2
 from drawable import Drawable
 from squirrel import Squirrel
 from chipmunk import Chipmunk
+from deer import Deer
 from combatGame import CombatGame
 from fox import Fox
 from bear import Bear
 from snake import Snake
+from rabbit import Rabbit
 from textbox import TextBox
 from button import Button
+from banner import Banner
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
-animals = [Chipmunk, Fox, Bear, Snake]
+animals = [Chipmunk, Fox, Bear, Snake, Deer, Rabbit]
+
+def attackButtonFunc():
+    print("Set Attack")
+
+def blockButtonFunc():
+    print("Set Block")
+
+def useItemButtonFunc():
+    print("Set Use Item")
+
+def retreatButtonFunc():
+    print("Set Retreat")
+
+def backButtonFunc():
+    print("Set Back")
 
 def main():
 
@@ -35,15 +53,15 @@ def main():
     a1 = random.choice(animals)()
     a2 = random.choice(animals)()
     a3 = random.choice(animals)()
-    stick1 = item.Stick(20)
-    stick1.rename("Breath Taker")
-    stick2 = item.Stick(10)
-    stick2.rename("Call of the Wild")
-    stick3 = item.Stick(15)
-    stick3.rename("Bane of Bears")
-    a1.equipTool(stick1)
-    a2.equipTool(stick2)
-    a3.equipTool(stick3)
+##    stick1 = item.Stick(20)
+##    stick1.rename("Breath Taker")
+##    stick2 = item.Stick(10)
+##    stick2.rename("Call of the Wild")
+##    stick3 = item.Stick(15)
+##    stick3.rename("Bane of Bears")
+##    a1.equipTool(stick1)
+##    a2.equipTool(stick2)
+##    a3.equipTool(stick3)
     allies = pack.Pack(a1)
     allies.addMember(a2)
     allies.addMember(a3)
@@ -79,10 +97,30 @@ def main():
         y += 160
 
     instructions = TextBox("Select a Target", (500,450), font, (0,0,0))
+    
     title = TextBox("Combat Mode", (500,10), font, (0,0,0))
 
+    # Create Buttons
     confirmButton = Button("Confirm", (750,440), font, (0,0,0), (200,200,200), 40, 125,
                            (0,0,0), 5)
+
+    attackButton = Button("Attack", (320,440), font, (0,100,0), (0,210,0), 40, 125,
+                          (0,128,0), 2)
+
+    useItemButton = Button("Use Item", (470,440), font, (0,0,100), (40,200,195), 40, 125,
+                          (0,0,128), 2)
+
+    blockButton = Button("Block", (620,440), font, (94,81,39), (213,175,53), 40, 125,
+                          (94,81,39), 2)
+
+    retreatButton = Button("Retreat", (770,440), font, (88,39,94), (192,106,202), 40, 125,
+                          (88,39,94), 2)
+
+    backButton = Button("Back", (320,340), font, (118,32,2), (215,63,11), 40, 125,
+                          (118,32,2), 2)
+
+    # Create Decorative Banners
+    banner = Banner((300,430), (120,120,120), (150, 615), (0,0,0), 2)
 
     #Create an instance of the game clock
     gameClock = pygame.time.Clock()
@@ -102,13 +140,14 @@ def main():
         #Draw the background to the screen
         background.draw(screen)
 
-        confirmButton.draw(screen)
+        #confirmButton.draw(screen)
+        banner.draw(screen)
 
         #Draw textboxes to the screen
         for box in textBoxes:
             box.draw(screen)
         title.draw(screen)
-        instructions.draw(screen)
+        #instructions.draw(screen)
 
         #Draw the animals to the screen
         y = 20
@@ -121,6 +160,12 @@ def main():
             animal.setPosition((950,y))
             animal.draw(screen)
             y+=150
+
+        attackButton.draw(screen)
+        blockButton.draw(screen)
+        useItemButton.draw(screen)
+        retreatButton.draw(screen)
+        backButton.draw(screen)
 
 
         pygame.display.flip()
@@ -140,6 +185,12 @@ def main():
                 if confirmButton.getCollideRect().collidepoint(event.pos) and \
                    target != None:
                     instructions.setText("Begin the Fight!")
+            #confirmButton.move(event)
+            attackButton.move(event, attackButtonFunc)
+            blockButton.move(event, blockButtonFunc)
+            useItemButton.move(event, useItemButtonFunc)
+            retreatButton.move(event, retreatButtonFunc)
+            backButton.move(event, backButtonFunc)
                 
         #Calculate ticks
         ticks = gameClock.get_time() / 1000
@@ -149,6 +200,8 @@ def main():
 
     #Close the pygame window and quit pygame
     pygame.quit()
+
+
 
 if __name__ == "__main__":
 
