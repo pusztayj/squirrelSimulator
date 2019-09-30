@@ -8,10 +8,12 @@ import random
 from inventory import Inventory
 from item import Item
 import itertools
+import items
+from items import *
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
-class TradingPost(object):
+class Merchant(object):
 
     def __init__(self,merchantName):
         """
@@ -24,10 +26,11 @@ class TradingPost(object):
         self._inventory = Inventory(100)
         self._willTrade = True
         self._merchantSpeak = str()
-        #self.generateInventory()
+        self.generateInventory()
 
     def __iter__(self):
         """
+
         Creates an iterable item for the inventory.
         """
         for item in self._inventory:
@@ -37,7 +40,10 @@ class TradingPost(object):
         """
         Generates an inventory for the merchant. 
         """
-        pass
+        for x in range(3):
+            for x in items.__all__:
+                if 50 >= random.randint(0,100):
+                    self._inventory.addItem(globals()[x]())
         
     def getRace(self):
         """Returns the race of the merchant."""
@@ -54,6 +60,10 @@ class TradingPost(object):
     def getMerchantSpeak(self):
         """Returns the buying logic of the merchant."""
         return self._merchantSpeak
+
+    def getInventory(self):
+        """Returns the inventory of the merchant."""
+        return self._inventory
 
     def buyItem(self,item,cost):
         """
