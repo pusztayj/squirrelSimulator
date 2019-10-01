@@ -9,13 +9,15 @@ def main():
     pygame.display.set_caption("Merchant MiniGame")
 
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    background = Banner((0,0),(255,0,0),(100,100))
+    background = Banner((0,0),(255,0,0),(500,1200))
 
     RUNNING = True
 
     while RUNNING:
         background.draw(screen)
 
+        pygame.display.flip()
+        
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
