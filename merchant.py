@@ -1,15 +1,14 @@
 """
 @author: Justin Pusztay
 
-Creates a trading post class.
+Creates a merchant class.
 """
 
-import random
+import random, items
 from inventory import Inventory
 from item import Item
-import itertools
-import items
 from items import *
+from npc import NPC
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
@@ -138,7 +137,4 @@ class Merchant(object):
         else:
             return False
             
-            
-
-        
-            
+                    
