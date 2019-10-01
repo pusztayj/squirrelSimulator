@@ -15,6 +15,7 @@ from button import Button
 from banner import Banner
 from scrollbox import ScrollBox
 from shmoo import Shmoo
+from hedgehog import HedgeHog
 from mysurface import MySurface
 import guiUtils
 from items import *
@@ -22,7 +23,7 @@ from items import *
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
-animals = [Chipmunk, Fox, Bear, Snake, Deer, Rabbit, Shmoo]
+animals = [Chipmunk, Fox, Bear, Snake, Deer, Rabbit, Shmoo, HedgeHog]
 
 def attackButtonFunc():
     print("Set Attack")
