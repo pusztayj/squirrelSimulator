@@ -17,6 +17,5 @@ class NPC(Animal):
                          defensiveStat=random.randint(defense[0],defense[1]))
         
         self._aggressionLevel = agression
-
-
+            
 

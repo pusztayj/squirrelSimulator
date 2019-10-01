@@ -92,7 +92,8 @@ class Item():
     def __repr__(self):
         return "\nLevel: " + str(self._level) + \
                "\nDurability: " + str(self._durability) + "/" + str(self._maxDurability) + \
-               "\nUtility: " + str(self._utility) + "/" + str(self._maxUtility)
+               "\nUtility: " + str(self._utility) + "/" + str(self._maxUtility) + \
+               "\nValue: " + str(self._value)
 
 
                                        

@@ -6,8 +6,8 @@ In this file we make all of our items.
 
 from item import Item
 
-__all__ = ["Weapon","Armor","Stick","Spear","IronSword","HideArmor","LeatherArmor","IronArmor",
-         "Food","Berries","NutSoup","PecanPie","Tool","Shovel","PickAx",
+__all__ = ["Stick","Spear","IronSword","HideArmor","LeatherArmor","IronArmor",
+         "Berries","NutSoup","PecanPie","Shovel","PickAx",
          "CrowBar","Potions"]
 
 ########################################################
@@ -234,10 +234,10 @@ class CrowBar(Tool):
 
 class Potions(Item):
 
-    def __init__(self,name, healthBoost,level=1, durability=100,
+    def __init__(self, healthBoost = 10,level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,
                  requirements=None, isBuyable = True, isSellable = True):
-        super().__init__(name,level=1, durability=100,
+        super().__init__("Health Potions",level=1, durability=100,
                  utility = 100,requirements=None,
                  isBuyable = True, isSellable = True)
         self._healthBoost = healthBoost
