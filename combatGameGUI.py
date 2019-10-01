@@ -65,6 +65,7 @@ def main():
     stick2.rename("Call of the Wild")
     stick3 = Stick(level=15)
     stick3.rename("Bane of Bears")
+    a1.getInventory().addItem(Berries())
     a1.equipTool(stick1)
     a2.equipTool(stick2)
     a3.equipTool(stick3)
@@ -187,7 +188,6 @@ def main():
         
         if scroll != None:
             scroll.draw(screen)
-
 
         pygame.display.flip()
 
