@@ -34,6 +34,7 @@ class FrameManager(object):
          "background.png" : (2400,500),
          "tempChipmunk.png":(128,128),
          "tempFox.png":(128,128),
+         "turtle.png":(128,128),
          "tempBear.png":(128,128),
          "tempSnake.png":(128,128),
          "tempDeer.png":(128,128),
@@ -50,7 +51,7 @@ class FrameManager(object):
       
       # A list of images that require to be loaded with a color key
       _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
-                    "tempBear.png", "tempSnake.png", "tempDeer.png",
+                    "tempBear.png","turtle.png", "tempSnake.png", "tempDeer.png",
                     "tempRabbit.png", "shmoo.png"]
       
       

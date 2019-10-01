@@ -1,5 +1,6 @@
 import pygame
 from banner import Banner
+from turtle import Turtle
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -10,11 +11,13 @@ def main():
 
     screen = pygame.display.set_mode(SCREEN_SIZE)
     background = Banner((0,0),(255,0,0),(500,1200))
+    merchant = Turtle()
 
     RUNNING = True
 
     while RUNNING:
         background.draw(screen)
+        merchant.draw(screen)
 
         pygame.display.flip()
         
