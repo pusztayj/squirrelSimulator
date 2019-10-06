@@ -70,14 +70,16 @@ class Button(Drawable):
         self._fontColor = self._defaultFontColor
         self.__updateButton()
 
-    def move(self, event, func=None):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            if self.getCollideRect().collidepoint(event.pos):
+    def move(self, event, func, *args, offset=(0,0)):
+        rect = self.getCollideRect()
+        rect = rect.move(offset[0],offset[1])
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1: 
+            if rect.collidepoint(event.pos):
                 self.buttonPressed()
-                func()
+                func(*args)
         elif event.type == pygame.MOUSEBUTTONUP and event.button==1:
                 self.buttonReleased()
-        elif self.getCollideRect().collidepoint(pygame.mouse.get_pos()):
+        elif rect.collidepoint(pygame.mouse.get_pos()):
             self.setHover()
         else:
             self.removeHover()

@@ -5,8 +5,9 @@ import pygame
 
 class DirtPile(Drawable):
 
-    def __init__(self,pos):
+    def __init__(self,pos,name="Unnamed Pile"):
         super().__init__("dirtpile.png",pos)
+        self._name = name
         self._acorns = 0
         self._capacity = 10
 

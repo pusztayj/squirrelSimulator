@@ -7,6 +7,7 @@ from banner import Banner
 from acorn import Acorn
 from dirtpile import DirtPile
 from textbox import TextBox
+from atm import ATM
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -48,6 +49,8 @@ def main():
 
    dirtPiles = []
 
+   atm = None #ATM(player, None)
+
    RUNNING = True
 
    while RUNNING:
@@ -70,6 +73,9 @@ def main():
 
       acornCount.draw(screen)
 
+      if atm != None:
+         atm.draw(screen)
+
       pygame.display.flip()
 
       # event handling, gets all event from the eventqueue
@@ -91,8 +97,15 @@ def main():
                   dp.addAcorn()
                   player.setAcorns(player.getAcorns() - 1)
                   dirtPiles.append(dp)
+          
          for pile in dirtPiles:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+               if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                  atm = ATM(player, pile)
             pile.handleEvent(event, player)
+         if atm != None:
+            atm.handleEvent(event)
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:
