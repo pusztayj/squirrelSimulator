@@ -4,7 +4,7 @@
 Creates a merchant class.
 """
 
-import random, items
+import random, items, shelve
 from inventory import Inventory
 from item import Item
 from items import *
@@ -12,14 +12,17 @@ from npc import NPC
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
-class Merchant(object):
+class Merchant(NPC):
 
-    def __init__(self,merchantName):
+    def __init__(self):
         """
         Creates the merchant, their race, and the amount of money that
         they have. Also generates an invetory. 
         """
-        self._merchantName = merchantName
+        shelf = shelve.open("data")
+        name = random.choice(shelf["names"])
+        shelf.close()
+        self._merchantName = name
         self._race = random.choice(races)
         self._money = random.randint(500,1500)
         self._inventory = Inventory(100)
@@ -136,5 +139,14 @@ class Merchant(object):
             return True
         else:
             return False
+
+    def __repr__(self):
+        return "Name:          " + self._merchantName + \
+               "\nSpecies:       " + str(type(self).__name__) + \
+               "\nAcorns:        " + str(self._money) + \
+               "\nInventory:     " + str(self._inventory)
+               
+
+
             
                     
