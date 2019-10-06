@@ -43,7 +43,8 @@ class FrameManager(object):
          "tempHedgeHog.png":(128,128),
          "combatBackground":(1200,500),
          "acorn.png":(32,32),
-         "dirtpile.png":(32,32)
+         "dirtpile.png":(32,32),
+         "tradeDesk.png":(750,422)
       }
       
       # A default frame size
@@ -55,7 +56,7 @@ class FrameManager(object):
       # A list of images that require to be loaded with a color key
       _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
                     "tempBear.png","turtle.png", "tempSnake.png", "tempDeer.png",
-                    "tempRabbit.png", "shmoo.png","tempHedgeHog.png",
+                    "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png"
                     "acorn.png", "dirtpile.png"]
       
       

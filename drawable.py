@@ -102,5 +102,14 @@ class Drawable():
 
     def isFlipped(self):
         return self._isFlipped
+
+    def scale(self,scalar):
+        """
+        Returns a scaled version of the image.
+        """
+        self._image = pygame.transform.scale(self._image,(round(scalar*self.getSize()[0]),
+                                                         round(scalar*self.getSize()[1])))
+
+    
         
      
