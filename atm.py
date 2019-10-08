@@ -4,12 +4,14 @@ import pygame
 from textbox import TextBox
 from button import Button
 from textinput import TextInput
+from window import Window
 
-class ATM(Drawable):
+class ATM(Drawable, Window):
 
     def __init__(self, player, hole):
-        super().__init__("",(50,25),worldBound=False)
-
+        Drawable.__init__(self, "",(50,25),worldBound=False)
+        Window.__init__(self)
+        
         self._player = player
         self._hole = hole
 
@@ -28,6 +30,8 @@ class ATM(Drawable):
                                       (0,255,0),40,150,(0,0,0), 2)
         self._depositButton = Button("Deposit", (120,100), self._font,(0,0,0),
                                       (255,225,225),40,150,(0,0,0), 2)
+        self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
+               (0,0,0), 1)
         # Text Inputs
         self._holeName = TextInput((200,10), self._font,(200,30),maxLen=12,
                                    defaultText=self._hole.getName(),
@@ -62,14 +66,15 @@ class ATM(Drawable):
                 self._hole.setAcorns(self._hole.getAcorns() - amount)
 
     def handleEvent(self, event):
-        self._withdrawButton.move(event, self.withdraw, (self._withdrawAmount.getInput()), offset=self._offset)
+        self._withdrawButton.handleEvent(event, self.withdraw, (self._withdrawAmount.getInput()), offset=self._offset)
         self._withdrawAmount.handleEvent(event, (self._withdrawAmount.getInput()), offset=self._offset,
                                          func=self.withdraw, clearOnEnter=True)
-        self._depositButton.move(event, self.deposit, (self._depositAmount.getInput()), offset=self._offset)
+        self._depositButton.handleEvent(event, self.deposit, (self._depositAmount.getInput()), offset=self._offset)
         self._depositAmount.handleEvent(event, (self._depositAmount.getInput()), offset=self._offset,
                                         func=self.deposit, clearOnEnter=True)
         self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset,
                                    func=self._hole.setName)
+        self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.__updateATM()
         
     def __updateATM(self):
@@ -94,11 +99,9 @@ class ATM(Drawable):
         self._currentBalance.draw(surf)
         self._carrying.setText("Carrying: " + str(self._player.getAcorns()))
         self._carrying.draw(surf)
-        
-        Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
-               (0,0,0), 1).draw(surf)
-        
+        self._exitButton.draw(surf)
 
+        # Blit the widget layer onto the back surface
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
         self._image = surfBack
 

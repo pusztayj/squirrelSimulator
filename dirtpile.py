@@ -15,7 +15,6 @@ class DirtPile(Drawable):
         return self._name
 
     def setName(self, name):
-        print("Name updated")
         self._name = name
 
     def isEmpty(self):
@@ -40,7 +39,7 @@ class DirtPile(Drawable):
                 if player.getCheekCapacity() - player.getAcorns() > 0:
                     player.setAcorns(player.getAcorns() + self.getAcorns())
                     self.setAcorns(0)
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
-            if self.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                print(self.getAcorns())
+##        elif event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+##            if self.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+##                                                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+##                print(self.getAcorns())

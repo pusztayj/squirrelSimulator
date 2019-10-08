@@ -52,8 +52,6 @@ def main():
 
    atm = None #ATM(player, None)
 
-   tinput = TextInput((0,0),font,(100,40), maxLen=6, numerical=True)
-
    RUNNING = True
 
    while RUNNING:
@@ -76,9 +74,7 @@ def main():
 
       acornCount.draw(screen)
 
-      tinput.draw(screen)
-
-      if atm != None:
+      if atm != None and atm.getDisplay():
          atm.draw(screen)
 
       pygame.display.flip()
@@ -109,9 +105,8 @@ def main():
                                                   event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                   atm = ATM(player, pile)
             pile.handleEvent(event, player)
-         if atm != None:
+         if atm != None and atm.getDisplay():
             atm.handleEvent(event)
-         tinput.handleEvent(event)
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:
