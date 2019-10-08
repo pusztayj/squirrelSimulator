@@ -29,11 +29,19 @@ class ATM(Drawable):
         self._depositButton = Button("Deposit", (120,100), self._font,(0,0,0),
                                       (255,225,225),40,150,(0,0,0), 2)
         # Text Inputs
+        self._holeName = TextInput((200,10), self._font,(200,30),maxLen=12,
+                                   defaultText=self._hole.getName(),
+                                   borderWidth=0, backgroundColor=(255,0,0),
+                                   color=(255,255,255), highlightColor=(0,0,0))
         self._withdrawAmount = TextInput((10,50), self._font,(90,40),maxLen=4,numerical=True)
         self._depositAmount  = TextInput((10,100), self._font,(90,40),maxLen=4,numerical=True)
 
         # Text Boxes
         self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
+        self._currentBalance = TextBox("Your Current Balance: " + str(self._hole.getAcorns()),
+                                       (400,50), self._font, (255,255,255))
+        self._carrying = TextBox("On You: " + str(self._player.getAcorns()),
+                                 (400,90), self._font, (255,255,255))
         
         self.__updateATM()
 
@@ -58,6 +66,7 @@ class ATM(Drawable):
         self._withdrawAmount.handleEvent(event, offset=self._offset)
         self._depositButton.move(event, self.deposit, offset=self._offset)
         self._depositAmount.handleEvent(event, offset=self._offset)
+        self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset, func=self._hole.setName)
         self.__updateATM()
         
     def __updateATM(self):
@@ -73,18 +82,16 @@ class ATM(Drawable):
 
         # Add Widgets
         self._title.draw(surf)
-        #TextBox("Withdraw: ", (10,50), self._font, (255,255,255)).draw(surf)
+        self._holeName.draw(surf)
         self._withdrawButton.draw(surf)
         self._withdrawAmount.draw(surf)
         self._depositButton.draw(surf)
         self._depositAmount.draw(surf)
-        #TextBox("Deposit: ", (10,90), self._font, (255,255,255)).draw(surf)
-
-        TextBox("Your Current Balance: ", (200,50), self._font, (255,255,255)).draw(surf)
-        TextBox(str(self._hole.getAcorns()), (500,50), self._font, (255,255,255)).draw(surf)
-        TextBox("On You: ", (200,90), self._font, (255,255,255)).draw(surf)
-        TextBox(str(self._player.getAcorns()), (500,90), self._font, (255,255,255)).draw(surf)
-
+        self._currentBalance.setText("Current Balance: " + str(self._hole.getAcorns()))
+        self._currentBalance.draw(surf)
+        self._carrying.setText("Carrying: " + str(self._player.getAcorns()))
+        self._carrying.draw(surf)
+        
         Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1).draw(surf)
         

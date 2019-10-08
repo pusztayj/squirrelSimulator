@@ -13,7 +13,7 @@ class TextInput(Drawable):
                  borderWidth=2, backgroundColor=(255,255,255),
                  borderColor=(0,0,0), borderHighlight=(100,100,200),
                  backgroundHighlight=(225,225,255), maxLen=10,
-                 numerical=False):
+                 numerical=False, highlightColor=(0,0,0), defaultText=""):
         super().__init__("", position, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -23,27 +23,31 @@ class TextInput(Drawable):
         self._defaultBackgroundColor = backgroundColor
         self._backgroundHighlight = backgroundHighlight
         self._backgroundColor = backgroundColor
-        self._textbox = TextBox("",(0,0),font,color)
+        self._textbox = TextBox(defaultText,(0,0),font,color)
         self._maxLen = maxLen
         self._active = False
         self._numerical = numerical
         self._currentBorderColor = self._borderColor
         self._borderWidth = borderWidth
+        self._color = color
+        self._highlightColor = highlightColor
         self.__updateInput()
 
     def displayActive(self):
         self._currentBorderColor = self._borderHighlight
         self._borderWidth = self._defaultBorderWidth + 1
         self._backgroundColor = self._backgroundHighlight
+        self._textbox.setFontColor(self._highlightColor)
         self.__updateInput()
 
     def displayPassive(self):
         self._currentBorderColor = self._borderColor
         self._borderWidth = self._defaultBorderWidth
         self._backgroundColor = self._defaultBackgroundColor
+        self._textbox.setFontColor(self._color)
         self.__updateInput()
         
-    def handleEvent(self, event, offset=(0,0)):
+    def handleEvent(self, event, *args, offset=(0,0), func=None):
         rect = self.getCollideRect()
         rect = rect.move(offset[0], offset[1])
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
@@ -56,16 +60,24 @@ class TextInput(Drawable):
         elif event.type == pygame.KEYDOWN and self._active:
             text = self._textbox.getText()
             if len(text) < self._maxLen:
+                # Check for letters
                 if 96 < event.key < 123 and not self._numerical:
                     self._textbox.setText(text + chr(event.key))
+                # Check for spaces
+                elif event.key == 32 and not self._numerical:
+                    self._textbox.setText(text + chr(event.key))
+                # Check for numbers
                 elif 47 < event.key < 58:
                     self._textbox.setText(text + chr(event.key))
             # Check if backspace was pressed
             if event.key == 8:
                 self._textbox.setText(text[:-1])
+            # Check if the enter key was pressed
             if event.key == 13:
                 self._active = False
                 self.displayPassive()
+                if func != None:
+                    func(*args)
             self.__updateInput()
 
     def getInput(self):

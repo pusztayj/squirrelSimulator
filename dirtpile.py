@@ -5,16 +5,17 @@ import pygame
 
 class DirtPile(Drawable):
 
-    def __init__(self,pos,name="Unnamed Pile"):
+    def __init__(self,pos,name="Unnamed Pile",capacity=10):
         super().__init__("dirtpile.png",pos)
         self._name = name
         self._acorns = 0
-        self._capacity = 10
+        self._capacity = capacity
 
     def getName(self):
         return self._name
 
     def setName(self, name):
+        print("Name updated")
         self._name = name
 
     def isEmpty(self):
