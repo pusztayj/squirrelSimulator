@@ -1,6 +1,6 @@
 
-from npc import NPC
-from animated import Animated
+from .npc import NPC
+from modules.animated import Animated
 
 AGGRESSION   = (8,10)
 HEALTH       = (50,75)

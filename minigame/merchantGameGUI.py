@@ -1,10 +1,10 @@
 import pygame
-from banner import Banner
-from turtle import Turtle
-from beaver import Beaver
-from squirrel import Squirrel
-from tradedesk import TradeDesk
-from merchant import Merchant
+from graphics.banner import Banner
+from animals.turtle import Turtle
+from animals.beaver import Beaver
+from animals.squirrel import Squirrel
+from economy.tradedesk import TradeDesk
+from economy.merchant import Merchant
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)

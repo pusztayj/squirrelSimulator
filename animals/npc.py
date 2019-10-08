@@ -1,5 +1,5 @@
 
-from animal import Animal
+from .animal import Animal
 import random
 
 class NPC(Animal):

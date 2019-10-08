@@ -4,7 +4,7 @@ Filename: items.py
 In this file we make all of our items.
 """
 
-from item import Item
+from .item import Item
 
 __all__ = ["Stick","Spear","IronSword","HideArmor","LeatherArmor","IronArmor",
          "Berries","NutSoup","PecanPie","Shovel","PickAx",

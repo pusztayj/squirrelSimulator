@@ -1,10 +1,10 @@
 
-from animal import Animal
-from chipmunk import Chipmunk
-from fox import Fox
-from bear import Bear
-from deer import Deer
-import item, random, buff, pack
+from animals.animal import Animal
+from animals.chipmunk import Chipmunk
+from animals.fox import Fox
+from animals.bear import Bear
+from animals.deer import Deer
+import items.item, random, buffs.buff, animals.pack
 from utils import *
 
 def fight(entityOne, entityTwo):

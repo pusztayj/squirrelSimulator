@@ -1,5 +1,5 @@
 
-from animated import Animated 
+from modules.animated import Animated 
 
 class TradeDesk(Animated):
 

@@ -6,9 +6,9 @@ Creates a merchant class.
 
 import random, items, shelve
 from inventory import Inventory
-from item import Item
-from items import *
-from npc import NPC
+from items.item import Item
+from items.items import *
+from animals.npc import NPC
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 

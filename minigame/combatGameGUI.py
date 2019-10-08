@@ -1,24 +1,26 @@
 
-import pygame, random, item, pack
-from vector2D import Vector2
-from drawable import Drawable
-from squirrel import Squirrel
-from chipmunk import Chipmunk
-from deer import Deer
+import pygame, random
+##from items.item import Item
+from animals.pack import Pack
+from modules.vector2D import Vector2
+from modules.drawable import Drawable
+from animals.squirrel import Squirrel
+from animals.chipmunk import Chipmunk
+from animals.deer import Deer
 from combatGame import CombatGame
-from fox import Fox
-from bear import Bear
-from snake import Snake
-from rabbit import Rabbit
-from textbox import TextBox
-from button import Button
-from banner import Banner
-from scrollbox import ScrollBox
-from shmoo import Shmoo
-from hedgehog import HedgeHog
-from mysurface import MySurface
-import guiUtils
-from items import *
+from animals.fox import Fox
+from animals.bear import Bear
+from animals.snake import Snake
+from animals.rabbit import Rabbit
+from graphics.textbox import TextBox
+from graphics.button import Button
+from graphics.banner import Banner
+from graphics.scrollbox import ScrollBox
+from animals.shmoo import Shmoo
+from animals.hedgehog import HedgeHog
+from graphics.mysurface import MySurface
+import graphics.guiUtils
+from items.items import *
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -70,7 +72,7 @@ def main():
     a1.equipTool(stick1)
     a2.equipTool(stick2)
     a3.equipTool(stick3)
-    allies = pack.Pack(a1)
+    allies = Pack(a1)
     allies.addMember(a2)
     allies.addMember(a3)
 
@@ -78,7 +80,7 @@ def main():
     b1 = random.choice(animals)()
     b2 = random.choice(animals)()
     b3 = random.choice(animals)()
-    enemies = pack.Pack(b1)
+    enemies =Pack(b1)
     enemies.addMember(b2)
     enemies.addMember(b3)
 
@@ -212,11 +214,11 @@ def main():
                    target != None:
                     instructions.setText("Begin the Fight!")
             #confirmButton.move(event)
-            attackButton.move(event, attackButtonFunc)
-            blockButton.move(event, blockButtonFunc)
-            useItemButton.move(event, useItemButtonFunc)
-            retreatButton.move(event, retreatButtonFunc)
-            backButton.move(event, backButtonFunc)
+            attackButton.handleEvent(event, attackButtonFunc)
+            blockButton.handleEvent(event, blockButtonFunc)
+            useItemButton.handleEvent(event, useItemButtonFunc)
+            retreatButton.handleEvent(event, retreatButtonFunc)
+            backButton.handleEvent(event, backButtonFunc)
             if scroll != None:
                 scroll.move(event)
                 

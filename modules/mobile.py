@@ -1,6 +1,6 @@
 
-from animated import Animated
-from vector2D import Vector2
+from .animated import Animated
+from .vector2D import Vector2
 
 class Mobile(Animated):
    def __init__(self, imageName, position):
