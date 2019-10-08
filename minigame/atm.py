@@ -17,6 +17,7 @@ class ATM(Drawable, Window):
 
         # Style Attributes
         self._font = pygame.font.SysFont("Times New Roman", 32)
+        self._fontsmall = pygame.font.SysFont("Times New Roman", 16)
         self._borderColor = (0,0,0)
         self._borderWidth = 5
         self._width = 1100
@@ -48,6 +49,10 @@ class ATM(Drawable, Window):
                                        (400,50), self._font, (255,255,255))
         self._carrying = TextBox("On You: " + str(self._player.getAcorns()),
                                  (400,90), self._font, (255,255,255))
+        self._capacity = TextBox("Storage Capacity: " + \
+                                 str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%",
+                                 (400,200), self._fontsmall,
+                                 (255,255,255))
         
         self.__updateATM()
 
@@ -99,6 +104,9 @@ class ATM(Drawable, Window):
         self._currentBalance.draw(surf)
         self._carrying.setText("Carrying: " + str(self._player.getAcorns()))
         self._carrying.draw(surf)
+        self._capacity.setText("Storage Capacity: " + \
+                                 str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%")
+        self._capacity.draw(surf)
         self._exitButton.draw(surf)
 
         # Blit the widget layer onto the back surface
