@@ -33,8 +33,10 @@ class ATM(Drawable):
                                    defaultText=self._hole.getName(),
                                    borderWidth=0, backgroundColor=(255,0,0),
                                    color=(255,255,255), highlightColor=(0,0,0))
-        self._withdrawAmount = TextInput((10,50), self._font,(90,40),maxLen=4,numerical=True)
-        self._depositAmount  = TextInput((10,100), self._font,(90,40),maxLen=4,numerical=True)
+        self._withdrawAmount = TextInput((10,50), self._font,(90,40),maxLen=4,
+                                         numerical=True, clearOnActive=True)
+        self._depositAmount  = TextInput((10,100), self._font,(90,40),maxLen=4,
+                                         numerical=True, clearOnActive=True)
 
         # Text Boxes
         self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
@@ -45,16 +47,14 @@ class ATM(Drawable):
         
         self.__updateATM()
 
-    def deposit(self):
-        amount = self._depositAmount.getInput()
+    def deposit(self, amount):
         if amount != "":
             amount = int(amount)
             if amount <= self._player.getAcorns():
                 self._player.setAcorns(self._player.getAcorns() - amount)
                 self._hole.setAcorns(self._hole.getAcorns() + amount)
 
-    def withdraw(self):
-        amount = self._withdrawAmount.getInput()
+    def withdraw(self, amount):
         if amount != "":
             amount = int(amount)
             if amount <= self._hole.getAcorns():
@@ -62,11 +62,14 @@ class ATM(Drawable):
                 self._hole.setAcorns(self._hole.getAcorns() - amount)
 
     def handleEvent(self, event):
-        self._withdrawButton.move(event, self.withdraw, offset=self._offset)
-        self._withdrawAmount.handleEvent(event, offset=self._offset)
-        self._depositButton.move(event, self.deposit, offset=self._offset)
-        self._depositAmount.handleEvent(event, offset=self._offset)
-        self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset, func=self._hole.setName)
+        self._withdrawButton.move(event, self.withdraw, (self._withdrawAmount.getInput()), offset=self._offset)
+        self._withdrawAmount.handleEvent(event, (self._withdrawAmount.getInput()), offset=self._offset,
+                                         func=self.withdraw, clearOnEnter=True)
+        self._depositButton.move(event, self.deposit, (self._depositAmount.getInput()), offset=self._offset)
+        self._depositAmount.handleEvent(event, (self._depositAmount.getInput()), offset=self._offset,
+                                        func=self.deposit, clearOnEnter=True)
+        self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset,
+                                   func=self._hole.setName)
         self.__updateATM()
         
     def __updateATM(self):

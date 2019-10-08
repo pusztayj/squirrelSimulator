@@ -13,7 +13,8 @@ class TextInput(Drawable):
                  borderWidth=2, backgroundColor=(255,255,255),
                  borderColor=(0,0,0), borderHighlight=(100,100,200),
                  backgroundHighlight=(225,225,255), maxLen=10,
-                 numerical=False, highlightColor=(0,0,0), defaultText=""):
+                 numerical=False, highlightColor=(0,0,0), defaultText="",
+                 clearOnActive=False):
         super().__init__("", position, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -26,6 +27,7 @@ class TextInput(Drawable):
         self._textbox = TextBox(defaultText,(0,0),font,color)
         self._maxLen = maxLen
         self._active = False
+        self._clearOnActive = clearOnActive
         self._numerical = numerical
         self._currentBorderColor = self._borderColor
         self._borderWidth = borderWidth
@@ -38,6 +40,8 @@ class TextInput(Drawable):
         self._borderWidth = self._defaultBorderWidth + 1
         self._backgroundColor = self._backgroundHighlight
         self._textbox.setFontColor(self._highlightColor)
+        if self._clearOnActive:
+            self._textbox.setText("")
         self.__updateInput()
 
     def displayPassive(self):
@@ -47,7 +51,8 @@ class TextInput(Drawable):
         self._textbox.setFontColor(self._color)
         self.__updateInput()
         
-    def handleEvent(self, event, *args, offset=(0,0), func=None):
+    def handleEvent(self, event, *args, offset=(0,0), func=None,
+                    clearOnEnter=False):
         rect = self.getCollideRect()
         rect = rect.move(offset[0], offset[1])
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
@@ -78,6 +83,8 @@ class TextInput(Drawable):
                 self.displayPassive()
                 if func != None:
                     func(*args)
+                if clearOnEnter:
+                    self._textbox.setText("")
             self.__updateInput()
 
     def getInput(self):
