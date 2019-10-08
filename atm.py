@@ -3,6 +3,7 @@ from drawable import Drawable
 import pygame
 from textbox import TextBox
 from button import Button
+from textinput import TextInput
 
 class ATM(Drawable):
 
@@ -20,24 +21,43 @@ class ATM(Drawable):
         self._height = 450
         self._backgroundColor = (255,0,0)
 
-        # Buttons
         self._offset = (50,25)
-        self._withdrawButton = Button("Withdraw", (10,50), self._font,(0,0,0),
+        
+        # Buttons
+        self._withdrawButton = Button("Withdraw", (120,50), self._font,(0,0,0),
                                       (0,255,0),40,150,(0,0,0), 2)
+        self._depositButton = Button("Deposit", (120,100), self._font,(0,0,0),
+                                      (255,225,225),40,150,(0,0,0), 2)
+        # Text Inputs
+        self._withdrawAmount = TextInput((10,50), self._font,(90,40),maxLen=4,numerical=True)
+        self._depositAmount  = TextInput((10,100), self._font,(90,40),maxLen=4,numerical=True)
 
+        # Text Boxes
+        self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
+        
         self.__updateATM()
 
-    def deposit(self, amount):
-        self._player.setAcorns(self._player.getAcorns() - amount)
-        self._hole.setAcorns(self._hole.getAcorns() + amount)
+    def deposit(self):
+        amount = self._depositAmount.getInput()
+        if amount != "":
+            amount = int(amount)
+            if amount <= self._player.getAcorns():
+                self._player.setAcorns(self._player.getAcorns() - amount)
+                self._hole.setAcorns(self._hole.getAcorns() + amount)
 
-    def withdraw(self, amount):
-        self._player.setAcorns(self._player.getAcorns() + amount)
-        self._hole.setAcorns(self._hole.getAcorns() - amount)
+    def withdraw(self):
+        amount = self._withdrawAmount.getInput()
+        if amount != "":
+            amount = int(amount)
+            if amount <= self._hole.getAcorns():
+                self._player.setAcorns(self._player.getAcorns() + amount)
+                self._hole.setAcorns(self._hole.getAcorns() - amount)
 
     def handleEvent(self, event):
-        self._withdrawButton.move(event, self.withdraw, (1), offset=self._offset)
-        #self._depositButton.move(event, self.deposit, (1), offset=self._offset)
+        self._withdrawButton.move(event, self.withdraw, offset=self._offset)
+        self._withdrawAmount.handleEvent(event, offset=self._offset)
+        self._depositButton.move(event, self.deposit, offset=self._offset)
+        self._depositAmount.handleEvent(event, offset=self._offset)
         self.__updateATM()
         
     def __updateATM(self):
@@ -52,10 +72,13 @@ class ATM(Drawable):
         surf.fill(self._backgroundColor)
 
         # Add Widgets
-        TextBox("Hole Name: " + self._hole._name, (10,10), self._font, (255,255,255)).draw(surf)
+        self._title.draw(surf)
         #TextBox("Withdraw: ", (10,50), self._font, (255,255,255)).draw(surf)
         self._withdrawButton.draw(surf)
-        TextBox("Deposit: ", (10,90), self._font, (255,255,255)).draw(surf)
+        self._withdrawAmount.draw(surf)
+        self._depositButton.draw(surf)
+        self._depositAmount.draw(surf)
+        #TextBox("Deposit: ", (10,90), self._font, (255,255,255)).draw(surf)
 
         TextBox("Your Current Balance: ", (200,50), self._font, (255,255,255)).draw(surf)
         TextBox(str(self._hole.getAcorns()), (500,50), self._font, (255,255,255)).draw(surf)

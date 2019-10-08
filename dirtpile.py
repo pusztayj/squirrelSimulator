@@ -11,6 +11,12 @@ class DirtPile(Drawable):
         self._acorns = 0
         self._capacity = 10
 
+    def getName(self):
+        return self._name
+
+    def setName(self, name):
+        self._name = name
+
     def isEmpty(self):
         return self._acorns == 0
 

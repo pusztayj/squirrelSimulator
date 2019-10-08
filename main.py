@@ -8,6 +8,7 @@ from acorn import Acorn
 from dirtpile import DirtPile
 from textbox import TextBox
 from atm import ATM
+from textinput import TextInput
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -51,6 +52,8 @@ def main():
 
    atm = None #ATM(player, None)
 
+   tinput = TextInput((0,0),font,(100,40), maxLen=6, numerical=True)
+
    RUNNING = True
 
    while RUNNING:
@@ -72,6 +75,8 @@ def main():
       player.draw(screen)
 
       acornCount.draw(screen)
+
+      tinput.draw(screen)
 
       if atm != None:
          atm.draw(screen)
@@ -106,6 +111,7 @@ def main():
             pile.handleEvent(event, player)
          if atm != None:
             atm.handleEvent(event)
+         tinput.handleEvent(event)
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:

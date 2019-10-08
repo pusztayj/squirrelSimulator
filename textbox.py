@@ -37,11 +37,11 @@ class TextBox(Drawable):
         self._fontColor = fontColor
         self.__updateTextBox()
 
-    def getText(self, text):
+    def getText(self):
         """Returns the current text of the textbox"""
         return self._text
 
-    def getFont(self, font):
+    def getFont(self):
         """Returns the current font of the textbox"""
         return self._font
 
