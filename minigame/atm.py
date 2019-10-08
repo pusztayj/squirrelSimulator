@@ -1,10 +1,10 @@
 
-from drawable import Drawable
 import pygame
-from textbox import TextBox
-from button import Button
-from textinput import TextInput
-from window import Window
+from modules.drawable import Drawable
+from graphics.textbox import TextBox
+from graphics.button import Button
+from graphics.textinput import TextInput
+from graphics.window import Window
 
 class ATM(Drawable, Window):
 

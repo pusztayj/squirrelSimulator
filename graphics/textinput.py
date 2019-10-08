@@ -3,8 +3,8 @@ Author: Trevor Stalnaker
 File: textinput.py
 """
 
-from drawable import Drawable
-from textbox import TextBox
+from modules.drawable import Drawable
+from graphics.textbox import TextBox
 import pygame
 
 class TextInput(Drawable):

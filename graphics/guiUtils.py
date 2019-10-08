@@ -5,9 +5,9 @@ File: guiUtils
 A file containing various utility functions for the creation
 of GUIs
 """
-from mysurface import MySurface
-from textbox import TextBox
-from scrollbox import ScrollBox
+from graphics.mysurface import MySurface
+from graphics.textbox import TextBox
+from graphics.scrollbox import ScrollBox
 import pygame, copy
 
 def makeMultiLineTextBox(text, position, font, color, backgroundColor):

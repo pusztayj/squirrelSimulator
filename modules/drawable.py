@@ -8,8 +8,8 @@ A super class with methods subclasses like Orb and Star inherit from
 """
 
 import pygame
-from vector2D import Vector2
-from frameManager import FRAMES
+from .vector2D import Vector2
+from .frameManager import FRAMES
 
 class Drawable():
 

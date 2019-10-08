@@ -1,14 +1,14 @@
 
 import pygame, random
-from vector2D import Vector2
-from drawable import Drawable
+from graphics.banner import Banner
+from graphics.textbox import TextBox
+from graphics.textinput import TextInput
+from modules.vector2D import Vector2
+from modules.drawable import Drawable
 from player import Player
-from banner import Banner
-from acorn import Acorn
-from dirtpile import DirtPile
-from textbox import TextBox
-from atm import ATM
-from textinput import TextInput
+from economy.acorn import Acorn
+from economy.dirtpile import DirtPile
+from minigame.atm import ATM
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)

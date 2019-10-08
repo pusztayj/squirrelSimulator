@@ -1,7 +1,7 @@
 
 import pygame
-from drawable import Drawable
-from banner import Banner
+from modules.drawable import Drawable
+from graphics.banner import Banner
 
 class ScrollBox(Drawable):
 

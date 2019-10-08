@@ -1,8 +1,7 @@
-import pygame
+import pygame, os
 from pygame import image
-import os
-from frameManager import FRAMES
-from drawable import Drawable
+from .frameManager import FRAMES
+from .drawable import Drawable
 
 class Animated(Drawable):
    

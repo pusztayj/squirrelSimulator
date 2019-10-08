@@ -7,7 +7,7 @@ Project 2
 A textbox class that inherits from the Drawable class
 """
 
-from drawable import Drawable
+from modules.drawable import Drawable
 
 class TextBox(Drawable):
 

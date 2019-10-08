@@ -1,7 +1,7 @@
 
 import pygame
-from drawable import Drawable
-from textbox import TextBox
+from modules.drawable import Drawable
+from graphics.textbox import TextBox
 
 class Button(Drawable):
 

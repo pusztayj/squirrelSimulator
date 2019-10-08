@@ -1,7 +1,7 @@
 
-from animal import Animal
-from animated import Animated
-from vector2D import Vector2
+from .animal import Animal
+from modules.animated import Animated
+from modules.vector2D import Vector2
 import pygame
 
 class Squirrel(Animal, Animated):

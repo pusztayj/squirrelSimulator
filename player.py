@@ -1,6 +1,7 @@
-from squirrel import Squirrel
+from animals.squirrel import Squirrel
+from modules.vector2D import Vector2
 import pygame
-from vector2D import Vector2
+
 
 class Player(Squirrel):
 

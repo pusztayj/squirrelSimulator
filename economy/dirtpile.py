@@ -1,5 +1,5 @@
 
-from drawable import Drawable
+from modules.drawable import Drawable
 from inventory import Inventory
 import pygame
 
