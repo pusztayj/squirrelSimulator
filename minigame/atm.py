@@ -5,6 +5,7 @@ from graphics.textbox import TextBox
 from graphics.button import Button
 from graphics.textinput import TextInput
 from graphics.window import Window
+from economy.acorn import Acorn
 
 class ATM(Drawable, Window):
 
@@ -16,44 +17,47 @@ class ATM(Drawable, Window):
         self._hole = hole
 
         # Style Attributes
-        self._font = pygame.font.SysFont("Times New Roman", 32)
+        self._font = pygame.font.SysFont("Times New Roman", 24)
         self._fontsmall = pygame.font.SysFont("Times New Roman", 16)
         self._borderColor = (0,0,0)
         self._borderWidth = 5
-        self._width = 1100
-        self._height = 450
+        self._width = 400#1100
+        self._height = 250#450
         self._backgroundColor = (255,0,0)
 
         self._offset = (50,25)
+
+        # Images
+        self._acorn1 = Acorn((250,55), worldBound=False)
+        self._acorn2 = Acorn((250,105), worldBound=False)
         
         # Buttons
-        self._withdrawButton = Button("Withdraw", (120,50), self._font,(0,0,0),
-                                      (0,255,0),40,150,(0,0,0), 2)
-        self._depositButton = Button("Deposit", (120,100), self._font,(0,0,0),
-                                      (255,225,225),40,150,(0,0,0), 2)
+        self._withdrawButton = Button("Withdraw", (10,50), self._font,(0,0,0),
+                                      (0,255,0),35,125,(0,0,0), 2)
+        self._depositButton = Button("Deposit", (10,100), self._font,(0,0,0),
+                                      (255,225,225),35,125,(0,0,0), 2)
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
         # Text Inputs
-        self._holeName = TextInput((200,10), self._font,(200,30),maxLen=12,
+        self._holeName = TextInput((0,10), self._font,(200,30),maxLen=15,
                                    defaultText=self._hole.getName(),
                                    borderWidth=0, backgroundColor=(255,0,0),
                                    color=(255,255,255), highlightColor=(0,0,0))
-        self._withdrawAmount = TextInput((10,50), self._font,(90,40),maxLen=4,
+        self._withdrawAmount = TextInput((150,50), self._font,(90,35),maxLen=4,
                                          numerical=True, clearOnActive=True)
-        self._depositAmount  = TextInput((10,100), self._font,(90,40),maxLen=4,
+        self._depositAmount  = TextInput((150,100), self._font,(90,35),maxLen=4,
                                          numerical=True, clearOnActive=True)
 
         # Text Boxes
-        self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
+##        self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
         self._currentBalance = TextBox("Your Current Balance: " + str(self._hole.getAcorns()),
-                                       (400,50), self._font, (255,255,255))
+                                       (25,150), self._font, (255,255,255))
         self._carrying = TextBox("On You: " + str(self._player.getAcorns()),
-                                 (400,90), self._font, (255,255,255))
+                                 (25,180), self._font, (255,255,255))
         self._capacity = TextBox("Storage Capacity: " + \
                                  str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%",
-                                 (400,200), self._fontsmall,
-                                 (255,255,255))
-        
+                                 (200,200), self._fontsmall,
+                                 (255,255,255))        
         self.__updateATM()
 
     def deposit(self, amount):
@@ -94,7 +98,7 @@ class ATM(Drawable, Window):
         surf.fill(self._backgroundColor)
 
         # Add Widgets
-        self._title.draw(surf)
+##        self._title.draw(surf)
         self._holeName.draw(surf)
         self._withdrawButton.draw(surf)
         self._withdrawAmount.draw(surf)
@@ -106,7 +110,10 @@ class ATM(Drawable, Window):
         self._carrying.draw(surf)
         self._capacity.setText("Storage Capacity: " + \
                                  str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%")
+        self._capacity.setPosition(((self._width//2)-(self._capacity.getWidth()//2),self._height - 35))
         self._capacity.draw(surf)
+        self._acorn1.draw(surf)
+        self._acorn2.draw(surf)
         self._exitButton.draw(surf)
 
         # Blit the widget layer onto the back surface
