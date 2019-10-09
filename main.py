@@ -4,6 +4,7 @@ from graphics.banner import Banner
 from graphics.textbox import TextBox
 from graphics.textinput import TextInput
 from graphics.popup import Popup
+from graphics.progressbar import ProgressBar
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -57,6 +58,8 @@ def main():
 
    popup = None #Popup("Pop", (0,0), popupFont)
 
+   health = ProgressBar((0,0),100,100,50)
+
    creatures = []
    chip = Chipmunk(pos=(1600,300))
    chip.flip()
@@ -95,6 +98,8 @@ def main():
       if atm != None and atm.getDisplay():
          atm.draw(screen)
 
+      health.draw(screen)
+
       pygame.display.flip()
 
       # event handling, gets all event from the eventqueue
@@ -126,6 +131,11 @@ def main():
             
          if atm != None and atm.getDisplay():
             atm.handleEvent(event)
+
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
+            health.changeProgress(-1)
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+            health.changeProgress(1)
 
          mouse = pygame.mouse.get_pos()
          m_pos_offset = player.adjustMousePos(mouse)
