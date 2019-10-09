@@ -45,12 +45,14 @@ def main():
    acornCount = TextBox("Acorns: " + str(player.getAcorns()), (0,0), font, (255,255,255))
    
    acorns = []
-   for x in range(100):
-      acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
+   #for x in range(100):
+   #   acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
 
    dirtPiles = []
 
-   atm = None #ATM(player, None)
+   acornSpawnTimer = random.randint(5,10)
+
+   atm = None
 
    RUNNING = True
 
@@ -115,6 +117,11 @@ def main():
             
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
+
+      acornSpawnTimer -= ticks
+      if acornSpawnTimer <= 0:
+         acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
+         acornSpawnTimer = random.randint(5,10)
 
       #Update the player's position
       player.update(WORLD_SIZE, ticks)

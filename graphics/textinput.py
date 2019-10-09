@@ -67,18 +67,27 @@ class TextInput(Drawable):
             if len(text) < self._maxLen:
                 # Check for letters
                 if 96 < event.key < 123 and not self._numerical:
-                    self._textbox.setText(text + chr(event.key))
+                    # Check if letter should be capitalized
+                    if event.mod in [pygame.KMOD_CAPS, pygame.KMOD_LSHIFT,
+                                     pygame.KMOD_RSHIFT]:
+                        self._textbox.setText(text + chr(event.key - 32))
+                    else:
+                        self._textbox.setText(text + chr(event.key))
                 # Check for spaces
                 elif event.key == 32 and not self._numerical:
                     self._textbox.setText(text + chr(event.key))
                 # Check for numbers
                 elif 47 < event.key < 58:
                     self._textbox.setText(text + chr(event.key))
+                # Check for numpad presses
+                elif pygame.K_KP0 <= event.key <= pygame.K_KP9:
+                    self._textbox.setText(text + chr(event.key-208))
+                    
             # Check if backspace was pressed
             if event.key == 8:
                 self._textbox.setText(text[:-1])
             # Check if the enter key was pressed
-            if event.key == 13:
+            if event.key == 13 or event.key == pygame.K_KP_ENTER:
                 self._active = False
                 self.displayPassive()
                 if func != None:
