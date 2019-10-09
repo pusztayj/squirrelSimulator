@@ -3,12 +3,14 @@ import pygame, random
 from graphics.banner import Banner
 from graphics.textbox import TextBox
 from graphics.textinput import TextInput
+from graphics.popup import Popup
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
 from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
+from animals.chipmunk import Chipmunk
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -22,6 +24,7 @@ def main():
    pygame.font.init()
 
    font = pygame.font.SysFont("Times New Roman", 32)
+   popupFont = pygame.font.SysFont("Times New Roman", 16)
 
    #Store the pygame key codes for simplicity later
    movement_keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]
@@ -52,6 +55,13 @@ def main():
 
    acornSpawnTimer = random.randint(5,10)
 
+   popup = None #Popup("Pop", (0,0), popupFont)
+
+   creatures = []
+   chip = Chipmunk(pos=(1600,300))
+   chip.flip()
+   creatures.append(chip)
+
    atm = None
 
    RUNNING = True
@@ -75,6 +85,12 @@ def main():
       player.draw(screen)
 
       acornCount.draw(screen)
+
+      for creature in creatures:
+         creature.draw(screen)
+
+      if popup != None:
+         popup.draw(screen)
 
       if atm != None and atm.getDisplay():
          atm.draw(screen)
@@ -107,13 +123,25 @@ def main():
                                                   event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                   atm = ATM(player, pile)
             pile.handleEvent(event, player)
+            
          if atm != None and atm.getDisplay():
             atm.handleEvent(event)
+
+         mouse = pygame.mouse.get_pos()
+         m_pos_offset = player.adjustMousePos(mouse)
+         m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
+         popup_pos = (mouse[0] + 5, mouse[1] + 5)
+         for creature in creatures:
+            if creature.getCollideRect().collidepoint(m_pos_offset):
+               popup = Popup(creature.getName(),popup_pos, popupFont)
+            else: popup = None
+               
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:
             player.setAcorns(player.getAcorns() + 1)
             acorn.collected()
+            
             
       #Calculate ticks
       ticks = gameClock.get_time() / 1000

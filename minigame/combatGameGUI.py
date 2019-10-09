@@ -19,7 +19,7 @@ from graphics.scrollbox import ScrollBox
 from animals.shmoo import Shmoo
 from animals.hedgehog import HedgeHog
 from graphics.mysurface import MySurface
-import graphics.guiUtils
+from graphics import guiUtils
 from items.items import *
 
 SCREEN_SIZE = (1200,500)

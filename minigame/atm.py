@@ -23,7 +23,7 @@ class ATM(Drawable, Window):
         self._borderWidth = 5
         self._width = 400#1100
         self._height = 250#450
-        self._backgroundColor = (255,0,0)
+        self._backgroundColor = (139,79,59)
 
         self._offset = (50,25)
 
@@ -35,13 +35,13 @@ class ATM(Drawable, Window):
         self._withdrawButton = Button("Withdraw", (10,50), self._font,(0,0,0),
                                       (0,255,0),35,125,(0,0,0), 2)
         self._depositButton = Button("Deposit", (10,100), self._font,(0,0,0),
-                                      (255,225,225),35,125,(0,0,0), 2)
+                                      (233,97,80),35,125,(0,0,0), 2)
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
         # Text Inputs
         self._holeName = TextInput((0,10), self._font,(200,30),maxLen=15,
                                    defaultText=self._hole.getName(),
-                                   borderWidth=0, backgroundColor=(255,0,0),
+                                   borderWidth=0, backgroundColor=self._backgroundColor,
                                    color=(255,255,255), highlightColor=(0,0,0))
         self._withdrawAmount = TextInput((150,50), self._font,(90,35),maxLen=4,
                                          numerical=True, clearOnActive=True)
@@ -49,7 +49,6 @@ class ATM(Drawable, Window):
                                          numerical=True, clearOnActive=True)
 
         # Text Boxes
-##        self._title = TextBox("Hole Name: ", (10,10), self._font, (255,255,255))
         self._currentBalance = TextBox("Your Current Balance: " + str(self._hole.getAcorns()),
                                        (25,150), self._font, (255,255,255))
         self._carrying = TextBox("On You: " + str(self._player.getAcorns()),
