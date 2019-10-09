@@ -110,6 +110,9 @@ class Drawable():
         self._image = pygame.transform.scale(self._image,(round(scalar*self.getSize()[0]),
                                                          round(scalar*self.getSize()[1])))
 
+    def getImage(self):
+        return self._image
+
     
         
      

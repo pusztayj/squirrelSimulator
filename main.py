@@ -5,6 +5,7 @@ from graphics.textbox import TextBox
 from graphics.textinput import TextInput
 from graphics.popup import Popup
 from graphics.progressbar import ProgressBar
+from graphics.statdisplay import StatDisplay
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -58,7 +59,9 @@ def main():
 
    popup = None #Popup("Pop", (0,0), popupFont)
 
-   health = ProgressBar((0,0),100,100,50)
+   health = ProgressBar((1000,5),100,100,50)
+
+   stats = StatDisplay((5,5),player)
 
    creatures = []
    chip = Chipmunk(pos=(1600,300))
@@ -99,6 +102,8 @@ def main():
          atm.draw(screen)
 
       health.draw(screen)
+      
+      stats.draw(screen)
 
       pygame.display.flip()
 
