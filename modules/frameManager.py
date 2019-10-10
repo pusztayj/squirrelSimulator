@@ -41,6 +41,7 @@ class FrameManager(object):
          "tempRabbit.png":(128,128),
          "shmoo.png":(128,128),
          "tempHedgeHog.png":(128,128),
+         "cow.png":(128,128),
          "combatBackground":(1200,500),
          "acorn.png":(32,32),
          "dirtpile.png":(32,32),
@@ -57,7 +58,7 @@ class FrameManager(object):
       _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
                     "tempBear.png","turtle.png", "tempSnake.png", "tempDeer.png",
                     "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png",
-                    "acorn.png", "dirtpile.png"]
+                    "acorn.png", "dirtpile.png","cow.png"]
       
       
       

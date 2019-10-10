@@ -26,7 +26,7 @@ class ProgressBar(Drawable):
 
     def setProgress(self, actStat):
         self._actStat = actStat
-        self._updateBar()
+        self.updateBar()
 
     def changeProgress(self, amount):
         if 0 < self._actStat + amount <= self._maxStat: 

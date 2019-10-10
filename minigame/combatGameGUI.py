@@ -6,6 +6,7 @@ from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from animals.squirrel import Squirrel
 from animals.chipmunk import Chipmunk
+from animals.cow import Cow
 from animals.deer import Deer
 from combatGame import CombatGame
 from animals.fox import Fox
@@ -25,7 +26,7 @@ from items.items import *
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
-animals = [Chipmunk, Fox, Bear, Snake, Deer, Rabbit, Shmoo, HedgeHog]
+animals = [Chipmunk, Fox, Bear, Snake, Deer, Rabbit, Shmoo, HedgeHog, Cow]
 
 def attackButtonFunc():
     print("Set Attack")

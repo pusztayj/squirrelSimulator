@@ -48,7 +48,9 @@ class StatDisplay(Drawable):
         surf.fill(self._backgroundColor)
 
         # Draw Widgets on the Surface
+        self._healthBar.setProgress(self._entity.getHealth())
         self._healthBar.draw(surf)
+        self._staminaBar.setProgress(self._entity.getStamina())
         self._staminaBar.draw(surf)
         self._nameDisplay.draw(surf)
         self._healthLabel.draw(surf)

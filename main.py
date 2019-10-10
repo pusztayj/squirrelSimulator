@@ -47,7 +47,7 @@ def main():
 
    ground = Banner((0,300),(100,255,100),(500, 2400))
 
-   acornCount = TextBox("Acorns: " + str(player.getAcorns()), (0,0), font, (255,255,255))
+   acornCount = TextBox("Acorns: " + str(player.getAcorns()), (1025,10), font, (255,255,255))
    
    acorns = []
    #for x in range(100):
@@ -58,8 +58,6 @@ def main():
    acornSpawnTimer = random.randint(5,10)
 
    popup = None #Popup("Pop", (0,0), popupFont)
-
-   health = ProgressBar((1000,5),100,100,50)
 
    stats = StatDisplay((5,5),player)
 
@@ -98,12 +96,10 @@ def main():
       if popup != None:
          popup.draw(screen)
 
+      stats.draw(screen)
+
       if atm != None and atm.getDisplay():
          atm.draw(screen)
-
-      health.draw(screen)
-      
-      stats.draw(screen)
 
       pygame.display.flip()
 
@@ -138,9 +134,9 @@ def main():
             atm.handleEvent(event)
 
          if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
-            health.changeProgress(-1)
+            player.loseHealth(10)
          if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
-            health.changeProgress(1)
+            player.heal(10)
 
          mouse = pygame.mouse.get_pos()
          m_pos_offset = player.adjustMousePos(mouse)
@@ -168,11 +164,13 @@ def main():
 
       #Update the player's position
       player.update(WORLD_SIZE, ticks)
+
+      stats.update()
       
       #Update the offset based on the player's location
       player.updateOffset(player, SCREEN_SIZE, WORLD_SIZE)
 
-      dirtPiles = [pile for pile in dirtPiles if not pile.isEmpty()]
+      #dirtPiles = [pile for pile in dirtPiles if not pile.isEmpty()]
 
       #player.setAcorns(player.getAcorns() + len([acorn for acorn in acorns if acorn.isCollected()]))
 

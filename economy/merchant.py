@@ -43,7 +43,7 @@ class Merchant(NPC):
         Generates an inventory for the merchant. 
         """
         for x in range(3):
-            for x in items.__all__:
+            for x in items.items.__all__:
                 if 50 >= random.randint(0,100):
                     self._inventory.addItem(globals()[x]())
         
