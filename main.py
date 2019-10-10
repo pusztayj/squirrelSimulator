@@ -117,7 +117,7 @@ def main():
                   dirtPiles.append(dp)
           
          for pile in dirtPiles:
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                                   event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                   atm = ATM(player, pile)
@@ -141,6 +141,10 @@ def main():
          for creature in creatures:
             if creature.getCollideRect().collidepoint(m_pos_offset):
                popup = Popup(creature.getName(),popup_pos, popupFont)
+            else: popup = None
+         for pile in dirtPiles:
+            if pile.getCollideRect().collidepoint(m_pos_offset):
+               popup = Popup(pile.getName(),popup_pos, popupFont)
             else: popup = None
                
       for acorn in acorns:
