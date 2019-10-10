@@ -2,7 +2,10 @@
 from modules.drawable import Drawable
 from graphics.progressbar import ProgressBar
 from graphics.textbox import TextBox
+from economy.acorn import Acorn
 import pygame
+
+digitLen = {1:33, 2:38, 3:45, 4:55}
 
 class StatDisplay(Drawable):
 
@@ -33,10 +36,15 @@ class StatDisplay(Drawable):
                                     self._fontColor)
         self._staminaLabel = TextBox("Stamina",(5,37), self._font,
                                      self._fontColor)
+        self._acornCount = TextBox("", (self._width-50, 4),
+                                       self._font, self._fontColor)
 ##        self._levelLabel = TextBox("Level " + entity.getLevel())
 
-        # Save an image of the entity
+        # Save an image of the entity and of an acorn
         self._entityImage = entity.getImage()
+        acorn = Acorn((0,0))
+        acorn.scale(.5)
+        self._acornImage = acorn.getImage()
 
         self.update()
 
@@ -55,6 +63,15 @@ class StatDisplay(Drawable):
         self._nameDisplay.draw(surf)
         self._healthLabel.draw(surf)
         self._staminaLabel.draw(surf)
+
+        acorns = str(self._entity.getAcorns())
+        self._acornCount.setText(acorns)
+        self._acornCount.setPosition((self._width - digitLen[len(acorns)], 4))
+        
+        self._acornCount.draw(surf)
+
+        # Blit images to the display
+        surf.blit(self._acornImage, (self._width-25, 5))
         
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
         self._image = surfBack

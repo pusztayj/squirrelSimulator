@@ -47,12 +47,7 @@ def main():
 
    ground = Banner((0,300),(100,255,100),(500, 2400))
 
-   acornCount = TextBox("Acorns: " + str(player.getAcorns()), (1025,10), font, (255,255,255))
-   
    acorns = []
-   #for x in range(100):
-   #   acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
-
    dirtPiles = []
 
    acornSpawnTimer = random.randint(5,10)
@@ -87,8 +82,6 @@ def main():
 
       #Draw the player to the screen
       player.draw(screen)
-
-      acornCount.draw(screen)
 
       for creature in creatures:
          creature.draw(screen)
@@ -133,10 +126,13 @@ def main():
          if atm != None and atm.getDisplay():
             atm.handleEvent(event)
 
+         # Button inputs to be used for testing
          if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
             player.loseHealth(10)
          if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
             player.heal(10)
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            player.setAcorns(player.getAcorns() + 1)
 
          mouse = pygame.mouse.get_pos()
          m_pos_offset = player.adjustMousePos(mouse)
@@ -150,7 +146,7 @@ def main():
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:
-            player.setAcorns(player.getAcorns() + 1)
+            player.setAcorns(player.getAcorns()+1)
             acorn.collected()
             
             
@@ -165,19 +161,14 @@ def main():
       #Update the player's position
       player.update(WORLD_SIZE, ticks)
 
+      # Update the players stats
       stats.update()
       
       #Update the offset based on the player's location
       player.updateOffset(player, SCREEN_SIZE, WORLD_SIZE)
 
-      #dirtPiles = [pile for pile in dirtPiles if not pile.isEmpty()]
-
-      #player.setAcorns(player.getAcorns() + len([acorn for acorn in acorns if acorn.isCollected()]))
-
+      # Remove acorns from the world that have been collected
       acorns = [acorn for acorn in acorns if not acorn.isCollected()]
-
-      acornCount.setText("Acorns: " + str(player.getAcorns()))
-
 
    #Close the pygame window and quit pygame
    pygame.quit()

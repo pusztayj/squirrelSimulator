@@ -37,6 +37,9 @@ class TextBox(Drawable):
         self._fontColor = fontColor
         self.__updateTextBox()
 
+    def setPosition(self, pos):
+        self._position = pos
+
     def getText(self):
         """Returns the current text of the textbox"""
         return self._text
