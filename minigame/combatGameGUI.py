@@ -20,6 +20,7 @@ from graphics.scrollbox import ScrollBox
 from animals.shmoo import Shmoo
 from animals.hedgehog import HedgeHog
 from graphics.mysurface import MySurface
+from graphics.scrollselector import ScrollSelector
 from graphics import guiUtils
 from items.items import *
 
@@ -42,6 +43,9 @@ def retreatButtonFunc():
 
 def backButtonFunc():
     print("Set Back")
+
+def testButtonFunc():
+    print("It worked")
 
 def main():
 
@@ -133,6 +137,18 @@ def main():
     # Create Decorative Banners
     banner = Banner((300,430), (120,120,120), (150, 615), (0,0,0), 2)
 
+    s = pygame.Surface((400,400))
+    s.fill((0,0,255))
+    testButton = Button("Test",(100,100),font, (255,0,0),(0,255,0),40,125,(188,32,2), 2)
+    testButton.draw(s)
+    testButton2 = Button("Test2",(100,200),font, (120,200,200),(100,220,50),40,125,(188,32,2), 2)
+    testButton2.draw(s)
+    s = MySurface(s)
+    scrollTest = ScrollBox((400,100), (200,400), s, (0,0,0), 2)
+
+    sc = ScrollSelector((100,100), (100,100), [{"text":"button"},{"text":"button2"}],(120,120,120))
+    
+
 ##    s = pygame.Surface((400,400))
 ##    s.fill((255,0,0))
 ##    Chipmunk((0,0)).draw(s)
@@ -189,6 +205,10 @@ def main():
         useItemButton.draw(screen)
         retreatButton.draw(screen)
         backButton.draw(screen)
+
+        scrollTest.draw(screen)
+
+        sc.draw(screen)
         
         if scroll != None:
             scroll.draw(screen)
@@ -215,13 +235,21 @@ def main():
                    target != None:
                     instructions.setText("Begin the Fight!")
             #confirmButton.move(event)
-            attackButton.handleEvent(event, attackButtonFunc)
-            blockButton.handleEvent(event, blockButtonFunc)
-            useItemButton.handleEvent(event, useItemButtonFunc)
-            retreatButton.handleEvent(event, retreatButtonFunc)
-            backButton.handleEvent(event, backButtonFunc)
+            #attackButton.handleEvent(event, attackButtonFunc)
+            #blockButton.handleEvent(event, blockButtonFunc)
+            #useItemButton.handleEvent(event, useItemButtonFunc)
+            #retreatButton.handleEvent(event, retreatButtonFunc)
+            #backButton.handleEvent(event, backButtonFunc)
+            if scrollTest.getY() < pygame.mouse.get_pos()[1] < \
+               scrollTest.getY() + scrollTest.getHeight():
+                testButton.handleEvent(event, testButtonFunc,
+                                   offset=(400,100+scrollTest.getOffset()))
+                testButton2.handleEvent(event, testButtonFunc,
+                                   offset=(400,100+scrollTest.getOffset()))
             if scroll != None:
                 scroll.move(event)
+            scrollTest.move(event)
+            sc.handleEvent(event)
                 
         #Calculate ticks
         ticks = gameClock.get_time() / 1000

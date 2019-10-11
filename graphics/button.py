@@ -73,7 +73,7 @@ class Button(Drawable):
     def handleEvent(self, event, func, *args, offset=(0,0)):
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1: 
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             if rect.collidepoint(event.pos):
                 self.buttonPressed()
                 func(*args)

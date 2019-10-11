@@ -22,6 +22,8 @@ class ScrollBox(Drawable):
         # Used to allow the scrollbox to appear around the screen
         self._offset = position
 
+        self._currentOffset = 0
+
         # Calculate slide step
         self._step = self._internalSurface.getHeight() // self._height
 
@@ -33,6 +35,9 @@ class ScrollBox(Drawable):
         self._scrolling = False
         
         self.__updateScrollBox()
+
+    def getOffset(self):
+        return self._currentOffset
 
     def dragSlider(self):
         if self._scrolling:
@@ -50,7 +55,7 @@ class ScrollBox(Drawable):
             ex,ey = event.pos
             ox,oy = self._offset
             pos = (ex-ox, ey-oy)
-            if self._slider.getCollideRect().collidepoint(pos):
+            if self._slide.getCollideRect().collidepoint(pos):
                 self._scrolling = True
         if event.type == pygame.MOUSEBUTTONUP and event.button==1:
             self._scrolling = False            
@@ -65,6 +70,7 @@ class ScrollBox(Drawable):
             self._internalSurface.setPosition((self._internalSurface.getX(),
                                               self._internalSurface.getY() +
                                               self._scrollOffset * self._step))
+            self._currentOffset += self._scrollOffset * self._step
             self._internalSurface.draw(displaySurf)
         sideBar = Banner((self._width-self._sidebarWidth,0),self._sidebarColor,
                          (self._height,self._sidebarWidth))
