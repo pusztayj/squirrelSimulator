@@ -146,7 +146,9 @@ def main():
     s = MySurface(s)
     scrollTest = ScrollBox((400,100), (200,400), s, (0,0,0), 2)
 
-    sc = ScrollSelector((100,100), (100,100), [{"text":"button"},{"text":"button2"}],(120,120,120))
+    sc = ScrollSelector((100,100), (100,100), [{"text":"button", "func":attackButtonFunc,"args":""},
+                                               {"text":"button2", "func":blockButtonFunc,"args":""}]
+                        ,(213,175,53), borderWidth=2)
     
 
 ##    s = pygame.Surface((400,400))
@@ -235,11 +237,11 @@ def main():
                    target != None:
                     instructions.setText("Begin the Fight!")
             #confirmButton.move(event)
-            #attackButton.handleEvent(event, attackButtonFunc)
-            #blockButton.handleEvent(event, blockButtonFunc)
-            #useItemButton.handleEvent(event, useItemButtonFunc)
-            #retreatButton.handleEvent(event, retreatButtonFunc)
-            #backButton.handleEvent(event, backButtonFunc)
+            attackButton.handleEvent(event, attackButtonFunc)
+            blockButton.handleEvent(event, blockButtonFunc)
+            useItemButton.handleEvent(event, useItemButtonFunc)
+            retreatButton.handleEvent(event, retreatButtonFunc)
+            backButton.handleEvent(event, backButtonFunc)
             if scrollTest.getY() < pygame.mouse.get_pos()[1] < \
                scrollTest.getY() + scrollTest.getHeight():
                 testButton.handleEvent(event, testButtonFunc,

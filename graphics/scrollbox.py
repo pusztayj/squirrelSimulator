@@ -1,4 +1,3 @@
-
 import pygame
 from modules.drawable import Drawable
 from graphics.banner import Banner
@@ -34,10 +33,16 @@ class ScrollBox(Drawable):
 
         self._scrolling = False
         
-        self.__updateScrollBox()
+        self.updateScrollBox()
 
     def getOffset(self):
         return self._currentOffset
+
+    def getInternalSurface(self):
+        return self._internalSurface
+
+    def setInternalSurface(self, surface):
+        self._internalSurface.update(surface)
 
     def dragSlider(self):
         if self._scrolling:
@@ -48,29 +53,29 @@ class ScrollBox(Drawable):
             if y > 0 and y < (self._height - self._sliderHeight):
                 self._slider.setPosition((self._slider.getX(), y))
                 self._scrollOffset = prevY - y
-                self.__updateScrollBox()
+                self._internalSurface.setPosition((self._internalSurface.getX(),
+                                              self._internalSurface.getY() +
+                                              self._scrollOffset * self._step))
+                self._currentOffset += self._scrollOffset * self._step
+                self.updateScrollBox()
 
     def move(self, event):        
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             ex,ey = event.pos
             ox,oy = self._offset
             pos = (ex-ox, ey-oy)
-            if self._slide.getCollideRect().collidepoint(pos):
+            if self._slider.getCollideRect().collidepoint(pos):
                 self._scrolling = True
         if event.type == pygame.MOUSEBUTTONUP and event.button==1:
             self._scrolling = False            
         self.dragSlider()
     
-    def __updateScrollBox(self):
+    def updateScrollBox(self):
         surfBack = pygame.Surface((self._width+(self._borderWidth*2),
                                    (self._height+(self._borderWidth*2))))
         surfBack.fill(self._borderColor)
         displaySurf = pygame.Surface((self._width, self._height))
-        if issubclass(type(self._internalSurface), Drawable):
-            self._internalSurface.setPosition((self._internalSurface.getX(),
-                                              self._internalSurface.getY() +
-                                              self._scrollOffset * self._step))
-            self._currentOffset += self._scrollOffset * self._step
+        if issubclass(type(self._internalSurface), Drawable): 
             self._internalSurface.draw(displaySurf)
         sideBar = Banner((self._width-self._sidebarWidth,0),self._sidebarColor,
                          (self._height,self._sidebarWidth))
