@@ -1,6 +1,6 @@
 """
 Author: Trevor Stalnaker
-File: tester.py
+5File: tester.py
 
 Used to test minigames nested within the minigames folder
 """
@@ -9,8 +9,8 @@ from minigame import combatGameGUI
 from minigame import merchantGameGUI
 
 def main():
-    combatGameGUI.main()
-    #merchantGameGUI.main()
+    #combatGameGUI.main()
+    merchantGameGUI.main()
 
 
 if __name__ == "__main__":
