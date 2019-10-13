@@ -15,7 +15,11 @@ class ScrollBox(Drawable):
         
         self._sidebarWidth = 10
         self._sidebarColor = (120,120,120)
-        self._sliderHeight = 10
+        if self._height > self._internalSurface.getHeight():
+            self._sliderHeight = self._height
+        else:
+            self._sliderHeight = (self._height ** 2) // \
+                                 self._internalSurface.getHeight()
         self._sliderColor = (180,180,180)
 
         # Used to allow the scrollbox to appear around the screen
