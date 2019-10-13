@@ -6,6 +6,7 @@ from graphics.textinput import TextInput
 from graphics.popup import Popup
 from graphics.progressbar import ProgressBar
 from graphics.statdisplay import StatDisplay
+from graphics.mask import Mask
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -56,6 +57,8 @@ def main():
 
    stats = StatDisplay((5,5),player)
 
+   nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
+   
    creatures = []
    chip = Chipmunk(pos=(1600,300))
    chip.flip()
@@ -86,6 +89,8 @@ def main():
       for creature in creatures:
          creature.draw(screen)
 
+      nightFilter.draw(screen)
+
       if popup != None:
          popup.draw(screen)
 
@@ -93,6 +98,8 @@ def main():
 
       if atm != None and atm.getDisplay():
          atm.draw(screen)
+
+
 
       pygame.display.flip()
 
@@ -133,6 +140,11 @@ def main():
             player.heal(10)
          if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
             player.setAcorns(player.getAcorns() + 1)
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+            if nightFilter.getAlpha() == 0:
+               nightFilter.setAlpha(150)
+            else:
+               nightFilter.setAlpha(0)
 
          mouse = pygame.mouse.get_pos()
          m_pos_offset = player.adjustMousePos(mouse)
