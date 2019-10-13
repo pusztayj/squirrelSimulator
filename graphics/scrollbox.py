@@ -54,9 +54,9 @@ class ScrollBox(Drawable):
             x,y = pygame.mouse.get_pos()
             y -= self._offset[1]
             
-            if y > 0 and y < (self._height - self._sliderHeight):
-                if (self._scrollOffset < prevY - y and self._slider.getY() > 0) or \
-                   (self._scrollOffset > prevY - y and \
+            if y > -10 and y < (self._height - self._sliderHeight) + 10:
+                if (prevY - y > 0 and self._slider.getY() >= 0) or \
+                    (prevY - y < 0 and \
                     self._slider.getY() + self._sliderHeight < self._height):
                     self._slider.setPosition((self._slider.getX(), y))
                     self._scrollOffset = prevY - y
