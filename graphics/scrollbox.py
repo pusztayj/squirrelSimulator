@@ -53,18 +53,29 @@ class ScrollBox(Drawable):
             prevY = self._slider.getY()
             x,y = pygame.mouse.get_pos()
             y -= self._offset[1]
-            
-            if y > -10 and y < (self._height - self._sliderHeight) + 10:
-                if (prevY - y > 0 and self._slider.getY() >= 0) or \
+
+            # Check that the slider bar has not reached the top or bottom of the window
+            if (prevY - y > 0 and self._slider.getY() >= 0) or \
                     (prevY - y < 0 and \
                     self._slider.getY() + self._sliderHeight < self._height):
-                    self._slider.setPosition((self._slider.getX(), y))
-                    self._scrollOffset = prevY - y
-                    self._internalSurface.setPosition((self._internalSurface.getX(),
-                                              self._internalSurface.getY() +
-                                              self._scrollOffset * self._step))
-                    self._currentOffset += self._scrollOffset * self._step
-                    self.updateScrollBox()
+
+                # Update the slider's position
+                self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
+                                                                   max(0,y))))
+                # Update the scroll offset
+                self._scrollOffset = prevY - y
+
+                # Set the position of the internal surface according to the offset
+                self._internalSurface.setPosition((self._internalSurface.getX(),
+                                      max(-1 * self._internalSurface.getHeight() - self.getHeight(),
+                                          min(0, self._internalSurface.getY() +
+                                      self._scrollOffset * self._step))))
+
+                # Update the current Offset
+                self._currentOffset += self._scrollOffset * self._step
+
+                # Update the scroll box
+                self.updateScrollBox()
 
     def move(self, event):        
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
