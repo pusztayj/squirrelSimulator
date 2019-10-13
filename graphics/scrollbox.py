@@ -55,13 +55,16 @@ class ScrollBox(Drawable):
             y -= self._offset[1]
             
             if y > 0 and y < (self._height - self._sliderHeight):
-                self._slider.setPosition((self._slider.getX(), y))
-                self._scrollOffset = prevY - y
-                self._internalSurface.setPosition((self._internalSurface.getX(),
+                if (self._scrollOffset < prevY - y and self._slider.getY() > 0) or \
+                   (self._scrollOffset > prevY - y and \
+                    self._slider.getY() + self._sliderHeight < self._height):
+                    self._slider.setPosition((self._slider.getX(), y))
+                    self._scrollOffset = prevY - y
+                    self._internalSurface.setPosition((self._internalSurface.getX(),
                                               self._internalSurface.getY() +
                                               self._scrollOffset * self._step))
-                self._currentOffset += self._scrollOffset * self._step
-                self.updateScrollBox()
+                    self._currentOffset += self._scrollOffset * self._step
+                    self.updateScrollBox()
 
     def move(self, event):        
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
