@@ -157,7 +157,7 @@ def main():
          for pile in dirtPiles:
             if pile.getCollideRect().collidepoint(m_pos_offset):
                popup = Popup(pile.getName(),popup_pos, popupFont)
-            else: popup = None
+            ##else: popup = None
                
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \

@@ -12,7 +12,7 @@ class Mask(Drawable):
         super().__init__("", position, worldBound=False)
         self._image = pygame.Surface(dimensions)
         self._image.fill(color)
-        self._image.set_alpha(alpha)
+        self._image.set_alpha(0)
         self._alpha = alpha
 
     def setAlpha(self, alpha):

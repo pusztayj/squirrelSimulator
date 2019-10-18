@@ -28,7 +28,7 @@ class ScrollBox(Drawable):
         self._currentOffset = 0
 
         # Calculate slide step
-        self._step = self._internalSurface.getHeight() // self._height
+        self._step = self._internalSurface.getHeight() // (self._height)
 
         self._scrollOffset = 0
 
@@ -40,7 +40,7 @@ class ScrollBox(Drawable):
         self.updateScrollBox()
 
     def getOffset(self):
-        return self._currentOffset
+        return self._slider.getY() * self._step * -1
 
     def getInternalSurface(self):
         return self._internalSurface
@@ -55,7 +55,7 @@ class ScrollBox(Drawable):
             y -= self._offset[1]
 
             # Check that the slider bar has not reached the top or bottom of the window
-            if (prevY - y > 0 and self._slider.getY() >= 0) or \
+            if (prevY - y > 0 and self._slider.getY() > 0) or \
                     (prevY - y < 0 and \
                     self._slider.getY() + self._sliderHeight < self._height):
 
@@ -63,16 +63,18 @@ class ScrollBox(Drawable):
                 self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
                                                                    max(0,y))))
                 # Update the scroll offset
-                self._scrollOffset = prevY - y
+##                self._scrollOffset = prevY - y
+
+                self._internalSurface.setPosition((self._internalSurface.getX(), self._slider.getY() * self._step * -1))
 
                 # Set the position of the internal surface according to the offset
-                self._internalSurface.setPosition((self._internalSurface.getX(),
-                                      max(-1 * self._internalSurface.getHeight() - self.getHeight(),
-                                          min(0, self._internalSurface.getY() +
-                                      self._scrollOffset * self._step))))
+##                self._internalSurface.setPosition((self._internalSurface.getX(),
+##                                      max(-1 * self._internalSurface.getHeight() - self.getHeight(),
+##                                          min(0, self._internalSurface.getY() +
+##                                      self._scrollOffset * self._step))))
 
                 # Update the current Offset
-                self._currentOffset += self._scrollOffset * self._step
+##                self._currentOffset += self._scrollOffset * self._step
 
                 # Update the scroll box
                 self.updateScrollBox()

@@ -11,34 +11,37 @@ from .mysurface import MySurface
 
 class ScrollSelector(Drawable):
 
-    def __init__(self, position, dimensions, selections, backgroundColor,
+    def __init__(self, position, dimensions, selectionHeight, selections, backgroundColor,
                  borderColor=(0,0,0), borderWidth=0):
         super().__init__("", position, worldBound=False)
-        self._dimensions = dimensions
+        self._width = dimensions[0]
+        self._height = dimensions[1]
+        self._internalHeight = selectionHeight * len(selections)
+        self._selectionHeight = selectionHeight
         self._selections = selections
         self._buttons = []
         self._scrollBarWidth = 10
         self._backgroundColor = backgroundColor
         internalSurface = self.makeDisplay()
-        self._scrollBox = ScrollBox(position, dimensions, internalSurface, borderColor, borderWidth)
+        self._scrollBox = ScrollBox(position, (self._height, self._width), internalSurface,
+                                    borderColor, borderWidth)
         self.update()
 
     def makeDisplay(self):
-        surf = pygame.Surface((self._dimensions[0] * 3, self._dimensions[1] * 3))
-        selectorWidth = self._dimensions[1] // len(self._selections)
+        surf = pygame.Surface((self._width, self._internalHeight))
         font = pygame.font.SysFont("Times New Roman", 16)        
         ypos = 0
         for sel in self._selections:
             b = Button(sel["text"], (0,ypos), font,(255,255,255),self._backgroundColor,
-                   selectorWidth-2, self._dimensions[0]-self._scrollBarWidth-2,
+                   self._selectionHeight-2, self._width-self._scrollBarWidth-2,
                        borderWidth=1)
             b.draw(surf)
             self._buttons.append(b)
-            ypos += selectorWidth
+            ypos += self._selectionHeight
         return MySurface(surf)
 
     def updateDisplay(self):
-        surf = pygame.Surface((self._dimensions[0] * 3, self._dimensions[1] * 3))
+        surf = pygame.Surface((self._width, self._internalHeight))
         for b in self._buttons:
             b.draw(surf)
         return surf
@@ -46,6 +49,7 @@ class ScrollSelector(Drawable):
     def handleEvent(self, event):
         self._scrollBox.move(event)
         offset = (self._position[0], self._position[1] + self._scrollBox.getOffset())
+        print(self._scrollBox.getOffset())
         for i,b in enumerate(self._buttons):
             if self._selections[i]["args"] != "":
                 b.handleEvent(event, self._selections[i]["func"],

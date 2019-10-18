@@ -8,6 +8,7 @@ of GUIs
 from graphics.mysurface import MySurface
 from graphics.textbox import TextBox
 from graphics.scrollbox import ScrollBox
+from animals.animal import Animal
 import pygame, copy
 
 
@@ -33,14 +34,15 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
 def getInfoCard(animal, position):
     nameFont = pygame.font.SysFont("Times New Roman", 32)
     detailsFont = pygame.font.SysFont("Times New Roman", 16)
-    s = pygame.Surface((500,500))
+    s = pygame.Surface((200,600))
     s.fill((0,0,0))
     a = copy.copy(animal)
     a.setPosition((10,50))
     if a.isFlipped():
         a.flip()
     TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
-    #a.draw(s)
+    if issubclass(type(animal), Animal): 
+        a.draw(s)
     makeMultiLineTextBox(str(a), (10,200), detailsFont,
                          (255,255,255), (0,0,0)).draw(s)
     s = MySurface(s)
