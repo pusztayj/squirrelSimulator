@@ -14,6 +14,7 @@ from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
 from animals.chipmunk import Chipmunk
+import math
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -60,6 +61,8 @@ def main():
    dirtPiles = []
 
    acornSpawnTimer = random.randint(5,10)
+
+   time = 0
 
    popup = None #Popup("Pop", (0,0), popupFont)
 
@@ -176,6 +179,11 @@ def main():
       if acornSpawnTimer <= 0:
          acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
          acornSpawnTimer = random.randint(5,10)
+
+      time += ticks
+      print(time)
+
+      nightFilter.setAlpha(math.sin(time/120)*200)
 
       #Update the player's position
       player.update(WORLD_SIZE, ticks)
