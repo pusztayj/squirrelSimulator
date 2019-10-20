@@ -10,6 +10,7 @@ A super class with methods subclasses like Orb and Star inherit from
 import pygame
 from .vector2D import Vector2
 from .frameManager import FRAMES
+import rectmanager
 
 class Drawable():
 
@@ -53,6 +54,8 @@ class Drawable():
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
         self._isFlipped = False
+        self._collideRects = None
+        self._flippedCollideRects = None
 
     def getWidth(self):
         """Returns the width of the image surface"""
@@ -87,6 +90,16 @@ class Drawable():
         area of the current object
         """
         return self._image.get_rect().move(self.getX(), self.getY())
+
+    def getCollideRects(self):
+        if self.isFlipped():
+            if self._flippedCollideRects == None:
+                self._flippedCollideRects = rectmanager.getRects(self._image)
+            return self._flippedCollideRects
+        else:
+            if self._collideRects == None:
+                self._collideRects = rectmanager.getRects(self._image)
+            return self._collideRects
 
     def draw(self, surface):
         """Draws the orb's image at the current position on the given surface"""

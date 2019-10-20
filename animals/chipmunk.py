@@ -14,6 +14,7 @@ class Chipmunk(NPC, Animated):
 
     def __init__(self, name="", pos=(0,0)):
 
+        
+        Animated.__init__(self, "tempChipmunk.png", pos)
         NPC.__init__(self, name, AGGRESSION, HEALTH, SPEED,
                          ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
-        Animated.__init__(self, "tempChipmunk.png", pos)

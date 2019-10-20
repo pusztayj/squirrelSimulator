@@ -18,6 +18,14 @@ from animals.chipmunk import Chipmunk
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
+def setPopup(lyst, mouse_pos, popup_pos, font):
+   for entity in lyst:
+      x,y = entity.getPosition()
+      for rect in entity.getCollideRects():
+         r = rect.move(x,y)
+         if r.collidepoint(mouse_pos):
+            return Popup(entity.getName(), popup_pos, font)
+               
 def main():
    """
    Main loop for the program
@@ -63,6 +71,7 @@ def main():
    chip = Chipmunk(pos=(1600,300))
    chip.flip()
    creatures.append(chip)
+   creatures.append(player)
 
    atm = None
 
@@ -150,21 +159,15 @@ def main():
          m_pos_offset = player.adjustMousePos(mouse)
          m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
          popup_pos = (mouse[0] + 5, mouse[1] + 5)
-         for creature in creatures:
-            if creature.getCollideRect().collidepoint(m_pos_offset):
-               popup = Popup(creature.getName(),popup_pos, popupFont)
-            else: popup = None
-         for pile in dirtPiles:
-            if pile.getCollideRect().collidepoint(m_pos_offset):
-               popup = Popup(pile.getName(),popup_pos, popupFont)
-            ##else: popup = None
-               
+         popup = setPopup(creatures, m_pos_offset, popup_pos, popupFont)
+         if popup==None:
+            popup = setPopup(dirtPiles, m_pos_offset, popup_pos, popupFont)
+            
       for acorn in acorns:
          if acorn.getCollideRect().colliderect(player.getCollideRect()) and \
             player.getCheekCapacity() - player.getAcorns() > 0:
             player.setAcorns(player.getAcorns()+1)
-            acorn.collected()
-            
+            acorn.collected()    
             
       #Calculate ticks
       ticks = gameClock.get_time() / 1000

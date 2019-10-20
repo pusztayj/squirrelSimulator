@@ -1,6 +1,7 @@
 
 from .animal import Animal
-import random
+from graphics.popup import Popup
+import random, pygame, copy
 
 class NPC(Animal):
 
@@ -17,5 +18,23 @@ class NPC(Animal):
                          defensiveStat=random.randint(defense[0],defense[1]))
         
         self._aggressionLevel = agression
+        #self._realImage = copy.copy(self._image)
+
+    def handleEvent(self, event, screen):     
+        popupFont = pygame.font.SysFont("Times New Roman", 16)
+        x,y = self.getPosition()
+        pos = pygame.mouse.get_pos()
+        for rect in self.getCollideRects(): 
+            r = rect.move(x,y)
+            if r.collidepoint(pos):
+                print("yeah")
+                #self._image = copy.copy(self._realImage)
+                popup = Popup(self.getName(), (pos[0]+5,pos[1]+5),
+                                popupFont)
+                popup.draw(screen)
+                break
+##        else:
+            #self._image = copy.copy(self._realImage)
+
             
 
