@@ -1,6 +1,6 @@
 """
 Author: Trevor Stalnaker
-5File: tester.py
+File: tester.py
 
 Used to test minigames nested within the minigames folder
 """

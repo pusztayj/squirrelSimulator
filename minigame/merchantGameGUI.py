@@ -46,7 +46,7 @@ def main():
     merchant.scale(1.5)
     merchant_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in merchantMind.getInventory()]
-    merchantSelect = ScrollSelector((100,100),(250,300),merchant_items,(0,0,0))
+    merchantSelect = ScrollSelector((100,100),(250,300),30,merchant_items,(0,0,0))
 
     # sets up player
     player = Player()
@@ -54,7 +54,7 @@ def main():
     player.getInventory().addItem(Berries())
     player_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in player.getInventory()]
-    playerSelect = ScrollSelector((100,100),(250,300),player_items,(0,0,0))
+    playerSelect = ScrollSelector((100,100),(250,300),30,player_items,(0,0,0))
     
     # sets up buttons
     buyButton = Button("Buy", (100,47), font, (0,0,0), (40,225,255), 50, 75,(255,255,255),2)

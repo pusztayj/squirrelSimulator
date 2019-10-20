@@ -49,7 +49,6 @@ class ScrollSelector(Drawable):
     def handleEvent(self, event):
         self._scrollBox.move(event)
         offset = (self._position[0], self._position[1] + self._scrollBox.getOffset())
-        print(self._scrollBox.getOffset())
         for i,b in enumerate(self._buttons):
             if self._selections[i]["args"] != "":
                 b.handleEvent(event, self._selections[i]["func"],
