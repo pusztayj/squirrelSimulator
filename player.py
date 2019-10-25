@@ -2,6 +2,7 @@ from animals.squirrel import Squirrel
 from modules.vector2D import Vector2
 import rectmanager
 import pygame
+from stateMachines import playerFSM
 
 
 class Player(Squirrel):
@@ -35,6 +36,9 @@ class Player(Squirrel):
                           pygame.K_LEFT:False,
                           pygame.K_RIGHT:False}
 
+        self._fsm = playerFSM
+
+
     def getAcorns(self):
         return self._acorns
 
@@ -59,24 +63,35 @@ class Player(Squirrel):
 
     def update(self, worldInfo, ticks):
         """Updates the position of the star"""
+
+        if self._fsm.getCurrentState() == "walking":
+            self.updateAnimation(ticks)
         
         #Update the velocity of the star based on the keyboard inputs
         if self._movement[pygame.K_UP]:
             self._velocity.y -= self._acceleration
+            self._fsm.changeState("walk")
         elif self._movement[pygame.K_DOWN]:
             self._velocity.y += self._acceleration
+            self._fsm.changeState("walk")
         else:
             self._velocity.y = 0
+            
         if self._movement[pygame.K_LEFT]:
             self._velocity.x -= self._acceleration
+            self._fsm.changeState("walk")
             if not self.isFlipped():
                 self.flip()
         elif self._movement[pygame.K_RIGHT]:
             self._velocity.x += self._acceleration
+            self._fsm.changeState("walk")
             if self.isFlipped():
                 self.flip()
         else:
             self._velocity.x = 0
+
+        if self._velocity.x==0 and self._velocity.y==0:
+            self._fsm.changeState("stop")
 
         #If the current velocity exceeds the maximum, scale it down
         if self._velocity.magnitude() > self._maxVelocity:

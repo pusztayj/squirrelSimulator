@@ -1,15 +1,17 @@
 
-from .animated import Animated
+from .drawable import Drawable
 from .vector2D import Vector2
 
-class Mobile(Animated):
-   def __init__(self, imageName, position):
-      super().__init__(imageName, position)
+class Mobile(Drawable):
+   """A game object that can move."""
+   def __init__(self, imageName, position, size, subImageRect=None):
+      super().__init__(imageName, position, size, subImageRect)
       self._velocity = Vector2(0,0)
    
-   def update(self, ticks):
-      super().update(ticks)
-      newPosition = self.getPosition() + self._velocity     
+   def update(self):
+      
+      newPosition = self.getPosition() + self._velocity
+      
       self.setPosition(newPosition)
       
       

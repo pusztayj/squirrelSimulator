@@ -1,6 +1,14 @@
 
 from fsm import *
 
+playerStartState = "standing"
+playerStates = ["standing","walking"]
+playerTransitions = [Rule("standing","walk","walking"),
+                     Rule("walking","walk","walking"),
+                     Rule("walking","stop","standing"),
+                     Rule("standing","stop","standing")]
+playerFSM = FSM(playerStartState, playerStates, playerTransitions)
+
 # A Finite State Machine for the Combat Game
 combatStartState = "options_menu"
 combatStates = ["options_menu", "attack",

@@ -1,5 +1,5 @@
 
-import pygame, random
+import pygame, random, math
 from graphics.banner import Banner
 from graphics.textbox import TextBox
 from graphics.textinput import TextInput
@@ -14,7 +14,7 @@ from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
 from animals.chipmunk import Chipmunk
-import math
+from minigame.interaction import Interaction
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -78,6 +78,8 @@ def main():
 
    atm = None
 
+   interaction = None
+
    RUNNING = True
 
    while RUNNING:
@@ -111,6 +113,9 @@ def main():
       if atm != None and atm.getDisplay():
          atm.draw(screen)
 
+      if interaction != None and interaction.getDisplay():
+         interaction.draw(screen)
+
 
 
       pygame.display.flip()
@@ -135,16 +140,28 @@ def main():
                   player.setAcorns(player.getAcorns() - 1)
                   dirtPiles.append(dp)
           
-         for pile in dirtPiles:
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+
+
+         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+            for pile in dirtPiles:
                if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                                   event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                   atm = ATM(player, pile)
-            pile.handleEvent(event, player)
+                  pile.handleEvent(event, player)
+            for creature in creatures:
+               x,y = creature.getPosition()
+               for rect in creature.getCollideRects():
+                  r = rect.move(x,y)
+                  if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                 event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                     interaction = Interaction()
             
          if atm != None and atm.getDisplay():
             atm.handleEvent(event)
 
+         if interaction != None and interaction.getDisplay():
+            interaction.handleEvent(event)
+            
          # Button inputs to be used for testing
          if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
             player.loseHealth(10)
@@ -181,7 +198,7 @@ def main():
          acornSpawnTimer = random.randint(5,10)
 
       time += ticks
-      print(time)
+##      print(time)
 
       nightFilter.setAlpha(math.sin(time/120)*200)
 

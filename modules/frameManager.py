@@ -45,7 +45,8 @@ class FrameManager(object):
          "combatBackground":(1200,500),
          "acorn.png":(32,32),
          "dirtpile.png":(32,32),
-         "tradeDesk.png":(750,422)
+         "tradeDesk.png":(750,422),
+         "squirrel.png":(32,32)
       }
       
       # A default frame size
@@ -58,7 +59,7 @@ class FrameManager(object):
       _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
                     "tempBear.png","turtle.png", "tempSnake.png", "tempDeer.png",
                     "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png",
-                    "acorn.png", "dirtpile.png","cow.png"]
+                    "acorn.png", "dirtpile.png","cow.png","squirrel.png"]
       
       
       
