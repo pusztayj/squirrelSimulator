@@ -9,6 +9,7 @@ from graphics.scrollbox import ScrollBox
 from graphics.textbox import TextBox
 from graphics.guiUtils import *
 from graphics.button import Button
+from graphics.tabs import Tabs
 from player import Player
 from items.items import *
 from graphics.scrollselector import ScrollSelector
@@ -21,6 +22,12 @@ itemCard = None
 
 def selectMerchantItem(item):
     global itemCard; itemCard = getInfoCard(item,(500,300))
+
+def updateDisplay(tabs):
+    if tabs.getActive() == 0:
+        return True
+    else:
+        return False
 
 def buyButtonFunc():
     global FLAG; FLAG = True
@@ -57,13 +64,18 @@ def main():
     playerSelect = ScrollSelector((100,100),(250,300),30,player_items,(0,0,0))
     
     # sets up buttons
-    buyButton = Button("Buy", (100,47), font, (0,0,0), (40,225,255), 50, 75,(255,255,255),2)
-    sellButton = Button("Sell", (175,47), font, (0,0,0), (40,80,255), 50, 75,(255,255,255),2)
+    #buyButton = Button("Buy", (100,47), font, (0,0,0), (40,225,255), 50, 75,(255,255,255),2)
+    #sellButton = Button("Sell", (175,47), font, (0,0,0), (40,80,255), 50, 75,(255,255,255),2)
 
     # gets trade desk
     tradeDesk = TradeDesk()
 
+    tabs = Tabs(["Buy","Sell"], (100,47), font, (0,0,0), (255,0,0), (200,50),
+               (0,255,0),(255,255,255))
+
     RUNNING = True
+
+    FLAG = True
 
     while RUNNING:
         background.draw(screen)
@@ -73,10 +85,12 @@ def main():
             merchantSelect.draw(screen)
         else:
             playerSelect.draw(screen)
-        buyButton.draw(screen)
-        sellButton.draw(screen)
+        #buyButton.draw(screen)
+        #sellButton.draw(screen)
         if itemCard != None:
-            itemCard.draw(screen)            
+            itemCard.draw(screen)
+
+        tabs.draw(screen)
         
         pygame.display.flip()
         
@@ -86,8 +100,9 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     RUNNING = False
-            buyButton.handleEvent(event, buyButtonFunc)
-            sellButton.handleEvent(event, sellButtonFunc)
+            #buyButton.handleEvent(event, buyButtonFunc)
+            #sellButton.handleEvent(event, sellButtonFunc)
+            tabs.handleEvent(event)
             
             # handles switching of tabs
             if FLAG:
@@ -97,6 +112,8 @@ def main():
             # updates item draw
             if itemCard != None:
                 itemCard.move(event)
+
+        FLAG = updateDisplay(tabs)
 
     pygame.quit()
 
