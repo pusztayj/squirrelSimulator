@@ -49,14 +49,17 @@ class ScrollSelector(Drawable):
     def handleEvent(self, event):
         self._scrollBox.move(event)
         offset = (self._position[0], self._position[1] + self._scrollBox.getOffset())
-        for i,b in enumerate(self._buttons):
-            if self._selections[i]["args"] != "":
-                b.handleEvent(event, self._selections[i]["func"],
+        if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP)\
+           and event.button==1:
+            if self._scrollBox.getCollideRect().collidepoint(event.pos):
+                for i,b in enumerate(self._buttons):
+                    if self._selections[i]["args"] != "":
+                        b.handleEvent(event, self._selections[i]["func"],
                               self._selections[i]["args"], offset=offset)
-            else:
-                b.handleEvent(event, self._selections[i]["func"], offset=offset)        
-            self._scrollBox.setInternalSurface(self.updateDisplay())
-            self.update()
+                    else:
+                        b.handleEvent(event, self._selections[i]["func"], offset=offset)        
+        self._scrollBox.setInternalSurface(self.updateDisplay())
+        self.update()
 
     def update(self):
         self._scrollBox.updateScrollBox()
