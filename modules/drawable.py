@@ -56,6 +56,8 @@ class Drawable():
         self._isFlipped = False
         self._collideRects = None
         self._flippedCollideRects = None
+        self._isScaled = False
+        self._scaleValue = 1
 
     def getWidth(self):
         """Returns the width of the image surface"""
@@ -116,12 +118,17 @@ class Drawable():
     def isFlipped(self):
         return self._isFlipped
 
+    def isScaled(self):
+        return self._isScaled
+
     def scale(self,scalar):
         """
         Returns a scaled version of the image.
         """
         self._image = pygame.transform.scale(self._image,(round(scalar*self.getSize()[0]),
                                                          round(scalar*self.getSize()[1])))
+        self._scaleValue = scalar
+        self._isScaled = True
 
     def getImage(self):
         return self._image

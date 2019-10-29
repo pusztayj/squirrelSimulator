@@ -29,6 +29,8 @@ class Animated(Drawable):
             self._image = FRAMES.getFrame(self._imageName, (self._frame, self._row))
             if self.isFlipped():
                self._image = pygame.transform.flip(self._image, True, False)
+            if self.isScaled():
+               self.scale(self._scaleValue)
    
    def startAnimation(self):
       self._animate = True

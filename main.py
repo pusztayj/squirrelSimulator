@@ -54,6 +54,7 @@ def main():
    gameClock = pygame.time.Clock()
 
    player = Player(pos=(600,300))
+   player.scale(2)
 
    ground = Banner((0,300),(100,255,100),(500, 2400))
 

@@ -59,7 +59,8 @@ class FrameManager(object):
       _COLOR_KEY = ["tempSquirrel.png", "tempChipmunk.png","tempFox.png",
                     "tempBear.png","turtle.png", "tempSnake.png", "tempDeer.png",
                     "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png",
-                    "acorn.png", "dirtpile.png","cow.png","squirrel.png"]
+                    "acorn.png", "dirtpile.png","cow.png","squirrel.png",
+                    "squirrel_walk_cycle.png"]
       
       
       
