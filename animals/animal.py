@@ -23,11 +23,14 @@ class Animal():
         self._name = name
 
         #Basic Stats
-        #self._baseHealth = health
+        self._baseHealth = health
         self._health = health
         self._xp = xp
         self._baseStamina = stamina
         self._stamina = stamina
+
+        self._baseHunger = 10
+        self._hunger = self._baseHunger
 
         #Movement Stats
         self._speed = speed
@@ -63,14 +66,14 @@ class Animal():
     def getHealth(self):
         return self._health
 
-##    def getBaseHealth(self):
-##        return self._baseHealth
+    def getBaseHealth(self):
+        return self._baseHealth
 
-##    def increaseBaseHealth(self, increase):
-##        self._baseHealth += increase
-##
-##    def decreaseBaseHealth(self, decrease):
-##        self._baseHealth -= decrease
+    def increaseBaseHealth(self, increase):
+        self._baseHealth += increase
+
+    def decreaseBaseHealth(self, decrease):
+        self._baseHealth -= decrease
 
     def setHealth(self, health):
         self._health = health
@@ -103,7 +106,7 @@ class Animal():
         Will decrease the health of the animal up to its maximum health by
         inputted health amount.
         """
-        self._health -= health
+        self._health = max(0, self._health-health)
 
     def isDead(self):
         """
@@ -112,13 +115,13 @@ class Animal():
         """
         return self._health <= 0
     
-##    def getBaseStamina(self):
-##        """Returns the base stamina of the animal."""
-##        return self._baseStamina
-##
-##    def setBaseStamina(self,newBaseStamina):
-##        """Returns the base stamina of the animal."""
-##        self._baseStamina = newBaseStamina
+    def getBaseStamina(self):
+        """Returns the base stamina of the animal."""
+        return self._baseStamina
+
+    def setBaseStamina(self,newBaseStamina):
+        """Returns the base stamina of the animal."""
+        self._baseStamina = newBaseStamina
 
     def getStamina(self):
         """Returns the stamina of the animal."""
@@ -160,6 +163,21 @@ class Animal():
 
     def incrementXP(self, xp):
         self._xp += xp
+
+    def getHunger(self):
+        return self._hunger
+
+    def getBaseHunger(self):
+        return self._baseHunger
+
+    def decrementHunger(self):
+        self._hunger = max(0, self._hunger-1)
+
+    def increaseHunger(self):
+        self._hunger = min(self._hunger+1, self._baseHunger)
+
+    def isStarving(self):
+        return self._hunger == 0
 
     def getSpeed(self):
         return self._speed

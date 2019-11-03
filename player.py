@@ -51,6 +51,16 @@ class Player(Squirrel):
     def setCheekCapacity(self, capacity):
         self._cheekCapacity = capacity
 
+    def eat(self):
+        if self._acorns > 0 and self._hunger < self._baseHunger:
+            self._acorns -= 1
+            self.increaseHunger()
+        elif self._acorns > 0 and self._hunger == self._baseHunger and \
+             self._health < self._baseHealth:
+            self._acorns -= 1
+            self.heal(1)
+            
+
     def move(self, event):
         """
         Given an event, changes the appropriate value
@@ -60,6 +70,9 @@ class Player(Squirrel):
             self._movement[event.key] = True
         elif event.type == pygame.KEYUP:
             self._movement[event.key] = False
+        if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE:
+            self.eat()
+            print("eat")
 
     def update(self, worldInfo, ticks):
         """Updates the position of the star"""

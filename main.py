@@ -67,6 +67,10 @@ def main():
 
    acornSpawnTimer = random.randint(5,10)
 
+   hungerTimer = 2 * hour_length
+
+   starveTimer = 2 * hour_length
+
    time = 0
 
    popup = None #Popup("Pop", (0,0), popupFont)
@@ -139,11 +143,9 @@ def main():
             # change the value to False, to exit the main loop
             RUNNING = False
             
-         elif (event.type == pygame.KEYDOWN or event.type == pygame.KEYUP) \
-            and event.key in movement_keys:
-            player.move(event)
+         player.move(event)
 
-         elif (event.type == pygame.KEYDOWN and event.key == pygame.K_b):
+         if (event.type == pygame.KEYDOWN and event.key == pygame.K_b):
             if player.getAcorns() > 0:
                   dp = DirtPile((player.getX() + (player.getWidth() // 2),
                                       player.getY() + (player.getHeight() // 2)))
@@ -208,9 +210,26 @@ def main():
          acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
          acornSpawnTimer = random.randint(5,10)
 
+      hungerTimer -= ticks
+      if hungerTimer <= 0:
+         player.decrementHunger()
+         hungerTimer = 2 * hour_length
+
       time += ticks
 
       nightFilter.setAlpha(math.sin(time/(day_length/4))*200)
+
+      if player.isStarving():
+         starveTimer -= ticks
+         if starveTimer <= 0:
+            player.loseHealth(5)
+            player.loseStamina(5)
+            starveTimer = 2 * hour_length
+      else:
+         starveTimer = 2 * hour_length
+
+      if player.isDead():
+         print("The Player is Dead")
 
       #Update the player's position
       player.update(WORLD_SIZE, ticks)

@@ -13,7 +13,7 @@ class StatDisplay(Drawable):
         super().__init__("", position, worldBound=False)
         self._entity = entity
         self._width = 200
-        self._height = 60
+        self._height = 75
         self._borderWidth = 2
         self._borderColor = (0,0,0)
         self._backgroundColor = (120,120,220)
@@ -25,7 +25,11 @@ class StatDisplay(Drawable):
         self._healthBar = ProgressBar((60,25), 5*(self._width//8),
                                       entity.getBaseHealth(),
                                       entity.getHealth())
-        self._staminaBar = ProgressBar((60,40), 5*(self._width//8),
+        self._hungerBar = ProgressBar((60,40), 5*(self._width//8),
+                                        entity.getBaseHunger(),
+                                        entity.getHunger(),
+                                        barColor=(235,125,52))
+        self._staminaBar = ProgressBar((60,55), 5*(self._width//8),
                                         entity.getBaseStamina(),
                                         entity.getStamina(),
                                         barColor=(0,0,255))
@@ -34,7 +38,9 @@ class StatDisplay(Drawable):
                                     self._nameFont, self._fontColor)
         self._healthLabel = TextBox("Health",(5,22), self._font,
                                     self._fontColor)
-        self._staminaLabel = TextBox("Stamina",(5,37), self._font,
+        self._hungerLabel = TextBox("Hunger",(5,37), self._font,
+                                    self._fontColor)
+        self._staminaLabel = TextBox("Stamina",(5,52), self._font,
                                      self._fontColor)
         self._acornCount = TextBox("", (self._width-50, 4),
                                        self._font, self._fontColor)
@@ -58,10 +64,13 @@ class StatDisplay(Drawable):
         # Draw Widgets on the Surface
         self._healthBar.setProgress(self._entity.getHealth())
         self._healthBar.draw(surf)
+        self._hungerBar.setProgress(self._entity.getHunger())
+        self._hungerBar.draw(surf)
         self._staminaBar.setProgress(self._entity.getStamina())
         self._staminaBar.draw(surf)
         self._nameDisplay.draw(surf)
         self._healthLabel.draw(surf)
+        self._hungerLabel.draw(surf)
         self._staminaLabel.draw(surf)
 
         acorns = str(self._entity.getAcorns())
