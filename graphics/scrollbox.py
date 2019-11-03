@@ -29,8 +29,8 @@ class ScrollBox(Drawable):
         self._currentOffset = 0
 
         # Calculate slide step
-        self._step = (self._internalSurface.getHeight() - self._height) // \
-                     max(1, (self._height-self._sliderHeight)) + 1
+        self._step = (self._internalSurface.getHeight() - self._height) / \
+                     max(1, (self._height-self._sliderHeight))
 
         self._scrollOffset = 0
 
@@ -60,8 +60,8 @@ class ScrollBox(Drawable):
             self._sliderHeight = (self._height ** 2) // \
                                  self._internalSurface.getHeight()
             
-        self._step = (self._internalSurface.getHeight() - self._height) // \
-                     max(1, (self._height-self._sliderHeight)) + 1
+        self._step = (self._internalSurface.getHeight() - self._height) / \
+                     max(1, (self._height-self._sliderHeight))
         tempPos = self._slider.getPosition()
         self._slider = Banner((self._width-self._sidebarWidth,0),self._sliderColor,
                          (self._sliderHeight,self._sidebarWidth))
@@ -82,7 +82,7 @@ class ScrollBox(Drawable):
                 self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
                                                                    max(0,y))))
                 self._internalSurface.setPosition((self._internalSurface.getX(),
-                                                   self._slider.getY() * self._step * -1))
+                                                   round(self._slider.getY() * self._step * -1)))
 
                 # Update the scroll box
                 self.updateScrollBox()
