@@ -52,6 +52,8 @@ def heal(animal,potion):
     if potion in animal.getInventory():
         animal.getInventory().removeItem(potion)
         animal.heal(potion.getHealthBoost())
+    else:
+        return "You cannont heal"
 
 def retreat(animal):
     """

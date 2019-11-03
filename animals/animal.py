@@ -23,7 +23,7 @@ class Animal():
         self._name = name
 
         #Basic Stats
-        self._baseHealth = health
+        #self._baseHealth = health
         self._health = health
         self._xp = xp
         self._baseStamina = stamina
@@ -40,7 +40,7 @@ class Animal():
 
         #Other Stats
         self._intelligence = intelligence
-        self._money = 0
+        self._money = 256
 
         #Equipment Carried by Animal
         self._inventory = Inventory(inventorySize)
@@ -63,14 +63,14 @@ class Animal():
     def getHealth(self):
         return self._health
 
-    def getBaseHealth(self):
-        return self._baseHealth
+##    def getBaseHealth(self):
+##        return self._baseHealth
 
-    def increaseBaseHealth(self, increase):
-        self._baseHealth += increase
-
-    def decreaseBaseHealth(self, decrease):
-        self._baseHealth -= decrease
+##    def increaseBaseHealth(self, increase):
+##        self._baseHealth += increase
+##
+##    def decreaseBaseHealth(self, decrease):
+##        self._baseHealth -= decrease
 
     def setHealth(self, health):
         self._health = health
@@ -112,13 +112,13 @@ class Animal():
         """
         return self._health <= 0
     
-    def getBaseStamina(self):
-        """Returns the base stamina of the animal."""
-        return self._baseStamina
-
-    def setBaseStamina(self,newBaseStamina):
-        """Returns the base stamina of the animal."""
-        self._baseStamina = newBaseStamina
+##    def getBaseStamina(self):
+##        """Returns the base stamina of the animal."""
+##        return self._baseStamina
+##
+##    def setBaseStamina(self,newBaseStamina):
+##        """Returns the base stamina of the animal."""
+##        self._baseStamina = newBaseStamina
 
     def getStamina(self):
         """Returns the stamina of the animal."""
@@ -250,6 +250,8 @@ class Animal():
     def incrementAttackSpeed(self, speed):
         self._attackSpeed += speed
 
+    # modifers 
+
     def getAttackModifers(self):
         return self._attackModifers
 
@@ -267,6 +269,12 @@ class Animal():
 
     def resetDefenseModifers(self):
         self._attackModifers = 1
+
+    #
+
+    def combatMoveLogic(self,target):
+        if self._health <= 25 and (Potions() in self._inventory):
+            return "heal"
 
     def getInventory(self):
         return self._inventory
