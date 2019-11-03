@@ -13,5 +13,8 @@ class Window():
     def close(self):
         self._display = False
 
+    def display(self):
+        self._display = True
+
     def getDisplay(self):
         return self._display
