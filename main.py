@@ -38,6 +38,10 @@ def main():
    font = pygame.font.SysFont("Times New Roman", 32)
    popupFont = pygame.font.SysFont("Times New Roman", 16)
 
+   hour_length = 1 # ticks / seconds
+   day_length = 24 * hour_length
+   minute_length = hour_length / 60
+
    #Store the pygame key codes for simplicity later
    movement_keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]
 
@@ -70,6 +74,9 @@ def main():
    stats = StatDisplay((5,5),player)
 
    nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
+
+   txtDay = TextBox("Day: 1", (500,5), font, (255,255,255))
+   txtHour = TextBox("12:00pm", (600,5), font, (255,255,255))
    
    creatures = []
    chip = Chipmunk(pos=(1600,300))
@@ -116,6 +123,9 @@ def main():
 
       if interaction != None and interaction.getDisplay():
          interaction.draw(screen)
+
+      txtDay.draw(screen)
+      txtHour.draw(screen)
 
 
 
@@ -199,9 +209,8 @@ def main():
          acornSpawnTimer = random.randint(5,10)
 
       time += ticks
-##      print(time)
 
-      nightFilter.setAlpha(math.sin(time/120)*200)
+      nightFilter.setAlpha(math.sin(time/(day_length/4))*200)
 
       #Update the player's position
       player.update(WORLD_SIZE, ticks)
@@ -214,6 +223,12 @@ def main():
 
       # Remove acorns from the world that have been collected
       acorns = [acorn for acorn in acorns if not acorn.isCollected()]
+
+      #Update InGame Clock
+      txtDay.setText("Day: " + str(int(time // day_length)+1))
+      txtHour.setText(str(int((time // hour_length) % 12)+1) + ":" +
+                      str(int(time // minute_length)%60).zfill(2) + " " +
+                      ("pm" if (int((time // hour_length) % 24)+1 >= 12) else "am"))
 
    #Close the pygame window and quit pygame
    pygame.quit()
