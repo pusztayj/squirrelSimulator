@@ -17,20 +17,20 @@ __all__ = ["Stick","Spear","IronSword","HideArmor","LeatherArmor","IronArmor",
 
 class Weapon(Item):
     
-    def __init__(self,name, damage, level=1, durability=100,
+    def __init__(self,name, strength, level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         Item.__init__(self,name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
-        self._damage = damage
+        self._strength = strength
         self._staminaCost = staminaCost
         self._causesBleeding = False
 
 
-    def getDamage(self):
-        """Calculate the damage done by the weapon"""
-        return round((self._damage + (self._level * (self._damage * (.05)))) *
+    def getStrength(self):
+        """Calculate the strength done by the weapon"""
+        return round((self._strength + (self._level * (self._strength * (.05)))) *
                      (self._durability / self._maxDurability))
 
     def getStaminaCost(self):
@@ -40,15 +40,15 @@ class Weapon(Item):
         return "Name: " + self._name + \
                "\nType: " + "Weapon" + \
                Item.__repr__(self) + \
-                "\nBase Damage: " + str(round(self._damage))
-               #"\nBase Damage: " + str(round(self._damage + (self._level * (self._damage * (.05)))))
+                "\nBase Strength: " + str(round(self._strength))
+               #"\nBase strength: " + str(round(self._strength + (self._level * (self._strength * (.05)))))
                
 class Stick(Weapon,Drawable):
 
-    def __init__(self,damage = 10, level=1, durability=100,
+    def __init__(self,strength = 10, level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
-        Weapon.__init__(self,"Stick", damage, level, durability,
+        Weapon.__init__(self,"Stick", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -56,20 +56,20 @@ class Stick(Weapon,Drawable):
 
 class Spear(Weapon,Drawable):
 
-    def __init__(self,damage = 15, level=1, durability=100,
+    def __init__(self,strength = 15, level=1, durability=100,
                  utility = 100,value = 150, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
-        Weapon.__init__(self,"Spear", damage, level, durability,
+        Weapon.__init__(self,"Spear", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"",(0,0))
 
 class IronSword(Weapon,Drawable):
 
-    def __init__(self,damage = 25, level=1, durability=100,
+    def __init__(self,strength = 25, level=1, durability=100,
                  utility = 100,value = 450, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
-        Weapon.__init__(self,"Iron Sword", damage, level, durability,
+        Weapon.__init__(self,"Iron Sword", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -80,31 +80,31 @@ class IronSword(Weapon,Drawable):
 
 class Armor(Item):
 
-    def __init__(self,name, protection, level=1, durability=100,
+    def __init__(self,name, strength, level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True):
         Item.__init__(self,name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
-        self._protection = protection
+        self._strength = strength
 
-    def getProtection(self):
-        return round((self._protection + (self._level * (self._protection * (.05)))) *
+    def getStrength(self):
+        return round((self._strength + (self._level * (self._strength * (.05)))) *
                      (self._durability / self._maxDurability))
 
     def __repr__(self):
         return "Name: " + self._name + \
                "\nType: " + "Armor" + \
                Item.__repr__(self) + \
-               "\nBase Protection: " + str(round(self._protection))
-               #"\nBase Protection: " + str(round(self._protection + (self._level * (self._protection * (.05)))))
+               "\nBase Strength: " + str(round(self._strength))
+               #"\nBase strength: " + str(round(self._strength + (self._level * (self._strength * (.05)))))
 
 class HideArmor(Armor,Drawable):
     
-    def __init__(self,protection = 8, level=1, durability=100,
+    def __init__(self,strength = 8, level=1, durability=100,
                  utility = 100,value = 75,requirements=None,
                  isBuyable = True, isSellable = True):
-        Armor.__init__(self,"Hide Armor", protection, level, durability,
+        Armor.__init__(self,"Hide Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
 
@@ -112,20 +112,20 @@ class HideArmor(Armor,Drawable):
 
 class LeatherArmor(Armor,Drawable):
     
-    def __init__(self,protection = 13, level=1, durability=100,
+    def __init__(self,strength = 13, level=1, durability=100,
                  utility = 100,value = 175,requirements=None,
                  isBuyable = True, isSellable = True):
-        Armor.__init__(self,"Leather Armor", protection, level, durability,
+        Armor.__init__(self,"Leather Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"",(0,0))
 
 class IronArmor(Armor,Drawable):
     
-    def __init__(self,protection = 21, level=1, durability=100,
+    def __init__(self,strength = 21, level=1, durability=100,
                  utility = 100,value = 475,requirements=None,
                  isBuyable = True, isSellable = True):
-        Armor.__init__(self,"Iron Armor", protection, level, durability,
+        Armor.__init__(self,"Iron Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -187,13 +187,13 @@ class PecanPie(Food,Drawable):
 
 class Tool(Item):
 
-    def __init__(self,name, damage, level=1, durability=100,
+    def __init__(self,name, strength, level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10, acornBoost = .1,
                  requirements=None, isBuyable = True, isSellable = True):
         Item.__init__(self,name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
-        self._damage = damage
+        self._strength = strength
         self._staminaCost = staminaCost
         self._acornBoost = acornBoost
 
@@ -202,14 +202,14 @@ class Tool(Item):
                "\nType: " + "Tool" + \
                "\nAcorn Bonus: " + str(self._acornBoost/0.01) + "%" + \
                Item.__repr__(self) + \
-               "\nBase Damage: " + str(round(self._damage))
+               "\nBase Strength: " + str(round(self._strength))
 
 class Shovel(Tool,Drawable):
 
-    def __init__(self, damage = 3, level=1, durability=100,
+    def __init__(self, strength = 3, level=1, durability=100,
                  utility = 100,value = 40,staminaCost = 10, acornBoost = .1,
                  requirements=None, isBuyable = True, isSellable = True):
-        Tool.__init__(self,"Shovel", damage, level,
+        Tool.__init__(self,"Shovel", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -219,10 +219,10 @@ class Shovel(Tool,Drawable):
 
 class PickAx(Tool,Drawable):
 
-    def __init__(self, damage = 5, level=1, durability=100,
+    def __init__(self, strength = 5, level=1, durability=100,
                  utility = 100,value = 65,staminaCost = 10, acornBoost = .2,
                  requirements=None, isBuyable = True, isSellable = True):
-        Tool.__init__(self,"Pick Ax", damage, level,
+        Tool.__init__(self,"Pick Ax", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -232,10 +232,10 @@ class PickAx(Tool,Drawable):
 
 class CrowBar(Tool,Drawable):
 
-    def __init__(self, damage = 8, level=1, durability=100,
+    def __init__(self, strength = 8, level=1, durability=100,
                  utility = 100,value = 95,staminaCost = 10, acornBoost = .3,
                  requirements=None, isBuyable = True, isSellable = True):
-        Tool.__init__(self,"Shovel", damage, level,
+        Tool.__init__(self,"Shovel", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"",(0,0))
@@ -259,6 +259,9 @@ class Potions(Item,Drawable):
         Drawable.__init__(self,"",(0,0))
         self._healthBoost = healthBoost
         self._value = self._healthBoost*10
+
+    def getHealthBoost():
+        return self._healthBoost
 
     def __repr__(self):
         return "Name: " + self._name + \

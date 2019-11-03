@@ -34,12 +34,11 @@ class Animal():
         self._endurance = endurance
 
         #Combat Stats
-        self._baseDamage = combatDamage
-        self._attackSpeed = attackSpeed
-        self._defensiveStat = defensiveStat
+        self._strength = strength
+        self._attackModifers = 1
+        self._defenseModifers = 1
 
         #Other Stats
-        self._strength = strength
         self._intelligence = intelligence
         self._money = 0
 
@@ -242,46 +241,6 @@ class Animal():
     def incrementEndurance(self, endurance):
         self._endurance += endurance
 
-    def getBaseDamage(self):
-        return self._baseDamage
-
-    def setBaseDamage(self, damage):
-        self._baseDamage = damage
-
-    def incrementBaseDamage(self, damage):
-        self._baseDamage += damage
-
-    def getCurrentDamageRange(self):
-        """
-        Outputs an interval of possible damage. Checks if there is a tool in
-        hand. If no tool, then animal punches.
-
-        The method will generate an interval of plus/minus 10% to the current
-        damage.
-
-        Will return a tuple of the damage interval. 
-        """
-        if self.hasToolInHand():
-            damage = self._inhand.getDamage()
-        else:
-            damage = self._baseDamage
-        margin = round(damage * .1) 
-        return (damage-margin, damage+margin)
-
-    def dealDamage(self):
-        """
-        Outputs an integer with the damage that will be dealt by the weapon.
-
-        Takes an adjusted damage from the damageRange and then multiples it
-        by a fraction in the range of 1/4 to 3/4. That will be the damage
-        returned.
-        """
-        damageRange = self.getCurrentDamageRange()
-        adjustedDamage = random.randint(damageRange[0],damageRange[1])
-        adjustedDamage += (((adjustedDamage * 0.01) * self._baseDamage) * \
-                           random.randint(0,1))
-        return max(0, round(adjustedDamage))
-
     def getAttackSpeed(self):
         return self._attackSpeed
 
@@ -291,50 +250,31 @@ class Animal():
     def incrementAttackSpeed(self, speed):
         self._attackSpeed += speed
 
-    def getDefensiveStat(self):
-        return self._defensiveStat
+    def getAttackModifers(self):
+        return self._attackModifers
 
-    def setDefensiveStat(self, defense):
-        self._defensiveStat = defense
+    def addAttackModifers(self,modifer):
+        self._attackModifers += self._modifers + modifer
 
-    def getCurrentProtectionRange(self):
-        """
-        Outputs an interval of possible damage absorption based on armor.
-        Checks if animal has armor.
+    def resetAttackModifers(self):
+        self._attackModifers = 1
 
-        The method will generate an interval of plus/minus 10% to the current
-        damage.
+    def getDefenseModifers(self):
+        return self._attackModifers
 
-        Will return a tuple of the damage interval. 
-        """
-        if self.hasArmor():
-            protect = self._armor.getProtection()
-        else:
-            protect = self._defensiveStat
-        margin = round(protect * .1) 
-        return (protect-margin, protect+margin)
+    def addDefenseModifers(self,modifer):
+        self._attackModifers += self._modifers + modifer
 
-    def defend(self):
-        """
-        Outputs an intenger for the amount of protection an animal has.
-
-        Takes an adjusted defend from the defend and then multiples it
-        by a fraction in the range of 1/4 to 3/4. That will be the defend
-        number returned.
-        """
-        defendRange = self.getCurrentProtectionRange()
-        adjustedProtect = random.randint(defendRange[0],defendRange[1])
-        adjustedProtect += (((adjustedProtect * 0.01) * self._defensiveStat) * \
-                           random.randint(0,1))
-        return max(0,round(adjustedProtect))        
+    def resetDefenseModifers(self):
+        self._attackModifers = 1
 
     def getInventory(self):
         return self._inventory
 
-    def equipTool(self, tool):
-        self._inhand = tool
+    def equipItem(self, item):
+        self._inhand = item
 
-    def unEquipTool(self):
+    def unEquipItem(self):
         self._inventory.addItem(self._inhand)
         self._inhand = None
 
@@ -345,16 +285,19 @@ class Animal():
     def equipArmor(self, armor):
         self._armor = armor
 
-    def hasToolInHand(self):
+    def getArmor(self):
+        return self._armor
+
+    def isEquipped(self):
         return self._inhand != None
 
-    def getToolInHand(self):
+    def getEquipItem(self):
         return self._inhand
 
     def hasArmor(self):
         return self._armor != None
 
-    def getToolInHandsName(self):
+    def getEquipItemName(self):
         if self._inhand == None:
             return "Nothing" # Empty string might be better
         else:
