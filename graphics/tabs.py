@@ -34,6 +34,9 @@ class Tabs(Drawable):
     def getActive(self):
         return self._active
 
+    def getTabs(self):
+        return self._tabs
+
     def handleEvent(self, event, offset=(0,0)):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             if self.getCollideRect().collidepoint(event.pos):
@@ -77,6 +80,9 @@ class Tab(Drawable):
         self._activeFontColor = activeFontColor
         self._activeBackgroundColor = activeBackgroundColor
         self.updateTab()
+
+    def getText(self):
+        return self._text
 
     def isActive(self):
         return self._active

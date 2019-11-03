@@ -1,6 +1,6 @@
 
 import pygame, random, math
-from graphics.banner import Banner
+#from graphics.banner import Banner
 from graphics.textbox import TextBox
 from graphics.textinput import TextInput
 from graphics.popup import Popup

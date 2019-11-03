@@ -14,7 +14,7 @@ races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
 class Merchant(NPC):
 
-    def __init__(self):
+    def __init__(self,name = ""):
         """
         Creates the merchant, their race, and the amount of money that
         they have. Also generates an invetory. 
@@ -51,7 +51,7 @@ class Merchant(NPC):
         """Returns the race of the merchant."""
         return self._race
 
-    def getMerchantName(self):
+    def getName(self):
         """Returns the name of the merchant."""
         return self._merchantName
 
@@ -136,8 +136,10 @@ class Merchant(NPC):
         """Returns a boolean whether or not the tradiing post wants
         to sell."""
         if item in self._inventory and item.isSellable():
+            self._merchantSpeak = "Item bought"
             return True
         else:
+            self._merchantSpeak = "Item not sellable"
             return False
 
     def __repr__(self):

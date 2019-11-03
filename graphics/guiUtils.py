@@ -31,7 +31,7 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
         p = (0, p[1] + height)
     return MySurface(surf, position)
 
-def getInfoCard(animal, position):
+def getInfoCard(animal, position,scrollBoxSize = (200,300)):
     nameFont = pygame.font.SysFont("Times New Roman", 32)
     detailsFont = pygame.font.SysFont("Times New Roman", 16)
     s = pygame.Surface((200,600))
@@ -46,7 +46,7 @@ def getInfoCard(animal, position):
     makeMultiLineTextBox(str(a), (10,200), detailsFont,
                          (255,255,255), (0,0,0)).draw(s)
     s = MySurface(s)
-    return ScrollBox(position, (200,300), s, borderWidth=2)
+    return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
 
     
     
