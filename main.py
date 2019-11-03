@@ -14,10 +14,11 @@ from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
 from animals.chipmunk import Chipmunk
+from animals.turtle import Turtle
 from minigame.interaction import Interaction
 
 SCREEN_SIZE = (1200,500)
-WORLD_SIZE  = (2400,500)
+WORLD_SIZE  = (2000,500)
 
 def setPopup(lyst, mouse_pos, popup_pos, font):
    for entity in lyst:
@@ -60,7 +61,7 @@ def main():
    player = Player(pos=(600,300))
    player.scale(2)
 
-   ground = Banner((0,300),(100,255,100),(500, 2400))
+   ground = Banner((0,0),(100,255,100),(WORLD_SIZE[1],WORLD_SIZE[0]))
 
    acorns = []
    dirtPiles = []
@@ -92,6 +93,8 @@ def main():
 
    interaction = None
 
+   merchant = Turtle(pos=(random.randint(0,WORLD_SIZE[0]),random.randint(0,WORLD_SIZE[1])))
+
    RUNNING = True
 
    while RUNNING:
@@ -115,6 +118,8 @@ def main():
       for creature in creatures:
          creature.draw(screen)
 
+      merchant.draw(screen)
+
       nightFilter.draw(screen)
 
       if popup != None:
@@ -130,8 +135,6 @@ def main():
 
       txtDay.draw(screen)
       txtHour.draw(screen)
-
-
 
       pygame.display.flip()
 
@@ -152,8 +155,6 @@ def main():
                   dp.addAcorn()
                   player.setAcorns(player.getAcorns() - 1)
                   dirtPiles.append(dp)
-          
-
 
          if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             for pile in dirtPiles:
@@ -207,7 +208,7 @@ def main():
 
       acornSpawnTimer -= ticks
       if acornSpawnTimer <= 0:
-         acorns.append(Acorn((random.randint(0,2400),random.randint(300,500))))
+         acorns.append(Acorn((random.randint(0,WORLD_SIZE[0]),random.randint(0,WORLD_SIZE[1]))))
          acornSpawnTimer = random.randint(5,10)
 
       hungerTimer -= ticks

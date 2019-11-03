@@ -26,7 +26,7 @@ class Player(Squirrel):
         self._luck = None
         self._charisma = None
 
-        self._minYPos = 220 
+        self._minYPos = 0 
 
         self._velocity = Vector2(0,0)
         self._maxVelocity = 100
@@ -72,7 +72,6 @@ class Player(Squirrel):
             self._movement[event.key] = False
         if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE:
             self.eat()
-            print("eat")
 
     def update(self, worldInfo, ticks):
         """Updates the position of the star"""
