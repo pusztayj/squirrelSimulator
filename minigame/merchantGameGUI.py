@@ -111,14 +111,16 @@ def main():
 
     FLAG = True
 
-    while RUNNING:
-        player_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
+    player_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in player.getInventory()]
-        playerSelect = ScrollSelector((100,100),(250,300),30,player_items,(0,0,0))
+    playerSelect = ScrollSelector((100,100),(250,300),30,player_items,(0,0,0))
 
-        merchant_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
+    merchant_items = [{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in merchantMind.getInventory()]
-        merchantSelect = ScrollSelector((100,100),(250,300),30,merchant_items,(0,0,0))
+    merchantSelect = ScrollSelector((100,100),(250,300),30,merchant_items,(0,0,0))
+
+    while RUNNING:
+
         background.draw(screen)
         merchant.draw(screen)
         tradeDesk.draw(screen)
@@ -157,6 +159,10 @@ def main():
                 itemCard.getCard().move(event)
                 executeTrasaction.handleEvent(event, buyButtonFunc,tabs,merchantMind,
                                               player,itemCard.getItem())
+                playerSelect.updateSelections([{"text": item.getName(),"func": selectMerchantItem,"args":item} \
+                      for item in player.getInventory()])
+                merchantSelect.updateSelections([{"text": item.getName(),"func": selectMerchantItem,"args":item} \
+                      for item in merchantMind.getInventory()])
 
         FLAG = updateDisplay(tabs)
         playerMoney.setText("Your money: $" + str(player.getMoney()))

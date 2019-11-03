@@ -1,5 +1,6 @@
 import pygame
 from modules.drawable import Drawable
+from graphics.mysurface import MySurface
 from graphics.banner import Banner
 
 class ScrollBox(Drawable):
@@ -28,7 +29,8 @@ class ScrollBox(Drawable):
         self._currentOffset = 0
 
         # Calculate slide step
-        self._step = self._internalSurface.getHeight() // (self._height)
+        self._step = (self._internalSurface.getHeight() - self._height) // \
+                     max(1, (self._height-self._sliderHeight)) + 1
 
         self._scrollOffset = 0
 
@@ -46,7 +48,24 @@ class ScrollBox(Drawable):
         return self._internalSurface
 
     def setInternalSurface(self, surface):
-        self._internalSurface.update(surface)
+        if issubclass(type(surface), MySurface):
+            self._internalSurface.update(surface.getImage())
+        else:
+            self._internalSurface.update(surface)
+
+        #Update Scroll Information
+        if self._height > self._internalSurface.getHeight():
+            self._sliderHeight = self._height
+        else:
+            self._sliderHeight = (self._height ** 2) // \
+                                 self._internalSurface.getHeight()
+            
+        self._step = (self._internalSurface.getHeight() - self._height) // \
+                     max(1, (self._height-self._sliderHeight)) + 1
+        tempPos = self._slider.getPosition()
+        self._slider = Banner((self._width-self._sidebarWidth,0),self._sliderColor,
+                         (self._sliderHeight,self._sidebarWidth))
+        self._slider.setPosition(tempPos)
 
     def dragSlider(self):
         if self._scrolling:
@@ -62,19 +81,8 @@ class ScrollBox(Drawable):
                 # Update the slider's position
                 self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
                                                                    max(0,y))))
-                # Update the scroll offset
-##                self._scrollOffset = prevY - y
-
-                self._internalSurface.setPosition((self._internalSurface.getX(), self._slider.getY() * self._step * -1))
-
-                # Set the position of the internal surface according to the offset
-##                self._internalSurface.setPosition((self._internalSurface.getX(),
-##                                      max(-1 * self._internalSurface.getHeight() - self.getHeight(),
-##                                          min(0, self._internalSurface.getY() +
-##                                      self._scrollOffset * self._step))))
-
-                # Update the current Offset
-##                self._currentOffset += self._scrollOffset * self._step
+                self._internalSurface.setPosition((self._internalSurface.getX(),
+                                                   self._slider.getY() * self._step * -1))
 
                 # Update the scroll box
                 self.updateScrollBox()
@@ -95,7 +103,7 @@ class ScrollBox(Drawable):
                                    (self._height+(self._borderWidth*2))))
         surfBack.fill(self._borderColor)
         displaySurf = pygame.Surface((self._width, self._height))
-        if issubclass(type(self._internalSurface), Drawable): 
+        if issubclass(type(self._internalSurface), Drawable):
             self._internalSurface.draw(displaySurf)
         sideBar = Banner((self._width-self._sidebarWidth,0),self._sidebarColor,
                          (self._height,self._sidebarWidth))

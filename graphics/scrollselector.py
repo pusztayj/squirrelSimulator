@@ -34,11 +34,19 @@ class ScrollSelector(Drawable):
         for sel in self._selections:
             b = Button(sel["text"], (0,ypos), font,(255,255,255),self._backgroundColor,
                    self._selectionHeight-2, self._width-self._scrollBarWidth-2,
-                       borderWidth=1)
+                       borderWidth=0)
             b.draw(surf)
             self._buttons.append(b)
             ypos += self._selectionHeight
         return MySurface(surf)
+
+    def updateSelections(self, selections):
+        self._internalHeight = self._selectionHeight * len(selections)
+        self._selections = selections
+        self._buttons = []
+        internalSurface = self.makeDisplay()
+        self._scrollBox.setInternalSurface(internalSurface)
+        self.update()
 
     def updateDisplay(self):
         surf = pygame.Surface((self._width, self._internalHeight))
