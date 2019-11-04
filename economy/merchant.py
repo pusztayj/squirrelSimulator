@@ -9,16 +9,18 @@ from inventory import Inventory
 from items.item import Item
 from items.items import *
 from animals.npc import NPC
+from modules.drawable import Drawable
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
-class Merchant(NPC):
+class Merchant(NPC, Drawable):
 
-    def __init__(self,name = ""):
+    def __init__(self,name = "", pos=(0,0)):
         """
         Creates the merchant, their race, and the amount of acorns that
         they have. Also generates an invetory. 
         """
+        Drawable.__init__(self, "turtle.png", pos)
         shelf = shelve.open("data")
         name = random.choice(shelf["names"])
         shelf.close()

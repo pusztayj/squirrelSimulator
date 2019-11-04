@@ -1,7 +1,7 @@
 
-from modules.animated import Animated 
+from modules.drawable import Drawable 
 
-class TradeDesk(Animated):
+class TradeDesk(Drawable):
 
     def __init__(self,pos=(450,100)):
-        Animated.__init__(self, "tradeDesk.png", pos)
+        Drawable.__init__(self, "tradeDesk.png", pos, worldBound=False)

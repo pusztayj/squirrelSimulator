@@ -16,6 +16,7 @@ from animals.chipmunk import Chipmunk
 from animals.turtle import Turtle
 from minigame.interaction import Interaction
 from level import Level
+from economy.merchant import Merchant
 
 class MainLevel(Level):
 
@@ -66,7 +67,7 @@ class MainLevel(Level):
 
         self._interaction = None
 
-        self._merchant = Turtle(pos=(random.randint(0,self._WORLD_SIZE[0]),
+        self._merchant = Merchant(pos=(random.randint(0,self._WORLD_SIZE[0]),
                                      random.randint(0,self._WORLD_SIZE[1])))
 
     def draw(self, screen):
