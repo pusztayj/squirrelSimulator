@@ -25,12 +25,12 @@ class MainLevel(Level):
         super().__init__()
 
         self._SCREEN_SIZE = (1200,500)
-        self._WORLD_SIZE = (2000,500)
+        self._WORLD_SIZE = (2000,1000)
 
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
 
-        self._hour_length = 1 # ticks / seconds
+        self._hour_length = 5 # ticks / seconds
         self._day_length = 24 * self._hour_length
         self._minute_length = self._hour_length / 60
 
@@ -128,6 +128,7 @@ class MainLevel(Level):
                     if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         self._interaction = Interaction()
+                        
             for merchant in self._merchants:
                 if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
@@ -146,6 +147,8 @@ class MainLevel(Level):
         self._popup = self.setPopup(self._creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:
             self._popup = self.setPopup(self._dirtPiles, m_pos_offset, popup_pos, self._popupFont)
+        if self._popup == None:
+            self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
         for acorn in self._acorns:
             if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \
@@ -159,7 +162,10 @@ class MainLevel(Level):
           for rect in entity.getCollideRects():
              r = rect.move(x,y)
              if r.collidepoint(mouse_pos):
-                return Popup(entity.getName(), popup_pos, font)
+                 name = entity.getName()
+                 if type(entity) == Merchant:
+                     name += "'s Shop"
+                 return Popup(name, popup_pos, font)
 
     def update(self, ticks):
 
