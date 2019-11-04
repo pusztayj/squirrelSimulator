@@ -16,7 +16,7 @@ class Merchant(NPC):
 
     def __init__(self,name = ""):
         """
-        Creates the merchant, their race, and the amount of money that
+        Creates the merchant, their race, and the amount of acorns that
         they have. Also generates an invetory. 
         """
         shelf = shelve.open("data")
@@ -24,7 +24,7 @@ class Merchant(NPC):
         shelf.close()
         self._merchantName = name
         self._race = random.choice(races)
-        self._money = random.randint(500,1500)
+        self._acorns = random.randint(500,1500)
         self._inventory = Inventory(100)
         self._willTrade = True
         self._merchantSpeak = str()
@@ -55,9 +55,9 @@ class Merchant(NPC):
         """Returns the name of the merchant."""
         return self._merchantName
 
-    def getMoney(self):
-        """Returns the money of the merchant."""
-        return self._money
+    def getAcorns(self):
+        """Returns the acorns of the merchant."""
+        return self._acorns
 
     def getMerchantSpeak(self):
         """Returns the buying logic of the merchant."""
@@ -81,7 +81,7 @@ class Merchant(NPC):
         assert type(cost) == int
         item.setUtility(100)
         self._inventory.addItem(item)
-        self._money = self._money - cost
+        self._acorns = self._acorns - cost
     
 
     def sellItem(self,item,price):
@@ -97,27 +97,27 @@ class Merchant(NPC):
         assert issubclass(type(item),Item)
         assert type(price) == int
         self._inventory.removeItem(item)
-        self._money = self._money + price
+        self._acorns = self._acorns + price
 
-    def moneyGeneration(self,rate = 1.01):
+    def acornsGeneration(self,rate = 1.01):
         """
-        Merchants will generate money back as they will do business
+        Merchants will generate acorns back as they will do business
         with other animals at a rate of 1% of their current amount.
         """
-        self._money = round(self._money * rate)
+        self._acorns = round(self._acorns * rate)
 
     def buyLogic(self,item,cost):
         """
         In this method we will determine the logic of the merchant
         and will return a boolean
         """
-        minimumMoney = random.randint(450,700)
+        minimumacorns = random.randint(450,700)
         minimumUtility = random.randint(30,50)
-        if self._money >= cost:
+        if self._acorns >= cost:
             if item.isBuyable() == True:
-                if self._money - cost >= minimumMoney:
+                if self._acorns - cost >= minimumacorns:
                     if item.getUtility() >= minimumUtility:
-                        self._merchantSpeak = "Item bought" 
+                        self._merchantSpeak = "Item Sold" 
                         return True
                     else:
                         self._merchantSpeak = "The item did not have enough utility"
@@ -129,7 +129,7 @@ class Merchant(NPC):
                 self._merchantSpeak = "Item is not buyable."
                 return False 
         else:
-            self._merchantSpeak = "Merchant did not have enough money."
+            self._merchantSpeak = "Merchant did not have enough acorns."
             return False
 
     def sellLogic(self,item,cost):
@@ -145,7 +145,7 @@ class Merchant(NPC):
     def __repr__(self):
         return "Name:          " + self._merchantName + \
                "\nSpecies:       " + str(type(self).__name__) + \
-               "\nAcorns:        " + str(self._money) + \
+               "\nAcorns:        " + str(self._acorns) + \
                "\nInventory:     " + str(self._inventory)
                
 

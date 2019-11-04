@@ -16,6 +16,7 @@ from modules.vector2D import Vector2
 from player import Player
 from items.items import *
 from graphics.scrollselector import ScrollSelector
+from graphics.popupwindow import PopupWindow
 
 
 # Forest Background
@@ -24,13 +25,15 @@ from graphics.scrollselector import ScrollSelector
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 FLAG = True
-itemCard = None
+global itemCard; itemCard = None
+popup = None
+
 
 class ItemCard(object):
 
     def __init__(self, item):
         self._item = item
-        self._card = getInfoCard(item,(471,166),(155,300))
+        self._card = self.generate(item,(471,166),(155,300))
 
     def getItem(self):
         return self._item
@@ -38,10 +41,25 @@ class ItemCard(object):
     def getCard(self):
         return self._card
 
-def selectMerchantItem(item):
-    #global itemCard; itemCard = getInfoCard(item,(471,166),(155,300))
-    global itemCard; itemCard = ItemCard(item)
+    def generate(self,animal, position,scrollBoxSize = (200,300)):
+        nameFont = pygame.font.SysFont("Times New Roman", 32)
+        detailsFont = pygame.font.SysFont("Times New Roman", 16)
+        s = pygame.Surface((200,600))
+        s.fill((0,0,0))
+        a = copy.copy(animal)
+        a.setPosition((10,50))
+        if a.isFlipped():
+            a.flip()
+        TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
+        if issubclass(type(animal), Animal): 
+            a.draw(s)
+        makeMultiLineTextBox(str(a), (10,200), detailsFont,
+                             (255,255,255), (0,0,0)).draw(s)
+        s = MySurface(s)
+        return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
 
+def selectMerchantItem(item):
+    global itemCard; itemCard = ItemCard(item)
 
 def updateDisplay(tabs):
     if tabs.getActive() == 0:
@@ -50,16 +68,30 @@ def updateDisplay(tabs):
         return False
 
 def buyButtonFunc(tabs,merchant,player,item):
+    global itemCard
     if itemCard != None:
         if tabs.getTabs()[tabs.getActive()].getText() == "Buy":
             merchantTransaction(player,merchant,item)
+            if player.getAcorns() < item.getValue():
+                text = "You do not have the money!"
+                itemCard = None
+            else:
+                text = merchant.getMerchantSpeak()
+                itemCard = None
+                
         elif tabs.getTabs()[tabs.getActive()].getText() == "Sell":
             merchantTransaction(merchant,player,item)
+            text = merchant.getMerchantSpeak()
+            itemCard = None
+            
+        font = pygame.font.SysFont("Times New Roman", 16)
+        global popup; popup = PopupWindow(text,(471,166),(303,158),
+                                font,(255,255,255),(0,0,0),(255,255,255),(30,30),
+                                font,(0,0,0),borderWidth = 3)
+     
     else:
         pass
-    
-def sellButtonFunc():
-    global FLAG; FLAG = False
+
 
 def main():
     
@@ -94,17 +126,15 @@ def main():
     
     # sets up buttons
     executeTrasaction = Button("Execute Transaction",(471,375),font,(255,255,255),(34,139,34),50,156,borderWidth = 2)
-    #buyButton = Button("Buy", (100,47), font, (0,0,0), (40,225,255), 50, 75,(255,255,255),2)
-    #sellButton = Button("Sell", (175,47), font, (0,0,0), (40,80,255), 50, 75,(255,255,255),2)
-
+ 
     # gets trade desk
     tradeDesk = TradeDesk()
 
     tabs = Tabs(["Buy","Sell"], (100,47), font, (0,0,0), (255,255,255), (200,50),
                (0,0,0),(255,255,255))
 
-    playerMoney = TextBox("Your money: $" + str(player.getMoney()), (771,375), textFont, (255,255,255))
-    merchantMoney = TextBox(merchantMind.getName() + "'s money: $" + str(merchantMind.getMoney()),
+    playerMoney = TextBox("Your money: $" + str(player.getAcorns()), (771,375), textFont, (255,255,255))
+    merchantMoney = TextBox(merchantMind.getName() + "'s money: $" + str(merchantMind.getAcorns()),
                             (775,410), textFont, (255,255,255))
 
     RUNNING = True
@@ -127,16 +157,19 @@ def main():
         executeTrasaction.draw(screen)
         playerMoney.draw(screen)
         merchantMoney.draw(screen)
+        
         if FLAG:
             merchantSelect.draw(screen)
         else:
             playerSelect.draw(screen)
-        #buyButton.draw(screen)
-        #sellButton.draw(screen)
         if itemCard != None:
             itemCard.getCard().draw(screen)
 
         tabs.draw(screen)
+        # draws the popup window saying the player does not have sufficient funds 
+        global popup;
+        if popup != None and popup.getDisplay():
+            popup.draw(screen)
         
         pygame.display.flip()
         
@@ -157,16 +190,21 @@ def main():
             # updates item draw
             if itemCard != None:
                 itemCard.getCard().move(event)
-                executeTrasaction.handleEvent(event, buyButtonFunc,tabs,merchantMind,
+                if popup == None or not popup.getDisplay():
+                    executeTrasaction.handleEvent(event, buyButtonFunc,tabs,merchantMind,
                                               player,itemCard.getItem())
+
+
                 playerSelect.updateSelections([{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in player.getInventory()])
                 merchantSelect.updateSelections([{"text": item.getName(),"func": selectMerchantItem,"args":item} \
                       for item in merchantMind.getInventory()])
+            if popup != None:
+                popup.handleEvent(event)
 
         FLAG = updateDisplay(tabs)
-        playerMoney.setText("Your money: $" + str(player.getMoney()))
-        merchantMoney.setText(merchantMind.getName() + "'s money: $" + str(merchantMind.getMoney()))
+        playerMoney.setText("Your money: $" + str(player.getAcorns()))
+        merchantMoney.setText(merchantMind.getName() + "'s money: $" + str(merchantMind.getAcorns()))
 
     pygame.quit()
 
