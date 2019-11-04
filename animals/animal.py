@@ -43,7 +43,7 @@ class Animal():
 
         #Other Stats
         self._intelligence = intelligence
-        self._money = 256
+        self._acorns = 256
 
         #Equipment Carried by Animal
         self._inventory = Inventory(inventorySize)
@@ -194,15 +194,15 @@ class Animal():
     def setEndurance(self, endurance):
         self._endurance = endurance
 
-    def getMoney(self):
-        return self._money
+    def getAcorns(self):
+        return self._acorns
 
-    def setMoney(self,money):
-        self._money = money
+    def setAcorns(self,acorns):
+        self._acorns = acorns
 
     def buyLogic(self,item,cost):
         """Returns boolean if animal wants to buy item."""
-        if self._money >= item.getValue() and item.isBuyable():
+        if self._acorns >= item.getValue() and item.isBuyable():
             return True
         else:
             return False
@@ -220,7 +220,7 @@ class Animal():
         assert issubclass(type(item),Item)
         assert type(cost) == int
         self._inventory.addItem(item)
-        self._money = self._money - cost
+        self._acorns = self._acorns - cost
 
     def sellLogic(self,item,price):
         """Returns boolean if animal wants to sell item."""
@@ -242,7 +242,7 @@ class Animal():
         assert issubclass(type(item),Item)
         assert type(price) == int
         self._inventory.removeItem(item)
-        self._money = self._money + price
+        self._acorns = self._acorns + price
 
     def getStrength(self):
         return self._strength
@@ -368,7 +368,7 @@ class Animal():
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
                "\nStamina:       " + str(self._stamina) + "/" + str(self._baseStamina) + \
-               "\nAcorns:        " + str(self._money) + \
+               "\nAcorns:        " + str(self._acorns) + \
                "\nXP:            " + str(self._xp) + \
                "\nSpeed:         " + str(self._speed) + \
                "\nEndurance:     " + str(self._endurance) + \

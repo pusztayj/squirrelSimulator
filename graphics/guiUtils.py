@@ -48,6 +48,35 @@ def getInfoCard(animal, position,scrollBoxSize = (200,300)):
     s = MySurface(s)
     return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
 
+class ItemCard(object):
+
+    def __init__(self, item):
+        self._item = item
+        self._card = self.generate(item,(471,166),(155,300))
+
+    def getItem(self):
+        return self._item
+
+    def getCard(self):
+        return self._card
+
+    def generate(self,animal, position,scrollBoxSize = (200,300)):
+        nameFont = pygame.font.SysFont("Times New Roman", 32)
+        detailsFont = pygame.font.SysFont("Times New Roman", 16)
+        s = pygame.Surface((200,600))
+        s.fill((0,0,0))
+        a = copy.copy(animal)
+        a.setPosition((10,50))
+        if a.isFlipped():
+            a.flip()
+        TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
+        if issubclass(type(animal), Animal): 
+            a.draw(s)
+        makeMultiLineTextBox(str(a), (10,200), detailsFont,
+                             (255,255,255), (0,0,0)).draw(s)
+        s = MySurface(s)
+        return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
+
     
     
 
