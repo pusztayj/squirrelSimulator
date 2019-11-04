@@ -31,6 +31,9 @@ class Interaction(Drawable, Window):
         self._bribeButton = Button("Bribe", (10,185), self._font, (0,0,0),
                                    (255,215,0), 35, 125, (0,0,0), 2)
 
+        self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
+               (0,0,0), 1)
+
         self.updateInteraction()
 
     def handleEvent(self, event):
@@ -38,6 +41,7 @@ class Interaction(Drawable, Window):
         self._befriendButton.handleEvent(event, self.nothing, offset=self._offset)
         self._stealButton.handleEvent(event, self.nothing,  offset=self._offset)
         self._bribeButton.handleEvent(event, self.nothing,  offset=self._offset)
+        self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.updateInteraction()
 
     def nothing(self):
@@ -59,6 +63,7 @@ class Interaction(Drawable, Window):
         self._befriendButton.draw(surf)
         self._stealButton.draw(surf)
         self._bribeButton.draw(surf)
+        self._exitButton.draw(surf)
 
         # Blit the widget layer onto the back surface
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))

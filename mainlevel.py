@@ -33,6 +33,8 @@ class MainLevel(Level):
         self._hour_length = 5 # ticks / seconds
         self._day_length = 24 * self._hour_length
         self._minute_length = self._hour_length / 60
+        self._season_length = self._day_length * 20
+        self._year_length = self._season_length * 4
 
         self._player = player
 
@@ -105,7 +107,7 @@ class MainLevel(Level):
         self._txtHour.draw(screen)
 
     def handleEvent(self, event):
-   
+
         self._player.move(event, self._atm)
 
         # Allow the player to create dirt piles
@@ -150,11 +152,12 @@ class MainLevel(Level):
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
-        for acorn in self._acorns:
-            if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \
-                self._player.getCheekCapacity() - self._player.getAcorns() > 0:
-                self._player.setAcorns(self._player.getAcorns()+1)
-                acorn.collected()
+
+        # Code for testing
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            self._player.setAcorns(self._player.getAcorns()+1)
+
+
 
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:
@@ -168,6 +171,12 @@ class MainLevel(Level):
                  return Popup(name, popup_pos, font)
 
     def update(self, ticks):
+
+        for acorn in self._acorns:
+            if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \
+                self._player.getCheekCapacity() - self._player.getAcorns() > 0:
+                self._player.setAcorns(self._player.getAcorns()+1)
+                acorn.collected()
 
         self._acornSpawnTimer -= ticks
         if self._acornSpawnTimer <= 0:
