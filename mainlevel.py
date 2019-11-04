@@ -103,20 +103,20 @@ class MainLevel(Level):
 
     def handleEvent(self, event):
    
-        self._player.move(event)
+        self._player.move(event, self._atm)
 
         # Allow the player to create dirt piles
-        if (event.type == pygame.KEYDOWN and event.key == pygame.K_b):
-            if self._player.getAcorns() > 0:
-                dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 2)))
-                self._dirtPiles.append(dp)
+        if (event.type == pygame.KEYDOWN and event.key == pygame.K_b and \
+            (self._atm == None or not self._atm.getDisplay())):
+            dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                            self._player.getY() + (self._player.getHeight() // 2)))
+            self._dirtPiles.append(dp)
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             for pile in self._dirtPiles:
                 if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                           event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                    self._atm = ATM(player, pile)
+                    self._atm = ATM(self._player, pile)
 
             for creature in self._creatures:
                 x,y = creature.getPosition()
@@ -125,6 +125,10 @@ class MainLevel(Level):
                     if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         self._interaction = Interaction()
+
+            if self._merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                         event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                return (1,) # Set Game Mode to Merchant
 
         if self._atm != None and self._atm.getDisplay():
             self._atm.handleEvent(event)

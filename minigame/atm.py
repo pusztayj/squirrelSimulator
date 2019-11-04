@@ -21,8 +21,8 @@ class ATM(Drawable, Window):
         self._fontsmall = pygame.font.SysFont("Times New Roman", 16)
         self._borderColor = (0,0,0)
         self._borderWidth = 5
-        self._width = 400#1100
-        self._height = 250#450
+        self._width = 400
+        self._height = 250
         self._backgroundColor = (139,79,59)
 
         self._offset = (50,25)

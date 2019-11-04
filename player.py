@@ -61,7 +61,7 @@ class Player(Squirrel):
             self.heal(1)
             
 
-    def move(self, event):
+    def move(self, event, atm=None):
         """
         Given an event, changes the appropriate value
         in _movement, if necessary.
@@ -70,7 +70,8 @@ class Player(Squirrel):
             self._movement[event.key] = True
         elif event.type == pygame.KEYUP:
             self._movement[event.key] = False
-        if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE:
+        if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE and \
+           (atm == None or not atm.getDisplay()):
             self.eat()
 
     def update(self, worldInfo, ticks):

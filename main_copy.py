@@ -2,6 +2,7 @@
 import pygame, random, math
 from mainlevel import MainLevel
 from player import Player
+from minigame.merchantlevel import MerchantLevel
 
 SCREEN_SIZE = (1200,500)
 
@@ -24,8 +25,11 @@ def main():
 
    player = Player()
    level = MainLevel(player, SCREEN_SIZE)
+   merchantLevel = None
 
    RUNNING = True
+
+   code = None
 
    while RUNNING:
 
@@ -34,6 +38,9 @@ def main():
 
       if level.isActive():
           level.draw(screen)
+
+      if merchantLevel != None and merchantLevel.isActive():
+          merchantLevel.draw(screen)
 
       pygame.display.flip()
 
@@ -45,17 +52,33 @@ def main():
             # change the value to False, to exit the main loop
             RUNNING = False
 
-         if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_p and \
+            (level._atm == None or not level._atm.getDisplay()):
             level.setActive(not level.isActive())
 
          if level.isActive():
-             level.handleEvent(event)
+             code = level.handleEvent(event)
+
+         if merchantLevel != None and merchantLevel.isActive():
+             code = merchantLevel.handleEvent(event)
 
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
+
+      # Set Game Mode to Merchant
+      if code != None and code[0] == 1:
+          level.setActive(False)
+          merchantLevel = MerchantLevel(player, SCREEN_SIZE)
+          code = None
+      elif code != None and code[0] == 0:
+          level.setActive(True)
+          code = None
         
       if level.isActive():
           level.update(ticks)
+
+      if merchantLevel != None and merchantLevel.isActive():
+          merchantLevel.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()
