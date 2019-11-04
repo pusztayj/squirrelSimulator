@@ -22,7 +22,7 @@ from level import Level
 
 class MerchantLevel(Level):
 
-    def __init__(self,player,SCREEN_SIZE):
+    def __init__(self,player,merchant,SCREEN_SIZE):
         super().__init__()
         self._SCREEN_SIZE = (1200,500)
         self._WORLD_SIZE = (1200,500)
@@ -38,7 +38,7 @@ class MerchantLevel(Level):
         self._merchant = Turtle(pos=(1000,170), worldBound=False)
         self._merchant.flip()
         self._merchant.scale(1.5)
-        self._merchantMind = Merchant()
+        self._merchantMind = merchant
         self._merchant_items = [{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
                       for item in self._merchantMind.getInventory()]
         self._merchantSelect = ScrollSelector((100,100),(250,300),30,self._merchant_items,(0,0,0))

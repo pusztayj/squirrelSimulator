@@ -20,7 +20,7 @@ class Merchant(NPC, Drawable):
         Creates the merchant, their race, and the amount of acorns that
         they have. Also generates an invetory. 
         """
-        Drawable.__init__(self, "turtle.png", pos)
+        Drawable.__init__(self, "merchant.png", pos)
         shelf = shelve.open("data")
         name = random.choice(shelf["names"])
         shelf.close()

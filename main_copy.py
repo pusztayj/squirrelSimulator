@@ -68,7 +68,8 @@ def main():
       # Set Game Mode to Merchant
       if code != None and code[0] == 1:
           level.setActive(False)
-          merchantLevel = MerchantLevel(player, SCREEN_SIZE)
+          merch = code[1]
+          merchantLevel = MerchantLevel(player, merch, SCREEN_SIZE)
           code = None
       elif code != None and code[0] == 0:
           level.setActive(True)

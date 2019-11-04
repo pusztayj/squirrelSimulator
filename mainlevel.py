@@ -67,8 +67,9 @@ class MainLevel(Level):
 
         self._interaction = None
 
-        self._merchant = Merchant(pos=(random.randint(0,self._WORLD_SIZE[0]),
+        self._merchants = [Merchant(pos=(random.randint(0,self._WORLD_SIZE[0]),
                                      random.randint(0,self._WORLD_SIZE[1])))
+                           for x in range(random.randint(1,5))]
 
     def draw(self, screen):
         
@@ -84,7 +85,8 @@ class MainLevel(Level):
         for creature in self._creatures:
             creature.draw(screen)
 
-        self._merchant.draw(screen)
+        for merchant in self._merchants:
+            merchant.draw(screen)
 
         self._nightFilter.draw(screen)
 
@@ -126,10 +128,10 @@ class MainLevel(Level):
                     if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         self._interaction = Interaction()
-
-            if self._merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+            for merchant in self._merchants:
+                if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                return (1,) # Set Game Mode to Merchant
+                    return (1, merchant) # Set Game Mode to Merchant and provide merchant
 
         if self._atm != None and self._atm.getDisplay():
             self._atm.handleEvent(event)
