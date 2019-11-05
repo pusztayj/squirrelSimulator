@@ -30,11 +30,15 @@ class MainLevel(Level):
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
 
-        self._hour_length = 5 # ticks / seconds
+        self._seasons = ["Spring", "Summer", "Fall", "Winter"]
+
+        self._hour_length = 1 # ticks / seconds
         self._day_length = 24 * self._hour_length
         self._minute_length = self._hour_length / 60
-        self._season_length = self._day_length * 20
+        self._season_length = 2 #days
         self._year_length = self._season_length * 4
+
+        self._current_season = 0
 
         self._player = player
 
@@ -58,6 +62,7 @@ class MainLevel(Level):
 
         self._txtDay = TextBox("Day: 1", (500,5), self._font, (255,255,255))
         self._txtHour = TextBox("12:00pm", (600,5), self._font, (255,255,255))
+        self._txtSeason = TextBox(self._seasons[0], (575, 40), self._font, (255,255,255))
 
         self._creatures = []
         self._chip = Chipmunk(pos=(1600,300))
@@ -105,6 +110,7 @@ class MainLevel(Level):
 
         self._txtDay.draw(screen)
         self._txtHour.draw(screen)
+        self._txtSeason.draw(screen)
 
     def handleEvent(self, event):
 
@@ -222,6 +228,9 @@ class MainLevel(Level):
         self._txtHour.setText(str(int((self._time // self._hour_length) % 12)+1) + ":" +
                       str(int(self._time // self._minute_length)%60).zfill(2) + " " +
                       ("pm" if (int((self._time // self._hour_length) % 24)+1 >= 12) else "am"))
+
+        self._current_season = int((((self._time // self._day_length) + 1) // self._season_length) % 4)
+        self._txtSeason.setText(self._seasons[self._current_season])
         
 
 
