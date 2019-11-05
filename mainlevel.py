@@ -96,7 +96,7 @@ class MainLevel(Level):
         for pile in self._dirtPiles:
             pile.draw(screen)
 
-        notDrawn = []
+        notDrawnTrees = []
         playerY = self._player.getY()
         for tree in self._trees:
             treeY = tree.getY()
@@ -104,15 +104,24 @@ class MainLevel(Level):
             if playerY > (treeY + treeHeight) - self._player.getHeight():
                 tree.draw(screen)
             else:
-                notDrawn.append(tree)
+                notDrawnTrees.append(tree)
+
+        notDrawnMerchants = []
+        for merch in self._merchants:
+            merchY = merch.getY()
+            merchHeight = merch.getHeight()
+            if playerY > (merchY + merchHeight) - self._player.getHeight():
+                merch.draw(screen)
+            else:
+                notDrawnTrees.append(merch)
 
         for creature in self._creatures:
             creature.draw(screen)
 
-        for merchant in self._merchants:
+        for merchant in notDrawnMerchants:
             merchant.draw(screen)
 
-        for tree in notDrawn:
+        for tree in notDrawnTrees:
             tree.draw(screen)
 
         self._nightFilter.draw(screen)
