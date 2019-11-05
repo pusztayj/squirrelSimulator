@@ -32,10 +32,10 @@ class MainLevel(Level):
 
         self._seasons = ["Spring", "Summer", "Fall", "Winter"]
 
-        self._hour_length = 1 # ticks / seconds
+        self._hour_length = 5 # ticks / seconds
         self._day_length = 24 * self._hour_length
         self._minute_length = self._hour_length / 60
-        self._season_length = 2 #days
+        self._season_length = 20 #days
         self._year_length = self._season_length * 4
 
         self._current_season = 0
@@ -78,6 +78,13 @@ class MainLevel(Level):
                                      random.randint(0,self._WORLD_SIZE[1])))
                            for x in range(random.randint(1,5))]
 
+        self._trees = []
+        for i in range(20):
+            t = Drawable("tree.png", (random.randint(0,2000+128),
+                                             random.randint(0,1000-128)))
+            if t.getCollideRect().collidelist([x.getCollideRect() for x in self._trees]) == -1:
+                self._trees.append(t)
+
     def draw(self, screen):
         
         #Draw the background to the screen
@@ -89,11 +96,24 @@ class MainLevel(Level):
         for pile in self._dirtPiles:
             pile.draw(screen)
 
+        notDrawn = []
+        playerY = self._player.getY()
+        for tree in self._trees:
+            treeY = tree.getY()
+            treeHeight = tree.getHeight()
+            if playerY > (treeY + treeHeight) - self._player.getHeight():
+                tree.draw(screen)
+            else:
+                notDrawn.append(tree)
+
         for creature in self._creatures:
             creature.draw(screen)
 
         for merchant in self._merchants:
             merchant.draw(screen)
+
+        for tree in notDrawn:
+            tree.draw(screen)
 
         self._nightFilter.draw(screen)
 
