@@ -49,7 +49,8 @@ class FrameManager(object):
          "squirrel.png":(32,32),
          "merchant.png":(64,64),
          "tree.png":(128,128),
-         "rocks.png":(32,32)
+         "rocks.png":(32,32),
+         "new_squirrel.png":(32,32)
       }
       
       # A default frame size
@@ -64,7 +65,7 @@ class FrameManager(object):
                     "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png",
                     "acorn.png", "dirtpile.png","cow.png","squirrel.png",
                     "squirrel_walk_cycle.png","merchant.png","tree.png",
-                    "rocks.png"]
+                    "rocks.png","new_squirrel.png"]
       
       
       

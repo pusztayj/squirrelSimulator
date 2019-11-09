@@ -24,6 +24,7 @@ def main():
    gameClock = pygame.time.Clock()
 
    player = Player()
+   player.scale(1.5)
    level = MainLevel(player, SCREEN_SIZE)
    merchantLevel = None
 

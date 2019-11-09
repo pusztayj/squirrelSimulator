@@ -9,9 +9,9 @@ class Squirrel(Animal, Animated):
     def __init__(self, name="", pos=(0,0)):
 
         Animal.__init__(self, name)
-        Animated.__init__(self, "squirrel_walk_cycle.png", pos)
+        Animated.__init__(self, "new_squirrel.png", pos)
 
-        self._nFrames = 6
+        self._nFrames = 4
         
 
    

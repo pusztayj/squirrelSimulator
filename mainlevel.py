@@ -101,7 +101,7 @@ class MainLevel(Level):
         for tree in self._trees:
             treeY = tree.getY()
             treeHeight = tree.getHeight()
-            if playerY > (treeY + treeHeight) - self._player.getHeight():
+            if playerY > (treeY + treeHeight) - (self._player.getHeight()-4):
                 tree.draw(screen)
             else:
                 notDrawnTrees.append(tree)
