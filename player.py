@@ -41,6 +41,8 @@ class Player(Squirrel):
         self._digTime = 2
         self._digClock = self._digTime
 
+        self._eatTime = .5
+        self._eatClock = self._eatTime
 
     def getAcorns(self):
         return self._acorns
@@ -55,13 +57,16 @@ class Player(Squirrel):
         self._cheekCapacity = capacity
 
     def eat(self):
-        if self._acorns > 0 and self._hunger < self._baseHunger:
-            self._acorns -= 1
-            self.increaseHunger()
-        elif self._acorns > 0 and self._hunger == self._baseHunger and \
-             self._health < self._baseHealth:
-            self._acorns -= 1
-            self.heal(1)
+        if self._fsm.getCurrentState() != "eating":
+            if self._acorns > 0 and self._hunger < self._baseHunger:
+                self._acorns -= 1
+                self.increaseHunger()
+                self._fsm.changeState("eat")
+            elif self._acorns > 0 and self._hunger == self._baseHunger and \
+                 self._health < self._baseHealth:
+                self._acorns -= 1
+                self.heal(1)
+                self._fsm.changeState("eat")
             
 
     def move(self, event, atm=None):
@@ -98,8 +103,17 @@ class Player(Squirrel):
             self._row = 0
             self._nFrames = 1
             self.updateAnimation(ticks)
+        elif self._fsm.getCurrentState() == "eating":
+            self._row = 2
+            self._nFrames = 2
+            self._eatClock -= ticks
+            self.updateAnimation(ticks)
+            if self._eatClock <= 0:
+                self._fsm.changeState("done")
+                self._eatClock = self._eatTime
 
-        if self._fsm.getCurrentState() == "digging":
+        if self._fsm.getCurrentState() == "digging" or \
+           self._fsm.getCurrentState() == "eating":
             self._velocity.x = 0
             self._velocity.y = 0
         else:
