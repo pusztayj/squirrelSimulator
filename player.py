@@ -119,21 +119,21 @@ class Player(Squirrel):
         else:
             #Update the velocity of the star based on the keyboard inputs
             if self._movement[pygame.K_UP]:
-                self._velocity.y -= self._acceleration
+                self._velocity.y = -self._maxVelocity
                 self._fsm.changeState("walk")
             elif self._movement[pygame.K_DOWN]:
-                self._velocity.y += self._acceleration
+                self._velocity.y = self._maxVelocity
                 self._fsm.changeState("walk")
             else:
                 self._velocity.y = 0
                 
             if self._movement[pygame.K_LEFT]:
-                self._velocity.x -= self._acceleration
+                self._velocity.x = -self._maxVelocity
                 self._fsm.changeState("walk")
                 if not self.isFlipped():
                     self.flip()
             elif self._movement[pygame.K_RIGHT]:
-                self._velocity.x += self._acceleration
+                self._velocity.x = self._maxVelocity
                 self._fsm.changeState("walk")
                 if self.isFlipped():
                     self.flip()
