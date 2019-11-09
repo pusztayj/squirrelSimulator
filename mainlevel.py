@@ -148,8 +148,12 @@ class MainLevel(Level):
         # Allow the player to create dirt piles
         if (event.type == pygame.KEYDOWN and event.key == pygame.K_b and \
             (self._atm == None or not self._atm.getDisplay())):
-            dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                            self._player.getY() + (self._player.getHeight() // 2)))
+            if self._player.isFlipped():
+                dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+                            self._player.getY() + (self._player.getHeight() // 3)))
+            else:
+                dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                            self._player.getY() + (self._player.getHeight() // 3)))
             self._dirtPiles.append(dp)
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:

@@ -6,7 +6,10 @@ playerStates = ["standing","walking"]
 playerTransitions = [Rule("standing","walk","walking"),
                      Rule("walking","walk","walking"),
                      Rule("walking","stop","standing"),
-                     Rule("standing","stop","standing")]
+                     Rule("standing","stop","standing"),
+                     Rule("standing","bury","digging"),
+                     Rule("walking","bury","digging"),
+                     Rule("digging","done","standing")]
 playerFSM = FSM(playerStartState, playerStates, playerTransitions)
 
 # A Finite State Machine for the Combat Game

@@ -38,6 +38,9 @@ class Player(Squirrel):
 
         self._fsm = playerFSM
 
+        self._digTime = 2
+        self._digClock = self._digTime
+
 
     def getAcorns(self):
         return self._acorns
@@ -73,42 +76,62 @@ class Player(Squirrel):
         if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE and \
            (atm == None or not atm.getDisplay()):
             self.eat()
+        if event.type == pygame.KEYDOWN and event.key==pygame.K_b:
+            self._fsm.changeState("bury")
 
     def update(self, worldInfo, ticks):
         """Updates the position of the star"""
 
-        if self._fsm.getCurrentState() == "walking":
+        if self._fsm.getCurrentState() == "digging":
+            self._row = 1
+            self._nFrames = 2
             self.updateAnimation(ticks)
-        
-        #Update the velocity of the star based on the keyboard inputs
-        if self._movement[pygame.K_UP]:
-            self._velocity.y -= self._acceleration
-            self._fsm.changeState("walk")
-        elif self._movement[pygame.K_DOWN]:
-            self._velocity.y += self._acceleration
-            self._fsm.changeState("walk")
-        else:
-            self._velocity.y = 0
-            
-        if self._movement[pygame.K_LEFT]:
-            self._velocity.x -= self._acceleration
-            self._fsm.changeState("walk")
-            if not self.isFlipped():
-                self.flip()
-        elif self._movement[pygame.K_RIGHT]:
-            self._velocity.x += self._acceleration
-            self._fsm.changeState("walk")
-            if self.isFlipped():
-                self.flip()
-        else:
+            self._digClock -= ticks
+            if self._digClock <= 0:
+                self._fsm.changeState("done")
+                self._digClock = self._digTime
+        elif self._fsm.getCurrentState() == "walking":
+            self._row = 0
+            self._nFrames = 4
+            self.updateAnimation(ticks)
+        elif self._fsm.getCurrentState() == "standing":
+            self._row = 0
+            self._nFrames = 1
+            self.updateAnimation(ticks)
+
+        if self._fsm.getCurrentState() == "digging":
             self._velocity.x = 0
+            self._velocity.y = 0
+        else:
+            #Update the velocity of the star based on the keyboard inputs
+            if self._movement[pygame.K_UP]:
+                self._velocity.y -= self._acceleration
+                self._fsm.changeState("walk")
+            elif self._movement[pygame.K_DOWN]:
+                self._velocity.y += self._acceleration
+                self._fsm.changeState("walk")
+            else:
+                self._velocity.y = 0
+                
+            if self._movement[pygame.K_LEFT]:
+                self._velocity.x -= self._acceleration
+                self._fsm.changeState("walk")
+                if not self.isFlipped():
+                    self.flip()
+            elif self._movement[pygame.K_RIGHT]:
+                self._velocity.x += self._acceleration
+                self._fsm.changeState("walk")
+                if self.isFlipped():
+                    self.flip()
+            else:
+                self._velocity.x = 0
 
-        if self._velocity.x==0 and self._velocity.y==0:
-            self._fsm.changeState("stop")
+            if self._velocity.x==0 and self._velocity.y==0:
+                self._fsm.changeState("stop")
 
-        #If the current velocity exceeds the maximum, scale it down
-        if self._velocity.magnitude() > self._maxVelocity:
-            self._velocity.scale(self._maxVelocity)
+            #If the current velocity exceeds the maximum, scale it down
+            if self._velocity.magnitude() > self._maxVelocity:
+                self._velocity.scale(self._maxVelocity)
 
         #Update the position of the star based on its current velocity and ticks
         newPosition = self._position + (self._velocity * ticks)
