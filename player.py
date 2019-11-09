@@ -96,7 +96,13 @@ class Player(Squirrel):
                 self._fsm.changeState("done")
                 self._digClock = self._digTime
         elif self._fsm.getCurrentState() == "walking":
-            self._row = 0
+            if abs(self._velocity.y) > abs(self._velocity.x):
+                if self._velocity.y > 0:
+                    self._row = 4
+                else:
+                    self._row = 3
+            else:
+                self._row = 0
             self._nFrames = 4
             self.updateAnimation(ticks)
         elif self._fsm.getCurrentState() == "standing":
