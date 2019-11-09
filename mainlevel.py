@@ -17,6 +17,7 @@ from animals.turtle import Turtle
 from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
+from minigame.worldclock import WorldClock
 
 class MainLevel(Level):
 
@@ -39,6 +40,8 @@ class MainLevel(Level):
         self._year_length = self._season_length * 4
 
         self._current_season = 0
+
+        self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
         self._player = player
 
@@ -137,9 +140,10 @@ class MainLevel(Level):
         if self._interaction != None and self._interaction.getDisplay():
             self._interaction.draw(screen)
 
-        self._txtDay.draw(screen)
-        self._txtHour.draw(screen)
-        self._txtSeason.draw(screen)
+        #self._txtDay.draw(screen)
+        #self._txtHour.draw(screen)
+        #self._txtSeason.draw(screen)
+        self._worldClock.draw(screen)
 
     def handleEvent(self, event):
 
@@ -257,6 +261,8 @@ class MainLevel(Level):
         self._acorns = [acorn for acorn in self._acorns if not acorn.isCollected()]
 
         #Update InGame Clock
+
+        self._worldClock.update(ticks)
         self._txtDay.setText("Day: " + str(int(self._time // self._day_length)+1))
         self._txtHour.setText(str(int((self._time // self._hour_length) % 12)+1) + ":" +
                       str(int(self._time // self._minute_length)%60).zfill(2) + " " +
