@@ -193,7 +193,7 @@ class MainLevel(Level):
 
 
         # Code for testing
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             self._player.setAcorns(self._player.getAcorns()+1)
 
 
