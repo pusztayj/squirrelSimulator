@@ -250,7 +250,7 @@ class CrowBar(Tool,Drawable):
 
 class Potions(Item,Drawable):
 
-    def __init__(self, healthBoost = 10,level=1, durability=100,
+    def __init__(self, healthBoost = 25,level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,
                  requirements=None, isBuyable = True, isSellable = True):
         super().__init__("Health Potions",level=1, durability=100,
@@ -260,7 +260,7 @@ class Potions(Item,Drawable):
         self._healthBoost = healthBoost
         self._value = self._healthBoost*10
 
-    def getHealthBoost():
+    def getHealthBoost(self):
         return self._healthBoost
 
     def __repr__(self):

@@ -2,6 +2,7 @@
 from .animal import Animal
 from graphics.popup import Popup
 import random, pygame, copy
+from items.items import *
 
 class NPC(Animal):
 
@@ -10,7 +11,7 @@ class NPC(Animal):
                  attack_speed, defense):
         
         super().__init__(name=name,
-                         health=random.randint(health[0],health[1]),
+                         health=100,
                          speed=random.randint(speed[0],speed[1]),
                          endurance=random.randint(endurance[0],endurance[1]),
                          combatDamage=random.randint(damage[0],damage[1]),
@@ -35,6 +36,18 @@ class NPC(Animal):
                 break
 ##        else:
             #self._image = copy.copy(self._realImage)
+
+    def combatMoveLogic(self,opponents):
+        # opponents is a list
+        if self._health <= 20:
+            types = [type(x) for x in self._inventory]
+            if type(Potions()) in types:
+                self.heal(Potions().getHealthBoost())
+                self._inventory.removeItem(Potions())
+                
+        else:
+            print("not used")
+            
 
             
 

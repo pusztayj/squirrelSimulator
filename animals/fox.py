@@ -3,7 +3,7 @@ from .npc import NPC
 from modules.animated import Animated
 
 AGGRESSION   = (0,5)
-HEALTH       = (25,30)
+HEALTH       = (100,100)
 SPEED        = (15,20)
 ENDURANCE    = (8,10)
 DAMAGE       = (12,15)
