@@ -31,11 +31,17 @@ class SoundManager(object):
       
       # Folders in which sounds are stored
       _MUSIC_FOLDER = os.path.join("sounds", "music")
-      _SFX_FOLDER = os.path.join("sounds", "SFX")
+      _SFX_FOLDER = os.path.join("sounds", "sfx")
       
       _FOLDER = {
-         "rain.wav"     : _SFX_FOLDER,
-         "main1.mp3" : _MUSIC_FOLDER
+         "munch.ogg" : _SFX_FOLDER,
+         "main1.mp3" : _MUSIC_FOLDER,
+         "main1.mp3" : _MUSIC_FOLDER,
+         "main3.mp3" : _MUSIC_FOLDER,
+         "main4.mp3" : _MUSIC_FOLDER,
+         "shop1.mp3" : _MUSIC_FOLDER,
+         "shop2.mp3" : _MUSIC_FOLDER,
+         "shop3.mp3" : _MUSIC_FOLDER
       }
       
       

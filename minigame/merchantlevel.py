@@ -78,7 +78,7 @@ class MerchantLevel(Level):
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
 
-        SoundManager.getInstance().togglePlayMusic(self._currentSong)
+        SoundManager.getInstance().playMusic(self._currentSong)
 
         
     def selectMerchantItem(self,item):
@@ -159,4 +159,4 @@ class MerchantLevel(Level):
             temp = self._currentSong
             while temp == self._currentSong:
                 self._currentSong = random.choice(self._songs)
-            SoundManager.getInstance().togglePlayMusic(self._currentSong)
+            SoundManager.getInstance().playMusic(self._currentSong)

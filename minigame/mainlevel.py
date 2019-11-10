@@ -76,7 +76,7 @@ class MainLevel(Level):
             if t.getCollideRect().collidelist([x.getCollideRect() for x in self._trees]) == -1:
                 self._trees.append(t)
 
-        SoundManager.getInstance().togglePlayMusic(self._currentSong)
+        SoundManager.getInstance().playMusic(self._currentSong)
 
     def draw(self, screen):
         
@@ -254,7 +254,7 @@ class MainLevel(Level):
             temp = self._currentSong
             while temp == self._currentSong:
                 self._currentSong = random.choice(self._songs)
-            SoundManager.getInstance().togglePlayMusic(self._currentSong)
+            SoundManager.getInstance().playMusic(self._currentSong)
         
 
 
