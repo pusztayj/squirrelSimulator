@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from graphics.banner import Banner
 from animals.turtle import Turtle
 from animals.beaver import Beaver
@@ -18,14 +18,20 @@ from items.items import *
 from graphics.scrollselector import ScrollSelector
 from graphics.popupwindow import PopupWindow
 from level import Level
-
+from modules.soundManager import SoundManager
 
 class MerchantLevel(Level):
 
     def __init__(self,player,merchant,SCREEN_SIZE):
         super().__init__()
+
+        
         self._SCREEN_SIZE = (1200,500)
         self._WORLD_SIZE = (1200,500)
+
+        self._songs = ["shop1.mp3","shop2.mp3","shop3.mp3"]
+        self._currentSong = random.choice(self._songs)
+
         # fonts
         self._font = pygame.font.SysFont("Times New Roman", 16)
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
@@ -71,6 +77,8 @@ class MerchantLevel(Level):
 
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
+
+        SoundManager.getInstance().togglePlayMusic(self._currentSong)
 
         
     def selectMerchantItem(self,item):
@@ -146,4 +154,9 @@ class MerchantLevel(Level):
         self._FLAG = self.updateDisplay()
         self._playerMoney.setText("Your money: $" + str(self._player.getAcorns()))
         self._merchantMoney.setText(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()))
-        
+
+        if not pygame.mixer.music.get_busy():
+            temp = self._currentSong
+            while temp == self._currentSong:
+                self._currentSong = random.choice(self._songs)
+            SoundManager.getInstance().togglePlayMusic(self._currentSong)

@@ -18,6 +18,7 @@ from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
+from modules.soundManager import SoundManager
 
 class MainLevel(Level):
 
@@ -30,6 +31,9 @@ class MainLevel(Level):
 
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
+
+        self._songs = ["main1.mp3","main2.mp3","main3.mp3","main4.mp3"]
+        self._currentSong = random.choice(self._songs)
 
         self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
@@ -71,6 +75,8 @@ class MainLevel(Level):
                                              random.randint(0,1000-128)))
             if t.getCollideRect().collidelist([x.getCollideRect() for x in self._trees]) == -1:
                 self._trees.append(t)
+
+        SoundManager.getInstance().togglePlayMusic(self._currentSong)
 
     def draw(self, screen):
         
@@ -243,6 +249,12 @@ class MainLevel(Level):
 
         #Update InGame Clock
         self._worldClock.update(ticks)
+
+        if not pygame.mixer.music.get_busy():
+            temp = self._currentSong
+            while temp == self._currentSong:
+                self._currentSong = random.choice(self._songs)
+            SoundManager.getInstance().togglePlayMusic(self._currentSong)
         
 
 

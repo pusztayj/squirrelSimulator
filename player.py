@@ -38,7 +38,7 @@ class Player(Squirrel):
 
         self._fsm = playerFSM
 
-        self._digTime = 2
+        self._digTime = 1
         self._digClock = self._digTime
 
         self._eatTime = .5

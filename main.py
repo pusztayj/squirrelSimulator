@@ -13,6 +13,7 @@ def main():
    #Initialize the module
    pygame.init()
    pygame.font.init()
+   pygame.mixer.init()
 
    #Update the title for the window
    pygame.display.set_caption('Squirrel Simulator')
@@ -69,10 +70,17 @@ def main():
       # Set Game Mode to Merchant
       if code != None and code[0] == 1:
           level.setActive(False)
+          pygame.mixer.music.fadeout(1000)
           merch = code[1]
           merchantLevel = MerchantLevel(player, merch, SCREEN_SIZE)
           code = None
+
+           # Reset the movement dictionary for the player
+          for k in player._movement.keys():
+             player._movement[k] = False
+             
       elif code != None and code[0] == 0:
+          pygame.mixer.music.fadeout(1000)
           level.setActive(True)
           code = None
         
