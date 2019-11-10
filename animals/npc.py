@@ -3,20 +3,20 @@ from .animal import Animal
 from graphics.popup import Popup
 import random, pygame, copy
 from items.items import *
+from combatutils import *
 
 class NPC(Animal):
 
 
-    def __init__(self, name, agression, health, speed, endurance, damage,
-                 attack_speed, defense):
+    def __init__(self, name, agression, speed, endurance,
+                 attack_speed,strength):
         
         super().__init__(name=name,
                          health=100,
                          speed=random.randint(speed[0],speed[1]),
                          endurance=random.randint(endurance[0],endurance[1]),
-                         combatDamage=random.randint(damage[0],damage[1]),
-                         attackSpeed=random.randint(attack_speed[0],attack_speed[1]),
-                         defensiveStat=random.randint(defense[0],defense[1]))
+                         strength = strength,
+                         attackSpeed=random.randint(attack_speed[0],attack_speed[1]))
         
         self._aggressionLevel = agression
         #self._realImage = copy.copy(self._image)
@@ -37,16 +37,18 @@ class NPC(Animal):
 ##        else:
             #self._image = copy.copy(self._realImage)
 
-    def combatMoveLogic(self,opponents):
+    def healLogic(self,opponents):
         # opponents is a list
+        damage = [(type(x),attackComputation(self,x)) for x in opponents]
+
+        print(damage)
+            
         if self._health <= 20:
-            types = [type(x) for x in self._inventory]
-            if type(Potions()) in types:
-                self.heal(Potions().getHealthBoost())
-                self._inventory.removeItem(Potions())
-                
-        else:
-            print("not used")
+            for x in self._inventory:
+                if type(x) == type(Potions()) and self._health <= 20:
+                    heal(self,x)
+         
+            
             
 
             

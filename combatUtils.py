@@ -16,25 +16,33 @@ def attack(attacker, defender):
     It awards damage based on the attackdamage dictionary.
     """
     
-    attacker.resetDefenseModifers()
-
-    i = 0; j = 0
-    if attacker.isEquipped(): i = 1
-    if defender.hasArmor(): j = 1
-
-    attack_strength = (attacker.getStrength() + \
-                       (i*attacker.getEquipItem().getStrength())) * \
-                       attacker.getAttackModifers()
-
-    defense_strength = (defender.getStrength() + \
-                       (j*defender.getArmor().getStrength())) * \
-                       defender.getDefenseModifers()
-
-    ratio = round((attack_strength/defense_strength) * 4) / 4  
-    damage = attackDamage[(ratio,1)]
+    damage = attackComputation(attacker,defender)
     defender.loseHealth(damage)
     # potential gain xp
     # potential stamina loss
+
+def attackComputation(attacker,defender):
+    """
+    Calculates the damage dealt.
+    """
+    attacker.resetDefenseModifers()
+    try:
+        attack_strength = (attacker.getStrength() + \
+                               (attacker.getEquipItem().getStrength())) * \
+                               attacker.getAttackModifers()
+    except AttributeError:
+        attack_strength = attacker.getStrength()*attacker.getAttackModifers()
+
+    try:
+        defense_strength = (defender.getStrength() + \
+                           (defender.getArmor().getStrength())) * \
+                           defender.getDefenseModifers()
+    except AttributeError:
+        defense_strength = defender.getStrength()*defender.getDefenseModifers()
+                         
+    ratio = round((attack_strength/defense_strength) * 4) / 4  
+    damage = attackDamage[(ratio,1)]
+    return damage
 
 def fortify(animal):
     """
