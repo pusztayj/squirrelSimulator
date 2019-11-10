@@ -42,6 +42,9 @@ class WorldClock(Drawable):
     def getHourLength(self):
         return self._hour_length
 
+    def getDayLength(self):
+        return self._day_length
+
     def getSeason(self):
         return self._current_season
 

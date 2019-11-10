@@ -31,16 +31,6 @@ class MainLevel(Level):
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
 
-        self._seasons = ["Spring", "Summer", "Fall", "Winter"]
-
-        self._hour_length = 5 # ticks / seconds
-        self._day_length = 24 * self._hour_length
-        self._minute_length = self._hour_length / 60
-        self._season_length = 20 #days
-        self._year_length = self._season_length * 4
-
-        self._current_season = 0
-
         self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
         self._player = player
@@ -52,20 +42,14 @@ class MainLevel(Level):
 
         # Create timers
         self._acornSpawnTimer = random.randint(5,10)
-        self._hungerTimer = 2 * self._hour_length
-        self._starveTimer = 2 * self._hour_length
-
-        self._time = 0
+        self._hungerTimer = 2 * self._worldClock.getHourLength()
+        self._starveTimer = 2 * self._worldClock.getHourLength()
 
         self._popup = None
 
         self._stats = StatDisplay((5,5),self._player)
 
         self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
-
-        self._txtDay = TextBox("Day: 1", (500,5), self._font, (255,255,255))
-        self._txtHour = TextBox("12:00pm", (600,5), self._font, (255,255,255))
-        self._txtSeason = TextBox(self._seasons[0], (575, 40), self._font, (255,255,255))
 
         self._creatures = []
         self._chip = Chipmunk(pos=(1600,300))
@@ -140,9 +124,6 @@ class MainLevel(Level):
         if self._interaction != None and self._interaction.getDisplay():
             self._interaction.draw(screen)
 
-        #self._txtDay.draw(screen)
-        #self._txtHour.draw(screen)
-        #self._txtSeason.draw(screen)
         self._worldClock.draw(screen)
 
     def handleEvent(self, event):
@@ -230,20 +211,20 @@ class MainLevel(Level):
         self._hungerTimer -= ticks
         if self._hungerTimer <= 0:
             self._player.decrementHunger()
-            self._hungerTimer = 2 * self._hour_length
+            self._hungerTimer = 2 * self._worldClock.getHourLength()
 
-        self._time += ticks
-
-        self._nightFilter.setAlpha(math.sin(self._time/(self._day_length/4))*200)
+        self._nightFilter.setAlpha(math.sin(self._worldClock.getTime()/
+                                            (self._worldClock.getDayLength()
+                                             /4))*200)
 
         if self._player.isStarving():
             self._starveTimer -= ticks
             if self._starveTimer <= 0:
                 self._player.loseHealth(5)
                 self._player.loseStamina(5)
-                self._starveTimer = 2 * self._hour_length
+                self._starveTimer = 2 * self._worldClock.getHourLength()
         else:
-            self._starveTimer = 2 * self._hour_length
+            self._starveTimer = 2 * self._worldClock.getHourLength()
 
         if self._player.isDead():
             print("The Player is Dead")
@@ -261,15 +242,7 @@ class MainLevel(Level):
         self._acorns = [acorn for acorn in self._acorns if not acorn.isCollected()]
 
         #Update InGame Clock
-
         self._worldClock.update(ticks)
-        self._txtDay.setText("Day: " + str(int(self._time // self._day_length)+1))
-        self._txtHour.setText(str(int((self._time // self._hour_length) % 12)+1) + ":" +
-                      str(int(self._time // self._minute_length)%60).zfill(2) + " " +
-                      ("pm" if (int((self._time // self._hour_length) % 24)+1 >= 12) else "am"))
-
-        self._current_season = int((((self._time // self._day_length) + 1) // self._season_length) % 4)
-        self._txtSeason.setText(self._seasons[self._current_season])
         
 
 
