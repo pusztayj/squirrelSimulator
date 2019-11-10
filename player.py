@@ -3,6 +3,7 @@ from modules.vector2D import Vector2
 import rectmanager
 import pygame
 from stateMachines import playerFSM
+from modules.soundManager import SoundManager
 
 
 class Player(Squirrel):
@@ -38,7 +39,7 @@ class Player(Squirrel):
 
         self._fsm = playerFSM
 
-        self._digTime = 2
+        self._digTime = 1
         self._digClock = self._digTime
 
         self._eatTime = .5
@@ -62,11 +63,13 @@ class Player(Squirrel):
                 self._acorns -= 1
                 self.increaseHunger()
                 self._fsm.changeState("eat")
+                SoundManager.getInstance().playSound("munch.ogg")
             elif self._acorns > 0 and self._hunger == self._baseHunger and \
                  self._health < self._baseHealth:
                 self._acorns -= 1
                 self.heal(1)
                 self._fsm.changeState("eat")
+                SoundManager.getInstance().playSound("munch.ogg")
             
 
     def move(self, event, atm=None):
