@@ -51,7 +51,7 @@ class Stick(Weapon,Drawable):
         Weapon.__init__(self,"Stick", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"stick.png",(0,0))
         
 
 class Spear(Weapon,Drawable):
@@ -62,7 +62,7 @@ class Spear(Weapon,Drawable):
         Weapon.__init__(self,"Spear", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"sword.png",(0,0))
+        Drawable.__init__(self,"spear.png",(0,0))
 
 class IronSword(Weapon,Drawable):
 
@@ -72,7 +72,7 @@ class IronSword(Weapon,Drawable):
         Weapon.__init__(self,"Iron Sword", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"sword.png",(0,0))
 
 ########################################################
 #################### Armor #############################
@@ -108,7 +108,7 @@ class HideArmor(Armor,Drawable):
                  utility,value,requirements,
                  isBuyable, isSellable)
 
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"hide_armor.png",(0,0))
 
 class LeatherArmor(Armor,Drawable):
     
@@ -118,7 +118,7 @@ class LeatherArmor(Armor,Drawable):
         Armor.__init__(self,"Leather Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"leather_armor.png",(0,0))
 
 class IronArmor(Armor,Drawable):
     
@@ -128,7 +128,7 @@ class IronArmor(Armor,Drawable):
         Armor.__init__(self,"Iron Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"iron_armor.png",(0,0))
         
 
 ########################################################
@@ -159,7 +159,7 @@ class Berries(Food,Drawable):
         Food.__init__(self,"Berries", healthBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"berries.png",(0,0))
 
 class NutSoup(Food,Drawable):
 
@@ -169,7 +169,7 @@ class NutSoup(Food,Drawable):
         Food.__init__(self,"Nut Soup", healthBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"nutsoup.png",(0,0))
 
 class PecanPie(Food,Drawable):
 
@@ -179,7 +179,7 @@ class PecanPie(Food,Drawable):
         Food.__init__(self,"Pecan Pie", healthBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"pecanpie.png",(0,0))
 
 ########################################################
 #################### Tool ##############################
@@ -212,7 +212,7 @@ class Shovel(Tool,Drawable):
         Tool.__init__(self,"Shovel", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"shovel.png",(0,0))
 
     def acornModifier(self):
         return 1.1 + self._level*.1
@@ -225,7 +225,7 @@ class PickAx(Tool,Drawable):
         Tool.__init__(self,"Pick Ax", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"pickax.png",(0,0))
 
     def acornModifier(self):
         return 1.1 + self._level*.1
@@ -235,10 +235,10 @@ class CrowBar(Tool,Drawable):
     def __init__(self, strength = 8, level=1, durability=100,
                  utility = 100,value = 95,staminaCost = 10, acornBoost = .3,
                  requirements=None, isBuyable = True, isSellable = True):
-        Tool.__init__(self,"Shovel", strength, level,
+        Tool.__init__(self,"Crowbar", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"crowbar.png",(0,0))
 
     def acornModifier(self):
         return 1.1 + self._level*.1
@@ -256,7 +256,7 @@ class Potions(Item,Drawable):
         super().__init__("Health Potions",level=1, durability=100,
                  utility = 100,requirements=None,
                  isBuyable = True, isSellable = True)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"healthpotion.png",(0,0))
         self._healthBoost = healthBoost
         self._value = self._healthBoost*10
 

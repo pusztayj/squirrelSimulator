@@ -21,7 +21,7 @@ class MainLevel(Level):
 
         super().__init__()
 
-        self._SCREEN_SIZE = (1200,500)
+        self._SCREEN_SIZE = SCREEN_SIZE
         self._WORLD_SIZE = (2000,1000)
 
         self._font = pygame.font.SysFont("Times New Roman", 32)
@@ -173,6 +173,7 @@ class MainLevel(Level):
 
         if self._interaction != None and self._interaction.getDisplay():
             self._interaction.handleEvent(event)
+            return (self._interaction.getSelection(),)
 
 
                 

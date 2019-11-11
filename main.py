@@ -3,6 +3,7 @@ import pygame, random, math
 from minigame.mainlevel import MainLevel
 from player import Player
 from minigame.merchantlevel import MerchantLevel
+from minigame.combatLevel import CombatLevel
 
 SCREEN_SIZE = (1200,500)
 
@@ -29,8 +30,7 @@ def main():
    player.scale(1.5)
    level = MainLevel(player, SCREEN_SIZE)
    merchantLevel = None
-
-   print(player.getInventory().getMaxCapacity())
+   combatLevel = None
 
    RUNNING = True
 
@@ -46,6 +46,9 @@ def main():
 
       if merchantLevel != None and merchantLevel.isActive():
           merchantLevel.draw(screen)
+
+      if combatLevel != None and combatLevel.isActive():
+         combatLevel.draw(screen)
 
       pygame.display.flip()
 
@@ -86,12 +89,22 @@ def main():
           pygame.mixer.music.fadeout(1000)
           level.setActive(True)
           code = None
+
+      # Set Game Mode to Combat
+      elif code != None and code[0] == 2:
+         level.setActive(False)
+         pygame.mixer.music.fadeout(1000)
+         combatLevel = CombatLevel(player, SCREEN_SIZE)
+         code = None
         
       if level.isActive():
           level.update(ticks)
 
       if merchantLevel != None and merchantLevel.isActive():
           merchantLevel.update(ticks)
+
+      if combatLevel != None and combatLevel.isActive():
+         combatLevel.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()

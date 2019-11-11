@@ -51,7 +51,19 @@ class FrameManager(object):
          "tree.png":(128,128),
          "rocks.png":(32,32),
          "new_squirrel.png":(32,32),
-         "sword.png":(32,32)
+         "sword.png":(32,32),
+         "spear.png":(32,32),
+         "stick.png":(32,32),
+         "hide_armor.png":(32,32),
+         "leather_armor.png":(32,32),
+         "iron_armor.png":(32,32),
+         "berries.png":(32,32),
+         "nutsoup.png":(32,32),
+         "pecanpie.png":(32,32),
+         "shovel.png":(32,32),
+         "pickax.png":(32,32),
+         "crowbar.png":(32,32),
+         "healthpotion":(32,32)
       }
       
       # A default frame size
@@ -66,7 +78,10 @@ class FrameManager(object):
                     "tempRabbit.png", "shmoo.png","tempHedgeHog.png","tradeDesk.png",
                     "acorn.png", "dirtpile.png","cow.png","squirrel.png",
                     "squirrel_walk_cycle.png","merchant.png","tree.png",
-                    "rocks.png","new_squirrel.png","sword.png"]
+                    "rocks.png","new_squirrel.png","sword.png","spear.png",
+                    "stick.png","hide_armor.png","leather_armor.png",
+                    "iron_armor.png","berries.png","nutsoup.png","shovel.png",
+                    "pickax.png","crowbar.png","healthpotion.png","pecanpie.png"]
       
       
       

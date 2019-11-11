@@ -9,6 +9,7 @@ from graphics.mysurface import MySurface
 from graphics.textbox import TextBox
 from graphics.scrollbox import ScrollBox
 from animals.animal import Animal
+from items.item import Item
 import pygame, copy
 
 
@@ -60,18 +61,19 @@ class ItemCard(object):
     def getCard(self):
         return self._card
 
-    def generate(self,animal, position,scrollBoxSize = (200,300)):
+    def generate(self,entity, position,scrollBoxSize = (200,300)):
         nameFont = pygame.font.SysFont("Times New Roman", 32)
         detailsFont = pygame.font.SysFont("Times New Roman", 16)
         s = pygame.Surface((200,600))
         s.fill((0,0,0))
-        a = copy.copy(animal)
+        a = copy.copy(entity)
         a.setPosition((10,50))
         if a.isFlipped():
             a.flip()
+        a.scale(4)
         TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
-        if issubclass(type(animal), Animal): 
-            a.draw(s)
+##        if issubclass(type(entity), Animal) or issubclass(type(entity), Item): 
+        a.draw(s)
         makeMultiLineTextBox(str(a), (10,200), detailsFont,
                              (255,255,255), (0,0,0)).draw(s)
         s = MySurface(s)

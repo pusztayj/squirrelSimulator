@@ -34,15 +34,23 @@ class Interaction(Drawable, Window):
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
 
+        self._selection = None
+
         self.updateInteraction()
 
     def handleEvent(self, event):
-        self._fightButton.handleEvent(event, self.nothing, offset=self._offset)
+        self._fightButton.handleEvent(event, self.fight, offset=self._offset)
         self._befriendButton.handleEvent(event, self.nothing, offset=self._offset)
         self._stealButton.handleEvent(event, self.nothing,  offset=self._offset)
         self._bribeButton.handleEvent(event, self.nothing,  offset=self._offset)
         self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.updateInteraction()
+
+    def fight(self):
+        self._selection = 2
+
+    def getSelection(self):
+        return self._selection
 
     def nothing(self):
         pass

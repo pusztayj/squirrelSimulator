@@ -41,7 +41,9 @@ class SoundManager(object):
          "main4.mp3" : _MUSIC_FOLDER,
          "shop1.mp3" : _MUSIC_FOLDER,
          "shop2.mp3" : _MUSIC_FOLDER,
-         "shop3.mp3" : _MUSIC_FOLDER
+         "shop3.mp3" : _MUSIC_FOLDER,
+         "battle1.mp3" : _MUSIC_FOLDER,
+         "battle2.mp3" : _MUSIC_FOLDER,
       }
       
       
