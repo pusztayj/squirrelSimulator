@@ -12,7 +12,7 @@ class Animal():
 
     def __init__(self, name="", health=100, stamina = 100,xp=0, speed=1, endurance=1,
                  combatDamage=10, attackSpeed=1, strength=1,
-                 intelligence=1, equipment=[], inventorySize=10,
+                 intelligence=1, equipment=[], inventorySize=9,
                  inHand=None, armor=None, buffs=[]):
 
         #Give the animal a random name if none was provided

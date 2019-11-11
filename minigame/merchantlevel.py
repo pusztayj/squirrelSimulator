@@ -92,18 +92,21 @@ class MerchantLevel(Level):
 
     def transaction(self,item):
         if self._itemCard != None:
-            if self._tabs.getTabs()[self._tabs.getActive()].getText() == "Buy":
-                merchantTransaction(self._player,self._merchant,item)
+            if self._tabs.getTabs()[self._tabs.getActive()].getText() == "Buy":  
                 if self._player.getAcorns() < item.getValue():
                     text = "You do not have the money!"
                     self._itemCard = None
+                elif not self._player.getInventory().hasSpace():
+                    text = "You do not have space for this item!"
+                    self._itemCard = None
                 else:
+                    merchantTransaction(self._player,self._merchantMind,item)
                     text = self._merchantMind.getMerchantSpeak()
                     self._itemCard = None
             elif self._tabs.getTabs()[self._tabs.getActive()].getText() \
                  == "Sell":
-                 merchantTransaction(self._merchant,self._player,item)
-                 text = self._merchant.getMerchantSpeak()
+                 merchantTransaction(self._merchantMind,self._player,item)
+                 text = self._merchantMind.getMerchantSpeak()
                  self._itemCard = None
             font = pygame.font.SysFont("Times New Roman", 16)
             self._popup = PopupWindow(text,(471,166),(303,158),

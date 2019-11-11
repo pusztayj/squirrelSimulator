@@ -5,7 +5,7 @@ File: inventory.py
 
 class Inventory():
 
-    def __init__(self, size=10):
+    def __init__(self, size=9):
         self._maxCapacity = size
         self._currentCapacity = 0
         self._items = []
