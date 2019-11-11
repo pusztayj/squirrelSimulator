@@ -3,12 +3,10 @@ from .npc import NPC
 from modules.animated import Animated
 
 AGGRESSION   = (0,2)
-HEALTH       = (10,15)
 SPEED        = (12,18)
 ENDURANCE    = (6,10)
-DAMAGE       = (4,6)
 ATTACK_SPEED = (1,2)
-DEFENSE      = (5,7)
+STRENGTH     = 8 
 
 class Chipmunk(NPC, Animated):
 
@@ -16,5 +14,5 @@ class Chipmunk(NPC, Animated):
 
         
         Animated.__init__(self, "tempChipmunk.png", pos)
-        NPC.__init__(self, name, AGGRESSION, HEALTH, SPEED,
-                         ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
+        NPC.__init__(self, name, AGGRESSION, SPEED,
+                         ENDURANCE,ATTACK_SPEED,STRENGTH)

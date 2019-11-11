@@ -3,17 +3,15 @@ from .npc import NPC
 from modules.animated import Animated
 
 AGGRESSION   = (0,1)
-HEALTH       = (14,18)
 SPEED        = (18,24)
 ENDURANCE    = (6,10)
-DAMAGE       = (6,8)
 ATTACK_SPEED = (1,2)
-DEFENSE      = (3,5)
+STRENGTH     = 12
 
 class Deer(NPC, Animated):
 
     def __init__(self, name="", pos=(0,0)):
 
-        NPC.__init__(self, name, AGGRESSION, HEALTH, SPEED,
-                         ENDURANCE,DAMAGE,ATTACK_SPEED,DEFENSE)
+        NPC.__init__(self, name, AGGRESSION, SPEED,
+                         ENDURANCE,ATTACK_SPEED,STRENGTH)
         Animated.__init__(self, "tempDeer.png", pos)
