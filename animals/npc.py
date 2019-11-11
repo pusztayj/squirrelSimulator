@@ -39,14 +39,44 @@ class NPC(Animal):
 
     def healLogic(self,opponents):
         # opponents is a list
-        damage = [(type(x),attackComputation(self,x)) for x in opponents]
-
-        print(damage)
-            
-        if self._health <= 20:
+        damage = [(type(x),attackComputation(self,x),x.getHealth()) \
+                  for x in opponents]
+        attacks = [x for x in damage if x[1] >= x[2]]
+        if self._health <= 20 and len(attacks) == 0:
             for x in self._inventory:
                 if type(x) == type(Potions()) and self._health <= 20:
-                    heal(self,x)
+                    return True
+            return False
+        else:
+            return False
+        
+    def fortifyLogic(self,opponents):
+        if self.getHealth() >= 20 and self.getHealth() <= 75:
+            damage = [(type(x),attackComputation(self,x),x.getHealth()) \
+                      for x in opponents]
+            attacks = [x for x in damage if x[1] <= 5]
+            print(damage)
+            if len(attacks) == len(opponents):
+                return True
+            elif 6 < random.randint(0,9):
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def attackLogic(self,opponents):
+        damage = [(type(x),attackComputation(self,x),x.getHealth()) \
+                  for x in opponents]
+        kills = [x for x in damage if x[1] >= x[2]]
+        if len(kills) > 0:
+            return kills[0]
+        else:
+            damage.sort(key = lambda x: x[1])
+            return damage[-1]
+        
+
+        
          
             
             
