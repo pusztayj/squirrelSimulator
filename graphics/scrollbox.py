@@ -78,24 +78,35 @@ class ScrollBox(Drawable):
                     (prevY - y < 0 and \
                     self._slider.getY() + self._sliderHeight < self._height):
 
-                # Update the slider's position
-                self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
+                self.moveBar(y)
+
+    def moveBar(self, y):
+        # Update the slider's position
+        self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
                                                                    max(0,y))))
-                self._internalSurface.setPosition((self._internalSurface.getX(),
+        self._internalSurface.setPosition((self._internalSurface.getX(),
                                                    round(self._slider.getY() * self._step * -1)))
 
-                # Update the scroll box
-                self.updateScrollBox()
+        # Update the scroll box
+        self.updateScrollBox()
+        
 
     def move(self, event):        
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            ex,ey = event.pos
-            ox,oy = self._offset
-            pos = (ex-ox, ey-oy)
-            if self._slider.getCollideRect().collidepoint(pos):
-                self._scrolling = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button==1:
+                ex,ey = event.pos
+                ox,oy = self._offset
+                pos = (ex-ox, ey-oy)
+                if self._slider.getCollideRect().collidepoint(pos):
+                    self._scrolling = True
+            if event.button==4: self.moveBar(self._slider.getY()-5)
+            if event.button==5: self.moveBar(self._slider.getY()+5)
         if event.type == pygame.MOUSEBUTTONUP and event.button==1:
-            self._scrolling = False            
+            self._scrolling = False
+        
+
+            # Update the scroll box
+            self.updateScrollBox()
         self.dragSlider()
     
     def updateScrollBox(self):
