@@ -352,19 +352,6 @@ class Animal():
             buff.applyBuff()
 
     def __repr__(self):
-##        damageRange = self.getCurrentDamageRange()
-##        protectRange = self.getCurrentProtectionRange()
-##        if damageRange[0] == damageRange[1]:
-##            drange = str(damageRange[0])
-##        else:
-##            drange = str(damageRange[0]) + "-" + str(damageRange[1])
-##        if protectRange[0] == protectRange[1]:
-##            prange = str(protectRange[0])
-##        else:
-##            prange = str(protectRange[0]) + "-" + str(protectRange[1])
-
-                    #"\nCombat Damage: " + drange + \
-             #"\nDefense:       " + prange +  \
         return "Name:          " + self._name + \
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
@@ -374,8 +361,8 @@ class Animal():
                "\nSpeed:         " + str(self._speed) + \
                "\nEndurance:     " + str(self._endurance) + \
                "\nAttack Speed:  " + str(self._attackSpeed) + \
-               "\nHolding:       " + self.getEquipItem() + \
+               "\nHolding:       " + self.getEquipItemName() + \
                "\nArmor:         " + self.getArmorsName() + \
-               "\nInventory:     " + str(self._inventory) #+ \
-               #"\nBuffs:         " + str([type(x).__name__ for x in self._buffs])
+               "\nInventory:     " + str(self._inventory) + \
+               "\nBuffs:         " + str([type(x).__name__ for x in self._buffs])
                
