@@ -1,11 +1,5 @@
 import pygame, random, math
-from graphics.banner import Banner
-from graphics.textbox import TextBox
-from graphics.textinput import TextInput
-from graphics.popup import Popup
-from graphics.progressbar import ProgressBar
-from graphics.statdisplay import StatDisplay
-from graphics.mask import Mask
+from graphics import Banner, Popup, StatDisplay, Mask
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -19,6 +13,7 @@ from level import Level
 from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
+from minigame.inventoryhud import InventoryHUD
 
 class MainLevel(Level):
 
@@ -76,6 +71,9 @@ class MainLevel(Level):
             if t.getCollideRect().collidelist([x.getCollideRect() for x in self._trees]) == -1:
                 self._trees.append(t)
 
+        self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
+                                  self._SCREEN_SIZE[1]-52), (700,50), player)
+
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def draw(self, screen):
@@ -132,20 +130,24 @@ class MainLevel(Level):
 
         self._worldClock.draw(screen)
 
+        self._hud.draw(screen)
+
     def handleEvent(self, event):
 
         self._player.move(event, self._atm)
 
-        # Allow the player to create dirt piles
-        if (event.type == pygame.KEYDOWN and event.key == pygame.K_b and \
-            (self._atm == None or not self._atm.getDisplay())):
-            if self._player.isFlipped():
-                dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+        if self._atm == None or not self._atm.getDisplay():
+            self._hud.handleEvent(event)
+            # Allow the player to create dirt piles
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                if self._player.isFlipped():
+                    dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
                             self._player.getY() + (self._player.getHeight() // 3)))
-            else:
-                dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                else:
+                    dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
                             self._player.getY() + (self._player.getHeight() // 3)))
-            self._dirtPiles.append(dp)
+                self._dirtPiles.append(dp)
+            
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
             for pile in self._dirtPiles:
@@ -171,6 +173,9 @@ class MainLevel(Level):
 
         if self._interaction != None and self._interaction.getDisplay():
             self._interaction.handleEvent(event)
+
+
+                
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
@@ -249,6 +254,8 @@ class MainLevel(Level):
 
         #Update InGame Clock
         self._worldClock.update(ticks)
+
+        self._hud.update()
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong

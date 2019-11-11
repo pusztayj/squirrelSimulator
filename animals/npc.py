@@ -3,7 +3,7 @@ from .animal import Animal
 from graphics.popup import Popup
 import random, pygame, copy
 from items.items import *
-from combatutils import *
+from combatUtils import *
 
 class NPC(Animal):
 

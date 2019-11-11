@@ -37,6 +37,11 @@ class InventoryHUD(Drawable):
                 self._selected = (self._selected + 1) % 9
             if event.button == 5:
                 self._selected = (self._selected - 1) % 9
+            if event.button == 1:
+                for i, b in enumerate(self._blocks):
+                    if b.getCollideRect().collidepoint(event.pos):
+                        self._selected = i
+                    
 
     def update(self):
         self._items = [item for item in self._player.getInventory()]
