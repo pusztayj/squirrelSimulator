@@ -2,6 +2,7 @@
 In this file we create the functions for the combat game.
 """
 
+from items.items import *
 
 attackDamage = {(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45,
@@ -34,6 +35,7 @@ def attackComputation(attacker,defender):
         attack_strength = attacker.getStrength()*attacker.getAttackModifers()
 
     try:
+        #print(type(defender))
         defense_strength = (defender.getStrength() + \
                            (defender.getArmor().getStrength())) * \
                            defender.getDefenseModifers()
@@ -68,4 +70,36 @@ def retreat(animal):
     Forces an animal to retreat
     """
     animal.resetDefenseModifers()
-        
+
+def move(animal,opponents):
+    """
+    Tests the animal logic so the NPC can decide their move.
+    """
+    if animal.healLogic(opponents):
+        potions = [x for x in animal.getInventory() if type(x) == type(Potions())]
+        potions.sort(key = lambda x: x.getHealthBoost())
+        if len(potions) != 0:
+            heal(animal,potions[-1])
+    elif animal.fortifyLogic(opponents):
+        fortify(animal)
+    else:
+        an = animal.attackLogic(opponents)
+        attack(animal,an)
+
+def combat(playerTeam,enemyTeam):
+    # teams needs to be pack objects
+    playerTeam = playerTeam.getMembers()
+    enemyTeam = enemyTeam.getMembers()
+    participants = list()
+    for x in range(3): # creates an alteration of the lists so the combat loop
+        # can work
+        participants += playerTeam[x:x+1]
+        participants += enemyTeam[x:x+1]
+    for animal in participants:
+        if type(animal) == type(Player()):
+            pass
+        else:
+            if animal in playerTeam:
+                move(animal,enemyTeam)
+            else:
+                move(animal,playerTeam)

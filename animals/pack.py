@@ -71,5 +71,8 @@ class Pack():
 
     def __len__(self):
         return len(self._members)
+
+    def __contains__(self,animal):
+        return animal in self._members
                 
             
