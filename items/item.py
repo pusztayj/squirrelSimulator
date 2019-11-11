@@ -2,7 +2,7 @@ import random, math
 
 class Item():
 
-    def __init__(self,name, level=1, durability=100, utility = 100,
+    def __init__(self, name, level=1, durability=100, utility = 100,
                  value = 50, requirements=None, isBuyable = True,
                  isSellable = True):
         self._name = name

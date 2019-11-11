@@ -62,7 +62,7 @@ class Spear(Weapon,Drawable):
         Weapon.__init__(self,"Spear", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
-        Drawable.__init__(self,"",(0,0))
+        Drawable.__init__(self,"sword.png",(0,0))
 
 class IronSword(Weapon,Drawable):
 
