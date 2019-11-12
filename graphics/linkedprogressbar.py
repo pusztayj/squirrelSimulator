@@ -16,6 +16,9 @@ class LinkedProgressBar():
     def update(self):
         self._progressBar.setProgress(self._entity.getHealth())
 
-    def draw(self):
-        self._progressBar.draw()
+    def draw(self,screen):
+        self._progressBar.draw(screen)
+
+    def getEntity(self):
+        return self._entity
         
