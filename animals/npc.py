@@ -4,14 +4,16 @@ from graphics.popup import Popup
 import random, pygame, copy
 from items.items import *
 from combatUtils import *
+from modules.animated import Animated
 
-class NPC(Animal):
+class NPC(Animal, Animated):
 
-
-    def __init__(self, name, agression, speed, endurance,
+    def __init__(self, name, image, pos, agression, speed, endurance,
                  attack_speed,strength):
+
+        Animated.__init__(self, image, pos)
         
-        super().__init__(name=name,
+        Animal.__init__(self, name=name,
                          health=100,
                          speed=random.randint(speed[0],speed[1]),
                          endurance=random.randint(endurance[0],endurance[1]),
@@ -21,6 +23,7 @@ class NPC(Animal):
         self._aggressionLevel = agression
         self._combatStatus = ""
         #self._realImage = copy.copy(self._image)
+        self._walkTimer = 5
 
     def getCombatStatus(self):
         return self._combatStatus
@@ -86,6 +89,14 @@ class NPC(Animal):
                                  (damage[-1][0]).getName()
             return damage[-1][0]
 
-    def wander(self, amount):
-        self._position.x += amount
+    def wander(self, ticks):
+        if self._walkTimer <= 0:
+            w_x = self._position[0] + random.randint(self._position[0] - 10, self._position[0] + 10)
+            w_y = self._position[1] + random.randint(self._position[1] - 10, self._position[1] + 10)
+            self._position.x = min(max(0,w_x),1000)
+            self._position.y = min(max(0,w_y),2000)
+            print(self._position)
+            self._walkTimer = 5
+        else:
+            self._walkTimer -= ticks
         

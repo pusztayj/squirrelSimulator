@@ -281,7 +281,7 @@ class MainLevel(Level):
 
         self._hud.update()
 
-        #self._fox.wander(1)
+        self._fox.wander(ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
