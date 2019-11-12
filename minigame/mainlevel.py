@@ -15,6 +15,19 @@ from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
 
+def spawn(spawnType, spawnRange, spawnCount, collidables, name=None):
+    spawns = []
+    while len(spawns) < spawnCount:
+        if name == None:
+            e = spawnType(pos=(random.randint(0,spawnRange[0]),
+                                 random.randint(0,spawnRange[1])))
+        else:
+            e = spawnType(name,(random.randint(0,spawnRange[0]),
+                                 random.randint(0,spawnRange[1])))
+        if e.getCollideRect().collidelist([x.getCollideRect() for x in spawns + collidables]) == -1:
+            spawns.append(e)
+    return spawns
+
 class MainLevel(Level):
 
     def __init__(self, player, SCREEN_SIZE):
@@ -60,16 +73,13 @@ class MainLevel(Level):
 
         self._interaction = None
 
-        self._merchants = [Merchant(pos=(random.randint(0,self._WORLD_SIZE[0]),
-                                     random.randint(0,self._WORLD_SIZE[1])))
-                           for x in range(random.randint(1,5))]
+        # Add merchants to the world
+        self._merchants = spawn(Merchant, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+                                random.randint(2,5), [])
 
-        self._trees = []
-        for i in range(20):
-            t = Drawable("tree.png", (random.randint(0,2000+128),
-                                             random.randint(0,1000-128)))
-            if t.getCollideRect().collidelist([x.getCollideRect() for x in self._trees]) == -1:
-                self._trees.append(t)
+        # Add trees to the world
+        self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+                            30, self._merchants, "tree.png")
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
