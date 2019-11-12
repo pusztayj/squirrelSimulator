@@ -149,10 +149,11 @@ class MainLevel(Level):
 
     def handleEvent(self, event):
 
-        self._player.move(event, self._atm)
+        
 
         if self._atm == None or not self._atm.getDisplay():
             self._hud.handleEvent(event)
+            self._player.move(event, self._atm)
             # Allow the player to create dirt piles
             if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
                 if self._player.isFlipped():
@@ -280,7 +281,7 @@ class MainLevel(Level):
 
         self._hud.update()
 
-        self._fox.wander(1)
+        #self._fox.wander(1)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
