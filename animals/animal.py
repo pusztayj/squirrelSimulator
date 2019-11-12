@@ -171,11 +171,11 @@ class Animal():
     def getBaseHunger(self):
         return self._baseHunger
 
-    def decrementHunger(self):
-        self._hunger = max(0, self._hunger-1)
+    def decrementHunger(self,amount=1):
+        self._hunger = max(0, self._hunger-amount)
 
-    def increaseHunger(self):
-        self._hunger = min(self._hunger+1, self._baseHunger)
+    def increaseHunger(self, amount=1):
+        self._hunger = min(self._hunger+amount, self._baseHunger)
 
     def isStarving(self):
         return self._hunger == 0

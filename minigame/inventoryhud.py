@@ -58,6 +58,12 @@ class InventoryHUD(Drawable):
                           (self._width//9,self._height),item=None,
                               selected=x==self._selected)
             self._blocks.append(i)
+
+    def getActiveItem(self):
+        if self._selected < len(self._items):
+            return self._items[self._selected]
+        else:
+            return None
         
     def draw(self, screen):
         # Draw the background

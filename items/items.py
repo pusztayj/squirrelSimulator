@@ -137,13 +137,14 @@ class IronArmor(Armor,Drawable):
 
 class Food(Item):
 
-    def __init__(self,name, healthBoost, level=1, durability=100,
+    def __init__(self,name, healthBoost, hungerBoost, level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True):
         Item.__init__(self,name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
         self._healthBoost = healthBoost
+        self._hungerBoost = hungerBoost
 
     def __repr__(self):
         return "Name: " + self._name + \
@@ -153,30 +154,30 @@ class Food(Item):
 
 class Berries(Food,Drawable):
 
-    def __init__(self, healthBoost = 5, level=1, durability=100,
+    def __init__(self, healthBoost=5, hungerBoost=2, level=1, durability=100,
                  utility = 100,value = 15,requirements=None,
                  isBuyable = True, isSellable = True):
-        Food.__init__(self,"Berries", healthBoost, level,
+        Food.__init__(self,"Berries", healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"berries.png",(0,0))
 
 class NutSoup(Food,Drawable):
 
-    def __init__(self, healthBoost = 8, level=1, durability=100,
+    def __init__(self, healthBoost = 8, hungerBoost=4, level=1, durability=100,
                  utility = 100,value = 20,requirements=None,
                  isBuyable = True, isSellable = True):
-        Food.__init__(self,"Nut Soup", healthBoost, level,
+        Food.__init__(self,"Nut Soup", healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"nutsoup.png",(0,0))
 
 class PecanPie(Food,Drawable):
 
-    def __init__(self, healthBoost = 13, level=1, durability=100,
+    def __init__(self, healthBoost = 13, hungerBoost=6, level=1, durability=100,
                  utility = 100,value = 45,requirements=None,
                  isBuyable = True, isSellable = True):
-        Food.__init__(self,"Pecan Pie", healthBoost, level,
+        Food.__init__(self,"Pecan Pie", healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"pecanpie.png",(0,0))

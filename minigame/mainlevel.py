@@ -14,6 +14,7 @@ from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
+from items.items import Food
 
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None):
     spawns = []
@@ -181,6 +182,13 @@ class MainLevel(Level):
                 if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                     return (1, merchant) # Set Game Mode to Merchant and provide merchant
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+            item = self._hud.getActiveItem()
+            if item != None and issubclass(type(item), Food):
+                self._player.getInventory().removeItem(item)
+                self._player.eat(item._hungerBoost, item._healthBoost)
+                
 
         if self._atm != None and self._atm.getDisplay():
             self._atm.handleEvent(event)

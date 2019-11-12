@@ -57,7 +57,7 @@ class Player(Squirrel):
     def setCheekCapacity(self, capacity):
         self._cheekCapacity = capacity
 
-    def eat(self):
+    def eatAcorn(self):
         if self._fsm.getCurrentState() != "eating":
             if self._acorns > 0 and self._hunger < self._baseHunger:
                 self._acorns -= 1
@@ -70,7 +70,12 @@ class Player(Squirrel):
                 self.heal(1)
                 self._fsm.changeState("eat")
                 SoundManager.getInstance().playSound("munch.ogg")
-            
+
+    def eat(self, hungerAmount, healthAmount):
+        self.increaseHunger(hungerAmount)
+        self.heal(healthAmount)
+        self._fsm.changeState("eat")
+        SoundManager.getInstance().playSound("munch.ogg")
 
     def move(self, event, atm=None):
         """
@@ -83,7 +88,7 @@ class Player(Squirrel):
             self._movement[event.key] = False
         if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE and \
            (atm == None or not atm.getDisplay()):
-            self.eat()
+            self.eatAcorn()
         if event.type == pygame.KEYDOWN and event.key==pygame.K_b:
             self._fsm.changeState("bury")
 
