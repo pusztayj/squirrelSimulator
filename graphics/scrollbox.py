@@ -99,8 +99,10 @@ class ScrollBox(Drawable):
                 pos = (ex-ox, ey-oy)
                 if self._slider.getCollideRect().collidepoint(pos):
                     self._scrolling = True
-            if event.button==4: self.moveBar(self._slider.getY()-5)
-            if event.button==5: self.moveBar(self._slider.getY()+5)
+            if event.button==4 and self.getCollideRect().collidepoint(event.pos):
+                self.moveBar(self._slider.getY()-5)
+            if event.button==5 and self.getCollideRect().collidepoint(event.pos):
+                self.moveBar(self._slider.getY()+5)
         if event.type == pygame.MOUSEBUTTONUP and event.button==1:
             self._scrolling = False
         
