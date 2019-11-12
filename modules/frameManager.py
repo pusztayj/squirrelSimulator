@@ -63,7 +63,8 @@ class FrameManager(object):
          "shovel.png":(32,32),
          "pickax.png":(32,32),
          "crowbar.png":(32,32),
-         "healthpotion":(32,32)
+         "healthpotion.png":(32,32),
+         "new_fox.png":(48,34)
       }
       
       # A default frame size
@@ -81,7 +82,8 @@ class FrameManager(object):
                     "rocks.png","new_squirrel.png","sword.png","spear.png",
                     "stick.png","hide_armor.png","leather_armor.png",
                     "iron_armor.png","berries.png","nutsoup.png","shovel.png",
-                    "pickax.png","crowbar.png","healthpotion.png","pecanpie.png"]
+                    "pickax.png","crowbar.png","healthpotion.png","pecanpie.png",
+                    "new_fox.png"]
       
       
       

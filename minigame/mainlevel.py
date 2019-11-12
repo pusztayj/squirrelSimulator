@@ -7,7 +7,7 @@ from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
 from animals.chipmunk import Chipmunk
-from animals.turtle import Turtle
+from animals.fox import Fox
 from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
@@ -66,6 +66,10 @@ class MainLevel(Level):
         self._creatures = []
         self._chip = Chipmunk(pos=(1600,300))
         self._chip.flip()
+        self._fox = Fox(pos=(800,200))
+        self._fox.flip()
+        self._fox.scale(1.5)
+        self._creatures.append(self._fox)
         self._creatures.append(self._chip)
         self._creatures.append(self._player)
 

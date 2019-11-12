@@ -14,4 +14,6 @@ class Fox(NPC, Animated):
 
         NPC.__init__(self,name, AGGRESSION, SPEED,
                          ENDURANCE,ATTACK_SPEED,STRENGTH)
-        Animated.__init__(self, "tempFox.png", pos)
+        Animated.__init__(self, "new_fox.png", pos)
+
+        self._nFrames = 1
