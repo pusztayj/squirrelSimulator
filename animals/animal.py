@@ -275,19 +275,19 @@ class Animal():
         return self._attackModifers
 
     def addAttackModifers(self,modifer):
-        self._attackModifers += self._modifers + modifer
+        self._attackModifers += modifer
 
     def resetAttackModifers(self):
         self._attackModifers = 1
 
     def getDefenseModifers(self):
-        return self._attackModifers
+        return self._defenseModifers
 
     def addDefenseModifers(self,modifer):
-        self._attackModifers += self._modifers + modifer
+        self._defenseModifers += modifer
 
     def resetDefenseModifers(self):
-        self._attackModifers = 1
+        self._defenseModifers = 1
 
     #
 
