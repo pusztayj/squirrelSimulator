@@ -73,4 +73,7 @@ class NPC(Animal):
         else:
             damage.sort(key = lambda x: x[1])
             return damage[-1][0]
+
+    def wander(self, amount):
+        self._position.x += amount
         
