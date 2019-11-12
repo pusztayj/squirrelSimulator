@@ -133,6 +133,9 @@ class Drawable():
     def getImage(self):
         return self._image
 
+    def setWorldBound(self, boolean):
+        self._worldBound = boolean
+
     
         
      

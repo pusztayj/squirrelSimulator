@@ -67,6 +67,7 @@ class ItemCard(object):
         s = pygame.Surface((200,600))
         s.fill((0,0,0))
         a = copy.copy(entity)
+        a.setWorldBound(False)
         a.setPosition((10,50))
         if a.isFlipped():
             a.flip()
