@@ -42,8 +42,11 @@ def attackComputation(attacker,defender):
     except AttributeError:
         defense_strength = defender.getStrength()*defender.getDefenseModifers()
                          
-    ratio = round((attack_strength/defense_strength) * 4) / 4  
-    damage = attackDamage[(ratio,1)]
+    ratio = (round((attack_strength/defense_strength) * 4))/ 4
+    if ratio > 3:
+        damage = 95
+    else:
+        damage = attackDamage[(ratio,1)]
     return damage
 
 def fortify(animal):
@@ -85,6 +88,21 @@ def move(animal,opponents):
     else:
         an = animal.attackLogic(opponents)
         attack(animal,an)
+
+def turnOrder(playerTeam,enemyTeam):
+    # teams needs to be pack objects
+    playerTeam1 = playerTeam.getMembers()
+    enemyTeam = enemyTeam.getMembers()
+    participants = list()
+    for x in range(3): # creates an alteration of the lists so the combat loop
+        # can work
+        if playerTeam1[x] == playerTeam.getLeader():
+            participants += enemyTeam[x:x+1]
+        else:
+            participants += playerTeam1[x:x+1]
+            participants += enemyTeam[x:x+1]
+    return participants
+    
 
 def combat(playerTeam,enemyTeam):
     # teams needs to be pack objects

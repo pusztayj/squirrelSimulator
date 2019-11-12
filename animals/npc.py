@@ -19,7 +19,11 @@ class NPC(Animal):
                          attackSpeed=random.randint(attack_speed[0],attack_speed[1]))
         
         self._aggressionLevel = agression
+        self._combatStatus = ""
         #self._realImage = copy.copy(self._image)
+
+    def getCombatStatus(self):
+        return self._combatStatus
 
     def handleEvent(self, event, screen):     
         popupFont = pygame.font.SysFont("Times New Roman", 16)
@@ -45,7 +49,9 @@ class NPC(Animal):
         if self._health <= 20 and len(attacks) == 0:
             for x in self._inventory:
                 if type(x) == type(Potions()) and self._health <= 20:
+                    self._combatStatus = self.getName() + "healed with a potion!"
                     return True
+                    
             return False
         else:
             return False
@@ -56,8 +62,10 @@ class NPC(Animal):
                       for x in opponents]
             attacks = [x for x in damage if x[1] <= 5]
             if len(attacks) == len(opponents):
+                self._combatStatus = self.getName() + "has fortified!"
                 return True
             elif 6 < random.randint(0,9):
+                self._combatStatus = self.getName() + "has fortified!"
                 return True
             else:
                 return False
@@ -69,9 +77,13 @@ class NPC(Animal):
                   for x in opponents]
         kills = [x for x in damage if x[1] >= x[2]]
         if len(kills) > 0:
+            a = kills[0][0]
+            self._combatStatus = self.getName() + "has killed " + a.getName()
             return kills[0][0]
         else:
             damage.sort(key = lambda x: x[1])
+            self._combatStatus = self.getName() + " did " + str(damage[-1][1])+ " damage to " + \
+                                 (damage[-1][0]).getName()
             return damage[-1][0]
 
     def wander(self, amount):
