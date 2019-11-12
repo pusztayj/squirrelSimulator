@@ -23,6 +23,9 @@ class Pack():
         """Return the leader of the pack"""
         return self._leader
 
+    def isLeader(self,animal):
+        return animal == self._leader
+
     def resetLeader(self, newLeader):
         """Reset the leader of the pack"""
         self._leader = newLeader
