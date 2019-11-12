@@ -62,14 +62,16 @@ class ATM(Drawable, Window):
     def deposit(self, amount):
         if amount != "":
             amount = int(amount)
-            if amount <= self._player.getAcorns():
+            if amount <= self._player.getAcorns() and \
+               amount <= self._hole.getCapacity() - self._hole.getAcorns():
                 self._player.setAcorns(self._player.getAcorns() - amount)
                 self._hole.setAcorns(self._hole.getAcorns() + amount)
 
     def withdraw(self, amount):
         if amount != "":
             amount = int(amount)
-            if amount <= self._hole.getAcorns():
+            if amount <= self._hole.getAcorns() and \
+               amount <= self._player.getCheekCapacity() - self._player.getAcorns():
                 self._player.setAcorns(self._player.getAcorns() + amount)
                 self._hole.setAcorns(self._hole.getAcorns() - amount)
 
