@@ -55,14 +55,16 @@ class MerchantLevel(Level):
         self._itemCard = None
         self._popup = None
         self._RUNNING = True
-        self._FLAG = True
 
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
 
         # tranasction button
-        self._executeTrasaction = Button("Execute Transaction",(471,375),
-                                         self._font,(255,255,255),(34,139,34),50,156,borderWidth = 2)
+        self._executeTransaction = Button("Execute Transaction",(471,375),
+                                         self._font,(255,255,255),(34,139,34),50,145,borderWidth = 2)
+
+        self._cancelTransaction = Button("Cancel Transaction",(627,375),
+                                         self._font,(255,255,255),(207,51,17),50,145,borderWidth = 2)
         # trade desk
         self._tradeDesk = TradeDesk()
 
@@ -71,9 +73,9 @@ class MerchantLevel(Level):
                (0,0,0),(255,255,255))
 
         # text boxes for player/merchant money
-        self._playerMoney = TextBox("Your money: $" + str(self._player.getAcorns()), (771,375), self._textFont, (255,255,255))
+        self._playerMoney = TextBox("Your money: $" + str(self._player.getAcorns()), (791,375), self._textFont, (255,255,255))
         self._merchantMoney = TextBox(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()),
-                            (775,410), self._textFont, (255,255,255))
+                            (795,410), self._textFont, (255,255,255))
 
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
@@ -112,14 +114,14 @@ class MerchantLevel(Level):
             self._popup = PopupWindow(text,(471,166),(303,158),
                                 font,(255,255,255),(0,0,0),(255,255,255),(30,30),
                                 font,(0,0,0),borderWidth = 3)
-        else:
-            pass
+
+    def cancelTransaction(self):
+        self._itemCard = None
 
     def draw(self,screen):
         self._background.draw(screen)
         self._merchant.draw(screen)
         self._tradeDesk.draw(screen)
-        self._executeTrasaction.draw(screen)
         self._playerMoney.draw(screen)
         self._merchantMoney.draw(screen)
         if self._FLAG:
@@ -128,6 +130,8 @@ class MerchantLevel(Level):
             self._playerSelect.draw(screen)
         if self._itemCard != None:
             self._itemCard.getCard().draw(screen)
+            self._executeTransaction.draw(screen)
+            self._cancelTransaction.draw(screen)
         self._tabs.draw(screen)
         if self._popup != None and self._popup.getDisplay():
             self._popup.draw(screen)
@@ -145,7 +149,8 @@ class MerchantLevel(Level):
         if self._itemCard != None:
             self._itemCard.getCard().move(event)
             if self._popup == None or not self._popup.getDisplay():
-                self._executeTrasaction.handleEvent(event, self.transaction,self._itemCard.getItem())
+                self._executeTransaction.handleEvent(event, self.transaction,self._itemCard.getItem())
+                self._cancelTransaction.handleEvent(event, self.cancelTransaction)
             self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
                   for item in self._player.getInventory()])
             self._merchantSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
