@@ -18,6 +18,7 @@ from minigame.inventoryhud import InventoryHUD
 from items.items import Food
 from items.items import Weapon
 from items.items import Armor
+from items.items import Spear
 from minigame.itemblock import ItemBlock
 
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
@@ -101,6 +102,9 @@ class MainLevel(Level):
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)
         self._creatures.extend(self._rabbits)
+
+        for fox in self._foxes:
+            fox.getInventory().addItem(Spear())
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
@@ -198,7 +202,7 @@ class MainLevel(Level):
                         r = rect.move(x,y)
                         if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                            self._interaction = Interaction()
+                            self._interaction = Interaction(creature)
                             
                 for merchant in self._merchants:
                     if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],

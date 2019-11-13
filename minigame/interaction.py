@@ -2,15 +2,18 @@
 from modules.drawable import Drawable
 from graphics.window import Window
 from graphics.button import Button
+from graphics.textbox import TextBox
+from .threexthreeinventory import threeXthreeInventory
 import pygame
 
 class Interaction(Drawable, Window):
 
-    def __init__(self):
+    def __init__(self, entity):
         Drawable.__init__(self, "", (50,25), worldBound=False)
         Window.__init__(self)
 
         # Style Attributes
+        self._fontlarge = pygame.font.SysFont("Times New Roman", 32)
         self._font = pygame.font.SysFont("Times New Roman", 24)
         self._fontsmall = pygame.font.SysFont("Times New Roman", 16)
         self._borderColor = (0,0,0)
@@ -22,19 +25,23 @@ class Interaction(Drawable, Window):
         self._offset = self.getPosition()
 
         # Buttons
-        self._fightButton = Button("Fight", (10,50), self._font, (0,0,0),
+        self._fightButton = Button("Fight", (15,50), self._font, (0,0,0),
                                    (255,0,0), 35, 125, (0,0,0), 2)
-        self._befriendButton = Button("Befriend", (10,95), self._font, (0,0,0),
+        self._befriendButton = Button("Befriend", (15,95), self._font, (0,0,0),
                                    (0,255,0), 35, 125, (0,0,0), 2)
-        self._stealButton = Button("Steal", (10,140), self._font, (0,0,0),
+        self._stealButton = Button("Steal", (15,140), self._font, (0,0,0),
                                    (40,80,150), 35, 125, (0,0,0), 2)
-        self._bribeButton = Button("Bribe", (10,185), self._font, (0,0,0),
+        self._bribeButton = Button("Bribe", (15,185), self._font, (0,0,0),
                                    (255,215,0), 35, 125, (0,0,0), 2)
 
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
 
         self._selection = None
+
+        self._inventory = threeXthreeInventory((175,50), (175,175), entity)
+
+        self._name = TextBox(entity.getName(), (20,5), self._fontlarge, (0,0,0))
 
         self.updateInteraction()
 
@@ -67,11 +74,13 @@ class Interaction(Drawable, Window):
         surf.fill(self._backgroundColor)
 
         # Draw widgets
+        self._name.draw(surf)
         self._fightButton.draw(surf)
         self._befriendButton.draw(surf)
         self._stealButton.draw(surf)
         self._bribeButton.draw(surf)
         self._exitButton.draw(surf)
+        self._inventory.draw(surf)
 
         # Blit the widget layer onto the back surface
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
