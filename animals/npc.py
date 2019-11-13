@@ -121,8 +121,13 @@ class NPC(Animal, Animated):
                 w_y = random.randint(self._wanderRect[1][0],self._wanderRect[1][1]) - self._position[1]
                 self._velocity.x = w_x // self._walkTimer
                 self._velocity.y = w_y // self._walkTimer
+                
+                #If the current velocity exceeds the maximum, scale it down
+                if self._velocity.magnitude() > self._maxVelocity:
+                    self._velocity.scale(self._maxVelocity)
+                    
                 # Reset the idle timer
-                self._idleTimer = random.randint(1,2)
+                self._idleTimer = random.randint(1,3)
             # Update to an idle animation
             else:
                 self._row = self._standRow

@@ -64,7 +64,8 @@ class FrameManager(object):
          "pickax.png":(32,32),
          "crowbar.png":(32,32),
          "healthpotion.png":(32,32),
-         "new_fox.png":(48,34)
+         "new_fox.png":(48,34),
+         "new_rabbit.png":(40,40)
       }
       
       # A default frame size
@@ -83,7 +84,7 @@ class FrameManager(object):
                     "stick.png","hide_armor.png","leather_armor.png",
                     "iron_armor.png","berries.png","nutsoup.png","shovel.png",
                     "pickax.png","crowbar.png","healthpotion.png","pecanpie.png",
-                    "new_fox.png"]
+                    "new_fox.png","new_rabbit.png"]
       
       
       

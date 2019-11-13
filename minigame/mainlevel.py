@@ -8,6 +8,7 @@ from economy.dirtpile import DirtPile
 from minigame.atm import ATM
 from animals.chipmunk import Chipmunk
 from animals.fox import Fox
+from animals.rabbit import Rabbit
 from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
@@ -91,8 +92,12 @@ class MainLevel(Level):
         self._foxes = spawn(Fox, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 3,
                           self._merchants + self._trees, wanderer=True)
 
+        self._rabbits = spawn(Rabbit, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
+                          self._merchants + self._trees + self._foxes, wanderer=True)
+
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)
+        self._creatures.extend(self._rabbits)
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
@@ -157,9 +162,8 @@ class MainLevel(Level):
 
     def handleEvent(self, event):
 
-        
-
-        if self._atm == None or not self._atm.getDisplay():
+        if (self._atm == None or not self._atm.getDisplay()) and \
+           (self._interaction == None or not self._interaction.getDisplay()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
             # Allow the player to create dirt piles
@@ -173,36 +177,37 @@ class MainLevel(Level):
                 self._dirtPiles.append(dp)
             
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            for pile in self._dirtPiles:
-                if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                          event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                    self._atm = ATM(self._player, pile)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+                for pile in self._dirtPiles:
+                    if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                        self._atm = ATM(self._player, pile)
 
-            for creature in self._creatures:
-                x,y = creature.getPosition()
-                for rect in creature.getCollideRects():
-                    r = rect.move(x,y)
-                    if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                         event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                        self._interaction = Interaction()
-                        
-            for merchant in self._merchants:
-                if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                         event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                    return (1, merchant) # Set Game Mode to Merchant and provide merchant
+                for creature in self._creatures:
+                    x,y = creature.getPosition()
+                    for rect in creature.getCollideRects():
+                        r = rect.move(x,y)
+                        if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                            self._interaction = Interaction()
+                            
+                for merchant in self._merchants:
+                    if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                        return (1, merchant) # Set Game Mode to Merchant and provide merchant
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
-            item = self._hud.getActiveItem()
-            if item != None and issubclass(type(item), Food):
-                self._player.getInventory().removeItem(item)
-                self._player.eat(item._hungerBoost, item._healthBoost)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+                item = self._hud.getActiveItem()
+                if item != None and issubclass(type(item), Food):
+                    self._player.getInventory().removeItem(item)
+                    self._player.eat(item._hungerBoost, item._healthBoost)
                 
 
         if self._atm != None and self._atm.getDisplay():
             self._atm.handleEvent(event)
 
         if self._interaction != None and self._interaction.getDisplay():
+            self._popup = None
             self._interaction.handleEvent(event)
             return (self._interaction.getSelection(),)
 
@@ -290,6 +295,7 @@ class MainLevel(Level):
         self._hud.update()
 
         for fox in self._foxes: fox.wander(ticks)
+        for rabbit in self._rabbits: rabbit.wander(ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong

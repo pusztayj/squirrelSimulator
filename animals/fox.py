@@ -13,10 +13,9 @@ class Fox(NPC):
 
         NPC.__init__(self,name, "new_fox.png", pos, AGGRESSION, SPEED,
                          ENDURANCE,ATTACK_SPEED,STRENGTH)
+
+        self._maxVelocity = 100
         
-
-        self._nFrames = 1
-
         # Specify which rows contain which animations
         self._standRow = 0
         self._walkRow = 1
