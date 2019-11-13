@@ -15,6 +15,14 @@ playerTransitions = [Rule("standing","walk","walking"),
                      Rule("eating","done","standing")]
 playerFSM = FSM(playerStartState, playerStates, playerTransitions)
 
+npcStartState = "standing"
+npcStates = ["standing","walking"]
+npcTransitions = [Rule("standing","walk","walking"),
+                     Rule("walking","walk","walking"),
+                     Rule("walking","stop","standing"),
+                     Rule("standing","stop","standing")]
+npcFSM = FSM(npcStartState, npcStates, npcTransitions)
+
 
 combatStartState = "player turn"
 combatPlayerStates = ["player turn","attack","waiting","retreat",
