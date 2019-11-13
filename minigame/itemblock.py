@@ -24,7 +24,7 @@ class ItemBlock(Drawable):
         self._item = item
 
     def getItem(self):
-        return item
+        return self._item
 
     def updateBlock(self):
         surfBack = pygame.Surface((self._width, self._height))

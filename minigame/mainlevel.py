@@ -211,10 +211,16 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
                 if item != None and issubclass(type(item), Weapon):
+                    previous = self._weapon.getItem()
+                    if previous != None:
+                        self._player.getInventory().addItem(previous)
                     self._player.equipItem(item)
                     self._weapon.setItem(item)
                     self._player.getInventory().removeItem(item)
                 if item != None and issubclass(type(item), Armor):
+                    previous = self._armor.getItem()
+                    if previous != None:
+                        self._player.getInventory().addItem(previous)
                     self._player.equipArmor(item)
                     self._armor.setItem(item)
                     self._player.getInventory().removeItem(item)
