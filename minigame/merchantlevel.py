@@ -142,10 +142,11 @@ class MerchantLevel(Level):
         if not self.isActive():
             return (0,)
         self._tabs.handleEvent(event)
-        if self._FLAG:
-            self._merchantSelect.handleEvent(event)
-        else:
-            self._playerSelect.handleEvent(event)
+        if self._popup == None or not self._popup.getDisplay():
+            if self._FLAG:
+                self._merchantSelect.handleEvent(event)
+            else:
+                self._playerSelect.handleEvent(event)
         if self._itemCard != None:
             self._itemCard.getCard().move(event)
             if self._popup == None or not self._popup.getDisplay():
