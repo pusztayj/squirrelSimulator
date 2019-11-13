@@ -16,6 +16,9 @@ from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
 from items.items import Food
+from items.items import Weapon
+from items.items import Armor
+from minigame.itemblock import ItemBlock
 
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
     spawns = []
@@ -102,6 +105,9 @@ class MainLevel(Level):
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
 
+        self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
+        self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
+
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def draw(self, screen):
@@ -160,6 +166,9 @@ class MainLevel(Level):
 
         self._hud.draw(screen)
 
+        self._armor.draw(screen)
+        self._weapon.draw(screen)
+
     def handleEvent(self, event):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
@@ -201,6 +210,14 @@ class MainLevel(Level):
                 if item != None and issubclass(type(item), Food):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
+                if item != None and issubclass(type(item), Weapon):
+                    self._player.equipItem(item)
+                    self._weapon.setItem(item)
+                    self._player.getInventory().removeItem(item)
+                if item != None and issubclass(type(item), Armor):
+                    self._player.equipArmor(item)
+                    self._armor.setItem(item)
+                    self._player.getInventory().removeItem(item)
                 
 
         if self._atm != None and self._atm.getDisplay():
@@ -293,6 +310,9 @@ class MainLevel(Level):
         self._worldClock.update(ticks)
 
         self._hud.update()
+
+        self._weapon.updateBlock()
+        self._armor.updateBlock()
 
         for fox in self._foxes: fox.wander(ticks)
         for rabbit in self._rabbits: rabbit.wander(ticks)

@@ -3,7 +3,7 @@ from modules.drawable import Drawable
 
 class ItemBlock(Drawable):
 
-    def __init__(self, pos, dimensions, item=None, selected=False):
+    def __init__(self, pos, dimensions=(77,50), item=None, selected=False):
         super().__init__("", pos, worldBound = False)
         self._item = item
         self._width = dimensions[0]
@@ -19,6 +19,12 @@ class ItemBlock(Drawable):
         self._selected = selected
 
         self.updateBlock()
+
+    def setItem(self, item):
+        self._item = item
+
+    def getItem(self):
+        return item
 
     def updateBlock(self):
         surfBack = pygame.Surface((self._width, self._height))
