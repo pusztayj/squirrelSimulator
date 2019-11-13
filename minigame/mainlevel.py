@@ -16,7 +16,7 @@ from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
 from items.items import Food
 
-def spawn(spawnType, spawnRange, spawnCount, collidables, name=None):
+def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
     spawns = []
     while len(spawns) < spawnCount:
         if name == None:
@@ -25,8 +25,12 @@ def spawn(spawnType, spawnRange, spawnCount, collidables, name=None):
         else:
             e = spawnType(name,(random.randint(0,spawnRange[0]),
                                  random.randint(0,spawnRange[1])))
-        if e.getCollideRect().collidelist([x.getCollideRect() for x in spawns + collidables]) == -1:
-            spawns.append(e)
+        if not wanderer:
+            if e.getCollideRect().collidelist([x.getCollideRect() for x in spawns + collidables]) == -1:
+                spawns.append(e)
+        else:
+            if e.getWanderRect().collidelist([x.getCollideRect() for x in spawns + collidables]) == -1:
+                spawns.append(e)
     return spawns
 
 class MainLevel(Level):
@@ -67,10 +71,8 @@ class MainLevel(Level):
         self._creatures = []
         self._chip = Chipmunk(pos=(1600,300))
         self._chip.flip()
-        self._fox = Fox(pos=(800,200))
-        self._fox.flip()
-        self._fox.scale(1.5)
-        self._creatures.append(self._fox)
+        #self._fox = Fox(pos=(self._WORLD_SIZE[0],self._WORLD_SIZE[1]))
+        #self._fox.flip()
         self._creatures.append(self._chip)
         self._creatures.append(self._player)
 
@@ -84,7 +86,13 @@ class MainLevel(Level):
 
         # Add trees to the world
         self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
-                            30, self._merchants, "tree.png")
+                            30, self._merchants, name="tree.png")
+
+        self._foxes = spawn(Fox, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 3,
+                          self._merchants + self._trees, wanderer=True)
+
+        for fox in self._foxes: fox.scale(1.5)
+        self._creatures.extend(self._foxes)
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
@@ -281,7 +289,7 @@ class MainLevel(Level):
 
         self._hud.update()
 
-        self._fox.wander(ticks)
+        for fox in self._foxes: fox.wander(ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
