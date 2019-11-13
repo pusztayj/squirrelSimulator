@@ -15,10 +15,8 @@ from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
-from items.items import Food
-from items.items import Weapon
-from items.items import Armor
-from items.items import Spear
+from items.items import *
+from items import items
 from minigame.itemblock import ItemBlock
 
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
@@ -103,8 +101,13 @@ class MainLevel(Level):
         self._creatures.extend(self._foxes)
         self._creatures.extend(self._rabbits)
 
-        for fox in self._foxes:
-            fox.getInventory().addItem(Spear())
+        for creature in self._creatures:
+            for _ in range(2):
+                i = items.__all__
+                random.shuffle(i)
+                for x in i:
+                    if .08 >= random.random():
+                        creature.getInventory().addItem(globals()[x]())
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)

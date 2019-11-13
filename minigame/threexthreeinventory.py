@@ -12,17 +12,19 @@ class threeXthreeInventory(Drawable):
         self._entity = entity
         self._items = [item for item in self._entity.getInventory()]
         self._blocks = []
-        for x in range(3):
-            for y in range(3):
-                if x+y < len(self._items):
+        count = 0
+        for y in range(3):
+            for x in range(3):
+                if count < len(self._items):
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
-                              (self._width//3,self._height//3),item=self._items[x])
+                              (self._width//3,self._height//3),item=self._items[count])
                 else:
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
                               (self._width//3,self._height//3),item=None)
                 self._blocks.append(i)
+                count += 1
 
     def handleEvent(self, event):
         pass
@@ -30,17 +32,19 @@ class threeXthreeInventory(Drawable):
     def update(self):
         self._items = [item for item in self._entity.getInventory()]
         self._blocks = []
-        for x in range(3):
-            for y in range(3):
-                if x+y < len(self._items):
+        count = 0
+        for y in range(3):
+            for x in range(3):
+                if count < len(self._items):
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
-                               (y*self._height//3)+self._position[1]),
-                              (self._width//3,self._height//3),item=self._items[x])
+                               (y*(self._height//3))+self._position[1]),
+                              (self._width//3,self._height//3),item=self._items[count])
                 else:
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
-                               (y*self._height)+self._position[1]),
+                               (y*(self._height//3))+self._position[1]),
                               (self._width//3,self._height//3),item=None)
                 self._blocks.append(i)
+                count += 1
 
     def getActiveItem(self):
         if self._selected < len(self._items):
