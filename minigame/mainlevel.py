@@ -77,7 +77,6 @@ class MainLevel(Level):
         #self._fox = Fox(pos=(self._WORLD_SIZE[0],self._WORLD_SIZE[1]))
         #self._fox.flip()
         self._creatures.append(self._chip)
-        self._creatures.append(self._player)
 
         self._atm = None
 
@@ -153,6 +152,8 @@ class MainLevel(Level):
         for merchant in notDrawnMerchants:
             merchant.draw(screen)
 
+        self._player.draw(screen)
+
         for tree in notDrawnTrees:
             tree.draw(screen)
 
@@ -206,6 +207,7 @@ class MainLevel(Level):
                         if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                             self._interaction = Interaction(creature)
+                            for k in self._player._movement.keys(): self._player._movement[k] = False
                             
                 for merchant in self._merchants:
                     if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
@@ -214,17 +216,17 @@ class MainLevel(Level):
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
                 item = self._hud.getActiveItem()
-                if item != None and issubclass(type(item), Food):
+                if item != None and issubclass(type(item), items.Food):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
-                if item != None and issubclass(type(item), Weapon):
+                if item != None and issubclass(type(item), items.Weapon):
                     previous = self._weapon.getItem()
                     if previous != None:
                         self._player.getInventory().addItem(previous)
                     self._player.equipItem(item)
                     self._weapon.setItem(item)
                     self._player.getInventory().removeItem(item)
-                if item != None and issubclass(type(item), Armor):
+                if item != None and issubclass(type(item), items.Armor):
                     previous = self._armor.getItem()
                     if previous != None:
                         self._player.getInventory().addItem(previous)
