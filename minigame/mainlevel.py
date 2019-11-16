@@ -1,5 +1,5 @@
 import pygame, random, math
-from graphics import Banner, Popup, StatDisplay, Mask
+from graphics import Banner, Popup, StatDisplay, Mask, TextBox
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -108,6 +108,10 @@ class MainLevel(Level):
                     if .08 >= random.random():
                         creature.getInventory().addItem(globals()[x]())
 
+##        self._activeItem = TextBox("", (0,0), self._font, (255,255,255))
+##        self._activeItem.setPosition(((self._SCREEN_SIZE[0]//2)-self._activeItem.getWidth()//2,
+##                                        self._SCREEN_SIZE[1]-90))
+
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), player)
 
@@ -172,6 +176,7 @@ class MainLevel(Level):
 
         self._worldClock.draw(screen)
 
+##        self._activeItem.draw(screen)
         self._hud.draw(screen)
 
         self._armor.draw(screen)
@@ -325,7 +330,7 @@ class MainLevel(Level):
         #Update InGame Clock
         self._worldClock.update(ticks)
 
-        self._hud.update()
+        self._hud.update(ticks)
 
         self._weapon.updateBlock()
         self._armor.updateBlock()
