@@ -281,6 +281,7 @@ class MainLevel(Level):
                 self._player.getCheekCapacity() - self._player.getAcorns() > 0:
                 self._player.setAcorns(self._player.getAcorns()+1)
                 acorn.collected()
+            acorn.update(ticks)
 
         self._acornSpawnTimer -= ticks
         if self._acornSpawnTimer <= 0:
