@@ -43,7 +43,7 @@ class NPC(Animal, Animated):
         for rect in self.getCollideRects(): 
             r = rect.move(x,y)
             if r.collidepoint(pos):
-                print("yeah")
+
                 #self._image = copy.copy(self._realImage)
                 popup = Popup(self.getName(), (pos[0]+5,pos[1]+5),
                                 popupFont)
@@ -149,11 +149,11 @@ class NPC(Animal, Animated):
             self._walkTimer -= ticks
             self.updateAnimation(ticks)
 
-    def follow(self, ticks, target, flank=1):
+    def followPlayer(self, ticks, target, flank=1):
         follow_x = random.randint(45,55)
         follow_y = random.randint(45,55)
         self._velocity = target._velocity
-        if target._fsm.getCurrentState() == "walking":
+        if target._velocity.x != 0 or target._velocity.y != 0:
             if abs(self._velocity.y) > abs(self._velocity.x):
                 if self._velocity.y > 0:
                     self._nFrames = self._forwardFrames
@@ -192,10 +192,14 @@ class NPC(Animal, Animated):
                 self._nFrames = self._walkFrames
                 self._row = self._walkRow
             self.updateAnimation(ticks)
-        elif target._fsm.getCurrentState() == "standing":
+        elif target._velocity.x == 0 and target._velocity.y==0:
             self._row = self._standRow
             self._nFrames = self._standFrames
             self.updateAnimation(ticks)
         
         self._position += (self._velocity*ticks)
+
+
+    def follow(self, ticks, target):
+        self._position += (target._velocity * ticks)
         

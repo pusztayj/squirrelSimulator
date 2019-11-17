@@ -5,6 +5,8 @@ File: pack.py
 A class that models a pack or clan of animals
 """
 
+from player import Player
+
 class Pack():
 
     def __init__(self, leader, name=""):
@@ -105,16 +107,23 @@ class Pack():
         return animal in self._members
 
     def draw(self, screen):
-
         sortedMembers = [x for x in self._members if x != None]
         sortedMembers.sort(key= lambda x: x._position.y + x.getHeight()) 
         for animal in sortedMembers:
             animal.draw(screen)
 
     def update(self, worldsize, ticks):
-        flank = 1
-        for animal in self._members:
-            if animal != None and not self.isLeader(animal):
-                animal.follow(ticks, self.getLeader(), flank)
-                flank += 1
+        if type(self.getLeader()) == Player:
+            flank = 1
+            for animal in self._members:
+                if animal != None and not self.isLeader(animal):
+                    animal.followPlayer(ticks, self.getLeader(), flank)
+                    flank += 1
+        else:
+            flank = 1
+            for animal in self._members:
+                if animal != None and not self.isLeader(animal):
+                    animal.follow(ticks, self.getLeader())
+                    flank += 1
+
             

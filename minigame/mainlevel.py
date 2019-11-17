@@ -101,6 +101,12 @@ class MainLevel(Level):
         self._deer = spawn(Deer, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 4,
                   self._merchants + self._trees + self._foxes + self._rabbits + self._bears, wanderer=True)
 
+        self._f = Rabbit(pos=(500,200))
+        self._enemyPack = Pack(self._f)
+        r = Rabbit(pos=(600,100))
+        self._enemyPack.addMember(r)
+##      r2 = Rabbit(pos=(600,250))
+##      self._enemyPack.addMember(r2)
 
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)
@@ -167,6 +173,8 @@ class MainLevel(Level):
             creature.draw(screen)
 
         self._playerPack.draw(screen)
+
+        self._enemyPack.draw(screen)
 
         for merchant in notDrawnMerchants:
             merchant.draw(screen)
@@ -356,6 +364,9 @@ class MainLevel(Level):
         for deer in self._deer: deer.wander(ticks)
 
         self._playerPack.update(self._WORLD_SIZE, ticks)
+
+        self._f.wander(ticks)
+        self._enemyPack.update(self._WORLD_SIZE, ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
