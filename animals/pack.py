@@ -1,17 +1,22 @@
 """
-Author: Trevor Stalnaker
+Author: Trevor Stalnaker, Justin Pusztay
 File: pack.py
 
 A class that models a pack or clan of animals
 """
 class Pack():
 
-    def __init__(self, leader, size=3, name=""):
+    def __init__(self, leader, name=""):
         """Initialize the pack with a leader and a max size"""
-        self._maxSize = size
-        self._members = [leader]
+        self._maxSize = 3
+        self._members = [leader, None, None]
         self._leader = leader
         self._name = name
+        self._nextToAttackIndex = 0
+        self._nextToAttack = self[self._nextToAttackIndex]
+
+    def getNextToAttack(self):
+        return self._nextToAttack
 
     def getPackName(self):
         return self._name
@@ -32,13 +37,17 @@ class Pack():
 
     def addMember(self, member):
         """Add a new member to the pack if able"""
-        if self.getSize() < self.getMaxSize():
-            self._members.append(member)
+        if None not in self._members:
+            pass
+        for i,animal in enumerate(self):
+            if animal == None:
+                self._members[i] = member
+                break
 
     def removeMemeber(self, member):
         """Remove a current member of the pack"""
         if member in self._members:
-            self._members.remove(member)
+            self._members.replace(member,None)
 
     def getMembers(self):
         """Return the members of the pack"""
@@ -50,18 +59,34 @@ class Pack():
 
     def getMaxSize(self):
         """Return the max size of the pack"""
-        return self._maxSize
+        return 3
 
     def updatePack(self):
         """Removes dead pack members and updates the leader accordingly"""
-        self._members = [m for m in self._members if not m.isDead()]
+        self._members = [x if x!=None and not x.isDead() else None for x in self._members]
         if self._leader.isDead():
-            if self.getSize() > 0:
+            for i,animal in enumerate(self):
+                if animal != None and i <= len(self)-1:
+                    self.resetLeader(self._members[i])
+                    break
+            else:
                 self.resetLeader(self._members[0])
+
+    def isDead(self):
+        return all(v is None for v in self)
+
+    def hasAttacked(self):
+        if self._nextToAttackIndex % 3 == 2:
+            self._nextToAttackIndex = 0
+        else:
+            self._nextToAttackIndex += 1
+        if self[self._nextToAttackIndex] == None and not self.isDead():
+            self.hasAttacked()
+        self._nextToAttack = self[self._nextToAttackIndex]
 
     def __repr__(self):
         """Representation of the pack class"""
-        return str([m.getName() for m in self._members])
+        return str([x.getName() if x != None else None for x in self._members])
 
     def __iter__(self):
         """Iterator for the pack class"""
