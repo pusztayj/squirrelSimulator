@@ -120,6 +120,11 @@ class MainLevel(Level):
 
         SoundManager.getInstance().playMusic(self._currentSong)
 
+    def setActive(self, boolean):
+        self._active = boolean
+        self._currentSong = random.choice(self._songs)
+        SoundManager.getInstance().playMusic(self._currentSong)
+
     def draw(self, screen):
         
         #Draw the background to the screen
