@@ -6,10 +6,7 @@ from player import Player
 from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
-from animals.chipmunk import Chipmunk
-from animals.fox import Fox
-from animals.bear import Bear
-from animals.rabbit import Rabbit
+from animals import *
 from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
@@ -100,10 +97,15 @@ class MainLevel(Level):
         self._bears = spawn(Bear, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
                   self._merchants + self._trees + self._foxes + self._rabbits, wanderer=True)
 
+        self._deer = spawn(Deer, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 4,
+                  self._merchants + self._trees + self._foxes + self._rabbits + self._bears, wanderer=True)
+
+
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)
         self._creatures.extend(self._rabbits)
         self._creatures.extend(self._bears)
+        self._creatures.extend(self._deer)
 
         for creature in self._creatures:
             for _ in range(2):
@@ -348,6 +350,7 @@ class MainLevel(Level):
         for fox in self._foxes: fox.wander(ticks)
         for rabbit in self._rabbits: rabbit.wander(ticks)
         for bear in self._bears: bear.wander(ticks)
+        for deer in self._deer: deer.wander(ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
