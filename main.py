@@ -4,6 +4,7 @@ from player import Player
 from minigame.merchantlevel import MerchantLevel
 from minigame.combatLevel import CombatLevel
 from minigame.cheats import Cheats
+from minigame.loadingscreen import LoadingScreen
 
 SCREEN_SIZE = (1200,500)
 
@@ -25,19 +26,20 @@ def main():
    pygame.display.set_caption('Squirrel Simulator')
    
    #Get the screen
-   screen = pygame.display.set_mode(SCREEN_SIZE)
+   screen = pygame.display.set_mode(SCREEN_SIZE) #, pygame.FULLSCREEN)
 
    #Create an instance of the game clock
    gameClock = pygame.time.Clock()
 
    player = Player(pos=(200,200))
-   player._acorns = 1000
    player.scale(1.5)
    level = MainLevel(player, SCREEN_SIZE)
    merchantLevel = None
    combatLevel = None
 
    cheatBox = Cheats(SCREEN_SIZE)
+
+   loading = LoadingScreen(SCREEN_SIZE, 1)
 
    RUNNING = True
 
@@ -60,6 +62,9 @@ def main():
       if cheatBox.isDisplayed():
          cheatBox.draw(screen)
 
+      if loading.isDisplayed():
+         loading.draw(screen)
+
       pygame.display.flip()
 
       # event handling, gets all event from the eventqueue
@@ -74,17 +79,18 @@ def main():
             (level._atm == None or not level._atm.getDisplay()):
             level.setActive(not level.isActive())
 
-         if level.isActive():
+         if level.isActive() and not loading.isDisplayed():
              code = level.handleEvent(event)
 
-         if merchantLevel != None and merchantLevel.isActive():
+         if merchantLevel != None and merchantLevel.isActive() and \
+            not loading.isDisplayed():
              code = merchantLevel.handleEvent(event)
 
          if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
             event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
                cheatBox.toggleDisplay()
 
-         if cheatBox.isDisplayed():
+         if cheatBox.isDisplayed() and not loading.isDisplayed():
             cheatCode = cheatBox.handleEvent(event)
             if cheatCode != None:
                cheatCodes[cheatCode[0]](player, cheatCode[1])
@@ -103,11 +109,17 @@ def main():
            # Reset the movement dictionary for the player
           for k in player._movement.keys():
              player._movement[k] = False
+
+          # Display the loading screen
+          loading.setDisplay(True)
              
       elif code != None and code[0] == 0:
           pygame.mixer.music.fadeout(1000)
           level.setActive(True)
           code = None
+
+          # Display the loading screen
+          loading.setDisplay(True)
 
       # Set Game Mode to Combat
       elif code != None and code[0] == 2:
@@ -116,10 +128,11 @@ def main():
          combatLevel = CombatLevel(player, SCREEN_SIZE)
          code = None
         
-      if level.isActive():
+      if level.isActive() and not loading.isDisplayed():
           level.update(ticks)
 
-      if merchantLevel != None and merchantLevel.isActive():
+      if merchantLevel != None and merchantLevel.isActive() and \
+         not loading.isDisplayed():
           merchantLevel.update(ticks)
 
       if combatLevel != None and combatLevel.isActive():
@@ -127,6 +140,9 @@ def main():
 
       if cheatBox.isDisplayed():
          cheatBox.update(ticks)
+
+      if loading.isDisplayed():
+         loading.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()

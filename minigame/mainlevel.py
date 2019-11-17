@@ -6,9 +6,7 @@ from player import Player
 from economy.acorn import Acorn
 from economy.dirtpile import DirtPile
 from minigame.atm import ATM
-from animals.chipmunk import Chipmunk
-from animals.fox import Fox
-from animals.rabbit import Rabbit
+from animals import *
 from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
@@ -43,7 +41,7 @@ class MainLevel(Level):
         super().__init__()
 
         self._SCREEN_SIZE = SCREEN_SIZE
-        self._WORLD_SIZE = (2000,1000)
+        self._WORLD_SIZE = (4000,2000)
 
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
@@ -96,9 +94,18 @@ class MainLevel(Level):
         self._rabbits = spawn(Rabbit, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
                           self._merchants + self._trees + self._foxes, wanderer=True)
 
+        self._bears = spawn(Bear, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
+                  self._merchants + self._trees + self._foxes + self._rabbits, wanderer=True)
+
+        self._deer = spawn(Deer, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 4,
+                  self._merchants + self._trees + self._foxes + self._rabbits + self._bears, wanderer=True)
+
+
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)
         self._creatures.extend(self._rabbits)
+        self._creatures.extend(self._bears)
+        self._creatures.extend(self._deer)
 
         for creature in self._creatures:
             for _ in range(2):
@@ -118,6 +125,11 @@ class MainLevel(Level):
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
 
+        SoundManager.getInstance().playMusic(self._currentSong)
+
+    def setActive(self, boolean):
+        self._active = boolean
+        self._currentSong = random.choice(self._songs)
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def draw(self, screen):
@@ -337,6 +349,8 @@ class MainLevel(Level):
 
         for fox in self._foxes: fox.wander(ticks)
         for rabbit in self._rabbits: rabbit.wander(ticks)
+        for bear in self._bears: bear.wander(ticks)
+        for deer in self._deer: deer.wander(ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
