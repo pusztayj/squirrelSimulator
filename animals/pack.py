@@ -4,6 +4,7 @@ File: pack.py
 
 A class that models a pack or clan of animals
 """
+
 class Pack():
 
     def __init__(self, leader, name=""):
@@ -102,5 +103,18 @@ class Pack():
 
     def __contains__(self,animal):
         return animal in self._members
-                
+
+    def draw(self, screen):
+
+        sortedMembers = [x for x in self._members if x != None]
+        sortedMembers.sort(key= lambda x: x._position.y + x.getHeight()) 
+        for animal in sortedMembers:
+            animal.draw(screen)
+
+    def update(self, worldsize, ticks):
+        flank = 1
+        for animal in self._members:
+            if animal != None and not self.isLeader(animal):
+                animal.follow(ticks, self.getLeader(), flank)
+                flank += 1
             

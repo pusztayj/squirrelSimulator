@@ -149,9 +149,9 @@ class NPC(Animal, Animated):
             self._walkTimer -= ticks
             self.updateAnimation(ticks)
 
-    def follow(self, ticks, target):
-        follow_x = 50
-        follow_y = 50
+    def follow(self, ticks, target, flank=1):
+        follow_x = random.randint(45,55)
+        follow_y = random.randint(45,55)
         self._velocity = target._velocity
         if target._fsm.getCurrentState() == "walking":
             if abs(self._velocity.y) > abs(self._velocity.x):
@@ -165,6 +165,12 @@ class NPC(Animal, Animated):
                     self._row = self._backwardRow
                     if target._position.y > self._position.y - follow_y:
                         self._velocity.y -= target._velocity.y//2
+                if flank == 1:
+                    if self._position.x + follow_x > target._position.x:
+                        self._velocity.x -= follow_x//2
+                else:
+                    if self._position.x - follow_x < target._position.x:
+                        self._velocity.x += follow_x//2
             else:
                 if self._velocity.x < 0:
                     if not self.isFlipped():
@@ -176,6 +182,13 @@ class NPC(Animal, Animated):
                         self.flip()
                     if target._position.x < self._position.x + follow_x:
                         self._velocity.x -= target._velocity.x//2
+                if flank == 1:
+                    if self._position.y + follow_y > target._position.y:
+                        self._velocity.y -= follow_y//2
+                else:
+                    if self._position.y - follow_y < target._position.y:
+                        self._velocity.y += follow_y//2
+                        
                 self._nFrames = self._walkFrames
                 self._row = self._walkRow
             self.updateAnimation(ticks)
