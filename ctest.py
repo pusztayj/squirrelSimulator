@@ -1,19 +1,9 @@
 import pygame
-from modules.drawable import Drawable
-from modules.vector2D import Vector2
-from animals.pack import Pack
-from animals.chipmunk import Chipmunk
-from animals.deer import Deer
-from animals.fox import Fox
-from animals.bear import Bear
-from animals.snake import Snake
-from animals.rabbit import Rabbit
-from graphics.textbox import TextBox
-from graphics.progressbar import ProgressBar
-from graphics.popup import Popup
-from graphics.popupwindow import PopupWindow
-from graphics.linkedprogressbar import LinkedProgressBar
-from graphics.button import Button
+from modules import Drawable,Vector2
+##from modules.drawable import Drawable
+##from modules.vector2D import Vector2
+from animals import *
+from graphics import *
 from combatUtils import *
 from stateMachines import combatStartState,combatPlayerStates,\
      playerTransitions, combatFSM
