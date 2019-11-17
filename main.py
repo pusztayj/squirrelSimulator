@@ -31,7 +31,6 @@ def main():
    gameClock = pygame.time.Clock()
 
    player = Player(pos=(200,200))
-   player._acorns = 1000
    player.scale(1.5)
    level = MainLevel(player, SCREEN_SIZE)
    merchantLevel = None
