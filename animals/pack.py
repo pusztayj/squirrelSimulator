@@ -6,9 +6,9 @@ A class that models a pack or clan of animals
 """
 class Pack():
 
-    def __init__(self, leader, size=3, name=""):
+    def __init__(self, leader, name=""):
         """Initialize the pack with a leader and a max size"""
-        self._maxSize = size
+        self._maxSize = 3
         self._members = [leader]
         self._leader = leader
         self._name = name
@@ -38,7 +38,7 @@ class Pack():
     def removeMemeber(self, member):
         """Remove a current member of the pack"""
         if member in self._members:
-            self._members.remove(member)
+            self._members.replace(member,None)
 
     def getMembers(self):
         """Return the members of the pack"""
@@ -54,14 +54,15 @@ class Pack():
 
     def updatePack(self):
         """Removes dead pack members and updates the leader accordingly"""
-        self._members = [m for m in self._members if not m.isDead()]
+        self._members = [x if not x.isDead() else None for x in self._members]
+        #self._members = [m for m in self._members if not m.isDead()]
         if self._leader.isDead():
             if self.getSize() > 0:
                 self.resetLeader(self._members[0])
 
     def __repr__(self):
         """Representation of the pack class"""
-        return str([m.getName() for m in self._members])
+        return str([x.getName() if x != None else None for x in self._members])
 
     def __iter__(self):
         """Iterator for the pack class"""

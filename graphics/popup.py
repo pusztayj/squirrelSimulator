@@ -4,7 +4,7 @@ File: popup.py
 """
 
 from .textbox import TextBox
-from modules.drawable import Drawable
+from modules import Drawable
 import pygame
 
 class Popup(Drawable):

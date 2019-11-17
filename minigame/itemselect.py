@@ -5,6 +5,7 @@ from modules.frameManager import FRAMES
 from items.items import Spear
 from .itemblock import ItemBlock
 
+
 class ItemSelect(Drawable):
 
     def __init__(self, pos, items, dimensions=(700,50)):
@@ -15,6 +16,7 @@ class ItemSelect(Drawable):
         self._position.x += (9-(len(items))) * ((self._width//9)/2)
         self._selected = 0
         self._blocks = []
+        self._itemSelected = None
         for x in range(len(items)):
             if x < len(self._items):
                 i = ItemBlock((self._position[0]+(x*(self._width//9)),
@@ -28,6 +30,9 @@ class ItemSelect(Drawable):
                               selected=x==self._selected)
             self._blocks.append(i)
 
+    def getItemSelected(self):
+        return self._itemSelected
+
     def handleEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4:
@@ -38,6 +43,7 @@ class ItemSelect(Drawable):
                 for i, b in enumerate(self._blocks):
                     if b.getCollideRect().collidepoint(event.pos):
                         self._selected = i
+                        self._itemSelected = self._blocks[self._selected]
                     
 
     def update(self):

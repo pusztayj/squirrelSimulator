@@ -1,13 +1,14 @@
 import pygame
 from modules import Drawable,Vector2
-##from modules.drawable import Drawable
-##from modules.vector2D import Vector2
 from animals import *
 from graphics import *
 from combatUtils import *
 from stateMachines import combatStartState,combatPlayerStates,\
      playerTransitions, combatFSM
 import time
+from items.items import *
+from minigame.itemselect import ItemSelect
+from minigame.combatSubLevel import PlayerCombatSide
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -47,6 +48,7 @@ def main():
 
     ### Make the ally pack ###
     ally1 = Bear()
+    ally1.getInventory().addItem(Potions())
     ally2 = Snake()
     ally3 = Fox()
 
@@ -84,68 +86,24 @@ def main():
 
     healthbars = makeHealthBars(allies) + makeHealthBars(enemies)
         
-
-    ### Make the turn counter metric ###
-    turnText = TextBox("Your turn",(565,470),font,(255,255,255))
-
-##    ### Health counter Hover over Popup ###
-##    allyPopups = list()
-##    for x in allies:
-##        text = x.getName() + "\nHealth: " + str(x.getHealth()) + "/100"
-##        a = Popup(text,(0,0),font)
-##        allyPopups.append(a)
-
-    ### Buttons for player to play game on ###
-    attackButton = Button("Attack", (385,100),font,(255,255,255),(222,44,44),
-                          50,100,borderWidth = 2)
-
-    fortifyButton = Button("Fortify",(495,100),font,(255,255,255),(46,46,218),
-                           50,100,borderWidth = 2)
-
-    healButton = Button("Heal",(605,100),font,(255,255,255),(0,0,0),
-                           50,100)
-
-    retreatButton = Button("Retreat",(715,100),font,(255,255,255),(206,218,46),
-                           50,100,borderWidth = 2)
-
-    attackUndoButton = Button("Go Back",(550,100),font,(255,255,255),(0,0,0),
-                           50,100)
-
-    ### Necessary Text Boxes ###
-    attackTextBox = TextBox("Click on enemy animal to proceed with attack",
-                            (350,190),textFont,(255,255,255))
-    
+    potionSelect = None
     
     RUNNING = True
-    count = 0
+
+    lev = PlayerCombatSide(screen,allies,enemies,healthbars)
+    
     while RUNNING:
         background.draw(screen)
-        ### Draw the allies ###
-        for a in allies:
-            a.draw(screen)
-        ### Draw the enemeies ###
-        for e in enemies:
-            e.draw(screen)
-        ### Drawing the health bars ###
-        for x in healthbars:
-            x.draw(screen)
-        ### Draw hover over pop ups ###
-        ### Draw the turn metric ###
-        pygame.draw.circle(screen,(255,255,255),(600,435),25)
-        turnText.draw(screen)
-
-        ### Draw the buttons if the players turn ###
+        
         if combatFSM.getCurrentState() == "player turn":
-            attackButton.draw(screen)
-            fortifyButton.draw(screen)
-            healButton.draw(screen)
-            retreatButton.draw(screen)
+            lev.drawPlayerTurn()
 
-        ### Draw appropriate buttons if in attack state ###
         if combatFSM.getCurrentState() == "attack":
-            attackUndoButton.draw(screen)
-            attackTextBox.draw(screen)
+            lev.drawAttack()
 
+        if combatFSM.getCurrentState() == "heal":
+            lev.drawHeal()
+            
         if combatFSM.getCurrentState() == "waiting":
                 combatOrder = turnOrder(allies,enemies)
                 text_y = 150
@@ -175,46 +133,29 @@ def main():
         pygame.display.flip()
 
         for event in pygame.event.get():
-
             if event.type == pygame.QUIT:
                 RUNNING = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     RUNNING = False
-                    
-            if combatFSM.getCurrentState() == "player turn":
-                attackButton.handleEvent(event,combatFSM.changeState,"attack button")
-                fortifyButton.handleEvent(event,combatFSM.changeState,"fortify button")
-                healButton.handleEvent(event,combatFSM.changeState,"heal button")
-                retreatButton.handleEvent(event,combatFSM.changeState,"retreat button")
-                
-            if combatFSM.getCurrentState() == "attack":
-                attackUndoButton.handleEvent(event,combatFSM.changeState,"go back")
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-                    for creature in enemies:
-                        x,y = creature.getPosition()
-                        for rect in creature.getCollideRects():
-                            r = rect.move(x,y)
-                            if r.collidepoint(event.pos):
-                                attack(allies[0],creature)
-                                enemies.updatePack()
-                                combatFSM.changeState("animal click")
+
+            if combatFSM.getCurrentState() == "heal":
+                lev.handleHeal(event)
+
+            elif combatFSM.getCurrentState() == "player turn":
+                lev.handlePlayerTurn(event)
+
+            elif combatFSM.getCurrentState() == "attack":
+                lev.handleAttack(event)
                                 
             elif combatFSM.getCurrentState() == "fortify":
-                fortify(allies[0])
-                combatFSM.changeState("action complete")
-                
-            elif combatFSM.getCurrentState() == "heal":
-                combatFSM.changeState("action complete")
-                
+                lev.handleFortify(event)
+                                
             elif combatFSM.getCurrentState() == "retreat":
                 retreat(allies[0])
                 RUNNING = False
 
-        # update health bars        
-        healthbars = [x for x in healthbars if not x.getEntity().isDead()]
-        for x in healthbars:
-            x.update()
+        lev.update()
         
     pygame.quit()
 
