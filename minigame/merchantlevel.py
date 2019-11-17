@@ -1,31 +1,19 @@
 import pygame, random
-from graphics.banner import Banner
-from animals.turtle import Turtle
-from animals.beaver import Beaver
-from animals.squirrel import Squirrel
+from graphics import *
+from animals import *
 from economy.tradedesk import TradeDesk
 from economy.merchant import Merchant
 from economy.transactions import merchantTransaction
-from graphics.scrollbox import ScrollBox
-from graphics.textbox import TextBox
-from graphics.guiUtils import *
-from graphics.button import Button
-from graphics.tabs import Tabs
-from modules.drawable import Drawable
-from modules.vector2D import Vector2
+from modules import Drawable, Vector2, SoundManager
 from player import Player
 from items.items import *
-from graphics.scrollselector import ScrollSelector
-from graphics.popupwindow import PopupWindow
 from level import Level
-from modules.soundManager import SoundManager
 
 class MerchantLevel(Level):
 
     def __init__(self,player,merchant,SCREEN_SIZE):
         super().__init__()
 
-        
         self._SCREEN_SIZE = (1200,500)
         self._WORLD_SIZE = (1200,500)
 

@@ -1,4 +1,3 @@
-
 import pygame, random, math
 from minigame.mainlevel import MainLevel
 from player import Player

@@ -8,8 +8,8 @@ import random, items, shelve
 from inventory import Inventory
 from items.item import Item
 from items.items import *
-from animals.npc import NPC
-from modules.drawable import Drawable
+from animals import NPC
+from modules import Drawable
 
 races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
