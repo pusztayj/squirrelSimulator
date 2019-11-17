@@ -25,7 +25,7 @@ def main():
    pygame.display.set_caption('Squirrel Simulator')
    
    #Get the screen
-   screen = pygame.display.set_mode(SCREEN_SIZE)
+   screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
 
    #Create an instance of the game clock
    gameClock = pygame.time.Clock()
