@@ -4,7 +4,6 @@ from .npc import NPC
 AGGRESSION   = (8,10)
 SPEED        = (15,20)
 ENDURANCE    = (8,10)
-ATTACK_SPEED = (6,8)
 STRENGTH     = 12
 
 class Rabbit(NPC):
@@ -12,7 +11,7 @@ class Rabbit(NPC):
     def __init__(self, name="", pos=(0,0)):
 
         NPC.__init__(self, name, "new_rabbit.png", pos, AGGRESSION, SPEED,
-                         ENDURANCE,ATTACK_SPEED,STRENGTH)
+                         ENDURANCE,STRENGTH)
 
         self._maxVelocity = 100
 

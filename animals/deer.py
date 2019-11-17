@@ -8,10 +8,10 @@ ENDURANCE    = (6,10)
 ATTACK_SPEED = (1,2)
 STRENGTH     = 12
 
-class Deer(NPC, Animated):
+class Deer(NPC):
 
     def __init__(self, name="", pos=(0,0)):
 
-        NPC.__init__(self, name, AGGRESSION, SPEED,
-                         ENDURANCE,ATTACK_SPEED,STRENGTH)
-        Animated.__init__(self, "tempDeer.png", pos)
+        NPC.__init__(self, name, "tempDeer.png", pos, AGGRESSION, SPEED,
+                         ENDURANCE,STRENGTH)
+    

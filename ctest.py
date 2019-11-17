@@ -30,6 +30,21 @@ If the screen size changes note that the positions of everything
 is hard coded so those positions need to be changed.
 """
 
+def makeHealthBars(pack1):
+    healthbars = list()
+    y = 200+133
+    for x in pack1:
+        if pack1.isLeader(x):
+            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),250+138),64,
+                                  100,x.getHealth())
+            healthbars.append(a)
+        else:
+            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),y),64,
+                                  100,x.getHealth())
+            healthbars.append(a)
+            y+=150
+    return healthbars
+
 def main():
 
     pygame.init()
@@ -56,23 +71,6 @@ def main():
         else:
             a.setPosition((100,y))
             y+=150
-    # ally pack health bars
-    allyHealthBars = list()
-    y = 200+133
-    for x in allies:
-        if allies.isLeader(x):
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),250+138),64,
-                                  100,x.getHealth())
-##            a = ProgressBar((x.getX() + (x.getWidth()//4),250+138),64,
-##                            100,x.getHealth())
-            allyHealthBars.append(a)
-        else:
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),y),64,
-                                  100,x.getHealth())
-##            a = ProgressBar((x.getX() + (x.getWidth()//4),y),
-##                             64,100,x.getHealth())
-            allyHealthBars.append(a)
-            y+=150
                 
     ### Make the enemy pack ###
     enemy1 = Deer()
@@ -93,32 +91,19 @@ def main():
         else:
             e.setPosition((972,y))
             y+=150
+
+    healthbars = makeHealthBars(allies) + makeHealthBars(enemies)
         
-    y = 200+133
-    for x in enemies:
-        if enemies.isLeader(x):
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),250+138),64,
-                                  100,x.getHealth())
-##            a = ProgressBar((x.getX() + (x.getWidth()//4),250+138),64,
-##                            100,x.getHealth())
-            allyHealthBars.append(a)
-        else:
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),y),64,
-                                  100,x.getHealth())
-##            a = ProgressBar((x.getX() + (x.getWidth()//4),y),64,
-##                            100,x.getHealth())
-            allyHealthBars.append(a)
-            y+=150
 
     ### Make the turn counter metric ###
     turnText = TextBox("Your turn",(565,470),font,(255,255,255))
 
-    ### Health counter Hover over Popup ###
-    allyPopups = list()
-    for x in allies:
-        text = x.getName() + "\nHealth: " + str(x.getHealth()) + "/100"
-        a = Popup(text,(0,0),font)
-        allyPopups.append(a)
+##    ### Health counter Hover over Popup ###
+##    allyPopups = list()
+##    for x in allies:
+##        text = x.getName() + "\nHealth: " + str(x.getHealth()) + "/100"
+##        a = Popup(text,(0,0),font)
+##        allyPopups.append(a)
 
     ### Buttons for player to play game on ###
     attackButton = Button("Attack", (385,100),font,(255,255,255),(222,44,44),
@@ -140,28 +125,21 @@ def main():
     attackTextBox = TextBox("Click on enemy animal to proceed with attack",
                             (350,190),textFont,(255,255,255))
     
-        
     
-
     RUNNING = True
+    count = 0
     while RUNNING:
         background.draw(screen)
-        
         ### Draw the allies ###
         for a in allies:
             a.draw(screen)
-
         ### Draw the enemeies ###
         for e in enemies:
             e.draw(screen)
-            
         ### Drawing the health bars ###
-        for x in allyHealthBars:
+        for x in healthbars:
             x.draw(screen)
-
         ### Draw hover over pop ups ###
-
-            
         ### Draw the turn metric ###
         pygame.draw.circle(screen,(255,255,255),(600,435),25)
         turnText.draw(screen)
@@ -173,6 +151,7 @@ def main():
             healButton.draw(screen)
             retreatButton.draw(screen)
 
+        ### Draw appropriate buttons if in attack state ###
         if combatFSM.getCurrentState() == "attack":
             attackUndoButton.draw(screen)
             attackTextBox.draw(screen)
@@ -204,7 +183,6 @@ def main():
             
         # needs to be after everything is drew
         pygame.display.flip()
-
 
         for event in pygame.event.get():
 
@@ -242,8 +220,10 @@ def main():
             elif combatFSM.getCurrentState() == "retreat":
                 retreat(allies[0])
                 RUNNING = False
-        allyHealthBars = [x for x in allyHealthBars if not x.getEntity().isDead()]
-        for x in allyHealthBars:
+
+        # update health bars        
+        healthbars = [x for x in healthbars if not x.getEntity().isDead()]
+        for x in healthbars:
             x.update()
         
     pygame.quit()

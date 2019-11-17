@@ -8,11 +8,10 @@ ENDURANCE    = (8,10)
 ATTACK_SPEED = (6,8)
 STRENGTH = 45
 
-class Bear(NPC, Animated):
+class Bear(NPC):
 
     def __init__(self, name="", pos=(0,0)):
 
-        NPC.__init__(self, name, AGGRESSION, SPEED,
-                         ENDURANCE,ATTACK_SPEED,STRENGTH)
+        NPC.__init__(self, name, "tempBear.png", pos, AGGRESSION, SPEED,
+                         ENDURANCE,STRENGTH)
 
-        Animated.__init__(self, "tempBear.png", pos)

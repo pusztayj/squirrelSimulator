@@ -10,8 +10,7 @@ from stateMachines import npcFSM
 
 class NPC(Animal, Animated):
 
-    def __init__(self, name, image, pos, agression, speed, endurance,
-                 attack_speed,strength):
+    def __init__(self, name, image, pos, agression, speed, endurance,strength):
 
         Animated.__init__(self, image, pos)
         
@@ -19,8 +18,7 @@ class NPC(Animal, Animated):
                          health=100,
                          speed=random.randint(speed[0],speed[1]),
                          endurance=random.randint(endurance[0],endurance[1]),
-                         strength = strength,
-                         attackSpeed=random.randint(attack_speed[0],attack_speed[1]))
+                         strength = strength)
         
         self._aggressionLevel = agression
         self._combatStatus = ""

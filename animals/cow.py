@@ -8,10 +8,9 @@ ENDURANCE    = (8,10)
 ATTACK_SPEED = (3,4)
 STRENGTH     = 25 
 
-class Cow(NPC, Animated):
+class Cow(NPC):
 
     def __init__(self, name="", pos=(0,0)):
 
-        NPC.__init__(self,name, AGGRESSION, SPEED,
-                         ENDURANCE,ATTACK_SPEED,STRENGTH)
-        Animated.__init__(self, "cow.png", pos)
+        NPC.__init__(self, name, "cow.png", pos, AGGRESSION, SPEED,
+                         ENDURANCE,STRENGTH)

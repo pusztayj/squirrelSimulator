@@ -11,7 +11,7 @@ from items.item import Item
 class Animal():
 
     def __init__(self, name="", health=100, stamina = 100,xp=0, speed=1, endurance=1,
-                 combatDamage=10, attackSpeed=1, strength=1,
+                 combatDamage=10, strength=1,
                  intelligence=1, equipment=[], inventorySize=9,
                  inHand=None, armor=None, buffs=[]):
 
@@ -40,7 +40,6 @@ class Animal():
         self._strength = strength
         self._attackModifers = 1
         self._defenseModifers = 1
-        self._attackSpeed = attackSpeed
 
         #Other Stats
         self._intelligence = intelligence
@@ -259,16 +258,7 @@ class Animal():
 
     def incrementEndurance(self, endurance):
         self._endurance += endurance
-
-    def getAttackSpeed(self):
-        return self._attackSpeed
-
-    def setAttackSpeed(self, speed):
-        self._attackSpeed = speed
-
-    def incrementAttackSpeed(self, speed):
-        self._attackSpeed += speed
-
+        
     # modifers 
 
     def getAttackModifers(self):
@@ -360,7 +350,6 @@ class Animal():
                "\nXP:            " + str(self._xp) + \
                "\nSpeed:         " + str(self._speed) + \
                "\nEndurance:     " + str(self._endurance) + \
-               "\nAttack Speed:  " + str(self._attackSpeed) + \
                "\nHolding:       " + self.getEquipItemName() + \
                "\nArmor:         " + self.getArmorsName() + \
                "\nInventory:     " + str(self._inventory) + \
