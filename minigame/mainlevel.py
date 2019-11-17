@@ -36,7 +36,7 @@ def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=Fa
 
 class MainLevel(Level):
 
-    def __init__(self, player, SCREEN_SIZE):
+    def __init__(self, player_pack, SCREEN_SIZE):
 
         super().__init__()
 
@@ -51,7 +51,8 @@ class MainLevel(Level):
 
         self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
-        self._player = player
+        self._playerPack = player_pack
+        self._player = self._playerPack.getLeader()
 
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
 
@@ -120,7 +121,7 @@ class MainLevel(Level):
 ##                                        self._SCREEN_SIZE[1]-90))
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
-                                  self._SCREEN_SIZE[1]-52), (700,50), player)
+                                  self._SCREEN_SIZE[1]-52), (700,50), self._player)
 
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
@@ -164,6 +165,8 @@ class MainLevel(Level):
 
         for creature in self._creatures:
             creature.draw(screen)
+
+        self._playerPack.draw(screen)
 
         for merchant in notDrawnMerchants:
             merchant.draw(screen)
@@ -351,6 +354,8 @@ class MainLevel(Level):
         for rabbit in self._rabbits: rabbit.wander(ticks)
         for bear in self._bears: bear.wander(ticks)
         for deer in self._deer: deer.wander(ticks)
+
+        self._playerPack.update(self._WORLD_SIZE, ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong

@@ -148,4 +148,41 @@ class NPC(Animal, Animated):
             self._position += (self._velocity*ticks)
             self._walkTimer -= ticks
             self.updateAnimation(ticks)
+
+    def follow(self, ticks, target):
+        follow_x = 50
+        follow_y = 50
+        self._velocity = target._velocity
+        if target._fsm.getCurrentState() == "walking":
+            if abs(self._velocity.y) > abs(self._velocity.x):
+                if self._velocity.y > 0:
+                    self._nFrames = self._forwardFrames
+                    self._row = self._forwardRow
+                    if target._position.y < self._position.y + follow_y:
+                        self._velocity.y -= target._velocity.y//2
+                else:
+                    self._nFrames = self._backwardFrames
+                    self._row = self._backwardRow
+                    if target._position.y > self._position.y - follow_y:
+                        self._velocity.y -= target._velocity.y//2
+            else:
+                if self._velocity.x < 0:
+                    if not self.isFlipped():
+                        self.flip()
+                    if target._position.x > self._position.x - follow_x:
+                        self._velocity.x -= target._velocity.x//2
+                if self._velocity.x > 0:
+                    if self.isFlipped():
+                        self.flip()
+                    if target._position.x < self._position.x + follow_x:
+                        self._velocity.x -= target._velocity.x//2
+                self._nFrames = self._walkFrames
+                self._row = self._walkRow
+            self.updateAnimation(ticks)
+        elif target._fsm.getCurrentState() == "standing":
+            self._row = self._standRow
+            self._nFrames = self._standFrames
+            self.updateAnimation(ticks)
+        
+        self._position += (self._velocity*ticks)
         

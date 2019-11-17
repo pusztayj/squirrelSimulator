@@ -1,6 +1,7 @@
 import pygame, random, math
 from minigame.mainlevel import MainLevel
 from player import Player
+from animals import Pack, Bear, Rabbit
 from minigame.merchantlevel import MerchantLevel
 from minigame.combatLevel import CombatLevel
 from minigame.cheats import Cheats
@@ -32,8 +33,13 @@ def main():
    gameClock = pygame.time.Clock()
 
    player = Player(pos=(200,200))
+   ally = Bear(pos=(100,100))
+   ally2 = Rabbit(pos=(300,300))
+   playerPack = Pack(player)
+   playerPack.addMember(ally)
+   playerPack.addMember(ally2)
    player.scale(1.5)
-   level = MainLevel(player, SCREEN_SIZE)
+   level = MainLevel(playerPack, SCREEN_SIZE)
    merchantLevel = None
    combatLevel = None
 
