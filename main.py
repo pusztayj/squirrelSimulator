@@ -4,8 +4,14 @@ from minigame.mainlevel import MainLevel
 from player import Player
 from minigame.merchantlevel import MerchantLevel
 from minigame.combatLevel import CombatLevel
+from minigame.cheats import Cheats
 
 SCREEN_SIZE = (1200,500)
+
+def giveAcorns(entity, amount):
+   entity.setAcorns(entity.getAcorns() + amount)
+
+cheatCodes = {1:giveAcorns}
 
 def main():
    """
@@ -32,6 +38,8 @@ def main():
    merchantLevel = None
    combatLevel = None
 
+   cheatBox = Cheats(SCREEN_SIZE)
+
    RUNNING = True
 
    code = None
@@ -49,6 +57,9 @@ def main():
 
       if combatLevel != None and combatLevel.isActive():
          combatLevel.draw(screen)
+
+      if cheatBox.isDisplayed():
+         cheatBox.draw(screen)
 
       pygame.display.flip()
 
@@ -69,6 +80,15 @@ def main():
 
          if merchantLevel != None and merchantLevel.isActive():
              code = merchantLevel.handleEvent(event)
+
+         if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
+            event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
+               cheatBox.toggleDisplay()
+
+         if cheatBox.isDisplayed():
+            cheatCode = cheatBox.handleEvent(event)
+            if cheatCode != None:
+               cheatCodes[cheatCode[0]](player, cheatCode[1])
 
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
@@ -105,6 +125,9 @@ def main():
 
       if combatLevel != None and combatLevel.isActive():
          combatLevel.update(ticks)
+
+      if cheatBox.isDisplayed():
+         cheatBox.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()
