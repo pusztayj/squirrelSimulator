@@ -8,7 +8,7 @@ from stateMachines import combatStartState,combatPlayerStates,\
 import time
 from items.items import *
 from minigame.itemselect import ItemSelect
-from minigame.combatSubLevel import PlayerCombatSide
+from minigame.subcombatlevel import SubCombatLevel
 
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
@@ -49,7 +49,7 @@ def main():
     ### Make the ally pack ###
     ally1 = Bear()
     ally1.getInventory().addItem(Potions())
-    ally2 = Snake()
+    ally2 = Deer()
     ally3 = Fox()
 
     allies = Pack(ally1)
@@ -90,48 +90,32 @@ def main():
     
     RUNNING = True
 
-    lev = PlayerCombatSide(screen,allies,enemies,healthbars)
+    lev = SubCombatLevel(screen,allies,enemies,healthbars)
+    print([x.getName() for x in allies])
+    print([x.getName() for x in enemies])
+    count = 0
     
     while RUNNING:
         background.draw(screen)
-        
+
         if combatFSM.getCurrentState() == "player turn":
             lev.drawPlayerTurn()
 
-        if combatFSM.getCurrentState() == "attack":
+        elif combatFSM.getCurrentState() == "fortify":
+            lev.drawFortify()
+
+        elif combatFSM.getCurrentState() == "attack":
             lev.drawAttack()
 
-        if combatFSM.getCurrentState() == "heal":
+        elif combatFSM.getCurrentState() == "heal":
             lev.drawHeal()
-            
-        if combatFSM.getCurrentState() == "waiting":
-                combatOrder = turnOrder(allies,enemies)
-                text_y = 150
-                for creature in combatOrder:
-                    if creature in allies:
-                        move(creature,enemies)
-                        pygame.draw.circle(screen,(15,245,107),(600,435),25)
-                        turnText.setText(creature.getName()+"'s turn")
-                        allies.updatePack()
-                        enemies.updatePack()
-                    else:
-                        move(creature,allies)
-                        pygame.draw.circle(screen,(222,44,44),(600,435),25)
-                        turnText.setText(creature.getName()+"'s turn")
-                        allies.updatePack()
-                        enemies.updatePack()
-                    text = creature.getCombatStatus()
-                    popup = TextBox(text,(375,text_y),font,(255,255,255))
-                    popup.draw(screen)
-                    pygame.display.flip()
-                    time.sleep(1)
-                    text_y += 50
-                combatFSM.changeState("done")
-            
-            
-        # needs to be after everything is drew
-        pygame.display.flip()
 
+        elif combatFSM.getCurrentState() == "waiting":
+            lev.drawWait()
+            time.sleep(3)
+            
+        pygame.display.flip()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 RUNNING = False
@@ -154,8 +138,10 @@ def main():
             elif combatFSM.getCurrentState() == "retreat":
                 retreat(allies[0])
                 RUNNING = False
-
         lev.update()
+        if combatFSM.getCurrentState() == "waiting":
+            lev.updateWait()
+        
         
     pygame.quit()
 

@@ -121,3 +121,8 @@ def combat(playerTeam,enemyTeam):
                 move(animal,enemyTeam)
             else:
                 move(animal,playerTeam)
+
+
+def getSpritePosition(healthBar,animal):
+    pass
+    
