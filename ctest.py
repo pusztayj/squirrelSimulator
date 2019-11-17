@@ -44,7 +44,7 @@ def main():
     textFont = pygame.font.SysFont("Times New Roman", 28)
 
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    background = background = Drawable("merchantForest2.png", Vector2(0,0))
+    background = Drawable("merchantForest2.png", Vector2(0,0))
 
     ### Make the ally pack ###
     ally1 = Bear()
