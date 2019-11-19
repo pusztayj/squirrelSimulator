@@ -34,10 +34,8 @@ def main():
 
    player = Player(pos=(200,200))
    ally = Bear(pos=(100,100))
-   ally2 = Rabbit(pos=(300,300))
    playerPack = Pack(player)
    playerPack.addMember(ally)
-   playerPack.addMember(ally2)
    player.scale(1.5)
    level = MainLevel(playerPack, SCREEN_SIZE)
    merchantLevel = None

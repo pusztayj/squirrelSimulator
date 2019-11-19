@@ -47,10 +47,11 @@ class Pack():
                 self._members[i] = member
                 break
 
-    def removeMemeber(self, member):
+    def removeMember(self, member):
         """Remove a current member of the pack"""
-        if member in self._members:
-            self._members.replace(member,None)
+        self._members = [None if m==member else m for m in self._members]
+##        if member in self._members:
+##            self._members.replace(member,None)
 
     def getMembers(self):
         """Return the members of the pack"""
@@ -105,6 +106,9 @@ class Pack():
 
     def __contains__(self,animal):
         return animal in self._members
+
+    def trueLen(self):
+        return len([animal for animal in self._members if animal != None])
 
     def draw(self, screen):
         sortedMembers = [x for x in self._members if x != None]

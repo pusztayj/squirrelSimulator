@@ -213,6 +213,7 @@ class MainLevel(Level):
            (self._interaction == None or not self._interaction.getDisplay()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
+            
             # Allow the player to create dirt piles
             if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
                 if self._player.isFlipped():
@@ -273,7 +274,20 @@ class MainLevel(Level):
         if self._interaction != None and self._interaction.getDisplay():
             self._popup = None
             self._interaction.handleEvent(event)
-            return (self._interaction.getSelection(),)
+            code = self._interaction.getSelection()
+            if (code == 2):
+                return (code,)
+            elif (code == 3):
+                e = self._interaction.getEntity()
+                print(self._playerPack.trueLen())
+                print(e.getPack().trueLen())
+                if self._playerPack.trueLen() < 3:
+                    if e.getPack().trueLen() == 1:
+                        self._playerPack.addMember(e)
+                        self._packs.remove(e.getPack())
+                        e.getPack().removeMember(e)
+                        e.setPack(self._playerPack)
+                        print("Let's Be Friends..." + e.getName())
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)

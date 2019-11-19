@@ -14,6 +14,8 @@ class Interaction(Drawable, Window):
         Drawable.__init__(self, "", (50,25), worldBound=False)
         Window.__init__(self)
 
+        self._entity = entity
+
         self._avatar = entity.getDefaultImage()
         self._imHeight = entity.getHeight()
         self._avHeight = 75
@@ -94,7 +96,7 @@ class Interaction(Drawable, Window):
 
     def handleEvent(self, event):
         self._fightButton.handleEvent(event, self.fight, offset=self._offset)
-        self._befriendButton.handleEvent(event, self.nothing, offset=self._offset)
+        self._befriendButton.handleEvent(event, self.befriend, offset=self._offset)
         self._stealButton.handleEvent(event, self.nothing,  offset=self._offset)
         self._bribeButton.handleEvent(event, self.nothing,  offset=self._offset)
         self._exitButton.handleEvent(event, self.close, offset=self._offset)
@@ -103,11 +105,19 @@ class Interaction(Drawable, Window):
     def fight(self):
         self._selection = 2
 
+    def befriend(self):
+        self._selection = 3
+
     def getSelection(self):
-        return self._selection
+        sel = self._selection
+        self._selection = None
+        return sel
 
     def nothing(self):
         pass
+
+    def getEntity(self):
+        return self._entity
 
     def updateInteraction(self):
 
