@@ -22,10 +22,13 @@ creatures = [Bear, Fox, Rabbit, Deer]
 def createPack(pos):
     leader = random.choice(creatures)(pos=pos)
     p = Pack(leader)
+    leader.setPack(p)
     for x in range(2):
-        if random.random() > .25:
-            p.addMember(random.choice(creatures)(pos=(pos[0]+(((-1)**x)*30),
-                                                      pos[1]+(((-1)**x)*30))))
+        if random.random() < .25:
+            c = random.choice(creatures)(pos=(pos[0]+(((-1)**x)*30),
+                                                      pos[1]+(((-1)**x)*30)))
+            c.setPack(p)
+            p.addMember(c)
     return p
 
 def spawnPacks(spawnRange, spawnCount, collidables):
@@ -94,8 +97,6 @@ class MainLevel(Level):
         self._creatures = []
         self._chip = Chipmunk(pos=(1600,300))
         self._chip.flip()
-        #self._fox = Fox(pos=(self._WORLD_SIZE[0],self._WORLD_SIZE[1]))
-        #self._fox.flip()
         self._creatures.append(self._chip)
 
         self._atm = None
@@ -281,6 +282,9 @@ class MainLevel(Level):
             for creature in pack:
                 if creature != None:
                     creatures.append(creature)
+        for creature in self._playerPack:
+            if creature != None:
+                creatures.append(creature)
         
         self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:

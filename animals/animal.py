@@ -54,6 +54,14 @@ class Animal():
         #Buffs currently on the animal
         self._buffs = buffs
 
+        self._pack = None
+
+    def getPack(self):
+        return self._pack
+
+    def setPack(self, pack):
+        self._pack = pack
+
     def getName(self):
         """Returns the name of the animal."""
         return self._name
