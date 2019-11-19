@@ -279,8 +279,6 @@ class MainLevel(Level):
                 return (code,)
             elif (code == 3):
                 e = self._interaction.getEntity()
-                print(self._playerPack.trueLen())
-                print(e.getPack().trueLen())
                 if self._playerPack.trueLen() < 3:
                     if e.getPack().trueLen() == 1:
                         self._playerPack.addMember(e)
@@ -288,6 +286,10 @@ class MainLevel(Level):
                         e.getPack().removeMember(e)
                         e.setPack(self._playerPack)
                         print("Let's Be Friends..." + e.getName())
+                    else:
+                        print(e.getName(), "is already part of a pack")
+                else:
+                    print("Your pack is already full")
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)

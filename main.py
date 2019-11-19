@@ -33,9 +33,7 @@ def main():
    gameClock = pygame.time.Clock()
 
    player = Player(pos=(200,200))
-   ally = Bear(pos=(100,100))
    playerPack = Pack(player)
-   playerPack.addMember(ally)
    player.scale(1.5)
    level = MainLevel(playerPack, SCREEN_SIZE)
    merchantLevel = None
