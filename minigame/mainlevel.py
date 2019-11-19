@@ -17,6 +17,27 @@ from items.items import *
 from items import items
 from minigame.itemblock import ItemBlock
 
+creatures = [Bear, Fox, Rabbit, Deer]
+
+def createPack(pos):
+    leader = random.choice(creatures)(pos=pos)
+    p = Pack(leader)
+    for x in range(2):
+        if random.random() > .25:
+            p.addMember(random.choice(creatures)(pos=(pos[0]+(((-1)**x)*30),
+                                                      pos[1]+(((-1)**x)*30))))
+    return p
+
+def spawnPacks(spawnRange, spawnCount, collidables):
+    spawns = []
+    packs = []
+    while len(packs) < spawnCount:
+        e = createPack((random.randint(0,spawnRange[0]), random.randint(0,spawnRange[1])))
+        if e.getLeader().getWanderRect().collidelist([x.getCollideRect() for x in spawns + collidables]) == -1:
+            spawns.append(e.getLeader())
+            packs.append(e)
+    return packs
+
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
     spawns = []
     while len(spawns) < spawnCount:
@@ -89,42 +110,19 @@ class MainLevel(Level):
         self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
                             30, self._merchants, name="tree.png")
 
-        self._foxes = spawn(Fox, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 3,
-                          self._merchants + self._trees, wanderer=True)
-
-        self._rabbits = spawn(Rabbit, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
-                          self._merchants + self._trees + self._foxes, wanderer=True)
-
-        self._bears = spawn(Bear, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 2,
-                  self._merchants + self._trees + self._foxes + self._rabbits, wanderer=True)
-
-        self._deer = spawn(Deer, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 4,
-                  self._merchants + self._trees + self._foxes + self._rabbits + self._bears, wanderer=True)
-
-        self._f = Rabbit(pos=(500,200))
-        self._enemyPack = Pack(self._f)
-        r = Fox(pos=(525,175))
-        self._enemyPack.addMember(r)
-        r2 = Rabbit(pos=(475,225))
-        self._enemyPack.addMember(r2)
-
-        for fox in self._foxes: fox.scale(1.5)
-        self._creatures.extend(self._foxes)
-        self._creatures.extend(self._rabbits)
-        self._creatures.extend(self._bears)
-        self._creatures.extend(self._deer)
-
-        for creature in self._creatures:
-            for _ in range(2):
-                i = items.__all__
-                random.shuffle(i)
-                for x in i:
-                    if .08 >= random.random():
-                        creature.getInventory().addItem(globals()[x]())
-
-##        self._activeItem = TextBox("", (0,0), self._font, (255,255,255))
-##        self._activeItem.setPosition(((self._SCREEN_SIZE[0]//2)-self._activeItem.getWidth()//2,
-##                                        self._SCREEN_SIZE[1]-90))
+        self._packs = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+                                 30,
+                                 self._merchants + self._trees)
+        
+        for pack in self._packs:
+            for creature in pack:
+                if creature != None:
+                    for _ in range(2):
+                        i = items.__all__
+                        random.shuffle(i)
+                        for x in i:
+                            if .08 >= random.random():
+                                creature.getInventory().addItem(globals()[x]())
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), self._player)
@@ -174,7 +172,8 @@ class MainLevel(Level):
 
         self._playerPack.draw(screen)
 
-        self._enemyPack.draw(screen)
+        for pack in self._packs:
+            pack.draw(screen)
 
         for merchant in notDrawnMerchants:
             merchant.draw(screen)
@@ -199,7 +198,6 @@ class MainLevel(Level):
 
         self._worldClock.draw(screen)
 
-##        self._activeItem.draw(screen)
         self._hud.draw(screen)
 
         self._armor.draw(screen)
@@ -227,15 +225,17 @@ class MainLevel(Level):
                     if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         self._atm = ATM(self._player, pile)
-
-                for creature in self._creatures:
-                    x,y = creature.getPosition()
-                    for rect in creature.getCollideRects():
-                        r = rect.move(x,y)
-                        if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                            self._interaction = Interaction(creature)
-                            for k in self._player._movement.keys(): self._player._movement[k] = False
+                        
+                for pack in self._packs:
+                    for creature in pack:
+                        if creature != None:
+                            x,y = creature.getPosition()
+                            for rect in creature.getCollideRects():
+                                r = rect.move(x,y)
+                                if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                                     event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                                    self._interaction = Interaction(creature)
+                                    for k in self._player._movement.keys(): self._player._movement[k] = False
                             
                 for merchant in self._merchants:
                     if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
@@ -271,14 +271,18 @@ class MainLevel(Level):
             self._interaction.handleEvent(event)
             return (self._interaction.getSelection(),)
 
-
-                
-
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
         m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
         popup_pos = (mouse[0] + 5, mouse[1] + 5)
-        self._popup = self.setPopup(self._creatures, m_pos_offset, popup_pos, self._popupFont)
+
+        creatures = []
+        for pack in self._packs:
+            for creature in pack:
+                if creature != None:
+                    creatures.append(creature)
+        
+        self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:
             self._popup = self.setPopup(self._dirtPiles, m_pos_offset, popup_pos, self._popupFont)
         if self._popup == None:
@@ -358,15 +362,11 @@ class MainLevel(Level):
         self._weapon.updateBlock()
         self._armor.updateBlock()
 
-        for fox in self._foxes: fox.wander(ticks)
-        for rabbit in self._rabbits: rabbit.wander(ticks)
-        for bear in self._bears: bear.wander(ticks)
-        for deer in self._deer: deer.wander(ticks)
-
         self._playerPack.update(self._WORLD_SIZE, ticks)
 
-        self._f.wander(ticks)
-        self._enemyPack.update(self._WORLD_SIZE, ticks)
+        for pack in self._packs:
+            pack.getLeader().wander(ticks)
+            pack.update(self._WORLD_SIZE, ticks)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
