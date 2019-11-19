@@ -124,7 +124,10 @@ class MainLevel(Level):
                         for x in i:
                             if .08 >= random.random():
                                 creature.getInventory().addItem(globals()[x]())
-                    creature.equipArmor(HideArmor())
+                    if random.random() < .33:
+                        creature.equipArmor(random.choice(items.armors)())
+                    if random.random() < .33:
+                        creature.equipItem(random.choice(items.weapons)())
                     creature.loseHealth(random.randint(20,80))
                     creature.setAcorns(random.randint(0,100))
 

@@ -74,6 +74,8 @@ class IronSword(Weapon,Drawable):
                  isBuyable, isSellable)
         Drawable.__init__(self,"sword.png",(0,0))
 
+weapons = [Stick, Spear, IronSword]
+
 ########################################################
 #################### Armor #############################
 ########################################################
@@ -130,6 +132,8 @@ class IronArmor(Armor,Drawable):
                  isBuyable, isSellable)
         Drawable.__init__(self,"iron_armor.png",(0,0))
         
+
+armors = [HideArmor, LeatherArmor, IronArmor]
 
 ########################################################
 #################### Food ##############################
