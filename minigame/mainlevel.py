@@ -124,6 +124,9 @@ class MainLevel(Level):
                         for x in i:
                             if .08 >= random.random():
                                 creature.getInventory().addItem(globals()[x]())
+                    creature.equipArmor(HideArmor())
+                    creature.loseHealth(random.randint(20,80))
+                    creature.setAcorns(random.randint(0,100))
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), self._player)

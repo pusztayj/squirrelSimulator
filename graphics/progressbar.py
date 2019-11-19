@@ -12,10 +12,10 @@ class ProgressBar(Drawable):
 
     def __init__(self, position, length, maxStat, actStat, borderWidth=1,
                  borderColor=(0,0,0), backgroundColor=(120,120,120),
-                 barColor=(255,0,0)):
+                 barColor=(255,0,0), height=10):
         super().__init__("", position, worldBound=False)
         self._length = length
-        self._height = 10
+        self._height = height
         self._maxStat = maxStat
         self._actStat = actStat
         self._borderWidth = borderWidth

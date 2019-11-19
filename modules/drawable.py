@@ -50,7 +50,8 @@ class Drawable():
         """
         if imageName != "":
             self._imageName = imageName
-            self._image = FRAMES.getFrame(self._imageName, offset)  
+            self._image = FRAMES.getFrame(self._imageName, offset)
+            self._defaultImage = self._image
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
         self._isFlipped = False
@@ -132,6 +133,9 @@ class Drawable():
 
     def getImage(self):
         return self._image
+
+    def getDefaultImage(self):
+        return self._defaultImage
 
     def setWorldBound(self, boolean):
         self._worldBound = boolean
