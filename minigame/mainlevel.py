@@ -103,10 +103,10 @@ class MainLevel(Level):
 
         self._f = Rabbit(pos=(500,200))
         self._enemyPack = Pack(self._f)
-        r = Rabbit(pos=(600,100))
+        r = Fox(pos=(525,175))
         self._enemyPack.addMember(r)
-##      r2 = Rabbit(pos=(600,250))
-##      self._enemyPack.addMember(r2)
+        r2 = Rabbit(pos=(475,225))
+        self._enemyPack.addMember(r2)
 
         for fox in self._foxes: fox.scale(1.5)
         self._creatures.extend(self._foxes)

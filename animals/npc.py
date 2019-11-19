@@ -128,6 +128,8 @@ class NPC(Animal, Animated):
                 self._idleTimer = random.randint(1,3)
             # Update to an idle animation
             else:
+                self._velocity.x = 0
+                self._velocity.y = 0
                 self._row = self._standRow
                 self._nFrames = self._standFrames
                 self._idleTimer -= ticks
@@ -201,5 +203,26 @@ class NPC(Animal, Animated):
 
 
     def follow(self, ticks, target):
-        self._position += (target._velocity * ticks)
+        self._velocity = target._velocity
+        if abs(self._velocity.y) > abs(self._velocity.x):
+            if self._velocity.y > 0:
+                self._nFrames = self._forwardFrames
+                self._row = self._forwardRow
+            else:
+                self._nFrames = self._backwardFrames
+                self._row = self._backwardRow
+        else:
+            if self._velocity.x < 0:
+                if not self.isFlipped():
+                    self.flip()
+            if self._velocity.x > 0:
+                if self.isFlipped():
+                    self.flip()         
+            self._nFrames = self._walkFrames
+            self._row = self._walkRow
+        if target._velocity.x == 0 and target._velocity.y==0:
+            self._row = self._standRow
+            self._nFrames = self._standFrames
+        self.updateAnimation(ticks)
+        self._position += (self._velocity * ticks)
         
