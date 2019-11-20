@@ -16,6 +16,7 @@ from minigame.inventoryhud import InventoryHUD
 from items.items import *
 from items import items
 from minigame.itemblock import ItemBlock
+from minigame.packmanager import PackManager
 
 creatures = [Bear, Fox, Rabbit, Deer]
 
@@ -76,6 +77,7 @@ class MainLevel(Level):
         self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
         self._playerPack = player_pack
+        self._packManager = PackManager(self._playerPack, self._SCREEN_SIZE)
         self._player = self._playerPack.getLeader()
 
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
@@ -205,6 +207,9 @@ class MainLevel(Level):
 
         self._worldClock.draw(screen)
 
+        if self._packManager.getDisplay():
+            self._packManager.draw(screen)
+
         self._hud.draw(screen)
 
         self._armor.draw(screen)
@@ -274,6 +279,9 @@ class MainLevel(Level):
         if self._atm != None and self._atm.getDisplay():
             self._atm.handleEvent(event)
 
+        if self._packManager.getDisplay():
+            self._packManager.handleEvent(event)
+
         if self._interaction != None and self._interaction.getDisplay():
             self._popup = None
             self._interaction.handleEvent(event)
@@ -314,6 +322,9 @@ class MainLevel(Level):
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+            if self._packManager._timeSinceClosed > self._packManager._delay:
+                self._packManager.display()
 
         # Code for testing
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
@@ -389,6 +400,8 @@ class MainLevel(Level):
         self._armor.updateBlock()
 
         self._playerPack.update(self._WORLD_SIZE, ticks)
+        
+        self._packManager.update(ticks)
 
         for pack in self._packs:
             pack.getLeader().wander(ticks)
