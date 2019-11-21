@@ -65,3 +65,9 @@ class ItemSelect(Drawable):
         # Draw the background
         for block in self._blocks:
             block.draw(screen)
+
+    def getItemBlocks(self):
+        return len(self._blocks)
+
+    def getWidth(self):
+        return sum([x.getWidth() for x in self._blocks])

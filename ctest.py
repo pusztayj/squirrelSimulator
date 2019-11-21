@@ -21,21 +21,6 @@ If the screen size changes note that the positions of everything
 is hard coded so those positions need to be changed.
 """
 
-def makeHealthBars(pack1):
-    healthbars = list()
-    y = 200+133
-    for x in pack1:
-        if pack1.isLeader(x):
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),250+138),64,
-                                  100,x.getHealth())
-            healthbars.append(a)
-        else:
-            a = LinkedProgressBar(x,(x.getX() + (x.getWidth()//4),y),64,
-                                  100,x.getHealth())
-            healthbars.append(a)
-            y+=150
-    return healthbars
-
 def main():
 
     pygame.init()
@@ -49,28 +34,31 @@ def main():
     ### Make the ally pack ###
     ally1 = Bear()
     ally1.getInventory().addItem(Potions())
+    ally1.getInventory().addItem(Potions())
+    ally1.getInventory().addItem(Potions())
     ally2 = Deer()
     ally3 = Fox()
 
     allies = Pack(ally1)
     allies.addMember(ally2)
     allies.addMember(ally3)
+    
+    combatSprites = list()
 
     y = 200
     for a in allies:
         if allies.isLeader(a):
-            a.setPosition((225,250))
+            c = CombatSprite(a,(228,275),font)
+            combatSprites.append(c)
         else:
-            a.setPosition((100,y))
+            c = CombatSprite(a,(100,y),font)
+            combatSprites.append(c)
             y+=150
                 
     ### Make the enemy pack ###
     enemy1 = Deer()
-    enemy1.flip()
     enemy2 = Rabbit()
-    enemy2.flip()
     enemy3 = Rabbit()
-    enemy3.flip()
 
     enemies = Pack(enemy1)
     enemies.addMember(enemy2)
@@ -79,20 +67,18 @@ def main():
     y = 200
     for e in enemies:
         if enemies.isLeader(e):
-            e.setPosition((847,250))
+            c = CombatSprite(e,(847,275),font,enemies = True)
+            combatSprites.append(c)
         else:
-            e.setPosition((972,y))
+            c = CombatSprite(e,(972,y),font,enemies = True)
+            combatSprites.append(c)
             y+=150
-
-    healthbars = makeHealthBars(allies) + makeHealthBars(enemies)
         
     potionSelect = None
     
     RUNNING = True
 
-    lev = SubCombatLevel(screen,allies,enemies,healthbars)
-    print([x.getName() for x in allies])
-    print([x.getName() for x in enemies])
+    lev = SubCombatLevel(screen,allies,enemies,combatSprites)
     count = 0
     
     while RUNNING:
@@ -101,7 +87,7 @@ def main():
         if combatFSM.getCurrentState() == "player turn":
             lev.drawPlayerTurn()
 
-        elif combatFSM.getCurrentState() == "fortify":
+        elif combatFSM.getCurrentState() == "fortify": 
             lev.drawFortify()
 
         elif combatFSM.getCurrentState() == "attack":
@@ -112,7 +98,7 @@ def main():
 
         elif combatFSM.getCurrentState() == "waiting":
             lev.drawWait()
-            time.sleep(3)
+            time.sleep(1.5)
             
         pygame.display.flip()
         
@@ -122,6 +108,8 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     RUNNING = False
+
+            #lev.handleEvent(event) # for the item popups
 
             if combatFSM.getCurrentState() == "heal":
                 lev.handleHeal(event)
@@ -147,4 +135,3 @@ def main():
 
 if "__main__" == __name__:
     main()  
-        

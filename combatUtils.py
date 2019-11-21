@@ -3,6 +3,9 @@ In this file we create the functions for the combat game.
 """
 
 from items.items import *
+from graphics import *
+import pygame
+import rectmanager
 
 attackDamage = {(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45,
@@ -88,41 +91,44 @@ def move(animal,opponents):
     else:
         an = animal.attackLogic(opponents)
         attack(animal,an)
-
-def turnOrder(playerTeam,enemyTeam):
-    # teams needs to be pack objects
-    playerTeam1 = playerTeam.getMembers()
-    enemyTeam = enemyTeam.getMembers()
-    participants = list()
-    for x in range(3): # creates an alteration of the lists so the combat loop
-        # can work
-        if playerTeam1[x] == playerTeam.getLeader():
-            participants += enemyTeam[x:x+1]
-        else:
-            participants += playerTeam1[x:x+1]
-            participants += enemyTeam[x:x+1]
-    return participants
     
+class CombatSprite(object):
 
-def combat(playerTeam,enemyTeam):
-    # teams needs to be pack objects
-    playerTeam = playerTeam.getMembers()
-    enemyTeam = enemyTeam.getMembers()
-    participants = list()
-    for x in range(3): # creates an alteration of the lists so the combat loop
-        # can work
-        participants += playerTeam[x:x+1]
-        participants += enemyTeam[x:x+1]
-    for animal in participants:
-        if type(animal) == type(Player()):
-            pass
+    def __init__(self,animal,position,font,enemies = False):
+        self._animal = animal
+        self._position = position
+        self._animal_xPos = self._position[0] + 50 - (self._animal.getWidth()//2)
+        self._animal_yPos = self._position[1] + 52 - (self._animal.getHeight()//2)
+        self._enemies = enemies
+        self._bar = LinkedProgressBar(self._animal,(self._position[0],self._position[1]+90),100,
+                                      100,self._animal.getHealth())
+        self._nameText = TextBox(self._animal.getName(),
+                                 (self._position[0],self._position[1]+105),
+                                 font,(255,255,255))
+        x = self._nameText.getWidth()
+        self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+105))
+
+    def draw(self,screen):
+        self._bar.draw(screen)
+        self._nameText.draw(screen)
+        if not self._enemies:
+            screen.blit(self._animal.getDefaultImage(),(self._animal_xPos,self._animal_yPos))
         else:
-            if animal in playerTeam:
-                move(animal,enemyTeam)
-            else:
-                move(animal,playerTeam)
+            img = pygame.transform.flip(self._animal.getDefaultImage(), True, False)
+            screen.blit(img,(self._animal_xPos,self._animal_yPos))
 
+    def getHealthBar(self):
+        return self._bar
 
-def getSpritePosition(healthBar,animal):
-    pass
-    
+    def getAnimal(self):
+        return self._animal
+
+    def isEnemy(self):
+        return self._enemies
+
+    def getAnimalSprite(self):
+        return self._animal.getDefaultImage()
+
+    def getPosition(self):
+        return (self._animal_xPos,self._animal_yPos)
+

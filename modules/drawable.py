@@ -140,6 +140,3 @@ class Drawable():
     def setWorldBound(self, boolean):
         self._worldBound = boolean
 
-    
-        
-     

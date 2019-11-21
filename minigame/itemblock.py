@@ -20,6 +20,9 @@ class ItemBlock(Drawable):
 
         self.updateBlock()
 
+    def getWidth(self):
+        return self._width
+
     def setItem(self, item):
         self._item = item
 
