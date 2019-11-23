@@ -71,3 +71,7 @@ class ItemSelect(Drawable):
 
     def getWidth(self):
         return sum([x.getWidth() for x in self._blocks])
+
+    def resetItems(self,newItems):
+        self._items = newItems
+        self._itemSelected = None

@@ -5,9 +5,9 @@ In this file we create the functions for the combat game.
 from items.items import *
 from graphics import *
 import pygame
-import rectmanager
+from rectmanager import getRects
 
-attackDamage = {(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
+attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45,
                 (2.5,1): 50, (2.75,1): 70, (3,1): 90}
 
@@ -107,6 +107,7 @@ class CombatSprite(object):
                                  font,(255,255,255))
         x = self._nameText.getWidth()
         self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+105))
+        self._collideRects = getRects(self.getAnimalSprite())
 
     def draw(self,screen):
         self._bar.draw(screen)
@@ -131,4 +132,7 @@ class CombatSprite(object):
 
     def getPosition(self):
         return (self._animal_xPos,self._animal_yPos)
+
+    def getCollideRects(self):
+        return self._collideRects
 

@@ -73,8 +73,6 @@ class Pack():
                 if animal != None and i <= len(self)-1:
                     self.resetLeader(self._members[i])
                     break
-            else:
-                self.resetLeader(self._members[0])
 
     def isDead(self):
         return all(v is None for v in self)

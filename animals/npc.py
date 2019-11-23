@@ -43,7 +43,6 @@ class NPC(Animal, Animated):
         for rect in self.getCollideRects(): 
             r = rect.move(x,y)
             if r.collidepoint(pos):
-
                 #self._image = copy.copy(self._realImage)
                 popup = Popup(self.getName(), (pos[0]+5,pos[1]+5),
                                 popupFont)
@@ -77,10 +76,10 @@ class NPC(Animal, Animated):
             # the current animal will do less than 5 damamge against. 
             if len(attacks) == len(opponents):
                 # checks to see if it can't do more than 5 damage to an animal
-                self._combatStatus = self.getName() + "has fortified!"
+                self._combatStatus = self.getName() + " has fortified!"
                 return True
             elif 6 < random.randint(0,9): # 33% random change of fortifying 
-                self._combatStatus = self.getName() + "has fortified!"
+                self._combatStatus = self.getName() + " has fortified!"
                 return True
             else:
                 return False
@@ -94,7 +93,7 @@ class NPC(Animal, Animated):
         random.shuffle(kills) # shuffles the kill so it's not always the player
         if len(kills) > 0:
             a = kills[0][0]
-            self._combatStatus = self.getName() + "has killed " + a.getName()
+            self._combatStatus = self.getName() + " has killed " + a.getName()
             return kills[0][0]
         else:
             damage.sort(key = lambda x: x[1]) #could shuffle to make more stupid

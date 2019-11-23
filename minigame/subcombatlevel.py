@@ -9,6 +9,11 @@ import time
 from .itemselect import ItemSelect
 
 
+# Add when player wants to attack when you hover over damage shown
+# highlight who's turn it is
+# figu
+
+
 class SubCombatLevel(object):
 
     def __init__(self,screen,allies,enemies,combatSprites):
@@ -48,8 +53,11 @@ class SubCombatLevel(object):
         self._combatText = TextBox("",(600,100),self._textFont,(255,255,255))
 
         self._potionSelect = None
+        potions = [x for x in self._allies[0].getInventory() \
+                   if type(x) == type(Potions())]
+        self._potionSelect = ItemSelect((255,100),potions)
 
-        self._turn = True
+        self._turn = True # true means enemies pack turn
 
         self._orbColor = (255,255,255)
 
@@ -66,11 +74,9 @@ class SubCombatLevel(object):
         self._healButton.draw(self._screen)
         self._retreatButton.draw(self._screen)
 
+
     def drawHeal(self):
         self.alwaysDraw()
-        potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
-        self._potionSelect = ItemSelect((255,100),potions)
         x = self._potionSelect.getWidth()
         self._potionSelect.setPosition((600-(x//2),100))
         self._potionSelect.draw(self._screen)
@@ -104,16 +110,18 @@ class SubCombatLevel(object):
     def handleAttack(self,event):
         self._attackUndoButton.handleEvent(event,combatFSM.changeState,"go back")
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            #en = [x.getAnimalSprite() for x in self._combatSprites if x.isEnemy()]
-            for creature in self._enemies: #zip(self._enemies,self._combatSprites):
-                x,y = creature.getPosition()
-                for rect in creature.getCollideRects():
-                    r = rect.move(x,y)
-                    if r.collidepoint(event.pos):
-                        attack(self._allies[0],creature) # the model is changed here as told by the controller
-                        self._enemies.updatePack()
-                        combatFSM.changeState("animal click")
-                        self._allies.hasAttacked() # here we udpate the model again
+            enemies = [x for x in self._combatSprites if x.isEnemy()]
+            for creature in self._enemies:
+                if creature != None:
+                    a = [z for z in enemies if z.getAnimal() == creature][0]
+                    x,y = a.getPosition()
+                    for rect in a.getCollideRects():
+                        r = rect.move(x,y)
+                        if r.collidepoint(event.pos):
+                            attack(self._allies[0],creature) # the model is changed here as told by the controller
+                            self._enemies.updatePack()
+                            combatFSM.changeState("animal click")
+                            self._allies.hasAttacked() # here we udpate the model again
 
     def handleFortify(self,event):
         fortify(self._allies[0]) # the model is changed here as told by the controller
@@ -123,8 +131,11 @@ class SubCombatLevel(object):
     def handleHeal(self,event):
         self._potionSelect.handleEvent(event)
         potionPick = self._potionSelect.getItemSelected()
-        if self._potionPick != None:
+        if potionPick != None:
             heal(self._allies[0],potionPick) # the model is changed here as told by the controller
+            potions = [x for x in self._allies[0].getInventory() \
+                   if type(x) == type(Potions())]
+            self._potionSelect.resetItems(potions)
             combatFSM.changeState("action complete")
         self._allies.hasAttacked() # here we udpate the model again
 
@@ -132,13 +143,10 @@ class SubCombatLevel(object):
         self._combatSprites = [x for x in self._combatSprites if not x.getHealthBar().getEntity().isDead()] # the model is updated here as told by the controller
         for x in self._combatSprites:
             x.getHealthBar().update()
-        self.updateHeal()
+        self._potionSelect.update()
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
 
-    def updateHeal(self):
-        if combatFSM.getCurrentState() == "heal" and self._potionSelect != None:
-            self._potionSelect.update()
 
     def updateWait(self):
         if self._turn == True:
@@ -169,4 +177,8 @@ class SubCombatLevel(object):
             self._turn = not self._turn
         else:
             combatFSM.changeState("done")
+            self._turnText.setText("Your turn")
+            x = self._turnText.getWidth()
+            self._turnText.setPosition((600-(x//2),470))
+            self._orbColor = (255,255,255)
             
