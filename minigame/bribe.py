@@ -66,6 +66,8 @@ class Bribe(Window):
             else:
                 self._player.setAcorns(self._player.getAcorns() - bribe)
                 self._entity.setAcorns(self._entity.getAcorns() + bribe)
+                self._entity.changeFriendScore(20)
+                print(self._entity.getFriendScore())
                 self._popupWindow.setText(self._entity.getName() + " is pleased")
                 self._popupWindow.display()   
 

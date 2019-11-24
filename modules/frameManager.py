@@ -26,6 +26,7 @@ class FrameManager(object):
       
       # Static information about the frame sizes of particular image sheets.
       _FRAME_SIZES = {
+         "faces.png":(32,32),
          "starAnim.png" : (32,32),
          "flowers-color-key.png" :  (114,116),
          "rose-anim.png" :  (114,116),
@@ -67,7 +68,12 @@ class FrameManager(object):
          "new_fox.png":(48,34),
          "new_rabbit.png":(40,40),
          "new_bear.png":(64,64),
-         "new_deer.png":(72,75)
+         "new_deer.png":(72,75),
+         "face_0.png":(32,32),
+         "face_1.png":(32,32),
+         "face_2.png":(32,32),
+         "face_3.png":(32,32),
+         "face_4.png":(32,32)
       }
       
       # A default frame size
@@ -86,7 +92,9 @@ class FrameManager(object):
                     "stick.png","hide_armor.png","leather_armor.png",
                     "iron_armor.png","berries.png","nutsoup.png","shovel.png",
                     "pickax.png","crowbar.png","healthpotion.png","pecanpie.png",
-                    "new_fox.png","new_rabbit.png","new_bear.png","new_deer.png"]
+                    "new_fox.png","new_rabbit.png","new_bear.png","new_deer.png",
+                    "ally_state.png","face_0.png","face_1.png","face_2.png","face_3.png",
+                    "face_4.png"]
       
       
       

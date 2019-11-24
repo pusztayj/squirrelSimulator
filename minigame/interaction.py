@@ -1,6 +1,6 @@
 
 from modules.drawable import Drawable
-from graphics import Window, Button, TextBox, ProgressBar
+from graphics import Window, Button, TextBox, ProgressBar, HappinessFace
 from economy.acorn import Acorn
 from .threexthreeinventory import threeXthreeInventory
 from .itemblock import ItemBlock
@@ -68,8 +68,12 @@ class Interaction(Drawable, Window):
                                       barColor=(0,0,255),
                                       height=5)
 
+        # Happiness Face
+        self._happyFace = HappinessFace((5,6))
+        self._happyFace.setFace(self._entity.getFriendScore())
+
         # Text Information
-        self._name = TextBox(entity.getName(), (20,5), self._fontlarge, (0,0,0))
+        self._name = TextBox(entity.getName(), (45,5), self._fontlarge, (0,0,0))
 
         p = []
         for animal in entity.getPack():
@@ -130,6 +134,8 @@ class Interaction(Drawable, Window):
         self._acornCount.setText(acorns)
         self._acornCount.setPosition((self._width - (65 + digitLen[len(acorns)]), 20))
 
+        self._happyFace.setFace(self._entity.getFriendScore())
+
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
         surfBack.fill(self._borderColor)
@@ -154,6 +160,7 @@ class Interaction(Drawable, Window):
         self._hungerBar.draw(surf)
         self._staminaBar.draw(surf)
         self._acornCount.draw(surf)
+        self._happyFace.draw(surf)
 
         surf.blit(self._avatar, (20,42 + ((75//2) - (self._imHeight//2))))
         surf.blit(self._acorn, (self._width-85, 17))

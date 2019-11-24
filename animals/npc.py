@@ -19,6 +19,12 @@ class NPC(Animal, Animated):
                          speed=random.randint(speed[0],speed[1]),
                          endurance=random.randint(endurance[0],endurance[1]),
                          strength = strength)
+
+        # The friend score is a metric of how much an
+        # NPC likes the player
+        self._minFriendScore = 0
+        self._maxFriendScore = 100
+        self._friendScore = random.randint(20,60)
         
         self._aggressionLevel = agression
         self._combatStatus = ""
@@ -32,6 +38,15 @@ class NPC(Animal, Animated):
 
         self._walkTimer = 0
         self._idleTimer = 0
+
+    def getFriendScore(self):
+        return self._friendScore
+
+    def setFriendScore(self, score):
+        self._friendScore = score
+
+    def changeFriendScore(self, change):
+        self._friendScore = max(0, min(100, self._friendScore + change))
 
     def getCombatStatus(self):
         return self._combatStatus
@@ -242,6 +257,7 @@ class NPC(Animal, Animated):
         pos = self.getPosition()
         c = type(self)(self.getName(), (round(pos[0]),round(pos[1])))
         c.setAcorns(self.getAcorns())
+        c.setFriendScore(self.getFriendScore())
         c.setHealth(self.getHealth())
         c.setHunger(self.getHunger())
         c.setStamina(self.getStamina())

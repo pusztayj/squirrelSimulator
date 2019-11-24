@@ -290,8 +290,6 @@ class Animal():
     def resetDefenseModifers(self):
         self._defenseModifers = 1
 
-    #
-
     def combatMoveLogic(self,target):
         if self._health <= 25 and (Potions() in self._inventory):
             return "heal"
