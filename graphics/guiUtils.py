@@ -21,14 +21,19 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
     split the text along new-lines and return a MySurface object
     containing all of the text formatted as desired.
     """
-    width = TextBox(text, position, font, color).getWidth()
-    height = font.get_height()
     lines = text.split("\n")
+    sortedLines = copy.copy(lines)
+    sortedLines.sort(key=lambda x: len(x)) # Find the longest line
+    width = TextBox(sortedLines[-1],position, font, color).getWidth()
+    height = font.get_height()
     surf = pygame.Surface((width,height*len(lines)))
     surf.fill(backgroundColor)
     p = (0,0)
     for line in lines:
-        TextBox(line, p, font, color).draw(surf)
+        t = TextBox(line, p, font, color)
+        center = width // 2 - t.getWidth() // 2
+        t.setPosition((center, t.getY()))
+        t.draw(surf)
         p = (0, p[1] + height)
     return MySurface(surf, position)
 

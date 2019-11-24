@@ -4,6 +4,7 @@ from modules.drawable import Drawable
 from graphics.window import Window
 from graphics.textbox import TextBox
 from graphics.button import Button
+from graphics.guiUtils import makeMultiLineTextBox
 
 class PopupWindow(Drawable, Window):
 
@@ -25,7 +26,9 @@ class PopupWindow(Drawable, Window):
         self._offset = position
 
         # Create the textbox
-        self._t = TextBox(self._text, (0,0), self._font, self._fontColor)
+##        self._t = TextBox(self._text, (0,0), self._font, self._fontColor)
+        self._t = makeMultiLineTextBox(self._text, (0,0), self._font,
+                                       self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
         x_pos = (self._width // 2) - (self._t.getWidth() // 2)
         self._t.setPosition((x_pos, y_pos))
@@ -41,7 +44,8 @@ class PopupWindow(Drawable, Window):
         self.updateWindow()
 
     def setText(self, text):
-        self._t.setText(text)
+        self._t = makeMultiLineTextBox(text, (0,0), self._font,
+                                       self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
         x_pos = (self._width // 2) - (self._t.getWidth() // 2)
         self._t.setPosition((x_pos, y_pos))

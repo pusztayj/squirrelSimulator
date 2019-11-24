@@ -64,12 +64,13 @@ class Bribe(Window):
                 self._popupWindow.setText("You do not have the Acorns")
                 self._popupWindow.display()
             else:
+                friendBoost = bribe * 0.5 # 2 Acorns = 1 Friend Point
                 self._player.setAcorns(self._player.getAcorns() - bribe)
                 self._entity.setAcorns(self._entity.getAcorns() + bribe)
-                self._entity.changeFriendScore(20)
+                self._entity.changeFriendScore(friendBoost)
                 print(self._entity.getFriendScore())
                 self._popupWindow.setText(self._entity.getName() + " is pleased")
-                self._popupWindow.display()   
+                self._popupWindow.display()  
 
     def draw(self, screen):
         
@@ -93,4 +94,7 @@ class Bribe(Window):
         self._acorns.draw(screen)
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
+
+    def update(self):
+        self._acornsAvailable.setText("/ " + str(self._player.getAcorns()))
         

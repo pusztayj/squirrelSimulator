@@ -100,7 +100,7 @@ class MainLevel(Level):
 
         self._popup = None
 
-        self._popupWindow = PopupWindow("", (0,0), (285,100), self._messageFont,
+        self._popupWindow = PopupWindow("", (0,0), (288,100), self._messageFont,
                                         (255,255,255),(255,0,0), (120,120,120), (40,20),
                                         self._popupFont,(255,255,255), borderWidth=1)
         self._popupWindow.setPosition((SCREEN_SIZE[0]//2 - self._popupWindow.getWidth()//2,
@@ -328,11 +328,15 @@ class MainLevel(Level):
                     e = self._interaction.getEntity()
                     if self._playerPack.trueLen() < 3:
                         if e.getPack().trueLen() == 1:
-                            self._playerPack.addMember(e)
-                            self._packs.remove(e.getPack())
-                            self._popupWindow.setText(e.getName() + " has joined your pack")
-                            self._popupWindow.display()
-                            self._interaction = None # Close the interaction window
+                            if e.getFriendScore() > 60:
+                                self._playerPack.addMember(e)
+                                self._packs.remove(e.getPack())
+                                self._popupWindow.setText(e.getName() + " has joined your pack")
+                                self._popupWindow.display()
+                                self._interaction = None # Close the interaction window
+                            else:
+                                self._popupWindow.setText(e.getName() + " doesn't want\nto join your pack")
+                                self._popupWindow.display()
                         else:
                             self._popupWindow.setText(e.getName() + " is already part of a pack")
                             self._popupWindow.display()
@@ -443,6 +447,9 @@ class MainLevel(Level):
 
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
             self._interactionTimer -= ticks
+
+        if self._bribeWindow != None and self._bribeWindow.getDisplay():
+            self._bribeWindow.update()
 
         #Update the player's position
         self._player.update(self._WORLD_SIZE, ticks)
