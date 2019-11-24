@@ -19,7 +19,7 @@ class Bribe(Window):
         self._height = 100
         self._borderWidth = 2
         self._borderColor = (0,0,0)
-        self._backgroundColor = (0,255,0)
+        self._backgroundColor = (139,79,59)
 
         givePos = (self._position[0] + 30, self._position[1] + 55)
         self._giveButton = Button("Give", givePos, self._font, (0,0,0),
@@ -38,7 +38,7 @@ class Bribe(Window):
                                       clearOnActive=True,borderWidth=1)
 
         self._popupWindow = PopupWindow("", (0,0), (285,100), self._font,
-                                        (255,255,255),(255,0,0), (120,120,120), (40,20),
+                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
                                         self._popupFont,(255,255,255), borderWidth=1)
         self._popupWindow.setPosition((SCREEN_SIZE[0]//2 - self._popupWindow.getWidth()//2,
                                        SCREEN_SIZE[1]//3 - self._popupWindow.getHeight()//2))

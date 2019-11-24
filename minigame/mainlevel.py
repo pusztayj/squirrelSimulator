@@ -101,7 +101,7 @@ class MainLevel(Level):
         self._popup = None
 
         self._popupWindow = PopupWindow("", (0,0), (288,100), self._messageFont,
-                                        (255,255,255),(255,0,0), (120,120,120), (40,20),
+                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
                                         self._popupFont,(255,255,255), borderWidth=1)
         self._popupWindow.setPosition((SCREEN_SIZE[0]//2 - self._popupWindow.getWidth()//2,
                                        SCREEN_SIZE[1]//3 - self._popupWindow.getHeight()//2))
