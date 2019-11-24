@@ -24,7 +24,7 @@ class NPC(Animal, Animated):
         # NPC likes the player
         self._minFriendScore = 0
         self._maxFriendScore = 100
-        self._friendScore = random.randint(20,60)
+        self._friendScore = random.randint(10,90)
         
         self._aggressionLevel = agression
         self._combatStatus = ""

@@ -24,7 +24,7 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
     lines = text.split("\n")
     sortedLines = copy.copy(lines)
     sortedLines.sort(key=lambda x: len(x)) # Find the longest line
-    width = TextBox(sortedLines[-1],position, font, color).getWidth()
+    width = TextBox(sortedLines[-1],position, font, color).getWidth() + 10
     height = font.get_height()
     surf = pygame.Surface((width,height*len(lines)))
     surf.fill(backgroundColor)

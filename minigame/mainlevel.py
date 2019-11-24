@@ -289,6 +289,14 @@ class MainLevel(Level):
                 if item != None and issubclass(type(item), items.Food):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
+                if item != None and type(item) == items.Shovel:
+                    for pile in self._spawnedPiles:
+                        if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                            self._spawnedPiles.remove(pile)
+                            acorns = pile.getAcorns()
+                            self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+                            
                 if item != None and issubclass(type(item), items.Weapon):
                     previous = self._weapon.getItem()
                     if previous != None:
@@ -314,6 +322,7 @@ class MainLevel(Level):
                 if c != None and c[0] == 9:
                     self._playerPack.removeMember(c[1])
                     clone = c[1].clone()
+                    clone.changeFriendScore(-20)
                     p = Pack(clone)
                     self._packs.append(p)
                     clone.setPack(p)
