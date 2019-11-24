@@ -86,8 +86,11 @@ class MainLevel(Level):
         self._acorns = []
         self._dirtPiles = []
 
+        self._spawnedPiles = []
+
         # Create timers
         self._acornSpawnTimer = random.randint(5,10)
+        self._pileSpawnTimer = random.randint(20,40)
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
 
@@ -163,6 +166,9 @@ class MainLevel(Level):
             acorn.draw(screen)
 
         for pile in self._dirtPiles:
+            pile.draw(screen)
+
+        for pile in self._spawnedPiles:
             pile.draw(screen)
 
         notDrawnTrees = []
@@ -337,6 +343,8 @@ class MainLevel(Level):
         self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:
             self._popup = self.setPopup(self._dirtPiles, m_pos_offset, popup_pos, self._popupFont)
+        if self._popup==None:
+            self._popup = self.setPopup(self._spawnedPiles, m_pos_offset, popup_pos, self._popupFont)
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
@@ -376,6 +384,16 @@ class MainLevel(Level):
             self._acorns.append(Acorn((random.randint(0,self._WORLD_SIZE[0]),
                                        random.randint(0,self._WORLD_SIZE[1]))))
             self._acornSpawnTimer = random.randint(5,10)
+
+        # Spawn Abandoned Piles around the map
+        self._pileSpawnTimer -= ticks
+        if self._pileSpawnTimer <=0:
+            d = DirtPile((random.randint(0,self._WORLD_SIZE[0]),
+                          random.randint(0,self._WORLD_SIZE[1])),
+                         "Abandoned Pile")
+            d.setAcorns(random.randint(1,20))
+            self._spawnedPiles.append(d)
+            self._pileSpawnTimer = random.randint(20,40)
 
         self._hungerTimer -= ticks
         if self._hungerTimer <= 0:
