@@ -1,5 +1,5 @@
 import pygame, random, math
-from graphics import Banner, Popup, StatDisplay, Mask, TextBox
+from graphics import *
 from modules.vector2D import Vector2
 from modules.drawable import Drawable
 from player import Player
@@ -70,6 +70,7 @@ class MainLevel(Level):
 
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
+        self._messageFont = pygame.font.SysFont("Times New Roman", 20)
 
         self._songs = ["main1.mp3","main2.mp3","main3.mp3","main4.mp3"]
         self._currentSong = random.choice(self._songs)
@@ -91,6 +92,13 @@ class MainLevel(Level):
         self._starveTimer = 2 * self._worldClock.getHourLength()
 
         self._popup = None
+
+        self._popupWindow = PopupWindow("", (0,0), (285,100), self._messageFont,
+                                        (255,255,255),(255,0,0), (120,120,120), (40,20),
+                                        self._popupFont,(255,255,255), borderWidth=1)
+        self._popupWindow.setPosition((SCREEN_SIZE[0]//2 - self._popupWindow.getWidth()//2,
+                                       SCREEN_SIZE[1]//3 - self._popupWindow.getHeight()//2))
+        self._popupWindow.close()
 
         self._stats = StatDisplay((5,5),self._player)
 
@@ -215,11 +223,15 @@ class MainLevel(Level):
         self._armor.draw(screen)
         self._weapon.draw(screen)
 
+        if self._popupWindow.getDisplay():
+            self._popupWindow.draw(screen)
+
     def handleEvent(self, event):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
-           (not self._packManager.getDisplay()):
+           (not self._packManager.getDisplay()) and \
+           (not self._popupWindow.getDisplay()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
             
@@ -277,31 +289,36 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
                 
 
-        if self._atm != None and self._atm.getDisplay():
-            self._atm.handleEvent(event)
+        if not self._popupWindow.getDisplay():
+            if self._atm != None and self._atm.getDisplay():
+                self._atm.handleEvent(event)
 
-        if self._packManager.getDisplay():
-            c = self._packManager.handleEvent(event)
-            if c != None and c[0] == 9:
-                self._playerPack.removeMember(c[1])
+            if self._packManager.getDisplay():
+                c = self._packManager.handleEvent(event)
+                if c != None and c[0] == 9:
+                    self._playerPack.removeMember(c[1])
 
-        if self._interaction != None and self._interaction.getDisplay():
-            self._popup = None
-            self._interaction.handleEvent(event)
-            code = self._interaction.getSelection()
-            if (code == 2):
-                return (code,)
-            elif (code == 3):
-                e = self._interaction.getEntity()
-                if self._playerPack.trueLen() < 3:
-                    if e.getPack().trueLen() == 1:
-                        self._playerPack.addMember(e)
-                        self._packs.remove(e.getPack())
-                        print("Let's Be Friends..." + e.getName())
+            if self._interaction != None and self._interaction.getDisplay():
+                self._popup = None
+                self._interaction.handleEvent(event)
+                code = self._interaction.getSelection()
+                if (code == 2):
+                    return (code,)
+                elif (code == 3):
+                    e = self._interaction.getEntity()
+                    if self._playerPack.trueLen() < 3:
+                        if e.getPack().trueLen() == 1:
+                            self._playerPack.addMember(e)
+                            self._packs.remove(e.getPack())
+                            self._popupWindow.setText(e.getName() + " has joined your pack")
+                            self._popupWindow.display()
+                            self._interaction = None # Close the interaction window
+                        else:
+                            self._popupWindow.setText(e.getName() + " is already part of a pack")
+                            self._popupWindow.display()
                     else:
-                        print(e.getName(), "is already part of a pack")
-                else:
-                    print("Your pack is already full")
+                        self._popupWindow.setText("Your pack is already full")
+                        self._popupWindow.display()
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
@@ -331,7 +348,8 @@ class MainLevel(Level):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             self._player.setAcorns(self._player.getAcorns()+1)
 
-
+        if self._popupWindow.getDisplay():
+            self._popupWindow.handleEvent(event)
 
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:

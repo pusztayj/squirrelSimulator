@@ -40,7 +40,15 @@ class PopupWindow(Drawable, Window):
 
         self.updateWindow()
 
+    def setText(self, text):
+        self._t.setText(text)
+        y_pos = (self._height // 4) - (self._t.getHeight() // 2)
+        x_pos = (self._width // 2) - (self._t.getWidth() // 2)
+        self._t.setPosition((x_pos, y_pos))
+        self.updateWindow()
+
     def handleEvent(self, event):
+        self._offset = self._position
         self._b.handleEvent(event,self.close,offset=self._offset)
         self.updateWindow()
 
