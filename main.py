@@ -34,6 +34,7 @@ def main():
 
    player = Player(pos=(200,200))
    playerPack = Pack(player)
+   player.setPack(playerPack)
    player.scale(1.5)
    level = MainLevel(playerPack, SCREEN_SIZE)
    merchantLevel = None

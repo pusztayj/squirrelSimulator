@@ -106,6 +106,11 @@ class NPC(Animal, Animated):
         return pygame.Rect(self._wanderRect[0][0], self._wanderRect[1][0],
                            self._wanderRange*2, self._wanderRange*2)
 
+    def resetWanderRect(self):
+        posx, posy = self._position
+        self._wanderRect= ((round(posx)-self._wanderRange,round(posx)+self._wanderRange),
+                           (round(posy)-self._wanderRange,round(posy)+self._wanderRange))
+
     def wander(self, ticks):
 
         # Check if done walking

@@ -114,7 +114,7 @@ class MainLevel(Level):
                             30, self._merchants, name="tree.png")
 
         self._packs = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
-                                 30,
+                                 20,
                                  self._merchants + self._trees)
         
         for pack in self._packs:
@@ -218,7 +218,8 @@ class MainLevel(Level):
     def handleEvent(self, event):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
-           (self._interaction == None or not self._interaction.getDisplay()):
+           (self._interaction == None or not self._interaction.getDisplay()) and \
+           (not self._packManager.getDisplay()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
             
@@ -280,7 +281,9 @@ class MainLevel(Level):
             self._atm.handleEvent(event)
 
         if self._packManager.getDisplay():
-            self._packManager.handleEvent(event)
+            c = self._packManager.handleEvent(event)
+            if c != None and c[0] == 9:
+                self._playerPack.removeMember(c[1])
 
         if self._interaction != None and self._interaction.getDisplay():
             self._popup = None
@@ -294,8 +297,6 @@ class MainLevel(Level):
                     if e.getPack().trueLen() == 1:
                         self._playerPack.addMember(e)
                         self._packs.remove(e.getPack())
-                        e.getPack().removeMember(e)
-                        e.setPack(self._playerPack)
                         print("Let's Be Friends..." + e.getName())
                     else:
                         print(e.getName(), "is already part of a pack")
@@ -403,9 +404,15 @@ class MainLevel(Level):
         
         self._packManager.update(ticks)
 
-        for pack in self._packs:
+        self.packs = [pack for pack in self._packs if not pack.isDead()]
+
+        #print("*"*10)
+        for pack in self._packs: 
+           # print(pack.getLeader().getName()) 
             pack.getLeader().wander(ticks)
-            pack.update(self._WORLD_SIZE, ticks)
+            if pack.trueLen() > 1:
+                pack.update(self._WORLD_SIZE, ticks)
+        #print("*"*10)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong

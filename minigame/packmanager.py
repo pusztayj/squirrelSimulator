@@ -4,6 +4,7 @@ from graphics import Window, Button, TextBox, ProgressBar
 from .threexthreeinventory import threeXthreeInventory
 from .itemblock import ItemBlock
 from economy.acorn import Acorn
+from player import Player
 import pygame
 
 digitLen = {1:33, 2:38, 3:45, 4:55}
@@ -36,6 +37,8 @@ class PackManager(Drawable, Window):
     def handleEvent(self, event):
         for tile in self._tiles:
             tile.handleEvent(event)
+            if tile.shouldRemove():
+                return (9, tile.getEntity())
         if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
             self.close()
         
@@ -45,6 +48,13 @@ class PackManager(Drawable, Window):
 
     def update(self, ticks):
         self._timeSinceClosed += ticks
+        self.redraw()
+
+    def redraw(self):
+        self._tiles = []
+        for i, creature in enumerate(self._pack):
+            self._tiles.append(MemberCard(creature, (self.getX() + (i * self._cardWidth),
+                                                     self.getY())))
 
     def close(self):
         self._display = False
@@ -118,16 +128,25 @@ class MemberCard(Drawable, Window):
             self._acornCount.setPosition((self._width - (145 + digitLen[len(acorns)]),
                                           50 + self._avHeight))
 
+        self._remove = False
+
         self.updateCard()
 
 
     def handleEvent(self, event):
         if self._entity != None:
-            self._removeButton.handleEvent(event, self.nothing, offset=self._offset)
+            if type(self._entity) != Player:
+                self._removeButton.handleEvent(event, self.remove, offset=self._offset)
             self.updateCard()
 
-    def nothing(self):
-        pass
+    def remove(self):
+        self._remove = True
+
+    def getEntity(self):
+        return self._entity
+
+    def shouldRemove(self):
+        return self._remove
 
     def updateCard(self):
         
@@ -149,7 +168,8 @@ class MemberCard(Drawable, Window):
             self._healthBar.draw(surf)
             self._hungerBar.draw(surf)
             self._staminaBar.draw(surf)
-            self._removeButton.draw(surf)
+            if type(self._entity) != Player:
+                self._removeButton.draw(surf)
             self._acornCount.draw(surf)
 
             surf.blit(self._avatar, (20,42 + ((75//2) - (self._imHeight//2))))
