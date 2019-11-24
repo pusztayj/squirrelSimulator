@@ -95,6 +95,9 @@ class MainLevel(Level):
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
 
+        self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
+        self._interactionTimer = self._interactionDelay
+
         self._popup = None
 
         self._popupWindow = PopupWindow("", (0,0), (285,100), self._messageFont,
@@ -273,6 +276,7 @@ class MainLevel(Level):
                                 if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                                      event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                                     self._interaction = Interaction(creature)
+                                    self._interactionTimer = self._interactionDelay
                                     for k in self._player._movement.keys(): self._player._movement[k] = False
                             
                 for merchant in self._merchants:
@@ -310,7 +314,7 @@ class MainLevel(Level):
                 if c != None and c[0] == 9:
                     self._playerPack.removeMember(c[1])
 
-            if self._interaction != None and self._interaction.getDisplay():
+            if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
                 self._popup = None
                 self._interaction.handleEvent(event)
                 code = self._interaction.getSelection()
@@ -358,9 +362,12 @@ class MainLevel(Level):
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-            if self._packManager._timeSinceClosed > self._packManager._delay:
-                self._packManager.display()
+        if (self._atm == None or not self._atm.getDisplay()) and \
+           (self._interaction == None or not self._interaction.getDisplay()) and \
+           (not self._popupWindow.getDisplay()):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                if self._packManager._timeSinceClosed > self._packManager._delay:
+                    self._packManager.display()
 
         # Code for testing
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
@@ -369,7 +376,7 @@ class MainLevel(Level):
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
 
-        if self._bribeWindow != None:
+        if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
@@ -429,6 +436,9 @@ class MainLevel(Level):
 
         if self._player.isDead():
             print("The Player is Dead")
+
+        if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
+            self._interactionTimer -= ticks
 
         #Update the player's position
         self._player.update(self._WORLD_SIZE, ticks)
