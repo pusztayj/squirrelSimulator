@@ -237,4 +237,15 @@ class NPC(Animal, Animated):
             self._nFrames = self._standFrames
         self.updateAnimation(ticks)
         self._position += (self._velocity * ticks)
-        
+
+    def clone(self):
+        pos = self.getPosition()
+        c = type(self)(self.getName(), (round(pos[0]),round(pos[1])))
+        c.setAcorns(self.getAcorns())
+        c.setHealth(self.getHealth())
+        c.setHunger(self.getHunger())
+        c.setStamina(self.getStamina())
+        c.equipArmor(self.getArmor())
+        c.equipItem(self.getEquipItem())
+        c.setInventory(self.getInventory())
+        return c

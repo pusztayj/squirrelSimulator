@@ -313,6 +313,10 @@ class MainLevel(Level):
                 c = self._packManager.handleEvent(event)
                 if c != None and c[0] == 9:
                     self._playerPack.removeMember(c[1])
+                    clone = c[1].clone()
+                    p = Pack(clone)
+                    self._packs.append(p)
+                    clone.setPack(p)
 
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
                 self._popup = None

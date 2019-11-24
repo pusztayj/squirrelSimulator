@@ -175,6 +175,9 @@ class Animal():
     def getHunger(self):
         return self._hunger
 
+    def setHunger(self, hunger):
+        self._hunger = hunger
+
     def getBaseHunger(self):
         return self._baseHunger
 
@@ -295,6 +298,9 @@ class Animal():
 
     def getInventory(self):
         return self._inventory
+
+    def setInventory(self, inv):
+        self._inventory = inv
 
     def equipItem(self, item):
         self._inhand = item
