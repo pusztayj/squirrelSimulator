@@ -17,6 +17,7 @@ from items.items import *
 from items import items
 from minigame.itemblock import ItemBlock
 from minigame.packmanager import PackManager
+from minigame.bribe import Bribe
 
 creatures = [Bear, Fox, Rabbit, Deer]
 
@@ -150,6 +151,8 @@ class MainLevel(Level):
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
 
+        self._bribeWindow = None #Bribe(self._player, Rabbit((0,0)), SCREEN_SIZE)
+
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def setActive(self, boolean):
@@ -232,6 +235,9 @@ class MainLevel(Level):
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
 
+        if self._bribeWindow != None and self._bribeWindow.getDisplay():
+            self._bribeWindow.draw(screen)
+
     def handleEvent(self, event):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
@@ -295,7 +301,7 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
                 
 
-        if not self._popupWindow.getDisplay():
+        if not self._popupWindow.getDisplay() and (self._bribeWindow==None or not self._bribeWindow.getDisplay()):
             if self._atm != None and self._atm.getDisplay():
                 self._atm.handleEvent(event)
 
@@ -325,6 +331,10 @@ class MainLevel(Level):
                     else:
                         self._popupWindow.setText("Your pack is already full")
                         self._popupWindow.display()
+                elif (code == 4):
+                    e = self._interaction.getEntity()
+                    self._bribeWindow = Bribe(self._player, e, self._SCREEN_SIZE)
+                    self._bribeWindow.display()
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
@@ -358,6 +368,10 @@ class MainLevel(Level):
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
+
+        if self._bribeWindow != None:
+            self._bribeWindow.handleEvent(event)
+            self._interaction.updateInteraction()
 
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:

@@ -98,7 +98,7 @@ class Interaction(Drawable, Window):
         self._fightButton.handleEvent(event, self.fight, offset=self._offset)
         self._befriendButton.handleEvent(event, self.befriend, offset=self._offset)
         self._stealButton.handleEvent(event, self.nothing,  offset=self._offset)
-        self._bribeButton.handleEvent(event, self.nothing,  offset=self._offset)
+        self._bribeButton.handleEvent(event, self.bribe,  offset=self._offset)
         self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.updateInteraction()
 
@@ -107,6 +107,9 @@ class Interaction(Drawable, Window):
 
     def befriend(self):
         self._selection = 3
+
+    def bribe(self):
+        self._selection = 4
 
     def getSelection(self):
         sel = self._selection
@@ -120,6 +123,12 @@ class Interaction(Drawable, Window):
         return self._entity
 
     def updateInteraction(self):
+
+        self._acornCount = TextBox("", (self._width-50, 4),
+                                    self._fontsmall, (0,0,0))
+        acorns = str(self._entity.getAcorns())
+        self._acornCount.setText(acorns)
+        self._acornCount.setPosition((self._width - (65 + digitLen[len(acorns)]), 20))
 
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
