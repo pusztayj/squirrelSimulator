@@ -71,6 +71,15 @@ class SubCombatLevel(object):
         self._scroll = None
         self._popup = None
 
+    def getCombatSprite(self,animal):
+        """
+        Given an input animal it returns the combatsprite that is for the
+        appropriate animal. 
+        """
+        for an in self._combatSprites:
+            if an.getAnimal() == animal:
+                return an
+
     def alwaysDraw(self):
         for x in self._combatSprites:
             x.draw(self._screen)
@@ -120,11 +129,14 @@ class SubCombatLevel(object):
                         self._scroll = ItemCard(sprite.getAnimal(), (500,150),(200,400))
                 elif r.collidepoint(pygame.mouse.get_pos()):
                     text = "Holding: " + sprite.getAnimal().getEquipItemName() + \
-                           "\nArmor: " + sprite.getAnimal().getArmorsName()
+                           "\nArmor: " + sprite.getAnimal().getArmorsName() + \
+                           "\nStrength: " + str(sprite.getAnimal().getStrength())
                     self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
                                         self._popupFont,multiLine = True)
+                    print("yes")
+                    print(type(self._popup))
+
                     
-              
     def handlePlayerTurn(self,event):
         self._attackButton.handleEvent(event,combatFSM.changeState,"attack button")
         self._fortifyButton.handleEvent(event,combatFSM.changeState,"fortify button")
@@ -173,15 +185,6 @@ class SubCombatLevel(object):
         self._potionSelect.update()
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
-
-    def getCombatSprite(self,animal):
-        """
-        Given an input animal it returns the combatsprite that is for the
-        appropriate animal. 
-        """
-        for i,an in enumerate(self._combatSprites):
-            if an.getAnimal() == animal:
-                return an
 
     def updateWait(self):
         # for the enemies

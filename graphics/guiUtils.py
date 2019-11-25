@@ -1,5 +1,5 @@
 """
-Author: Trevor Stalnaker
+Author: Trevor Stalnaker, Justin Pusztay
 File: guiUtils
 
 A file containing various utility functions for the creation

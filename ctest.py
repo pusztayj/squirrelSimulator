@@ -14,13 +14,6 @@ from minigame.subcombatlevel import SubCombatLevel
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
-"""
-REMARK
-------
-
-If the screen size changes note that the positions of everything
-is hard coded so those positions need to be changed.
-"""
 
 def main():
 

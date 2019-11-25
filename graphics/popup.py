@@ -1,12 +1,12 @@
 """
-Author: Trevor Stalnaker, justin Pusztay
+Author: Trevor Stalnaker, Justin Pusztay
 File: popup.py
 """
 
 from .textbox import TextBox
 from modules import Drawable
 import pygame
-from .guiUtils import makeMultiLineTextBox
+from graphics import *
 
 class Popup(Drawable):
 
