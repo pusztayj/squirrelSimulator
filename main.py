@@ -6,6 +6,7 @@ from minigame.merchantlevel import MerchantLevel
 from minigame.combatLevel import CombatLevel
 from minigame.cheats import Cheats
 from minigame.loadingscreen import LoadingScreen
+from minigame.pausemenu import PauseMenu
 
 SCREEN_SIZE = (1200,500)
 
@@ -44,6 +45,12 @@ def main():
 
    loading = LoadingScreen(SCREEN_SIZE, 1)
 
+   pWidth = SCREEN_SIZE[0] // 4
+   pHeight = 2 * (SCREEN_SIZE[1] // 3)
+   pauseMenu = PauseMenu((SCREEN_SIZE[0]//2 - pWidth//2, SCREEN_SIZE[1]//2 - pHeight//2),
+                     (pWidth, pHeight))
+   pauseMenu.close()
+
    RUNNING = True
 
    code = None
@@ -68,25 +75,30 @@ def main():
       if loading.isDisplayed():
          loading.draw(screen)
 
+      if pauseMenu.getDisplay():
+         pauseMenu.draw(screen)
+
       pygame.display.flip()
 
       # event handling, gets all event from the eventqueue
       for event in pygame.event.get():
          # only do something if the event is of type QUIT or K_ESCAPE
-         if (event.type == pygame.QUIT) or \
-             (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            # change the value to False, to exit the main loop
+         if (event.type == pygame.QUIT):
             RUNNING = False
 
-         if event.type == pygame.KEYDOWN and event.key == pygame.K_p and \
-            (level._atm == None or not level._atm.getDisplay()):
+         if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
+            (level._atm == None or not level._atm.getDisplay()) and \
+            not loading.isDisplayed():
             level.setActive(not level.isActive())
+            pauseMenu.display()
 
-         if level.isActive() and not loading.isDisplayed():
+         if level.isActive() and not loading.isDisplayed() and \
+            not pauseMenu.getDisplay():
              code = level.handleEvent(event)
 
          if merchantLevel != None and merchantLevel.isActive() and \
-            not loading.isDisplayed():
+            not loading.isDisplayed() and \
+            not pauseMenu.getDisplay():
              code = merchantLevel.handleEvent(event)
 
          if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
@@ -97,6 +109,15 @@ def main():
             cheatCode = cheatBox.handleEvent(event)
             if cheatCode != None:
                cheatCodes[cheatCode[0]](player, cheatCode[1])
+
+         if pauseMenu.getDisplay():
+            sel = pauseMenu.handleEvent(event)
+            if sel == 1:
+               if merchantLevel == None or not merchantLevel.isActive():
+                  level.setActive(True)
+            if sel == 4:
+               RUNNING = False
+                  
 
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
