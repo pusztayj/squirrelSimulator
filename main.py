@@ -99,9 +99,13 @@ def main():
 
          if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
             (level._atm == None or not level._atm.getDisplay()) and \
-            not loading.isDisplayed():
+            not loading.isDisplayed() and\
+            not controls.getDisplay():
             level.setActive(not level.isActive())
-            pauseMenu.display()
+            if pauseMenu.getDisplay():
+               pauseMenu.close()
+            else:
+               pauseMenu.display()
 
          if level.isActive() and not loading.isDisplayed() and \
             not pauseMenu.getDisplay():

@@ -14,18 +14,20 @@ class Player(Squirrel):
         self._acorns = 0
 
         #Stats that effect Squirrel movement     
-        self._diggingSkill = None
+        self._diggingSkill = 1
         self._canFly = False
 
         #Nut storage stats     
-        self._memory = None
-        self._cheekCapacity = 10
+        self._memory = 3
+        self._cheekCapacity = 50
         self._burrowingSkill = None
 
         #Other stats
         self._sight = None
         self._luck = None
-        self._charisma = None
+        self._charisma = 1
+        self._stealth = 1
+        self._xp = 0
 
         self._minYPos = 0 
 
@@ -45,6 +47,9 @@ class Player(Squirrel):
         self._eatTime = .5
         self._eatClock = self._eatTime
 
+    def getXP(self):
+        return self._xp
+
     def getAcorns(self):
         return self._acorns
 
@@ -56,6 +61,18 @@ class Player(Squirrel):
 
     def setCheekCapacity(self, capacity):
         self._cheekCapacity = capacity
+
+    def getMemory(self):
+        return self._memory
+
+    def getCharisma(self):
+        return self._charisma
+
+    def getDiggingSkill(self):
+        return self._diggingSkill
+
+    def getStealth(self):
+        return self._stealth
 
     def eatAcorn(self):
         if self._fsm.getCurrentState() != "eating":

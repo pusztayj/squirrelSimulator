@@ -18,6 +18,7 @@ from items import items
 from minigame.itemblock import ItemBlock
 from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
+from minigame.xpmanager import XPManager
 
 creatures = [Bear, Fox, Rabbit, Deer]
 
@@ -154,7 +155,10 @@ class MainLevel(Level):
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
 
-        self._bribeWindow = None #Bribe(self._player, Rabbit((0,0)), SCREEN_SIZE)
+        self._bribeWindow = None
+
+        self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
+        self._xpManager.close()
 
         SoundManager.getInstance().playMusic(self._currentSong)
 
@@ -240,6 +244,9 @@ class MainLevel(Level):
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.draw(screen)
+
+        if self._xpManager.getDisplay():
+            self._xpManager.draw(screen)
 
     def handleEvent(self, event):
 
@@ -381,10 +388,21 @@ class MainLevel(Level):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
-           (not self._popupWindow.getDisplay()):
+           (not self._popupWindow.getDisplay()) and \
+           not self._xpManager.getDisplay():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
+
+        if (self._atm == None or not self._atm.getDisplay()) and \
+           (self._interaction == None or not self._interaction.getDisplay()) and \
+           (not self._popupWindow.getDisplay()) and \
+           not self._packManager.getDisplay():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                if self._xpManager.getDisplay():
+                    self._xpManager.close()
+                else:
+                    self._xpManager.display()
 
         # Code for testing
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
@@ -396,6 +414,9 @@ class MainLevel(Level):
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
+
+        if self._xpManager.getDisplay():
+            self._xpManager.handleEvent(event)
 
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:
