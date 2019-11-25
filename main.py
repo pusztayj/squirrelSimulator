@@ -7,6 +7,7 @@ from minigame.combatLevel import CombatLevel
 from minigame.cheats import Cheats
 from minigame.loadingscreen import LoadingScreen
 from minigame.pausemenu import PauseMenu
+from minigame.controls import Controls
 
 SCREEN_SIZE = (1200,500)
 
@@ -45,11 +46,17 @@ def main():
 
    loading = LoadingScreen(SCREEN_SIZE, 1)
 
+   # Create the pause menu
    pWidth = SCREEN_SIZE[0] // 4
    pHeight = 2 * (SCREEN_SIZE[1] // 3)
    pauseMenu = PauseMenu((SCREEN_SIZE[0]//2 - pWidth//2, SCREEN_SIZE[1]//2 - pHeight//2),
                      (pWidth, pHeight))
    pauseMenu.close()
+
+   controls = Controls((SCREEN_SIZE[0]//2 - 209, SCREEN_SIZE[1]//2 - 100),200)
+   controls.close()
+
+   flicker  = False
 
    RUNNING = True
 
@@ -60,8 +67,9 @@ def main():
       #Increment the clock
       gameClock.tick()
 
-      if level.isActive():
+      if level.isActive() or flicker:
           level.draw(screen)
+          flicker = False
 
       if merchantLevel != None and merchantLevel.isActive():
           merchantLevel.draw(screen)
@@ -77,6 +85,9 @@ def main():
 
       if pauseMenu.getDisplay():
          pauseMenu.draw(screen)
+
+      if controls.getDisplay():
+         controls.draw(screen)
 
       pygame.display.flip()
 
@@ -110,15 +121,21 @@ def main():
             if cheatCode != None:
                cheatCodes[cheatCode[0]](player, cheatCode[1])
 
-         if pauseMenu.getDisplay():
+         if pauseMenu.getDisplay() and not controls.getDisplay():
             sel = pauseMenu.handleEvent(event)
             if sel == 1:
                if merchantLevel == None or not merchantLevel.isActive():
                   level.setActive(True)
+            if sel == 3:
+               controls.display()
             if sel == 4:
                RUNNING = False
-                  
 
+         if controls.getDisplay():
+            controls.handleEvent(event)
+            if not controls.getDisplay():
+               flicker = True
+                  
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
 
