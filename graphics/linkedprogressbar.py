@@ -1,6 +1,14 @@
+"""
+@authors: Trevor Stalnaker, Justin Pusztay
+
+This file creates a linked progress bar, where an entity is
+attached to the animal and it updates the progress bar based on
+the entity that is attached, hence the bar being linked.
+"""
+
 
 import pygame
-from .progressbar import ProgressBar 
+from .progressbar import ProgressBar
 
 class LinkedProgressBar():
 
@@ -8,9 +16,10 @@ class LinkedProgressBar():
                  borderColor=(0,0,0), backgroundColor=(120,120,120),
                  barColor=(255,0,0)):
 
+
         self._progressBar = ProgressBar(position, length, maxStat, actStat,
                                         borderWidth, borderColor, backgroundColor,
-                                        barColor)
+                                        barColor,height = 12)
         self._entity = entity
 
     def update(self):

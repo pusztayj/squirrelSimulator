@@ -10,6 +10,7 @@ from items.items import *
 from minigame.itemselect import ItemSelect
 from minigame.subcombatlevel import SubCombatLevel
 
+
 SCREEN_SIZE = (1200,500)
 WORLD_SIZE  = (2400,500)
 
@@ -51,9 +52,10 @@ def main():
             c = CombatSprite(a,(228,275),font)
             combatSprites.append(c)
         else:
-            c = CombatSprite(a,(100,y),font)
-            combatSprites.append(c)
-            y+=150
+            if a != None:
+                c = CombatSprite(a,(100,y),font)
+                combatSprites.append(c)
+                y+=150
                 
     ### Make the enemy pack ###
     enemy1 = Deer()
@@ -70,17 +72,17 @@ def main():
             c = CombatSprite(e,(847,275),font,enemies = True)
             combatSprites.append(c)
         else:
-            c = CombatSprite(e,(972,y),font,enemies = True)
-            combatSprites.append(c)
-            y+=150
+            if e != None:
+                c = CombatSprite(e,(972,y),font,enemies = True)
+                combatSprites.append(c)
+                y+=150
         
     potionSelect = None
     
     RUNNING = True
 
     lev = SubCombatLevel(screen,allies,enemies,combatSprites)
-    count = 0
-    
+
     while RUNNING:
         background.draw(screen)
 
@@ -89,7 +91,7 @@ def main():
 
         elif combatFSM.getCurrentState() == "fortify": 
             lev.drawFortify()
-
+ 
         elif combatFSM.getCurrentState() == "attack":
             lev.drawAttack()
 
@@ -97,9 +99,11 @@ def main():
             lev.drawHeal()
 
         elif combatFSM.getCurrentState() == "waiting":
+            lev.updateWait()
+            lev.update()
             lev.drawWait()
-            time.sleep(1.5)
-            
+            time.sleep(1.2)
+
         pygame.display.flip()
         
         for event in pygame.event.get():
@@ -109,7 +113,7 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     RUNNING = False
 
-            #lev.handleEvent(event) # for the item popups
+            lev.handleEvent(event) # for the item popups
 
             if combatFSM.getCurrentState() == "heal":
                 lev.handleHeal(event)
@@ -126,10 +130,9 @@ def main():
             elif combatFSM.getCurrentState() == "retreat":
                 retreat(allies[0])
                 RUNNING = False
-        lev.update()
-        if combatFSM.getCurrentState() == "waiting":
-            lev.updateWait()
         
+        if combatFSM.getCurrentState() != "waiting":
+            lev.update()
         
     pygame.quit()
 

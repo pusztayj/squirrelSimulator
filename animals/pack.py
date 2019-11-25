@@ -19,7 +19,13 @@ class Pack():
         self._nextToAttack = self[self._nextToAttackIndex]
 
     def getNextToAttack(self):
-        return self._nextToAttack
+        if self._nextToAttack != None and self._nextToAttack.isDead():
+            return None
+        else:
+            return self._nextToAttack
+
+    def getNextToAttackIndex(self):
+        return self._nextToAttackIndex
 
     def getPackName(self):
         return self._name
@@ -82,8 +88,8 @@ class Pack():
             self._nextToAttackIndex = 0
         else:
             self._nextToAttackIndex += 1
-        if self[self._nextToAttackIndex] == None and not self.isDead():
-            self.hasAttacked()
+##        if self[self._nextToAttackIndex] == None and not self.isDead():
+##            self.hasAttacked()
         self._nextToAttack = self[self._nextToAttackIndex]
 
     def __repr__(self):

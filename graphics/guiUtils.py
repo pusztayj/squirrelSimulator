@@ -22,9 +22,7 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
     containing all of the text formatted as desired.
     """
     lines = text.split("\n")
-    sortedLines = copy.copy(lines)
-    sortedLines.sort(key=lambda x: len(x)) # Find the longest line
-    width = TextBox(sortedLines[-1],position, font, color).getWidth() + 10
+    width = TextBox(max(lines, key=len),position, font, color).getWidth() + 10
     height = font.get_height()
     surf = pygame.Surface((width,height*len(lines)))
     surf.fill(backgroundColor)
@@ -37,7 +35,11 @@ def makeMultiLineTextBox(text, position, font, color, backgroundColor):
         p = (0, p[1] + height)
     return MySurface(surf, position)
 
+
 def getInfoCard(animal, position,scrollBoxSize = (200,300)):
+    """
+    Most likely an obsolete function. However, not sure. JKP.
+    """
     nameFont = pygame.font.SysFont("Times New Roman", 32)
     detailsFont = pygame.font.SysFont("Times New Roman", 16)
     s = pygame.Surface((200,600))
@@ -56,17 +58,31 @@ def getInfoCard(animal, position,scrollBoxSize = (200,300)):
 
 class ItemCard(object):
 
-    def __init__(self, item):
+    def __init__(self, item,position = (471,166),scrollBoxSize = (155,300)):
+        """
+        Creates an item card for the object, this works for both items and GUIs.
+
+        Defaults is set for the merchant GUI which needs to be changed.
+        """
         self._item = item
-        self._card = self.generate(item,(471,166),(155,300))
+        self._card = self.generate(item,position,scrollBoxSize)
 
     def getItem(self):
+        """
+        Returns the item that the item card is representing
+        """
         return self._item
 
     def getCard(self):
+        """
+        Returns the scorllbox that is the item. 
+        """
         return self._card
 
-    def generate(self,entity, position,scrollBoxSize = (200,300)):
+    def generate(self,entity, position,scrollBoxSize):
+        """
+        Generates the item that is the in the item card.
+        """
         nameFont = pygame.font.SysFont("Times New Roman", 32)
         detailsFont = pygame.font.SysFont("Times New Roman", 16)
         s = pygame.Surface((200,600))
@@ -84,8 +100,3 @@ class ItemCard(object):
                              (255,255,255), (0,0,0)).draw(s)
         s = MySurface(s)
         return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
-
-    
-    
-
-    

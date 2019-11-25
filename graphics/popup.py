@@ -1,19 +1,23 @@
 """
-Author: Trevor Stalnaker
+Author: Trevor Stalnaker, justin Pusztay
 File: popup.py
 """
 
 from .textbox import TextBox
 from modules import Drawable
 import pygame
+from .guiUtils import makeMultiLineTextBox
 
 class Popup(Drawable):
 
     def __init__(self, text, position, font,
                  color=(0,0,0), backgroundColor=(255,255,255),
-                 borderColor=(0,0,0), borderWidth=1, margin=2):
+                 borderColor=(0,0,0), borderWidth=1, margin=2,multiLine = False):
         super().__init__("", position, worldBound=False)
-        self._textbox = TextBox(text, (0,0), font, color)
+        if multiLine == True:
+            self._textbox = makeMultiLineTextBox(text,(0,0),font,color,backgroundColor)
+        else:
+            self._textbox = TextBox(text, (0,0), font, color)
         self._backgroundColor = backgroundColor
         self._borderColor = borderColor
         self._borderWidth = borderWidth

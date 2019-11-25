@@ -328,13 +328,13 @@ class Animal():
 
     def getEquipItemName(self):
         if self._inhand == None:
-            return "Nothing" # Empty string might be better
+            return "" # Empty string might be better
         else:
             return type(self._inhand).__name__
 
     def getArmorsName(self):
         if self._armor == None:
-            return "Nothing"
+            return ""
         else:
             return type(self._armor).__name__
 

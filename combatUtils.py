@@ -103,15 +103,23 @@ class CombatSprite(object):
         self._bar = LinkedProgressBar(self._animal,(self._position[0],self._position[1]+90),100,
                                       100,self._animal.getHealth())
         self._nameText = TextBox(self._animal.getName(),
-                                 (self._position[0],self._position[1]+105),
+                                 (self._position[0],self._position[1]+107),
                                  font,(255,255,255))
+
         x = self._nameText.getWidth()
-        self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+105))
+        self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+107))
+        healthFont = pygame.font.SysFont("Times New Roman", 12)
+        self._healthText = TextBox(str(self._animal.getHealth()) + "/100",
+                                   (self._position[0],self._position[1]+125),
+                                   healthFont,(255,255,255))
+        x = self._healthText.getWidth()
+        self._healthText.setPosition((self._position[0]+50-(x//2),self._position[1]+90))
         self._collideRects = getRects(self.getAnimalSprite())
 
     def draw(self,screen):
         self._bar.draw(screen)
         self._nameText.draw(screen)
+        self._healthText.draw(screen)
         if not self._enemies:
             screen.blit(self._animal.getDefaultImage(),(self._animal_xPos,self._animal_yPos))
         else:
@@ -120,6 +128,9 @@ class CombatSprite(object):
 
     def getHealthBar(self):
         return self._bar
+
+    def getHealthText(self):
+        return self._healthText
 
     def getAnimal(self):
         return self._animal
@@ -131,8 +142,57 @@ class CombatSprite(object):
         return self._animal.getDefaultImage()
 
     def getPosition(self):
+        return self._position
+
+    def getAnimalPosition(self):
         return (self._animal_xPos,self._animal_yPos)
 
     def getCollideRects(self):
         return self._collideRects
+
+    def getTextHeight(self):
+        return self._nameText.getHeight()
+
+
+class Box(object):
+
+    def __init__(self,position,demensions,color,width):
+        """
+        Here we create a box. It needs a position and a demension
+        to create a box that is not filled in with those demensions.
+        You can also input the color and the width (thickness) of the
+        lines. 
+        """
+        self._position = position
+        self._demensions = demensions
+        self._x = self._demensions[0]
+        self._y = self._demensions[1]
+        self._width = width
+        self._color = color
+
+    def draw(self,screen):
+        """
+        Will draw the box on the input screen.
+        """ 
+        pygame.draw.line(screen,self._color,(self._position[0],self._position[1]),
+                         (self._position[0],self._position[1]+self._y),
+                         self._width)
+        pygame.draw.line(screen,self._color,self._position,
+                         (self._position[0]+self._x,self._position[1]),
+                         self._width)       
+        pygame.draw.line(screen,self._color,(self._position[0],self._position[1]+self._y),
+        (self._position[0]+self._x,self._position[1]+self._y),
+        self._width)
+        pygame.draw.line(screen,self._color,(self._position[0]+self._x,self._position[1]),
+                         (self._position[0]+self._x,self._position[1]+self._y),
+                         self._width)
+
+    def setPosition(self,newPosition):
+        """
+        Sets a new position to the box.
+        """
+        self._position = newPosition
+
+    
+    
 
