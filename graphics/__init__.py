@@ -15,11 +15,12 @@ from .textbox import TextBox
 from .textinput import TextInput
 from .window import Window
 from .happinessface import HappinessFace
+from .particletext import ParticleText
 
 __all__ = ["Banner","Button","makeMultiLineTextBox","getInfoCard","ItemCard",
            "LinkedProgressBar","Mask","MySurface","Popup","PopupWindow",
            "ProgressBar","ScrollBox","ScrollSelector","StatDisplay","Tabs",
-           "TextBox","TextInput","Window", "HappinessFace"]
+           "TextBox","TextInput","Window", "HappinessFace","ParticleText"]
 
 
 
