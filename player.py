@@ -74,6 +74,18 @@ class Player(Squirrel):
     def getStealth(self):
         return self._stealth
 
+    def setMemory(self, amount):
+        self._memory = amount
+        
+    def setCharisma(self, amount):
+        self._charisma = amount
+
+    def setDiggingSkill(self, amount):
+        self._diggingSkill = amount
+
+    def setStealth(self, amount):
+        self._stealth = amount
+
     def eatAcorn(self):
         if self._fsm.getCurrentState() != "eating":
             if self._acorns > 0 and self._hunger < self._baseHunger:

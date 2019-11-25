@@ -14,7 +14,10 @@ SCREEN_SIZE = (1200,500)
 def giveAcorns(entity, amount):
    entity.setAcorns(entity.getAcorns() + amount)
 
-cheatCodes = {1:giveAcorns}
+def giveXP(entity, amount):
+   entity.setXP(entity.getXP() + amount)
+
+cheatCodes = {1:giveAcorns,2:giveXP}
 
 def main():
    """

@@ -239,14 +239,14 @@ class MainLevel(Level):
         self._armor.draw(screen)
         self._weapon.draw(screen)
 
-        if self._popupWindow.getDisplay():
-            self._popupWindow.draw(screen)
-
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.draw(screen)
 
         if self._xpManager.getDisplay():
             self._xpManager.draw(screen)
+
+        if self._popupWindow.getDisplay():
+            self._popupWindow.draw(screen)
 
     def handleEvent(self, event):
 
@@ -415,8 +415,15 @@ class MainLevel(Level):
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
-        if self._xpManager.getDisplay():
-            self._xpManager.handleEvent(event)
+        if self._xpManager.getDisplay() and not self._popupWindow.getDisplay():
+            c = self._xpManager.handleEvent(event)
+            if c != None:
+                if c[0] == 0:
+                    self._popupWindow.setText("You do not have any XP")
+                    self._popupWindow.display()
+                ##if c[0] == 1:
+                ##    self._popupWindow.setText(c[1] + " upgraded")
+                ##    self._popupWindow.display()
 
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:

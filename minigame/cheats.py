@@ -41,6 +41,9 @@ class Cheats():
             if terms[0] == "giveAcorns":
                 if terms[1].isdigit():
                     self._code = (1,int(terms[1]))
+            if terms[0] == "giveXP":
+                if terms[1].isdigit():
+                    self._code = (2,int(terms[1]))
 
     def draw(self, screen):
         self._input.draw(screen)

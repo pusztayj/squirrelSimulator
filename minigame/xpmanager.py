@@ -9,6 +9,8 @@ class XPManager(Window):
 
         Window.__init__(self)
 
+        self._player = player
+
         font = pygame.font.SysFont("Times New Roman", 24)
 
         attributes = ["Memory","Charisma","Digging Skill","Cheek Capacity","Stealth"]
@@ -39,6 +41,13 @@ class XPManager(Window):
     def handleEvent(self, event):
         for a in self._attrs:
             a.handleEvent(event)
+            ret = a.getReturn()
+            if ret != None: break
+        self.updateManager()
+        return ret
+
+    def updateManager(self):
+        self._availXP.setText("Available XP: " + str(self._player.getXP()))
 
 
 class AttributeManager(Drawable):
@@ -48,8 +57,9 @@ class AttributeManager(Drawable):
         Drawable.__init__(self, "", pos, worldBound=False)
 
         self._player = player
+        self._attr = attribute
 
-        font = pygame.font.SysFont("Times New Roman", 24)
+        self._font = pygame.font.SysFont("Times New Roman", 24)
 
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -58,17 +68,19 @@ class AttributeManager(Drawable):
         self._borderColor = (0,0,0)
         self._borderWidth = 1
 
-        buttonDim = 20
+        self._buttonDim = 20
         
-        self._plusButton = Button("+", (200,(self._height//2 - buttonDim//2)-2),
-                                  font, (0,0,0), (0,255,0),
-                                  buttonDim,buttonDim,(0,0,0),1)
-        self._text = TextBox(attribute, (0,0), font, (0,0,0))
+        self._plusButton = Button("+", (200,(self._height//2 - self._buttonDim//2)-2),
+                                  self._font, (0,0,0), (0,255,0),
+                                  self._buttonDim,self._buttonDim,(0,0,0),1)
+        self._text = TextBox(attribute, (0,0), self._font, (0,0,0))
         self._text.setPosition((5, self._height//2 - self._text.getHeight()//2))
         self._current = TextBox(str(eval("player.get"+attribute.title().replace(" ","")+"()")),
-                                (0,0), font, (0,0,0))
-        self._current.setPosition(((self._width - self._current.getWidth() - (buttonDim*2)),
+                                (0,0), self._font, (0,0,0))
+        self._current.setPosition(((self._width - self._current.getWidth() - (self._buttonDim*2)),
                                    self._height//2 - self._current.getHeight()//2))
+
+        self._ret = None
 
         self.updateAttribute()
 
@@ -77,9 +89,25 @@ class AttributeManager(Drawable):
         self.updateAttribute()
 
     def incrementStat(self):
-        pass
-        
+        if self._player.getXP() <= 0:
+            self._ret = (0,)
+        else:
+            a = self._attr.replace(" ","")
+            eval("self._player.set" + a + "(self._player.get" + a + "() + 1)")
+            self._player.setXP(self._player.getXP()-1)
+            self._ret = (1, self._attr)
+
+    def getReturn(self):
+        ret = self._ret
+        self._ret = None
+        return ret
+                   
     def updateAttribute(self):
+
+        self._current = TextBox(str(eval("self._player.get"+self._attr.title().replace(" ","")+"()")),
+                                (0,0), self._font, (0,0,0))
+        self._current.setPosition(((self._width - self._current.getWidth() - (self._buttonDim*2)),
+                                   self._height//2 - self._current.getHeight()//2))
 
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
