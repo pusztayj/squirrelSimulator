@@ -6,6 +6,9 @@ from items.items import *
 from graphics import *
 import pygame
 from rectmanager import getRects
+from economy.acorn import Acorn
+from minigame.threexthreeinventory import threeXthreeInventory
+from minigame.itemblock import ItemBlock
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45,
@@ -38,7 +41,6 @@ def attackComputation(attacker,defender):
         attack_strength = attacker.getStrength()*attacker.getAttackModifers()
 
     try:
-        #print(type(defender))
         defense_strength = (defender.getStrength() + \
                            (defender.getArmor().getStrength())) * \
                            defender.getDefenseModifers()
@@ -193,6 +195,103 @@ class Box(object):
         """
         self._position = newPosition
 
-    
-    
 
+class AnimalStats(object):
+
+    def __init__(self,animal,position):
+        """
+        Creates an animal display for the user to see. It shows relevant
+        stats as well as other useful stats for combat.
+        """
+        self._display = True
+        self._animal = animal
+        self._position = position
+        self._xpos = self._position[0]
+        self._ypos = self._position[1]
+        self._font = pygame.font.SysFont("Times New Roman", 18)
+        # Text Stat display along with appropriate images
+        self._name = TextBox("Name: " + self._animal.getName(),self._position,
+                             self._font,(255,255,255))
+        text_y = self._name.getHeight()
+        self._opinionText = TextBox("Opinion: ",(self._xpos,self._ypos+text_y+\
+                                                 8),
+                                    self._font,(255,255,255))
+        x = self._opinionText.getWidth()
+        self._opinion = HappinessFace((self._xpos + x,self._ypos+text_y+2))
+        self._opinion.setFace(self._animal.getFriendScore())
+
+        text_y += self._opinion.getHeight()
+        self._healthtext = TextBox("Health: "+str(self._animal.getHealth())+\
+                                   "/100",
+                                   (self._xpos,self._ypos+text_y+2),self._font,
+                                   (255,255,255))
+        text_y += self._healthtext.getHeight()
+        self._acornsText = TextBox("Acorns: "+str(self._animal.getAcorns()),
+                                   (self._xpos,self._ypos+text_y+6),self._font,
+                                   (255,255,255))
+        x = self._acornsText.getWidth()
+        self._acormImg = Acorn((self._xpos+x,self._ypos+text_y+2))
+
+        # Exit Button
+        self._exitButton = Button("X",(self._xpos + 400,self._ypos),
+                                  self._font,(0,0,0),(100,100,100),25,25,
+                           (0,0,0), 1)
+        #x = self._exitButton.getWidth()
+        self._exitButton.setPosition((self._xpos + 400,self._ypos))
+
+        # Inventory Items
+        text_y += self._acornsText.getHeight() + 10
+        x = self._healthtext.getWidth()
+        self._weaponText = TextBox("Weapon equipped: ",(self._xpos,self._ypos+text_y+10),
+                                   self._font,(255,255,255))
+        xlen = self._weaponText.getWidth()
+        self._weapon = ItemBlock((self._xpos+xlen+5,self._ypos+text_y+10),(50,50), item=self._animal.getEquipItem())
+        self._weaponText = TextBox("Weapon equipped: ",(self._xpos,self._ypos+text_y+10),
+                                   self._font,(255,255,255))
+        self._armorText = TextBox("Armor equipped: ",(self._xpos+xlen+75,self._ypos+text_y+10),
+                                   self._font,(255,255,255))
+        xlen += self._armorText.getWidth()
+        self._armor = ItemBlock((self._xpos+xlen+80,self._ypos+text_y+10),(50,50), item=self._animal.getArmor())
+        self._inventory = threeXthreeInventory((self._xpos+x+30,self._ypos),(xlen-14,text_y), self._animal)
+
+    def getDisplay(self):
+        """
+        Returns the display boolean.
+        """
+        return self._display
+        
+    def close(self):
+        """
+        This method closes the stats window.
+        """
+        self._display = False
+
+    def draw(self,screen):
+        """
+        Draws the window.
+        """
+        if self._display == True:
+            self._name.draw(screen)
+            self._opinionText.draw(screen)
+            self._opinion.draw(screen)
+            self._exitButton.draw(screen)
+            self._healthtext.draw(screen)
+            self._acornsText.draw(screen)
+            self._acormImg.draw(screen)
+            self._inventory.draw(screen)
+            self._weaponText.draw(screen)
+            self._weapon.draw(screen)
+            self._armorText.draw(screen)
+            self._armor.draw(screen)
+
+    def handleEvent(self,event):
+        """
+        Handles how the user interacts with the window.
+        """
+        self._exitButton.handleEvent(event, self.close)
+
+    def update(self):
+        self._healthtext.setText("Health: "+str(self._animal.getHealth())+\
+                                   "/100")
+        self._acornsText.setText("Acorns: "+str(self._animal.getAcorns()))
+    

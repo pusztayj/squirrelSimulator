@@ -9,10 +9,11 @@ import time
 from .itemselect import ItemSelect
 from graphics.guiUtils import ItemCard
 
-
-# Add when player wants to attack when you hover over damage shown
-# highlight who's turn it is
-# figu
+# add ranges to damage that can be done
+# add looting and exit strategy
+# show modifers
+# show feedback based on player cchoice
+# add some animation
 
 
 class SubCombatLevel(object):
@@ -46,7 +47,7 @@ class SubCombatLevel(object):
         self._attackUndoButton = Button("Go Back",(550,100),self._font,
                                         (255,255,255),(0,0,0),50,100)
 
-        self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(350,190),self._textFont,(255,255,255))
+        self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(350,170),self._textFont,(255,255,255))
 
         self._turnText = TextBox("Your turn",(565,470),self._font,(255,255,255))
         x = self._turnText.getWidth()
@@ -68,8 +69,26 @@ class SubCombatLevel(object):
         y = self._combatSprites[0].getTextHeight()
         self._currentTurnHighlight = Box(self._playerPos,(100,107+y),
                                                     (255,255,0),3)
-        self._scroll = None
+        self._animalStats = None
         self._popup = None
+
+        self._allyText = TextBox("You and your allies",(239,150),self._font,(255,255,255))
+        x = self._allyText.getWidth()
+        self._allyText.setPosition((239-(x//2),150))
+        self._allyStrength = TextBox("Total Strength: "+ \
+                                     str(sum([x.getStrength() for x in self._allies if x!= None])),
+                                     (239,150),self._font,(255,255,255))
+        x = self._allyStrength.getWidth()
+        self._allyStrength.setPosition((239-(x//2),175))
+
+        self._enemyText = TextBox("Your enemies",(239,150),self._font,(255,255,255))
+        x = self._enemyText.getWidth()
+        self._enemyText.setPosition((975-(x//2),150))
+        self._enemyStrength = TextBox("Total Strength: "+\
+                                      str(sum([x.getStrength() for x in self._enemies if x!= None])),
+                                      (239,150),self._font,(255,255,255))
+        x = self._enemyStrength.getWidth()
+        self._enemyStrength.setPosition((975-(x//2),175))
 
     def getCombatSprite(self,animal):
         """
@@ -85,8 +104,12 @@ class SubCombatLevel(object):
             x.draw(self._screen)
         pygame.draw.circle(self._screen,self._orbColor,(600,435),25)
         self._turnText.draw(self._screen)
-        if self._scroll != None:
-            self._scroll.getCard().draw(self._screen)
+        self._allyText.draw(self._screen)
+        self._allyStrength.draw(self._screen)
+        self._enemyStrength.draw(self._screen)
+        self._enemyText.draw(self._screen)
+        if self._animalStats != None:
+            self._animalStats.draw(self._screen)
         if self._popup != None:
             self._popup.draw(self._screen)
 
@@ -127,17 +150,18 @@ class SubCombatLevel(object):
                 r = rect.move(x,y)
                 if (event.type == pygame.MOUSEBUTTONDOWN and event.button==3):
                     if r.collidepoint(event.pos):
-                        self._scroll = ItemCard(sprite.getAnimal(), (500,150),(200,400))
+                        self._animalStats = AnimalStats(sprite.getAnimal(),(400,220))
                 elif r.collidepoint(pygame.mouse.get_pos()):
                     text = "Holding: " + sprite.getAnimal().getEquipItemName() + \
                            "\nArmor: " + sprite.getAnimal().getArmorsName() + \
                            "\nStrength: " + str(sprite.getAnimal().getStrength())
                     self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
                                         self._popupFont,multiLine = True)
-                    print("yes")
-                    print(type(self._popup))
+        if self._animalStats != None:
+            self._animalStats.handleEvent(event)
+            if self._animalStats.getDisplay() == False:
+                self._animalStats = None
 
-                    
     def handlePlayerTurn(self,event):
         self._attackButton.handleEvent(event,combatFSM.changeState,"attack button")
         self._fortifyButton.handleEvent(event,combatFSM.changeState,"fortify button")
@@ -145,15 +169,17 @@ class SubCombatLevel(object):
         self._retreatButton.handleEvent(event,combatFSM.changeState,"retreat button")
 
     def handleAttack(self,event):
+        self._popup = None
         self._attackUndoButton.handleEvent(event,combatFSM.changeState,"go back")
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            for creature in self._enemies:
-                if creature != None:
-                    a = self.getCombatSprite(creature)
-                    x,y = a.getAnimalPosition()
-                    for rect in a.getCollideRects():
-                        r = rect.move(x,y)
+        for creature in self._enemies:
+            if creature != None:
+                a = self.getCombatSprite(creature)
+                x,y = a.getAnimalPosition()
+                for rect in a.getCollideRects():
+                    r = rect.move(x,y)
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                         if r.collidepoint(event.pos):
+                            self._animalStats = None
                             attack(self._allies[0],creature) # the model is changed here as told by the controller
                             self._combatText.setText(self._allies.getNextToAttack().getCombatStatus())
                             x = self._combatText.getWidth()
@@ -161,6 +187,10 @@ class SubCombatLevel(object):
                             self._enemies.updatePack()
                             combatFSM.changeState("animal click")
                             self._allies.hasAttacked() # here we udpate the model again
+                    elif r.collidepoint(pygame.mouse.get_pos()):
+                        text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
+                        self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
+                                    self._popupFont,multiLine = True)
 
     def handleFortify(self,event):
         fortify(self._allies[0]) # the model is changed here as told by the controller
@@ -183,6 +213,10 @@ class SubCombatLevel(object):
         for x in self._combatSprites:
             x.getHealthBar().update()
             x.getHealthText().setText(str(x.getAnimal().getHealth()) + "/100")
+        self._enemyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._enemies if x!= None])))
+        self._allyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._allies if x!= None])))
+        if self._animalStats != None:
+            self._animalStats.update()
         self._potionSelect.update()
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
