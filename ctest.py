@@ -31,6 +31,7 @@ def main():
     ally1.getInventory().addItem(Potions())
     ally1.getInventory().addItem(Potions())
     ally1.getInventory().addItem(Potions())
+    ally1.getInventory().addItem(Spear())
     ally2 = Deer()
     ally3 = Fox()
 

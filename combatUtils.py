@@ -1,5 +1,5 @@
 """
-In this file we create the functions for the combat game.
+In this file we create the functions/classes used for the combat game.
 """
 
 from items.items import *
@@ -67,6 +67,7 @@ def heal(animal,potion):
     Heals the animal based on the health potion.
     """
     animal.resetDefenseModifers()
+    print(potion)
     if potion in animal.getInventory():
         animal.getInventory().removeItem(potion)
         animal.heal(potion.getHealthBoost())

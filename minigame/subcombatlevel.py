@@ -12,7 +12,7 @@ from graphics.guiUtils import ItemCard
 # add ranges to damage that can be done
 # add looting and exit strategy
 # show modifers
-# show feedback based on player cchoice
+# show feedback based on player choice
 # add some animation
 
 
@@ -193,18 +193,18 @@ class SubCombatLevel(object):
                                     self._popupFont,multiLine = True)
 
     def handleFortify(self,event):
+        self._animalStats = None
         fortify(self._allies[0]) # the model is changed here as told by the controller
         combatFSM.changeState("action complete")
         self._allies.hasAttacked() # here we udpate the model again
 
     def handleHeal(self,event):
+        self._animalStats = None
         self._potionSelect.handleEvent(event)
         potionPick = self._potionSelect.getItemSelected()
         if potionPick != None:
             heal(self._allies[0],potionPick) # the model is changed here as told by the controller
-            potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
-            self._potionSelect.resetItems(potions)
+            print("we are here")
             combatFSM.changeState("action complete")
         self._allies.hasAttacked() # here we udpate the model again
 
@@ -217,6 +217,9 @@ class SubCombatLevel(object):
         self._allyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._allies if x!= None])))
         if self._animalStats != None:
             self._animalStats.update()
+        potions = [x for x in self._allies[0].getInventory() \
+                   if type(x) == type(Potions())]
+        self._potionSelect.resetItems(potions)
         self._potionSelect.update()
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
