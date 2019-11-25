@@ -20,6 +20,7 @@ class Controls(Window):
                     ("s","Move Down"),
                     ("b","Dig an Acorn Pile"),
                     ("e","Open Pack Manager"),
+                    ("r","Open XP Manager"),
                     ("esc","Pause"),
                     ("left click","Interact with World"),
                     ("right click","Use item"),
