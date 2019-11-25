@@ -120,6 +120,7 @@ class SubCombatLevel(object):
         self.alwaysDraw()
 
     def handleEvent(self,event):
+        self._popup = None
         for sprite in self._combatSprites: # no need to check nones as they are no longer in list
             x,y = sprite.getAnimalPosition()
             for rect in sprite.getCollideRects():
