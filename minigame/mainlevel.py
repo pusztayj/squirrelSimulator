@@ -63,9 +63,11 @@ def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=Fa
 
 class MainLevel(Level):
 
-    def __init__(self, player_pack, SCREEN_SIZE):
+    def __init__(self, player_pack, SCREEN_SIZE, cheatBox):
 
         super().__init__()
+
+        self._cheatBox = cheatBox
 
         self._SCREEN_SIZE = SCREEN_SIZE
         self._WORLD_SIZE = (4000,2000)
@@ -267,7 +269,8 @@ class MainLevel(Level):
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._packManager.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
-           (not self._confirmationWindow.getDisplay()):
+           (not self._confirmationWindow.getDisplay()) and \
+           (not self._cheatBox.isDisplayed()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
             
@@ -425,7 +428,8 @@ class MainLevel(Level):
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
            not self._xpManager.getDisplay() and \
-           not self._confirmationWindow.getDisplay():
+           not self._confirmationWindow.getDisplay() and \
+           not self._cheatBox.isDisplayed():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
@@ -435,7 +439,8 @@ class MainLevel(Level):
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
            not self._packManager.getDisplay() and \
-           not self._confirmationWindow.getDisplay():
+           not self._confirmationWindow.getDisplay() and \
+           not self._cheatBox.isDisplayed():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                 if self._xpManager.getDisplay():
                     self._xpManager.close()
@@ -443,9 +448,6 @@ class MainLevel(Level):
                     self._xpManager.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
-        # Code for testing
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
-            self._player.setAcorns(self._player.getAcorns()+1)
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)

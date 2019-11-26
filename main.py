@@ -37,15 +37,15 @@ def main():
    #Create an instance of the game clock
    gameClock = pygame.time.Clock()
 
+   cheatBox = Cheats(SCREEN_SIZE)
+
    player = Player(pos=(200,200))
    playerPack = Pack(player)
    player.setPack(playerPack)
    player.scale(1.5)
-   level = MainLevel(playerPack, SCREEN_SIZE)
+   level = MainLevel(playerPack, SCREEN_SIZE, cheatBox)
    merchantLevel = None
    combatLevel = None
-
-   cheatBox = Cheats(SCREEN_SIZE)
 
    loading = LoadingScreen(SCREEN_SIZE, 1)
 
