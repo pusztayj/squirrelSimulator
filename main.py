@@ -1,6 +1,7 @@
 import pygame, random, math
 from minigame.mainlevel import MainLevel
 from player import Player
+from economy.merchant import Merchant
 from animals import Pack, Bear, Rabbit
 from minigame.merchantlevel import MerchantLevel
 from minigame.combatLevel import CombatLevel
@@ -17,7 +18,10 @@ def giveAcorns(entity, amount):
 def giveXP(entity, amount):
    entity.setXP(entity.getXP() + amount)
 
-cheatCodes = {1:giveAcorns,2:giveXP}
+def spawnMerchant(mainGame, position):
+   mainGame._merchants.append(Merchant(pos=position))
+
+cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant}
 
 def main():
    """
@@ -127,7 +131,10 @@ def main():
          if cheatBox.isDisplayed() and not loading.isDisplayed():
             cheatCode = cheatBox.handleEvent(event)
             if cheatCode != None:
-               cheatCodes[cheatCode[0]](player, cheatCode[1])
+               if cheatCode[0] in (1,2):
+                  cheatCodes[cheatCode[0]](player, cheatCode[1])
+               if cheatCode[0] in (3,):
+                  cheatCodes[cheatCode[0]](level, cheatCode[1])
 
          if pauseMenu.getDisplay() and not controls.getDisplay():
             sel = pauseMenu.handleEvent(event)

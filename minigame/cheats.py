@@ -44,6 +44,10 @@ class Cheats():
             if terms[0] == "giveXP":
                 if terms[1].isdigit():
                     self._code = (2,int(terms[1]))
+        elif len(terms) == 3:
+            if terms[0] == "spawnMerchant":
+                if terms[1].isdigit() and terms[2].isdigit():
+                    self._code = (3, (int(terms[1]),int(terms[2])))
 
     def draw(self, screen):
         self._input.draw(screen)
