@@ -379,7 +379,7 @@ class MainLevel(Level):
                     e = self._interaction.getEntity()
                     if self._playerPack.trueLen() < 3:
                         if e.getPack().trueLen() == 1:
-                            if e.getFriendScore() > 60:
+                            if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
                                 self._playerPack.addMember(e)
                                 self._packs.remove(e.getPack())
                                 self._popupWindow.setText(e.getName() + " has joined your pack")
