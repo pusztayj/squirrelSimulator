@@ -278,10 +278,12 @@ class MainLevel(Level):
                     self._player._fsm.changeState("bury")
                     if self._player.isFlipped():
                         dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)))
+                                self._player.getY() + (self._player.getHeight() // 3)),
+                                      capacity=8+(self._player.getDiggingSkill()*2))
                     else:
                         dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)))
+                                self._player.getY() + (self._player.getHeight() // 3)),
+                                      capacity=8+(self._player.getDiggingSkill()*2))
                     self._dirtPiles.append(dp)
                 else:
                     self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
@@ -460,10 +462,12 @@ class MainLevel(Level):
                     self._player._fsm.changeState("bury")
                     if self._player.isFlipped():
                         dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)))
+                                self._player.getY() + (self._player.getHeight() // 3)),
+                                      capacity=8+(self._player.getDiggingSkill()*2))
                     else:
                         dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)))
+                                self._player.getY() + (self._player.getHeight() // 3)),
+                                      capacity=8+(self._player.getDiggingSkill()*2))
                     lostPile = random.choice(self._dirtPiles)
                     self._dirtPiles.remove(lostPile)
                     lostPile.setName("Abandoned Pile")

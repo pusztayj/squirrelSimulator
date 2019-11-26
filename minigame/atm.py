@@ -22,7 +22,7 @@ class ATM(Drawable, Window):
         self._borderColor = (0,0,0)
         self._borderWidth = 5
         self._width = 400
-        self._height = 250
+        self._height = 265
         self._backgroundColor = (139,79,59)
 
         self._offset = (50,25)
@@ -56,7 +56,10 @@ class ATM(Drawable, Window):
         self._capacity = TextBox("Storage Capacity: " + \
                                  str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%",
                                  (200,200), self._fontsmall,
-                                 (255,255,255))        
+                                 (255,255,255))
+        self._maxCapacity = TextBox("Max Capacity: " + str(self._hole.getCapacity()),
+                                    (200,250),self._fontsmall,(255,255,255))
+        self._maxCapacity.setPosition(((self._width//2)-(self._maxCapacity.getWidth()//2),self._height - 55))
         self.__updateATM()
 
     def deposit(self, amount):
@@ -113,6 +116,7 @@ class ATM(Drawable, Window):
                                  str(round((1-(self._hole.getAcorns()/self._hole.getCapacity()))*100,3)) + "%")
         self._capacity.setPosition(((self._width//2)-(self._capacity.getWidth()//2),self._height - 35))
         self._capacity.draw(surf)
+        self._maxCapacity.draw(surf)
         self._acorn1.draw(surf)
         self._acorn2.draw(surf)
         self._exitButton.draw(surf)
