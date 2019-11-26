@@ -110,7 +110,7 @@ class MainLevel(Level):
         self._popupWindow.close()
 
         # Create the confirmation window
-        self._confirmationWindow = ConfirmationWindow("", (0,0), (288,100), self._messageFont,
+        self._confirmationWindow = ConfirmationWindow("", (0,0), (288,150), self._messageFont,
                                         (255,255,255),(0,0,0), (120,120,120), (40,20),
                                         self._popupFont,(255,255,255), borderWidth=1)
         self._confirmationWindow.setPosition((SCREEN_SIZE[0]//2 - self._confirmationWindow.getWidth()//2,
@@ -273,14 +273,20 @@ class MainLevel(Level):
             
             # Allow the player to create dirt piles
             if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
-                if self._player.isFlipped():
-                    dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                            self._player.getY() + (self._player.getHeight() // 3)))
+                # Check if the player can remember this new pile
+                if len(self._dirtPiles) < self._player.getMemory():
+                    self._player._fsm.changeState("bury")
+                    if self._player.isFlipped():
+                        dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+                                self._player.getY() + (self._player.getHeight() // 3)))
+                    else:
+                        dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                                self._player.getY() + (self._player.getHeight() // 3)))
+                    self._dirtPiles.append(dp)
                 else:
-                    dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                            self._player.getY() + (self._player.getHeight() // 3)))
-                self._dirtPiles.append(dp)
-            
+                    self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
+                    self._confirmationWindow.display()
+                    self._confirmationProceedure = (1,) #Redirect neccessary information
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                 for pile in self._dirtPiles:
@@ -449,6 +455,20 @@ class MainLevel(Level):
                     self._dirtPiles.remove(pile)
                     acorns = pile.getAcorns()
                     self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+                # Create a new acorn pile and forget an old one
+                if self._confirmationProceedure[0] == 1:
+                    self._player._fsm.changeState("bury")
+                    if self._player.isFlipped():
+                        dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+                                self._player.getY() + (self._player.getHeight() // 3)))
+                    else:
+                        dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                                self._player.getY() + (self._player.getHeight() // 3)))
+                    lostPile = random.choice(self._dirtPiles)
+                    self._dirtPiles.remove(lostPile)
+                    lostPile.setName("Abandoned Pile")
+                    self._spawnedPiles.append(lostPile)
+                    self._dirtPiles.append(dp)
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)

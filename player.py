@@ -118,8 +118,8 @@ class Player(Squirrel):
         if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE and \
            (atm == None or not atm.getDisplay()):
             self.eatAcorn()
-        if event.type == pygame.KEYDOWN and event.key==pygame.K_b:
-            self._fsm.changeState("bury")
+##        if event.type == pygame.KEYDOWN and event.key==pygame.K_b:
+##            self._fsm.changeState("bury")
 
     def update(self, worldInfo, ticks):
         """Updates the position of the star"""
