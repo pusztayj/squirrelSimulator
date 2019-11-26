@@ -101,12 +101,22 @@ class MainLevel(Level):
 
         self._popup = None
 
+        # Create the popup window
         self._popupWindow = PopupWindow("", (0,0), (288,100), self._messageFont,
                                         (255,255,255),(0,0,0), (120,120,120), (40,20),
                                         self._popupFont,(255,255,255), borderWidth=1)
         self._popupWindow.setPosition((SCREEN_SIZE[0]//2 - self._popupWindow.getWidth()//2,
                                        SCREEN_SIZE[1]//3 - self._popupWindow.getHeight()//2))
         self._popupWindow.close()
+
+        # Create the confirmation window
+        self._confirmationWindow = ConfirmationWindow("", (0,0), (288,100), self._messageFont,
+                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
+                                        self._popupFont,(255,255,255), borderWidth=1)
+        self._confirmationWindow.setPosition((SCREEN_SIZE[0]//2 - self._confirmationWindow.getWidth()//2,
+                                       SCREEN_SIZE[1]//3 - self._confirmationWindow.getHeight()//2))
+        self._confirmationWindow.close()
+        self._confirmationProceedure = None
 
         self._stats = StatDisplay((5,5),self._player)
 
@@ -248,12 +258,16 @@ class MainLevel(Level):
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
 
+        if self._confirmationWindow.getDisplay():
+            self._confirmationWindow.draw(screen)
+
     def handleEvent(self, event):
 
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._packManager.getDisplay()) and \
-           (not self._popupWindow.getDisplay()):
+           (not self._popupWindow.getDisplay()) and \
+           (not self._confirmationWindow.getDisplay()):
             self._hud.handleEvent(event)
             self._player.move(event, self._atm)
             
@@ -292,10 +306,13 @@ class MainLevel(Level):
                         return (1, merchant) # Set Game Mode to Merchant and provide merchant
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+                
                 item = self._hud.getActiveItem()
+                
                 if item != None and issubclass(type(item), items.Food):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
+                    
                 if item != None and type(item) == items.Shovel:
                     for pile in self._spawnedPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
@@ -303,6 +320,14 @@ class MainLevel(Level):
                             self._spawnedPiles.remove(pile)
                             acorns = pile.getAcorns()
                             self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+
+                    for pile in self._dirtPiles:
+                        if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                            self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
+                            self._confirmationWindow.display()
+                            self._confirmationProceedure = (0, pile) #Redirect neccessary information
+                            
                             
                 if item != None and issubclass(type(item), items.Weapon):
                     previous = self._weapon.getItem()
@@ -320,7 +345,9 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
                 
 
-        if not self._popupWindow.getDisplay() and (self._bribeWindow==None or not self._bribeWindow.getDisplay()):
+        if not self._popupWindow.getDisplay() and \
+           (self._bribeWindow==None or not self._bribeWindow.getDisplay()) and \
+           not self._confirmationWindow.getDisplay():
             if self._atm != None and self._atm.getDisplay():
                 self._atm.handleEvent(event)
 
@@ -389,7 +416,8 @@ class MainLevel(Level):
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
-           not self._xpManager.getDisplay():
+           not self._xpManager.getDisplay() and \
+           not self._confirmationWindow.getDisplay():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
@@ -397,7 +425,8 @@ class MainLevel(Level):
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
-           not self._packManager.getDisplay():
+           not self._packManager.getDisplay() and \
+           not self._confirmationWindow.getDisplay():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                 if self._xpManager.getDisplay():
                     self._xpManager.close()
@@ -411,11 +440,22 @@ class MainLevel(Level):
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
 
+        if self._confirmationWindow.getDisplay():
+            c = self._confirmationWindow.handleEvent(event)
+            if c == 1 and self._confirmationProceedure!=None:
+                # Dig up a players acorn pile
+                if self._confirmationProceedure[0] == 0:
+                    pile = self._confirmationProceedure[1]
+                    self._dirtPiles.remove(pile)
+                    acorns = pile.getAcorns()
+                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
-        if self._xpManager.getDisplay() and not self._popupWindow.getDisplay():
+        if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
+           not self._confirmationWindow.getDisplay():
             c = self._xpManager.handleEvent(event)
             if c != None:
                 if c[0] == 0:
