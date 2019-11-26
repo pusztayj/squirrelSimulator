@@ -48,6 +48,9 @@ class Cheats():
             if terms[0] == "spawnMerchant":
                 if terms[1].isdigit() and terms[2].isdigit():
                     self._code = (3, (int(terms[1]),int(terms[2])))
+            if terms[0] == "fastForward":
+                if terms[1].isdigit() and terms[2] in ["hours","days"]:
+                    self._code = (4,(int(terms[1]),terms[2]))
 
     def draw(self, screen):
         self._input.draw(screen)

@@ -21,7 +21,15 @@ def giveXP(entity, amount):
 def spawnMerchant(mainGame, position):
    mainGame._merchants.append(Merchant(pos=position))
 
-cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant}
+def fastForward(mainGame, amount):
+   hourLen = mainGame._worldClock.getHourLength()
+   time, mode = amount
+   if mode == "hours":
+      mainGame._worldClock._time += (time*hourLen)
+   if mode == "days":
+      mainGame._worldClock._time += (time*hourLen*24)
+
+cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward}
 
 def main():
    """
@@ -133,7 +141,7 @@ def main():
             if cheatCode != None:
                if cheatCode[0] in (1,2):
                   cheatCodes[cheatCode[0]](player, cheatCode[1])
-               if cheatCode[0] in (3,):
+               if cheatCode[0] in (3,4):
                   cheatCodes[cheatCode[0]](level, cheatCode[1])
 
          if pauseMenu.getDisplay() and not controls.getDisplay():
