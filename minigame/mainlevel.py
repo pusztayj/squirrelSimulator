@@ -429,6 +429,7 @@ class MainLevel(Level):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
+                    for k in self._player._movement.keys(): self._player._movement[k] = False
 
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
@@ -440,6 +441,7 @@ class MainLevel(Level):
                     self._xpManager.close()
                 else:
                     self._xpManager.display()
+                    for k in self._player._movement.keys(): self._player._movement[k] = False
 
         # Code for testing
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:

@@ -109,6 +109,7 @@ def main():
                pauseMenu.close()
             else:
                pauseMenu.display()
+               for k in player._movement.keys(): player._movement[k] = False
 
          if level.isActive() and not loading.isDisplayed() and \
             not pauseMenu.getDisplay():
