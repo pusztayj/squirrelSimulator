@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: titlescreen.py
+
+The start screen of the game
+"""
 
 import pygame
 from modules.frameManager import FRAMES

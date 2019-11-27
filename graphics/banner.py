@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: banner.py
+"""
 
 from modules.drawable import Drawable
 import pygame

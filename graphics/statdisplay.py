@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: statdisplay.py
+"""
 
 from modules.drawable import Drawable
 from graphics.progressbar import ProgressBar

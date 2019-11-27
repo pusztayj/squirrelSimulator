@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: tabs.py
+"""
 
 from modules.drawable import Drawable
 from graphics.textbox import TextBox

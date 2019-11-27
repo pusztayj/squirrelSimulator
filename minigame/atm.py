@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: atm.py
+"""
 
 import pygame
 from modules.drawable import Drawable

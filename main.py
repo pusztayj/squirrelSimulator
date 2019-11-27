@@ -1,3 +1,10 @@
+"""
+Author: Trevor Stalnaker, Justin Pusztay
+File: main.py
+
+The main loop for running Squirrel Simulator
+"""
+
 import pygame, random, math
 from minigame.mainlevel import MainLevel
 from player import Player

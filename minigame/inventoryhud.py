@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: inventory.py
+
+A class modeling a heads up display for the player's inventory
+"""
 
 import pygame
 from modules.drawable import Drawable

@@ -1,3 +1,11 @@
+"""
+Author: Trevor Stalnaker
+File: itemblock.py
+
+A class that can be used as a building block for the various
+inventory themed classes or used on its own as an item frame
+"""
+
 import pygame
 from modules.drawable import Drawable
 

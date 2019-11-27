@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: controls.py
+
+A class for displaying the games controls
+"""
 
 import pygame
 from graphics import *

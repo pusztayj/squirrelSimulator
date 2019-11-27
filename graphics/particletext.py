@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: particletext.py
+"""
 
 import pygame
 from graphics import *

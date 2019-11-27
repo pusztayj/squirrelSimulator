@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: bribe.py
+
+The user interface for bribing NPCs
+"""
 
 import pygame
 from graphics import *

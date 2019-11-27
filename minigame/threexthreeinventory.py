@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: threexthreeinventory.py
+
+The inventory HUD displayed as a 3x3 grid
+"""
 
 import pygame
 from modules.drawable import Drawable

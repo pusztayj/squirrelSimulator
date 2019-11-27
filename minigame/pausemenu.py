@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: pausemenu.py
+
+The menu that displays when the game is paused
+"""
 
 import pygame
 from graphics import *

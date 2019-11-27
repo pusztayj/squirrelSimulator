@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: packmanager.py
+
+A user interface that allows the player to alter and adjust their pack
+"""
 
 from modules.drawable import Drawable
 from graphics import Window, Button, TextBox, ProgressBar

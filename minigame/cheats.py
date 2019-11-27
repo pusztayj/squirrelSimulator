@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: cheats.py
+
+A class that models a cheats box
+"""
 
 import pygame
 from graphics.textinput import TextInput

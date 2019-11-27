@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: worldclock.py
+
+A class that maintains and displays the in-game clock
+"""
 
 import pygame
 from modules.drawable import Drawable

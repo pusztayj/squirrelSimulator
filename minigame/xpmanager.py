@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: xpmanager.py
+
+The user interface for managing xp
+"""
 
 import pygame
 from graphics import *

@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: happinessface.py
+"""
 
 from modules.drawable import Drawable
 from modules.frameManager import FRAMES

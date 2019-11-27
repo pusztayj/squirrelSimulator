@@ -1,3 +1,8 @@
+"""
+Author: Trevor Stalnaker
+File: scrollbox.py
+"""
+
 import pygame
 from modules.drawable import Drawable
 from graphics.mysurface import MySurface

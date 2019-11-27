@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: mysurface.py
+"""
 
 from modules.drawable import Drawable
 

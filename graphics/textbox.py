@@ -1,8 +1,6 @@
 """
 Author: Trevor Stalnaker
-File Name: drawable.py
-Date: 22 September 2019
-Project 2
+File Name: textbox.py
 
 A textbox class that inherits from the Drawable class
 """

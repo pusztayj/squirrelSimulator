@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: loadingscreen.py
+
+A class that is displayed between game levels, while the game loads
+"""
 
 import pygame
 from graphics import TextBox

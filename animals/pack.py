@@ -56,8 +56,6 @@ class Pack():
     def removeMember(self, member):
         """Remove a current member of the pack"""
         self._members = [None if m==member else m for m in self._members]
-##        if member in self._members:
-##            self._members.replace(member,None)
 
     def getMembers(self):
         """Return the members of the pack"""

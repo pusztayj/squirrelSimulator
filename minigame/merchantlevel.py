@@ -1,3 +1,10 @@
+"""
+Author: Justin Pusztay, Trevor Stalnaker
+File: merchantlevel.py
+
+The level of the game in which the player interacts with a merchant
+"""
+
 import pygame, random
 from graphics import *
 from animals import *

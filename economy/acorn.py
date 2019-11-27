@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: acorn.py
+
+A class modeling acorns
+"""
 
 from modules.drawable import Drawable
 import random

@@ -1,8 +1,6 @@
 """
 Author: Trevor Stalnaker
 File Name: drawable.py
-Date: 22 September 2019
-Project 2
 
 A super class with methods subclasses like Orb and Star inherit from
 """
@@ -105,7 +103,7 @@ class Drawable():
             return self._collideRects
 
     def draw(self, surface):
-        """Draws the orb's image at the current position on the given surface"""
+        """Draws the object's image at the current position on the given surface"""
         if self._worldBound:
             (x,y) = Vector2(self._position[0],self._position[1]) - Drawable.WINDOW_OFFSET
         else:
@@ -113,13 +111,16 @@ class Drawable():
         surface.blit(self._image, (x,y))
 
     def flip(self):
+        """Flip the object's image"""
         self._isFlipped = not self._isFlipped
         self._image = pygame.transform.flip(self._image, True, False)
 
     def isFlipped(self):
+        """Returns a boolean value revealing if the object has been flipped"""
         return self._isFlipped
 
     def isScaled(self):
+        """Returns a boolean value revealing if the object has been scaled"""
         return self._isScaled
 
     def scale(self,scalar):
@@ -132,11 +133,14 @@ class Drawable():
         self._isScaled = True
 
     def getImage(self):
+        """Returns the drawable's current image"""
         return self._image
 
     def getDefaultImage(self):
+        """Returns the drawable's default / starter image"""
         return self._defaultImage
 
     def setWorldBound(self, boolean):
+        """Determines if drawable should be fixed or world bound"""
         self._worldBound = boolean
 

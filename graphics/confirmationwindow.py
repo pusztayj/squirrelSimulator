@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: confirmationwindow.py
+"""
 
 import pygame
 from modules.drawable import Drawable

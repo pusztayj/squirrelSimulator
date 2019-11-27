@@ -1,4 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: level.py
 
+An abstract class containing general methods for levels
+"""
 class Level():
 
     def __init__(self):

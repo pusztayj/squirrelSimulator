@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: interaction.py
+
+The user interface for interacting with NPCs
+"""
 
 from modules.drawable import Drawable
 from graphics import Window, Button, TextBox, ProgressBar, HappinessFace

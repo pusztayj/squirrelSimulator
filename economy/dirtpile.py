@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: dirtpile.py
+
+A class modeling buried acorn piles
+"""
 
 from modules.drawable import Drawable
 from inventory import Inventory

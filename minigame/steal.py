@@ -1,3 +1,9 @@
+"""
+Author: Trevor Stalnaker
+File: steal.py
+
+The user interface for stealing from NPCs
+"""
 
 import pygame, random
 from graphics import *

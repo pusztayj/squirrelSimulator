@@ -1,3 +1,10 @@
+"""
+Author: Trevor Stalnaker
+File: itemselect.py
+
+A variable length version of the inventory HUD that can be used
+to prompt the user for item selections
+"""
 
 import pygame
 from modules.drawable import Drawable

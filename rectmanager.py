@@ -1,3 +1,10 @@
+"""
+Author: Trevor Stalnaker
+File: rectmanager.py
+
+Manages more complicated collide rectangles for sprites
+"""
+
 import copy, pygame
 
 def getRects(image):
