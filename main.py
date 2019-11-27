@@ -9,6 +9,7 @@ from minigame.cheats import Cheats
 from minigame.loadingscreen import LoadingScreen
 from minigame.pausemenu import PauseMenu
 from minigame.controls import Controls
+from minigame.titlescreen import TitleScreen
 
 SCREEN_SIZE = (1200,500)
 
@@ -71,6 +72,8 @@ def main():
    controls = Controls((SCREEN_SIZE[0]//2 - 209, SCREEN_SIZE[1]//2 - 100),200)
    controls.close()
 
+   titleScreen = TitleScreen(SCREEN_SIZE)
+
    flicker  = False
 
    RUNNING = True
@@ -104,6 +107,9 @@ def main():
       if controls.getDisplay():
          controls.draw(screen)
 
+      if titleScreen.isDisplayed():
+         titleScreen.draw(screen)
+
       pygame.display.flip()
 
       # event handling, gets all event from the eventqueue
@@ -112,52 +118,56 @@ def main():
          if (event.type == pygame.QUIT):
             RUNNING = False
 
-         if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
-            (level._atm == None or not level._atm.getDisplay()) and \
-            not loading.isDisplayed() and\
-            not controls.getDisplay():
-            level.setActive(not level.isActive())
-            if pauseMenu.getDisplay():
-               pauseMenu.close()
-            else:
-               pauseMenu.display()
-               for k in player._movement.keys(): player._movement[k] = False
+         if titleScreen.isDisplayed():
+            titleScreen.handleEvent(event)
+         else:
 
-         if level.isActive() and not loading.isDisplayed() and \
-            not pauseMenu.getDisplay():
-             code = level.handleEvent(event)
+            if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
+               (level._atm == None or not level._atm.getDisplay()) and \
+               not loading.isDisplayed() and\
+               not controls.getDisplay():
+               level.setActive(not level.isActive())
+               if pauseMenu.getDisplay():
+                  pauseMenu.close()
+               else:
+                  pauseMenu.display()
+                  for k in player._movement.keys(): player._movement[k] = False
 
-         if merchantLevel != None and merchantLevel.isActive() and \
-            not loading.isDisplayed() and \
-            not pauseMenu.getDisplay():
-             code = merchantLevel.handleEvent(event)
+            if level.isActive() and not loading.isDisplayed() and \
+               not pauseMenu.getDisplay():
+                code = level.handleEvent(event)
 
-         if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
-            event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
-               cheatBox.toggleDisplay()
+            if merchantLevel != None and merchantLevel.isActive() and \
+               not loading.isDisplayed() and \
+               not pauseMenu.getDisplay():
+                code = merchantLevel.handleEvent(event)
 
-         if cheatBox.isDisplayed() and not loading.isDisplayed():
-            cheatCode = cheatBox.handleEvent(event)
-            if cheatCode != None:
-               if cheatCode[0] in (1,2):
-                  cheatCodes[cheatCode[0]](player, cheatCode[1])
-               if cheatCode[0] in (3,4):
-                  cheatCodes[cheatCode[0]](level, cheatCode[1])
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
+               event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
+                  cheatBox.toggleDisplay()
 
-         if pauseMenu.getDisplay() and not controls.getDisplay():
-            sel = pauseMenu.handleEvent(event)
-            if sel == 1:
-               if merchantLevel == None or not merchantLevel.isActive():
-                  level.setActive(True)
-            if sel == 3:
-               controls.display()
-            if sel == 4:
-               RUNNING = False
+            if cheatBox.isDisplayed() and not loading.isDisplayed():
+               cheatCode = cheatBox.handleEvent(event)
+               if cheatCode != None:
+                  if cheatCode[0] in (1,2):
+                     cheatCodes[cheatCode[0]](player, cheatCode[1])
+                  if cheatCode[0] in (3,4):
+                     cheatCodes[cheatCode[0]](level, cheatCode[1])
 
-         if controls.getDisplay():
-            controls.handleEvent(event)
-            if not controls.getDisplay():
-               flicker = True
+            if pauseMenu.getDisplay() and not controls.getDisplay():
+               sel = pauseMenu.handleEvent(event)
+               if sel == 1:
+                  if merchantLevel == None or not merchantLevel.isActive():
+                     level.setActive(True)
+               if sel == 3:
+                  controls.display()
+               if sel == 4:
+                  RUNNING = False
+
+            if controls.getDisplay():
+               controls.handleEvent(event)
+               if not controls.getDisplay():
+                  flicker = True
                   
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
@@ -191,22 +201,25 @@ def main():
          pygame.mixer.music.fadeout(1000)
          combatLevel = CombatLevel(player, SCREEN_SIZE)
          code = None
-        
-      if level.isActive() and not loading.isDisplayed():
-          level.update(ticks)
 
-      if merchantLevel != None and merchantLevel.isActive() and \
-         not loading.isDisplayed():
-          merchantLevel.update(ticks)
+      if titleScreen.isDisplayed():
+         titleScreen.update(ticks)
+      else:
+         if level.isActive() and not loading.isDisplayed():
+             level.update(ticks)
 
-      if combatLevel != None and combatLevel.isActive():
-         combatLevel.update(ticks)
+         if merchantLevel != None and merchantLevel.isActive() and \
+            not loading.isDisplayed():
+             merchantLevel.update(ticks)
 
-      if cheatBox.isDisplayed():
-         cheatBox.update(ticks)
+         if combatLevel != None and combatLevel.isActive():
+            combatLevel.update(ticks)
 
-      if loading.isDisplayed():
-         loading.update(ticks)
+         if cheatBox.isDisplayed():
+            cheatBox.update(ticks)
+
+         if loading.isDisplayed():
+            loading.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()

@@ -73,7 +73,8 @@ class FrameManager(object):
          "face_1.png":(32,32),
          "face_2.png":(32,32),
          "face_3.png":(32,32),
-         "face_4.png":(32,32)
+         "face_4.png":(32,32),
+         "title.png":(1280,720)
       }
       
       # A default frame size
