@@ -6,17 +6,10 @@ The main loop for running Squirrel Simulator
 """
 
 import pygame, random, math
-from minigame.mainlevel import MainLevel
+from minigame import *
 from player import Player
 from economy.merchant import Merchant
 from animals import Pack, Bear, Rabbit
-from minigame.merchantlevel import MerchantLevel
-from minigame.combatLevel import CombatLevel
-from minigame.cheats import Cheats
-from minigame.loadingscreen import LoadingScreen
-from minigame.pausemenu import PauseMenu
-from minigame.controls import Controls
-from minigame.titlescreen import TitleScreen
 
 SCREEN_SIZE = (1200,500)
 
