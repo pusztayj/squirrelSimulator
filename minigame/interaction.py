@@ -101,7 +101,7 @@ class Interaction(Drawable, Window):
     def handleEvent(self, event):
         self._fightButton.handleEvent(event, self.fight, offset=self._offset)
         self._befriendButton.handleEvent(event, self.befriend, offset=self._offset)
-        self._stealButton.handleEvent(event, self.nothing,  offset=self._offset)
+        self._stealButton.handleEvent(event, self.steal,  offset=self._offset)
         self._bribeButton.handleEvent(event, self.bribe,  offset=self._offset)
         self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.updateInteraction()
@@ -114,6 +114,9 @@ class Interaction(Drawable, Window):
 
     def bribe(self):
         self._selection = 4
+
+    def steal(self):
+        self._selection = 5
 
     def getSelection(self):
         sel = self._selection

@@ -18,6 +18,7 @@ from items import items
 from minigame.itemblock import ItemBlock
 from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
+from minigame.steal import Steal
 from minigame.xpmanager import XPManager
 
 creatures = [Bear, Fox, Rabbit, Deer]
@@ -170,6 +171,7 @@ class MainLevel(Level):
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
 
         self._bribeWindow = None
+        self._stealWindow = None
 
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
@@ -255,6 +257,9 @@ class MainLevel(Level):
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.draw(screen)
+
+        if self._stealWindow != None and self._stealWindow.getDisplay():
+            self._stealWindow.draw(screen)
 
         if self._xpManager.getDisplay():
             self._xpManager.draw(screen)
@@ -360,7 +365,8 @@ class MainLevel(Level):
 
         if not self._popupWindow.getDisplay() and \
            (self._bribeWindow==None or not self._bribeWindow.getDisplay()) and \
-           not self._confirmationWindow.getDisplay():
+           not self._confirmationWindow.getDisplay() and \
+           (self._stealWindow==None or not self._stealWindow.getDisplay()):
             if self._atm != None and self._atm.getDisplay():
                 self._atm.handleEvent(event)
 
@@ -403,6 +409,10 @@ class MainLevel(Level):
                     e = self._interaction.getEntity()
                     self._bribeWindow = Bribe(self._player, e, self._SCREEN_SIZE)
                     self._bribeWindow.display()
+                elif (code == 5):
+                    e = self._interaction.getEntity()
+                    self._stealWindow = Steal(self._player, e, self._SCREEN_SIZE)
+                    self._stealWindow.display()
 
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
@@ -484,6 +494,12 @@ class MainLevel(Level):
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
+        if self._stealWindow != None and self._stealWindow.getDisplay():
+            bustedRobbery = self._stealWindow.handleEvent(event)
+            self._interaction.updateInteraction()
+            if bustedRobbery:
+                print("Let's fight")
+
         if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
            not self._confirmationWindow.getDisplay():
             c = self._xpManager.handleEvent(event)
@@ -557,6 +573,9 @@ class MainLevel(Level):
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.update()
+
+        if self._stealWindow != None and self._stealWindow.getDisplay():
+            self._stealWindow.update()
 
         #Update the player's position
         self._player.update(self._WORLD_SIZE, ticks)
