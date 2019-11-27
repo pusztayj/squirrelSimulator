@@ -67,6 +67,8 @@ class MainLevel(Level):
 
         super().__init__()
 
+        self._xpPerDay = 1
+
         self._cheatBox = cheatBox
 
         self._SCREEN_SIZE = SCREEN_SIZE
@@ -582,13 +584,13 @@ class MainLevel(Level):
 
         self.packs = [pack for pack in self._packs if not pack.isDead()]
 
-        #print("*"*10)
         for pack in self._packs: 
-           # print(pack.getLeader().getName()) 
             pack.getLeader().wander(ticks)
             if pack.trueLen() > 1:
                 pack.update(self._WORLD_SIZE, ticks)
-        #print("*"*10)
+
+        if self._worldClock.dayPassed():
+            self._player.setXP(self._player.getXP() + self._xpPerDay)
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong

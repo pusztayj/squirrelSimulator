@@ -37,6 +37,8 @@ class WorldClock(Drawable):
         self._txtHour = TextBox("", (0,0), self._small_font, (255,255,255))
         self._txtSeason = TextBox("", (0,0), self._small_font, (255,255,255))
 
+        self._dayTimer = 0
+
         self.update()
 
     def getHourLength(self):
@@ -51,8 +53,16 @@ class WorldClock(Drawable):
     def getTime(self):
         return self._time
 
+    def dayPassed(self):
+        if self._dayTimer >= self._day_length:
+            self._dayTimer = 0
+            return True
+        else:
+            return False
+
     def update(self, ticks=0):
         self._time += ticks
+        self._dayTimer += ticks
         surf = pygame.Surface((self._width, self._height))
         surf.fill((0,0,0,255))
         self._txtDay.setText("Day: " + str(int(self._time // self._day_length)+1))
