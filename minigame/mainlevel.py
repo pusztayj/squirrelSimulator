@@ -160,7 +160,7 @@ class MainLevel(Level):
                         creature.equipArmor(random.choice(items.armors)())
                     if random.random() < .33:
                         creature.equipItem(random.choice(items.weapons)())
-                    creature.loseHealth(random.randint(20,80))
+                    creature.loseHealth(random.randint(0,20))
                     creature.setAcorns(random.randint(0,100))
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
