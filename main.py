@@ -154,6 +154,11 @@ def main():
                not pauseMenu.getDisplay():
                 code = merchantLevel.handleEvent(event)
 
+            if combatLevel != None and combatLevel.isActive() and \
+               not loading.isDisplayed() and \
+               not pauseMenu.getDisplay():
+                code = combatLevel.handleEvent(event)
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
                event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
                   cheatBox.toggleDisplay()
@@ -200,7 +205,8 @@ def main():
 
           # Display the loading screen
           loading.setDisplay(True)
-             
+
+      # Set Game Mode to Main Game
       elif code != None and code[0] == 0:
           pygame.mixer.music.fadeout(1000)
           level.setActive(True)
@@ -215,6 +221,13 @@ def main():
          pygame.mixer.music.fadeout(1000)
          combatLevel = CombatLevel(player, SCREEN_SIZE)
          code = None
+
+         # Reset the movement dictionary for the player
+         for k in player._movement.keys():
+            player._movement[k] = False
+
+         # Display the loading screen
+         loading.setDisplay(True)
 
       if titleScreen.isDisplayed():
          titleScreen.update(ticks)
