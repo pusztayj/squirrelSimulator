@@ -509,6 +509,17 @@ class MainLevel(Level):
                 ##    self._popupWindow.setText(c[1] + " upgraded")
                 ##    self._popupWindow.display()
 
+        for pack in self._packs:
+            leader = pack.getLeader()
+            rect = leader.getWanderRect()
+            if leader.getFriendScore() < 20:
+                if self._player.getCollideRect().colliderect(rect):
+                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+                    self._popupWindow.display()
+                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                    
+            
+
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:
           x,y = entity.getPosition()
