@@ -29,6 +29,8 @@ class PopupWindow(Drawable, Window):
 
         self._offset = position
 
+        self._confirmed = None
+
         # Create the textbox
 ##        self._t = TextBox(self._text, (0,0), self._font, self._fontColor)
         self._t = makeMultiLineTextBox(self._text, (0,0), self._font,
@@ -55,9 +57,18 @@ class PopupWindow(Drawable, Window):
         self._t.setPosition((x_pos, y_pos))
         self.updateWindow()
 
+    def confirm(self):
+        self.close()
+        self._confirmed = True
+
+    def getConfirmed(self):
+        con = self._confirmed
+        self._confirmed = None
+        return con
+
     def handleEvent(self, event):
         self._offset = self._position
-        self._b.handleEvent(event,self.close,offset=self._offset)
+        self._b.handleEvent(event,self.confirm,offset=self._offset)
         self.updateWindow()
 
     def updateWindow(self):

@@ -168,6 +168,8 @@ class MainLevel(Level):
         self._bribeWindow = None
         self._stealWindow = None
 
+        self._fightFlag = False
+
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
 
@@ -457,10 +459,6 @@ class MainLevel(Level):
                     self._xpManager.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
-
-        if self._popupWindow.getDisplay():
-            self._popupWindow.handleEvent(event)
-
         if self._confirmationWindow.getDisplay():
             c = self._confirmationWindow.handleEvent(event)
             if c == 1 and self._confirmationProceedure!=None:
@@ -497,6 +495,7 @@ class MainLevel(Level):
             if bustedRobbery:
                 self._popupWindow.setText("You have been caught!\nPrepare for a fight")
                 self._popupWindow.display()
+                self._fightFlag = True #Start Combat on okay
 
         if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
            not self._confirmationWindow.getDisplay():
@@ -517,6 +516,13 @@ class MainLevel(Level):
                     self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
                     self._popupWindow.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
+                    self._fightFlag = True #Start Combat on okay
+
+        if self._popupWindow.getDisplay():
+            self._popupWindow.handleEvent(event)
+            if self._popupWindow.getConfirmed() and self._fightFlag:
+                self._fightFlag = False
+                return (2,)
                     
             
 
