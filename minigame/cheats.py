@@ -50,6 +50,9 @@ class Cheats():
             if terms[0] == "giveXP":
                 if terms[1].isdigit():
                     self._code = (2,int(terms[1]))
+            if terms[0] == "setHealth":
+                if terms[1].isdigit():
+                    self._code = (5,int(terms[1]))
         elif len(terms) == 3:
             if terms[0] == "spawnMerchant":
                 if terms[1].isdigit() and terms[2].isdigit():

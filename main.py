@@ -30,7 +30,11 @@ def fastForward(mainGame, amount):
    if mode == "days":
       mainGame._worldClock._time += (time*hourLen*24)
 
-cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward}
+def setHealth(entity, amount):
+   amount = max(0,min(amount,entity.getBaseHealth()))
+   entity.setHealth(amount)
+
+cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward,5:setHealth}
 
 def main():
    """
@@ -149,7 +153,7 @@ def main():
             if cheatBox.isDisplayed() and not loading.isDisplayed():
                cheatCode = cheatBox.handleEvent(event)
                if cheatCode != None:
-                  if cheatCode[0] in (1,2):
+                  if cheatCode[0] in (1,2,5):
                      cheatCodes[cheatCode[0]](player, cheatCode[1])
                   if cheatCode[0] in (3,4):
                      cheatCodes[cheatCode[0]](level, cheatCode[1])

@@ -361,6 +361,11 @@ class MainLevel(Level):
                     self._player.equipArmor(item)
                     self._armor.setItem(item)
                     self._player.getInventory().removeItem(item)
+
+                if item != None and issubclass(type(item), items.Potions):
+                    self._player.getInventory().removeItem(item)
+                    self._player.heal(item.getHealthBoost())
+
                 
 
         if not self._popupWindow.getDisplay() and \
@@ -498,7 +503,8 @@ class MainLevel(Level):
             bustedRobbery = self._stealWindow.handleEvent(event)
             self._interaction.updateInteraction()
             if bustedRobbery:
-                print("Let's fight")
+                self._popupWindow.setText("You have been caught!\nPrepare for a fight")
+                self._popupWindow.display()
 
         if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
            not self._confirmationWindow.getDisplay():
