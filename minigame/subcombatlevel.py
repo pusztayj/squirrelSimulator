@@ -94,8 +94,6 @@ class SubCombatLevel(object):
 
         # victory GUI items
         self._victoryScreen = None
-        self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
-                                 (124,252,0),80,150,borderWidth = 2)
 
         # retreat GUI Items
         self._retreatScreen = None
@@ -172,13 +170,11 @@ class SubCombatLevel(object):
         if self._victoryScreen == None:
             self._victoryScreen = VictoryScreen(self._enemies,self._allies[0])
         self._victoryScreen.draw(self._screen)
-        self._backWorld.draw(self._screen)
 
     def drawRetreat(self):
         if self._retreatScreen == None:
             self._retreatScreen = RetreatScreen(self._allies[0])
         self._retreatScreen.draw(self._screen)
-        self._backWorld.draw(self._screen)
 
     def drawDead(self):
         self._endScreen.draw(self._screen)
