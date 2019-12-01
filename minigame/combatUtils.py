@@ -19,6 +19,8 @@ from graphics.button import Button
 from graphics.tabs import Tabs
 from graphics.particletext import ParticleText
 #from graphics.guiUtils import makeMultiLineTextBox
+##from player import Player
+
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45, (2.25,1): 47,
@@ -264,10 +266,14 @@ class AnimalStats(object):
                                                  8),
                                     self._font,(255,255,255))
         x = self._opinionText.getWidth()
-        self._opinion = HappinessFace((self._xpos + x,self._ypos+text_y+2))
-        self._opinion.setFace(self._animal.getFriendScore())
+        if str(type(self._animal)) == "<class 'player.Player'>":
+            self._opinionText.setText("Opinion: --")
+            text_y += self._opinionText.getHeight() + 11
+        else:
+            self._opinion = HappinessFace((self._xpos + x,self._ypos+text_y+2))
+            self._opinion.setFace(self._animal.getFriendScore())
+            text_y += self._opinion.getHeight()
 
-        text_y += self._opinion.getHeight()
         self._healthtext = TextBox("Health: "+str(self._animal.getHealth())+\
                                    "/100",
                                    (self._xpos,self._ypos+text_y+2),self._font,
@@ -317,8 +323,11 @@ class AnimalStats(object):
         """
         if self._display == True:
             self._name.draw(screen)
-            self._opinionText.draw(screen)
-            self._opinion.draw(screen)
+            if str(type(self._animal)) == "<class 'player.Player'>":
+                self._opinionText.draw(screen)
+            else:
+                self._opinionText.draw(screen)
+                self._opinion.draw(screen)
             self._exitButton.draw(screen)
             self._healthtext.draw(screen)
             self._acornsText.draw(screen)
