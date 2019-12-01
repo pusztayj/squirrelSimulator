@@ -513,15 +513,15 @@ class MainLevel(Level):
                 ##    self._popupWindow.setText(c[1] + " upgraded")
                 ##    self._popupWindow.display()
 
-        for pack in self._packs:
-            leader = pack.getLeader()
-            rect = leader.getWanderRect()
-            if leader.getFriendScore() < self._attackThreshold:
-                if self._player.getCollideRect().colliderect(rect):
-                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
-                    self._popupWindow.display()
-                    for k in self._player._movement.keys(): self._player._movement[k] = False
-                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+##        for pack in self._packs:
+##            leader = pack.getLeader()
+##            rect = leader.getWanderRect()
+##            if leader.getFriendScore() < self._attackThreshold:
+##                if self._player.getCollideRect().colliderect(rect):
+##                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+##                    self._popupWindow.display()
+##                    for k in self._player._movement.keys(): self._player._movement[k] = False
+##                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
