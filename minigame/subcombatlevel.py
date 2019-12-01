@@ -251,7 +251,8 @@ class SubCombatLevel(object):
             pass
 
     def handleVictory(self,event):
-        self._victoryScreen.handleEvent(event)
+        if self._victoryScreen != None:
+            self._victoryScreen.handleEvent(event)
 
     def update(self):
         self._combatSprites = [x for x in self._combatSprites if not x.getHealthBar().getEntity().isDead()] # the model is updated here as told by the controller

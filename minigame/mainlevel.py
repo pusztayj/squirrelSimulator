@@ -360,8 +360,6 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
                     self._player.heal(item.getHealthBoost())
 
-                
-
         if not self._popupWindow.getDisplay() and \
            (self._bribeWindow==None or not self._bribeWindow.getDisplay()) and \
            not self._confirmationWindow.getDisplay() and \
@@ -374,7 +372,7 @@ class MainLevel(Level):
                 if c != None and c[0] == 9:
                     self._playerPack.removeMember(c[1])
                     clone = c[1].clone()
-                    clone.changeFriendScore(-20)
+                    clone.changeFriendScore(random.randint(-25,-5))
                     p = Pack(clone)
                     self._packs.append(p)
                     clone.setPack(p)
@@ -384,9 +382,12 @@ class MainLevel(Level):
                 self._interaction.handleEvent(event)
                 code = self._interaction.getSelection()
                 if (code == 2):
-                    ret = (code,self._playerPack,self._interaction.getEntity().getPack())
+                    enemyPack = self._interaction.getEntity().getPack()
+                    for e in enemyPack:
+                        if e != None:
+                            e.changeFriendScore(random.randint(-30,-10))
                     self._interaction = None
-                    return ret
+                    return (code,self._playerPack,enemyPack)
                 elif (code == 3):
                     e = self._interaction.getEntity()
                     if self._playerPack.trueLen() < 3:
@@ -526,6 +527,9 @@ class MainLevel(Level):
                 enemyPack = self._fightFlag[1]
                 self._fightFlag = (False,)
                 self._interaction = None
+                for e in enemyPack:
+                    if e != None:
+                        e.changeFriendScore(random.randint(-30,-10))
                 return (2,self._playerPack,enemyPack)
                     
     def setPopup(self, lyst, mouse_pos, popup_pos, font):

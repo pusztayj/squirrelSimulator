@@ -9,6 +9,7 @@ from economy.acorn import Acorn
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock
 from graphics import *
+from player import player
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45, (2.25,1): 47,
