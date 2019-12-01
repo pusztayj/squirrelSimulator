@@ -8,7 +8,7 @@ ENDURANCE    = (6,10)
 ATTACK_SPEED = (1,2)
 STRENGTH     = 7
 
-class HedgeHog(NPC):
+class Hedgehog(NPC):
 
     def __init__(self, name="", pos=(0,0)):
 

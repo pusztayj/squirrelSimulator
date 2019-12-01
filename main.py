@@ -9,7 +9,7 @@ import pygame, random, math
 from minigame import *
 from player import Player
 from economy.merchant import Merchant
-from animals import Pack, Bear, Rabbit
+from animals import *
 
 SCREEN_SIZE = (1200,500)
 
@@ -34,7 +34,15 @@ def setHealth(entity, amount):
    amount = max(0,min(amount,entity.getBaseHealth()))
    entity.setHealth(amount)
 
-cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward,5:setHealth}
+def spawnAnimal(mainGame, species, position, friendScore):
+   animal = eval(species.title())(pos=position)
+   animal.setFriendScore(friendScore)
+   p = Pack(animal)
+   animal.setPack(p)
+   mainGame._packs.append(p)
+
+cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward,5:setHealth,
+              6:spawnAnimal}
 
 def main():
    """
@@ -157,6 +165,8 @@ def main():
                      cheatCodes[cheatCode[0]](player, cheatCode[1])
                   if cheatCode[0] in (3,4):
                      cheatCodes[cheatCode[0]](level, cheatCode[1])
+                  if cheatCode[0] in (6,):
+                     cheatCodes[cheatCode[0]](level,cheatCode[1],cheatCode[2],cheatCode[3])
 
             if pauseMenu.getDisplay() and not controls.getDisplay():
                sel = pauseMenu.handleEvent(event)

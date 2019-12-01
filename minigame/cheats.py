@@ -60,6 +60,12 @@ class Cheats():
             if terms[0] == "fastForward":
                 if terms[1].isdigit() and terms[2] in ["hours","days"]:
                     self._code = (4,(int(terms[1]),terms[2]))
+        elif len(terms) == 5:
+            if terms[0] == "spawnAnimal":
+                if terms[1] in ("chipmunk","fox","bear","hedgehog","deer","rabbit"):
+                    if terms[2].isdigit() and terms[3].isdigit():
+                        if terms[4].isdigit():
+                            self._code = (6,terms[1],(int(terms[2]),int(terms[3])),int(terms[4]))
 
     def draw(self, screen):
         self._input.draw(screen)

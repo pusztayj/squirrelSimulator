@@ -21,7 +21,7 @@ from minigame.bribe import Bribe
 from minigame.steal import Steal
 from minigame.xpmanager import XPManager
 
-creatures = [Bear, Fox, Rabbit, Deer, Chipmunk, HedgeHog]
+creatures = [Bear, Fox, Rabbit, Deer, Chipmunk, Hedgehog]
 
 def createPack(pos):
     leader = random.choice(creatures)(pos=pos)

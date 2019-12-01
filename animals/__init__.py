@@ -1,4 +1,4 @@
-__all__ = ["Animal","Bear","Beaver","Chipmunk","Cow","Deer","Fox","HedgeHog",
+__all__ = ["Animal","Bear","Beaver","Chipmunk","Cow","Deer","Fox","Hedgehog",
            "NPC","Pack","Rabbit","Shmoo","Snake","Squirrel","Turtle"]
 
 from .animal import Animal
@@ -8,7 +8,7 @@ from .chipmunk import Chipmunk
 from .cow import Cow
 from .deer import Deer
 from .fox import Fox
-from .hedgehog import HedgeHog
+from .hedgehog import Hedgehog
 from .npc import NPC
 from .pack import Pack
 from .rabbit import Rabbit
