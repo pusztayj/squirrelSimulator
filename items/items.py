@@ -258,7 +258,7 @@ class Potions(Item,Drawable):
     def __init__(self, healthBoost = 25,level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,
                  requirements=None, isBuyable = True, isSellable = True):
-        super().__init__("Health Potions",level=1, durability=100,
+        super().__init__("Health Potion",level=1, durability=100,
                  utility = 100,requirements=None,
                  isBuyable = True, isSellable = True)
         Drawable.__init__(self,"healthpotion.png",(0,0))

@@ -101,10 +101,16 @@ class NPC(Animal, Animated):
         else:
             return False
 
-    def attackLogic(self,opponents):
-        damage = [(x,attackComputation(self,x),x.getHealth()) \
+    def damageOnOpponents(self,opponents):
+        return [(x,attackComputation(self,x),x.getHealth()) \
                   for x in opponents if x!=None]
-        kills = [x for x in damage if x[1] >= x[2]] # calculates the kills
+
+    def kills(self,opponents):
+        return [x for x in self.damageOnOpponents(opponents) if x[1] >= x[2]]
+
+    def attackLogic(self,opponents):
+        damage = self.damageOnOpponents(opponents)
+        kills = self.kills(opponents) # calculates the kills
         random.shuffle(kills) # shuffles the kill so it's not always the player
         if len(kills) > 0:
             a = kills[0][0]

@@ -26,7 +26,7 @@ npcFSM = FSM(npcStartState, npcStates, npcTransitions)
 
 combatStartState = "player turn"
 combatPlayerStates = ["player turn","attack","waiting","retreat",
-                      "heal","fortify"]
+                      "heal","fortify","victory","dead"]
 playerTransitions = [Rule("player turn","attack button","attack"),
                      Rule("attack","go back","player turn"),
                      Rule("attack","animal click","waiting"),
@@ -35,7 +35,11 @@ playerTransitions = [Rule("player turn","attack button","attack"),
                      Rule("player turn","fortify button","fortify"),
                      Rule("player turn","retreat button","retreat"),
                      Rule("heal","action complete","waiting"),
-                     Rule("fortify","action complete","waiting")]
+                     Rule("heal","go back","player turn"),
+                     Rule("fortify","action complete","waiting"),
+                     Rule("waiting","all dead","victory"),
+                     Rule("waiting","killed","dead")]
+                     
 combatFSM = FSM(combatStartState,combatPlayerStates,playerTransitions)
 
 
