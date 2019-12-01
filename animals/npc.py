@@ -3,7 +3,6 @@ from .animal import Animal
 from graphics.popup import Popup
 import random, pygame, copy
 from items.items import *
-from combatUtils import *
 from modules.animated import Animated
 from modules.vector2D import Vector2
 from stateMachines import npcFSM
@@ -27,7 +26,6 @@ class NPC(Animal, Animated):
         self._friendScore = random.randint(10,90)
         
         self._aggressionLevel = agression
-        self._combatStatus = ""
 
         self._fsm = npcFSM
         
@@ -48,9 +46,6 @@ class NPC(Animal, Animated):
     def changeFriendScore(self, change):
         self._friendScore = max(0, min(100, self._friendScore + change))
 
-    def getCombatStatus(self):
-        return self._combatStatus
-
     def handleEvent(self, event, screen):     
         popupFont = pygame.font.SysFont("Times New Roman", 16)
         x,y = self.getPosition()
@@ -63,65 +58,6 @@ class NPC(Animal, Animated):
                                 popupFont)
                 popup.draw(screen)
                 break
-
-    def healLogic(self,opponents):
-        # opponents is a list
-        damage = [(x,attackComputation(self,x),x.getHealth())
-                  for x in opponents if x!=None]
-        # calculates damage done and health an animal has
-        attacks = [x for x in damage if x[1] >= x[2]]
-        # checks to see if the animal can kill an opponent
-        if self._health <= 20 and len(attacks) == 0:
-            for x in self._inventory:
-                if type(x) == type(Potions()) and self._health <= 20:
-                    self._combatStatus = self.getName() + "healed with a potion!"
-                    return True
-                    
-            return False
-        else:
-            return False
-        
-    def fortifyLogic(self,opponents):
-        if self.getHealth() >= 20 and self.getHealth() <= 75:
-            damage = [(x,attackComputation(self,x),x.getHealth()) \
-                  for x in opponents if x!=None]
-            #calculates the amount of damage that can be done vs the health
-            attacks = [x for x in damage if x[1] <= 5]
-            # runs a list comp that calculates if there are any animals that
-            # the current animal will do less than 5 damamge against. 
-            if len(attacks) == len(opponents):
-                # checks to see if it can't do more than 5 damage to an animal
-                self._combatStatus = self.getName() + " has fortified!"
-                return True
-            elif 6 < random.randint(0,9): # 33% random change of fortifying 
-                self._combatStatus = self.getName() + " has fortified!"
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    def damageOnOpponents(self,opponents):
-        return [(x,attackComputation(self,x),x.getHealth()) \
-                  for x in opponents if x!=None]
-
-    def kills(self,opponents):
-        return [x for x in self.damageOnOpponents(opponents) if x[1] >= x[2]]
-
-    def attackLogic(self,opponents):
-        damage = self.damageOnOpponents(opponents)
-        kills = self.kills(opponents) # calculates the kills
-        random.shuffle(kills) # shuffles the kill so it's not always the player
-        if len(kills) > 0:
-            a = kills[0][0]
-            self._combatStatus = self.getName() + " has killed " + a.getName()
-            return kills[0][0]
-        else:
-            damage.sort(key = lambda x: x[1]) #could shuffle to make more stupid
-            # sorts the damage from lowest to highest
-            self._combatStatus = self.getName() + " did " + str(damage[-1][1])+ " damage to " + \
-                                 (damage[-1][0]).getName()
-            return damage[-1][0] #returns the highest damage animal
 
     def getWanderRect(self):
         return pygame.Rect(self._wanderRect[0][0], self._wanderRect[1][0],

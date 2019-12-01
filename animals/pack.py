@@ -12,7 +12,7 @@ class Pack():
     def __init__(self, leader, name=""):
         """Initialize the pack with a leader and a max size"""
         self._maxSize = 3
-        leader.setPack(self)
+##        leader.setPack(self)
         self._members = [leader, None, None]
         self._leader = leader
         self._name = name
@@ -52,7 +52,7 @@ class Pack():
         for i,animal in enumerate(self):
             if animal == None:
                 self._members[i] = member
-                member.setPack(self)
+##                member.setPack(self)
                 break
 
     def removeMember(self, member):

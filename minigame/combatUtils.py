@@ -8,7 +8,17 @@ from rectmanager import getRects
 from economy.acorn import Acorn
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock
-from graphics import *
+from graphics.linkedprogressbar import LinkedProgressBar
+from graphics.textbox import TextBox
+from graphics.scrollbox import ScrollBox
+from graphics.scrollselector import ScrollSelector
+from graphics.happinessface import HappinessFace
+from graphics.popup import Popup
+from graphics.button import Button
+##from graphics.popupwindow import PopupWindow
+from graphics.tabs import Tabs
+from graphics.particletext import ParticleText
+#from graphics.guiUtils import makeMultiLineTextBox
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45, (2.25,1): 47,

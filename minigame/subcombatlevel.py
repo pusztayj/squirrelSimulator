@@ -2,7 +2,7 @@ import pygame
 from modules import Drawable,Vector2
 from animals import *
 from graphics import *
-from combatUtils import *
+from .combatUtils import *
 from stateMachines import combatStartState,combatPlayerStates,\
      playerTransitions, combatFSM
 import time
@@ -281,10 +281,7 @@ class SubCombatLevel(object):
 
     def updateWait(self):
         # for the enemies
-        print("Allies: ",self._allies)
-        print("Enemies: ",self._enemies)
         self._damageText = None
-        print(self._turn)
         if self._turn == True:
             if self._enemies.getNextToAttack() == None:
                 self._enemies.hasAttacked()
@@ -306,7 +303,6 @@ class SubCombatLevel(object):
                 self._turn = not self._turn
                 if self._enemies.isDead():
                     combatFSM.changeState("all dead")
-                print(self._allies[0])
 ##                if self._allies[0].isDead():
 ##                    combatFSM.changeState("killed")
         # for the allies     

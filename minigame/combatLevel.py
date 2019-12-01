@@ -2,14 +2,14 @@ import pygame,random
 from modules import Drawable,Vector2
 from animals import *
 from graphics import *
-from combatUtils import *
+from .combatUtils import *
 from stateMachines import combatStartState,combatPlayerStates,\
      playerTransitions, combatFSM
 import time
 from items.items import *
 from minigame.itemselect import ItemSelect
 from minigame.subcombatlevel import SubCombatLevel
-from minigame.level import Level
+from level import Level
 from modules.drawable import Drawable
 from modules.soundManager import SoundManager
 
@@ -45,8 +45,8 @@ class CombatLevel(Level):
 
     def createCombatSprites(self):
         y = 200
-        for a in allies:
-            if allies.isLeader(a):
+        for a in self._allies:
+            if self._allies.isLeader(a):
                 c = CombatSprite(a,(228,275),self._font)
                 self._combatSprites.append(c)
             else:
@@ -55,8 +55,8 @@ class CombatLevel(Level):
                     self._combatSprites.append(c)
                     y+=150
         y = 200
-        for e in enemies:
-            if enemies.isLeader(e):
+        for e in self._enemies:
+            if self._enemies.isLeader(e):
                 c = CombatSprite(e,(847,275),self._font,enemies = True)
                 self._combatSprites.append(c)
             else:
@@ -65,7 +65,7 @@ class CombatLevel(Level):
                     self._combatSprites.append(c)
                     y+=150
 
-    def draw(self):
+    def draw(self, screen):
         self._background.draw(screen)
         if combatFSM.getCurrentState() == "player turn":
             self._lev.drawPlayerTurn()
@@ -113,11 +113,17 @@ class CombatLevel(Level):
             self._lev.handleFortify(event)
                             
         elif combatFSM.getCurrentState() == "retreat":
-            retreat(allies[0])
+            retreat(self._allies[0])
+            self._backWorld.handleEvent(event, self.setActive, False)
+            if not self.isActive():
+                return (0,)
             
         elif combatFSM.getCurrentState() == "victory":
             self._lev.handleVictory(event)
+            self._backWorld.handleEvent(event, self.setActive, False)
+            if not self.isActive():
+                return (0,)
 
     def update(self, ticks):
         if combatFSM.getCurrentState() != "waiting":
-            lev.update()
+            self._lev.update()

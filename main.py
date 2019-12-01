@@ -219,7 +219,7 @@ def main():
       elif code != None and code[0] == 2:
          level.setActive(False)
          pygame.mixer.music.fadeout(1000)
-         combatLevel = CombatLevel(player, SCREEN_SIZE)
+         combatLevel = CombatLevel(player, SCREEN_SIZE, code[1], code[2], screen)
          code = None
 
          # Reset the movement dictionary for the player

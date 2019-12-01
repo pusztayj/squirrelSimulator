@@ -168,7 +168,7 @@ class MainLevel(Level):
         self._bribeWindow = None
         self._stealWindow = None
 
-        self._fightFlag = False
+        self._fightFlag = (False,)
 
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
@@ -384,7 +384,9 @@ class MainLevel(Level):
                 self._interaction.handleEvent(event)
                 code = self._interaction.getSelection()
                 if (code == 2):
-                    return (code,)
+                    ret = (code,self._playerPack,self._interaction.getEntity().getPack())
+                    self._interaction = None
+                    return ret
                 elif (code == 3):
                     e = self._interaction.getEntity()
                     if self._playerPack.trueLen() < 3:
@@ -495,7 +497,7 @@ class MainLevel(Level):
             if bustedRobbery:
                 self._popupWindow.setText("You have been caught!\nPrepare for a fight")
                 self._popupWindow.display()
-                self._fightFlag = True #Start Combat on okay
+                self._fightFlag = (True, self._interaction.getEntity().getPack()) #Start Combat on okay
 
         if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
            not self._confirmationWindow.getDisplay():
@@ -516,16 +518,16 @@ class MainLevel(Level):
                     self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
                     self._popupWindow.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
-                    self._fightFlag = True #Start Combat on okay
+                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
-            if self._popupWindow.getConfirmed() and self._fightFlag:
-                self._fightFlag = False
-                return (2,)
+            if self._popupWindow.getConfirmed() and self._fightFlag[0]:
+                enemyPack = self._fightFlag[1]
+                self._fightFlag = (False,)
+                self._interaction = None
+                return (2,self._playerPack,enemyPack)
                     
-            
-
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        for entity in lyst:
           x,y = entity.getPosition()

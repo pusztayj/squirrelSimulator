@@ -12,7 +12,6 @@ from animals.animal import Animal
 from items.item import Item
 import pygame, copy
 
-
 def makeMultiLineTextBox(text, position, font, color, backgroundColor):
     """
     Used to create multiline text boxes which are not native to
