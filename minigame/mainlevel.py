@@ -21,7 +21,7 @@ from minigame.bribe import Bribe
 from minigame.steal import Steal
 from minigame.xpmanager import XPManager
 
-creatures = [Bear, Fox, Rabbit, Deer]
+creatures = [Bear, Fox, Rabbit, Deer, Chipmunk]
 
 def createPack(pos):
     leader = random.choice(creatures)(pos=pos)
@@ -127,11 +127,6 @@ class MainLevel(Level):
 
         self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
 
-        self._creatures = []
-        self._chip = Chipmunk(pos=(1600,300))
-        self._chip.flip()
-        self._creatures.append(self._chip)
-
         self._atm = None
 
         self._interaction = None
@@ -215,9 +210,6 @@ class MainLevel(Level):
                 merch.draw(screen)
             else:
                 notDrawnTrees.append(merch)
-
-        for creature in self._creatures:
-            creature.draw(screen)
 
         self._playerPack.draw(screen)
 

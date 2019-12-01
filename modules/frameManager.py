@@ -74,7 +74,8 @@ class FrameManager(object):
          "face_2.png":(32,32),
          "face_3.png":(32,32),
          "face_4.png":(32,32),
-         "title.png":(1280,720)
+         "title.png":(1280,720),
+         "new_chipmunk.png":(32,25)
       }
       
       # A default frame size
@@ -95,7 +96,7 @@ class FrameManager(object):
                     "pickax.png","crowbar.png","healthpotion.png","pecanpie.png",
                     "new_fox.png","new_rabbit.png","new_bear.png","new_deer.png",
                     "ally_state.png","face_0.png","face_1.png","face_2.png","face_3.png",
-                    "face_4.png"]
+                    "face_4.png","new_chipmunk.png"]
       
       
       
