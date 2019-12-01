@@ -70,6 +70,8 @@ class MainLevel(Level):
 
         self._xpPerDay = 1
 
+        self._attackThreshold = 20
+
         self._cheatBox = cheatBox
 
         self._SCREEN_SIZE = SCREEN_SIZE
@@ -87,6 +89,8 @@ class MainLevel(Level):
         self._playerPack = player_pack
         self._packManager = PackManager(self._playerPack, self._SCREEN_SIZE)
         self._player = self._playerPack.getLeader()
+
+        self._player.setMask((255,0,0,150))
 
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
 
@@ -125,7 +129,7 @@ class MainLevel(Level):
 
         self._stats = StatDisplay((5,5),self._player)
 
-        self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
+        self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150, False)
 
         self._atm = None
 
@@ -514,7 +518,7 @@ class MainLevel(Level):
         for pack in self._packs:
             leader = pack.getLeader()
             rect = leader.getWanderRect()
-            if leader.getFriendScore() < 20:
+            if leader.getFriendScore() < self._attackThreshold:
                 if self._player.getCollideRect().colliderect(rect):
                     self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
                     self._popupWindow.display()

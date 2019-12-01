@@ -8,8 +8,8 @@ from modules.drawable import Drawable
 
 class Mask(Drawable):
 
-    def __init__(self, position, dimensions, color, alpha):
-        super().__init__("", position, worldBound=False)
+    def __init__(self, position, dimensions, color, alpha, worldBound=False):
+        super().__init__("", position, worldBound=worldBound)
         self._image = pygame.Surface(dimensions)
         self._image.fill(color)
         self._image.set_alpha(0)
