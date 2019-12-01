@@ -90,8 +90,6 @@ class MainLevel(Level):
         self._packManager = PackManager(self._playerPack, self._SCREEN_SIZE)
         self._player = self._playerPack.getLeader()
 
-        self._player.setMask((255,0,0,150))
-
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
 
         self._acorns = []
