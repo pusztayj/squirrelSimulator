@@ -29,7 +29,7 @@ class EndScreen(object):
                                (600,150+y+5),self._font,(255,255,255))
         y+=self._acornsText.getHeight()
         pack = self._player.getPack().getMembers()
-        followers = [x.getName() for x in pack if x!=None]
+        followers = [x.getName() for x in pack if x!=None and x!=self._player]
         followersStr = ', '.join(followers)
         self._followerText = TextBox("Followers: "+followersStr,
                                (600,150+y+5),self._font,(255,255,255))
@@ -49,9 +49,9 @@ class EndScreen(object):
 
     def score(self):
         inventoryWorth = sum([x.getValue() for x in self._player.getInventory()])
-        followers = len([x.getName() for x in self._player.getPack().getMembers() if x!=None])
+        followers = len([x.getName() for x in self._player.getPack().getMembers() if x!=None and x!=self._player])
         score = inventoryWorth + self._player.getAcorns() + (5*self._player.getXP()) +\
-             (100*followers)
+             (100*(followers))
         return score
 
     def draw(self,screen):
