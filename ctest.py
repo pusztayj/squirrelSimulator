@@ -27,16 +27,16 @@ def main():
     background = Drawable("merchantForest2.png", Vector2(0,0))
 
     ### Make the ally pack ###
-    ally1 = Bear()
+    ally1 = Fox()
     ally1.getInventory().addItem(Potions())
     ally1.getInventory().addItem(Potions())
     ally1.getInventory().addItem(Potions())
     ally1.getInventory().addItem(Spear())
-    ally2 = Deer()
-    ally3 = Fox()
+##    ally2 = Rabbit()
+    ally3 = Bear()
 
     allies = Pack(ally1)
-    allies.addMember(ally2)
+##    allies.addMember(ally2)
     allies.addMember(ally3)
     
     combatSprites = list()
@@ -53,13 +53,14 @@ def main():
                 y+=150
                 
     ### Make the enemy pack ###
-    enemy1 = Deer()
-    enemy2 = Rabbit()
-    enemy3 = Rabbit()
+    enemy1 = Fox()
+##    enemy2 = Bear()
+##    enemy3 = Snake()
+    enemy1.getInventory().addItem(Spear())
 
     enemies = Pack(enemy1)
-    enemies.addMember(enemy2)
-    enemies.addMember(enemy3)
+##    enemies.addMember(enemy2)
+##    enemies.addMember(enemy3)
 
     y = 200
     for e in enemies:
@@ -92,12 +93,23 @@ def main():
 
         elif combatFSM.getCurrentState() == "heal":
             lev.drawHeal()
+            lev.updateHeal()
 
         elif combatFSM.getCurrentState() == "waiting":
             lev.updateWait()
             lev.update()
             lev.drawWait()
             time.sleep(1.2)
+
+        elif combatFSM.getCurrentState() == "victory":
+            lev.drawVictory()
+
+        elif combatFSM.getCurrentState() == "retreat":
+            lev.drawRetreat()
+
+        elif combatFSM.getCurrentState() == "dead":
+            print("yes")
+            lev.drawDead()
 
         pygame.display.flip()
         
@@ -124,7 +136,9 @@ def main():
                                 
             elif combatFSM.getCurrentState() == "retreat":
                 retreat(allies[0])
-                RUNNING = False
+                
+            elif combatFSM.getCurrentState() == "victory":
+                lev.handleVictory(event)
         
         if combatFSM.getCurrentState() != "waiting":
             lev.update()

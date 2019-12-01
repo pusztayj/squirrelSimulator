@@ -4,14 +4,14 @@ In this file we create the functions/classes used for the combat game.
 
 from items.items import *
 from graphics import *
-import pygame
+import pygame, random, math
 from rectmanager import getRects
 from economy.acorn import Acorn
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
-                (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45,
+                (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45, (2.25,1): 47,
                 (2.5,1): 50, (2.75,1): 70, (3,1): 90}
 
 def attack(attacker, defender):
@@ -67,7 +67,6 @@ def heal(animal,potion):
     Heals the animal based on the health potion.
     """
     animal.resetDefenseModifers()
-    print(potion)
     if potion in animal.getInventory():
         animal.getInventory().removeItem(potion)
         animal.heal(potion.getHealthBoost())
@@ -94,6 +93,43 @@ def move(animal,opponents):
     else:
         an = animal.attackLogic(opponents)
         attack(animal,an)
+
+def lootItems(opponents):
+    """
+    Generates a list of items that can be used
+    """
+    lootItems = list()
+    for x in opponents:
+        if x != None:
+            ivt = x.getInventory()
+            for y in ivt:
+                if random.randint(0,100) <= 75: # items can be looted only 75% of time
+                    lootItems.append(y)
+    return lootItems
+        
+def lootAcorns(opponents):
+    """
+    Generates the number of acorns you looted.
+    """
+    acorns = sum([x.getAcorns() for x in opponents if x!=None])
+    acornsLooted = acorns*random.uniform(.25,1)
+    return math.floor(acornsLooted)
+
+def retreatLostAcorns(animal):
+    """
+    Acorns lost for retreating from a battle
+    """
+    return math.ceil(animal.getAcorns()*random.uniform(0,0.5))
+     
+def retreatItemLost(animal):
+    """
+    Chance of item lost from retreating from battle.
+    """
+    if 10 <= random.randint(0,100):
+        item = random.choice(animal.getInventory())
+        return item
+    else:
+        return None
     
 class CombatSprite(object):
 
@@ -106,14 +142,14 @@ class CombatSprite(object):
         self._bar = LinkedProgressBar(self._animal,(self._position[0],self._position[1]+90),100,
                                       100,self._animal.getHealth())
         self._nameText = TextBox(self._animal.getName(),
-                                 (self._position[0],self._position[1]+107),
+                                 (0,0),
                                  font,(255,255,255))
 
         x = self._nameText.getWidth()
         self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+107))
         healthFont = pygame.font.SysFont("Times New Roman", 12)
         self._healthText = TextBox(str(self._animal.getHealth()) + "/100",
-                                   (self._position[0],self._position[1]+125),
+                                   (0,0),
                                    healthFont,(255,255,255))
         x = self._healthText.getWidth()
         self._healthText.setPosition((self._position[0]+50-(x//2),self._position[1]+90))
@@ -231,14 +267,12 @@ class AnimalStats(object):
                                    (self._xpos,self._ypos+text_y+6),self._font,
                                    (255,255,255))
         x = self._acornsText.getWidth()
-        self._acormImg = Acorn((self._xpos+x,self._ypos+text_y+2))
+        self._acornImg = Acorn((self._xpos+x,self._ypos+text_y+2))
 
         # Exit Button
         self._exitButton = Button("X",(self._xpos + 400,self._ypos),
                                   self._font,(0,0,0),(100,100,100),25,25,
                            (0,0,0), 1)
-        #x = self._exitButton.getWidth()
-        self._exitButton.setPosition((self._xpos + 400,self._ypos))
 
         # Inventory Items
         text_y += self._acornsText.getHeight() + 10
@@ -278,7 +312,7 @@ class AnimalStats(object):
             self._exitButton.draw(screen)
             self._healthtext.draw(screen)
             self._acornsText.draw(screen)
-            self._acormImg.draw(screen)
+            self._acornImg.draw(screen)
             self._inventory.draw(screen)
             self._weaponText.draw(screen)
             self._weapon.draw(screen)
@@ -295,4 +329,167 @@ class AnimalStats(object):
         self._healthtext.setText("Health: "+str(self._animal.getHealth())+\
                                    "/100")
         self._acornsText.setText("Acorns: "+str(self._animal.getAcorns()))
-    
+
+
+class VictoryScreen(object):
+
+    def __init__(self,dead,player):
+        self._dead = dead
+        self._player = player
+
+        # acorns looted
+        self._lootedAcorns = lootAcorns(self._dead)
+
+        # graphics settings
+        self._FLAG = True
+        self._itemCard = None
+        
+        # fonts
+        self._textFont = pygame.font.SysFont("Times New Roman", 28)
+        self._font = pygame.font.SysFont("Times New Roman", 16)
+
+        # needed text boxes
+        text = "Congratuations! You defeated your enemies."
+        self._victoryText = TextBox(text,(100,25),self._textFont,(255,255,255))
+        y = self._victoryText.getHeight()
+        self._acornLooted = TextBox("Acorns Looted: "+str(self._lootedAcorns),
+                                    (100,25+y+2),self._textFont,(255,255,255))
+        y += self._acornLooted.getHeight()
+        self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
+        self._acornCount = TextBox("Your Acorns: "+str(self._player.getAcorns()),
+                                   (100,25+y+2),self._textFont,(255,255,255))
+        y += self._acornCount.getHeight()
+
+        # tabs
+        self._tabs = Tabs(["Pickup","Drop"], (100,25+y+5), self._font, (0,0,0), (255,255,255), (200,50),
+               (0,0,0),(255,255,255))
+        y += self._tabs.getHeight()
+        
+        # items looted
+        self._lootedItems = lootItems(self._dead)
+        self._lootItems = [{"text": item.getName(),"func": self.selectItem,"args":item} \
+                      for item in self._lootedItems]
+        self._lootedItemSelect = ScrollSelector((100,25+y+10),(250,300),30,self._lootItems,(0,0,0))
+
+        # player items
+        self._player_items = [{"text": item.getName(),"func": self.selectItem,"args":item} \
+                      for item in self._player.getInventory()]
+        self._playerSelect = ScrollSelector((100,25+y+10),(250,300),30,self._player_items,(0,0,0))
+        self._y = y
+
+        self._executePickUp = Button("Pick up Item",(450,self._y+25-50),
+                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
+
+        self._executeDrop = Button("Drop Item",(450,self._y+25-50),
+                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
+
+        self._cancelTransaction = Button("Cancel Transaction",(450+156,self._y+25-50),
+                                         self._font,(255,255,255),(207,51,17),48,140,borderWidth = 2)
+    def selectItem(self,item):
+        self._itemCard = ItemCard(item, position = (450,self._y+25+10), scrollBoxSize = (200,300))
+
+    def updateDisplay(self):
+        if self._tabs.getActive() == 0:
+            return True
+        else:
+            return False
+
+    def cancelTransaction(self):
+        self._itemCard = None
+
+    def pickUpItem(self,item):
+        self._player.getInventory().addItem(item)
+        self._lootedItems.remove(item)
+        
+    def draw(self,screen):
+        self._victoryText.draw(screen)
+        self._acornLooted.draw(screen)
+        self._acornCount.draw(screen)
+        if self._FLAG:
+            self._lootedItemSelect.draw(screen)
+        else:
+            self._playerSelect.draw(screen)
+        if self._itemCard != None:
+            self._itemCard.getCard().draw(screen)
+            self._cancelTransaction.draw(screen)
+            if self._FLAG:
+                self._executePickUp.draw(screen)
+            else:
+                self._executeDrop.draw(screen)
+            
+        self._tabs.draw(screen)
+
+    def handleEvent(self,event):
+        self._tabs.handleEvent(event)
+        if self._FLAG:
+            self._lootedItemSelect.handleEvent(event)
+        else:
+            self._playerSelect.handleEvent(event)
+        if self._itemCard != None:
+            self._itemCard.getCard().move(event)
+            if self._FLAG:
+                self._executePickUp.handleEvent(event,
+                                    self.pickUpItem,self._itemCard.getItem())
+            else:
+                self._executeDrop.handleEvent(event,
+                                    self._player.getInventory().removeItem,
+                                              self._itemCard.getItem())
+            self._cancelTransaction.handleEvent(event,
+                                        self.cancelTransaction)
+
+            self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
+                      for item in self._player.getInventory()])
+            self._lootedItemSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
+                      for item in self._lootedItems])
+
+    def update(self):
+        if self._FLAG != self.updateDisplay():
+            self._itemCard = None
+        self._FLAG = self.updateDisplay()
+
+
+class RetreatScreen(object):
+
+    def __init__(self,player):
+        self._player = player
+        self._moneyLost = retreatLostAcorns(self._player)
+        player.setAcorns(self._player.getAcorns()-self._moneyLost)
+
+        self._font = pygame.font.SysFont("Times New Roman", 20)
+        
+        self._itemLost = retreatItemLost(self._player)
+        if self._itemLost != None:
+            self._player.getInventory().removeItem(self._itemLost)
+        
+        self._lostMoneyText = TextBox("You lost "+ str(self._moneyLost) + " acorns.",
+                                      (0,0),self._font,(255,255,255))
+        x = self._lostMoneyText.getWidth()
+        self._lostMoneyText.setPosition((600-(x//2),150))
+        y = self._lostMoneyText.getHeight()
+        if self._itemLost != None:
+            self._itemLostText = TextBox("You lost your " + self._itemLost.getName(),
+                                         (0,0),self._font,(255,255,255))
+            x = self._itemLostText.getWidth()
+            self._itemLostText.setPosition((600-(x//2),150+y+5))
+            y += self._itemLostText.getHeight()
+        self._inventoryText = TextBox("Your inventory: ",(450,150+y+20),
+                                     self._font,(255,255,255))
+
+        self._acornsText = TextBox("Acorns: "+str(self._player.getAcorns()),
+                                   (0,0),self._font,
+                                   (255,255,255))
+        self._acornImg = Acorn((0,0))
+        self._acornsText.setPosition((750-(self._acornsText.getWidth()+self._acornImg.getWidth()+5),150+y+20))
+        self._acornImg.setPosition((750-self._acornImg.getWidth(),150+y+15))
+        y += self._acornImg.getHeight() + 20
+        self._inventory = threeXthreeInventory((450,150+y+5),(300,200), self._player)
+        
+    def draw(self,screen):
+        self._lostMoneyText.draw(screen)
+        if self._itemLost != None:
+            self._itemLostText.draw(screen)
+        self._acornsText.draw(screen)
+        self._acornImg.draw(screen)
+        self._inventoryText.draw(screen)    
+        self._inventory.draw(screen)
+        

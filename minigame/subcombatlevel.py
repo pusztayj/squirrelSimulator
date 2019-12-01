@@ -8,12 +8,14 @@ from stateMachines import combatStartState,combatPlayerStates,\
 import time
 from .itemselect import ItemSelect
 from graphics.guiUtils import ItemCard
+from .endscreen import EndScreen
 
 # add ranges to damage that can be done
 # add looting and exit strategy
 # show modifers
 # show feedback based on player choice
 # add some animation
+# does dropping an item make it go to the pick up tab?
 
 
 class SubCombatLevel(object):
@@ -48,6 +50,9 @@ class SubCombatLevel(object):
                                         (255,255,255),(0,0,0),50,100)
 
         self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(350,170),self._textFont,(255,255,255))
+        self._healTextBox = TextBox("Click on potion to heal",(350,270),self._textFont,(255,255,255))
+        x = self._healTextBox.getWidth()
+        self._healTextBox.setPosition((600-(x//2),270))
 
         self._turnText = TextBox("Your turn",(565,470),self._font,(255,255,255))
         x = self._turnText.getWidth()
@@ -56,11 +61,6 @@ class SubCombatLevel(object):
         self._combatText = TextBox("",(600,100),self._textFont,(255,255,255))
 
         self._potionSelect = None
-
-        potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
-
-        self._potionSelect = ItemSelect((255,100),potions)
 
         self._turn = True # true means enemies pack turn
 
@@ -90,6 +90,20 @@ class SubCombatLevel(object):
         x = self._enemyStrength.getWidth()
         self._enemyStrength.setPosition((975-(x//2),175))
 
+        self._damageText = None
+
+        # victory GUI items
+        self._victoryScreen = None
+        self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
+                                 (124,252,0),80,150,borderWidth = 2)
+
+        # retreat GUI Items
+        self._retreatScreen = None
+
+        # death GUI
+        self._endScreen = EndScreen((1200,500),self._allies[0])
+
+                                 
     def getCombatSprite(self,animal):
         """
         Given an input animal it returns the combatsprite that is for the
@@ -98,6 +112,12 @@ class SubCombatLevel(object):
         for an in self._combatSprites:
             if an.getAnimal() == animal:
                 return an
+
+    def updateDisplay(self):
+        if self._tabs.getActive() == 0:
+            return True
+        else:
+            return False        
 
     def alwaysDraw(self):
         for x in self._combatSprites:
@@ -123,10 +143,16 @@ class SubCombatLevel(object):
 
     def drawHeal(self):
         self.alwaysDraw()
-        x = self._potionSelect.getWidth()
-        self._potionSelect.setPosition((600-(x//2),100))
+        if self._potionSelect == None:
+            potions = [x for x in self._allies[0].getInventory() \
+                   if type(x) == type(Potions())]
+            self._potionSelect = ItemSelect((0,0),potions)
+            x = self._potionSelect.getWidth()
+            self._potionSelect.setPosition((600-(x//2),165))
         self._potionSelect.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
+        self._attackUndoButton.draw(self._screen)
+        self._healTextBox.draw(self._screen)
         
     def drawAttack(self):
         self.alwaysDraw()
@@ -141,7 +167,22 @@ class SubCombatLevel(object):
 
     def drawFortify(self):
         self.alwaysDraw()
+        
+    def drawVictory(self):
+        if self._victoryScreen == None:
+            self._victoryScreen = VictoryScreen(self._enemies,self._allies[0])
+        self._victoryScreen.draw(self._screen)
+        self._backWorld.draw(self._screen)
 
+    def drawRetreat(self):
+        if self._retreatScreen == None:
+            self._retreatScreen = RetreatScreen(self._allies[0])
+        self._retreatScreen.draw(self._screen)
+        self._backWorld.draw(self._screen)
+
+    def drawDead(self):
+        self._endScreen.draw(self._screen)
+        
     def handleEvent(self,event):
         self._popup = None
         for sprite in self._combatSprites: # no need to check nones as they are no longer in list
@@ -191,6 +232,8 @@ class SubCombatLevel(object):
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
                         self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
                                     self._popupFont,multiLine = True)
+        if self._enemies.isDead():
+            combatFSM.changeState("all dead")
 
     def handleFortify(self,event):
         self._animalStats = None
@@ -200,13 +243,19 @@ class SubCombatLevel(object):
 
     def handleHeal(self,event):
         self._animalStats = None
+        self._attackUndoButton.handleEvent(event,combatFSM.changeState,"go back")
         self._potionSelect.handleEvent(event)
-        potionPick = self._potionSelect.getItemSelected()
-        if potionPick != None:
-            heal(self._allies[0],potionPick) # the model is changed here as told by the controller
-            print("we are here")
-            combatFSM.changeState("action complete")
-        self._allies.hasAttacked() # here we udpate the model again
+        try:
+            potionPick = self._potionSelect.getItemSelected()
+            if potionPick != None:
+                heal(self._allies[0],potionPick) # the model is changed here as told by the controller
+                combatFSM.changeState("action complete")
+            self._allies.hasAttacked() # here we udpate the model again
+        except AttributeError:
+            pass
+
+    def handleVictory(self,event):
+        self._victoryScreen.handleEvent(event)
 
     def update(self):
         self._combatSprites = [x for x in self._combatSprites if not x.getHealthBar().getEntity().isDead()] # the model is updated here as told by the controller
@@ -217,15 +266,29 @@ class SubCombatLevel(object):
         self._allyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._allies if x!= None])))
         if self._animalStats != None:
             self._animalStats.update()
-        potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
-        self._potionSelect.resetItems(potions)
-        self._potionSelect.update()
+        if self._allies[0] != None and self._potionSelect != None:
+            potions = [x for x in self._allies[0].getInventory() \
+                       if type(x) == type(Potions())]
+            self._potionSelect.resetItems(potions)
+            self._potionSelect.update()
+            x = self._potionSelect.getWidth()
+            self._potionSelect.setPosition((600-(x//2),165))
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
+        if self._victoryScreen != None:
+            self._victoryScreen.update()
+        if self._allies[0] == None:
+            combatFSM.changeState("killed")
+
+    def updateHeal(self):
+        self._combatSprites[0].getHealthBar().update()
 
     def updateWait(self):
         # for the enemies
+        print("Allies: ",self._allies)
+        print("Enemies: ",self._enemies)
+        self._damageText = None
+        print(self._turn)
         if self._turn == True:
             if self._enemies.getNextToAttack() == None:
                 self._enemies.hasAttacked()
@@ -245,6 +308,11 @@ class SubCombatLevel(object):
                 self._enemies.updatePack() # the model is updated here
                 self._enemies.hasAttacked() # here we update the model
                 self._turn = not self._turn
+                if self._enemies.isDead():
+                    combatFSM.changeState("all dead")
+                print(self._allies[0])
+##                if self._allies[0].isDead():
+##                    combatFSM.changeState("killed")
         # for the allies     
         elif self._turn == False and self._allies.getNextToAttack() != self._allies[0]:
             if self._allies.getNextToAttack() == None:
@@ -264,6 +332,9 @@ class SubCombatLevel(object):
                 self._enemies.updatePack() # the model is updated here
                 self._allies.hasAttacked() # here we update the model
                 self._turn = not self._turn
+                if self._enemies.isDead():
+                    combatFSM.changeState("all dead")
+                           
         else:
             self._turn = not self._turn
             combatFSM.changeState("done")

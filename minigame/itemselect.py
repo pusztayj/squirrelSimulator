@@ -38,7 +38,7 @@ class ItemSelect(Drawable):
             self._blocks.append(i)
 
     def getItemSelected(self):
-        return self._itemSelected
+        return self._itemSelected.getItem()
 
     def handleEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
