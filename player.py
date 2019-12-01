@@ -29,6 +29,8 @@ class Player(Squirrel):
         self._stealth = 1
         self._xp = 0
 
+        self._strength = 12
+
         self._minYPos = 0 
 
         self._velocity = Vector2(0,0)
