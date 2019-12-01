@@ -11,11 +11,9 @@ from graphics.guiUtils import ItemCard
 from .endscreen import EndScreen
 
 # add ranges to damage that can be done
-# add looting and exit strategy
 # show modifers
 # show feedback based on player choice
 # add some animation
-# does dropping an item make it go to the pick up tab?
 
 
 class SubCombatLevel(object):
@@ -49,10 +47,14 @@ class SubCombatLevel(object):
         self._attackUndoButton = Button("Go Back",(550,100),self._font,
                                         (255,255,255),(0,0,0),50,100)
 
-        self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(350,170),self._textFont,(255,255,255))
-        self._healTextBox = TextBox("Click on potion to heal",(350,270),self._textFont,(255,255,255))
+        self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(0,0),self._textFont,(255,255,255))
+        self._healTextBox = TextBox("Click on a potion to heal",(0,0),self._textFont,(255,255,255))
         x = self._healTextBox.getWidth()
-        self._healTextBox.setPosition((600-(x//2),270))
+        self._healTextBox.setPosition((600-(x//2),225))
+
+        self._noHealTextBox = TextBox("You have no potions!",(0,0),self._textFont,(255,255,255))
+        x = self._noHealTextBox.getWidth()
+        self._noHealTextBox.setPosition((600-(x//2),170))
 
         self._turnText = TextBox("Your turn",(565,470),self._font,(255,255,255))
         x = self._turnText.getWidth()
@@ -91,6 +93,8 @@ class SubCombatLevel(object):
         self._enemyStrength.setPosition((975-(x//2),175))
 
         self._damageText = None
+        self._potions = [x for x in self._allies[0].getInventory() \
+                   if type(x) == type(Potions())]
 
         # victory GUI items
         self._victoryScreen = None
@@ -142,15 +146,17 @@ class SubCombatLevel(object):
     def drawHeal(self):
         self.alwaysDraw()
         if self._potionSelect == None:
-            potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
-            self._potionSelect = ItemSelect((0,0),potions)
+            self._potionSelect = ItemSelect((0,0),self._potions)
             x = self._potionSelect.getWidth()
             self._potionSelect.setPosition((600-(x//2),165))
-        self._potionSelect.draw(self._screen)
+        if len(self._potions) > 0:
+            self._potionSelect.draw(self._screen)
+            self._healTextBox.draw(self._screen)
+        else:
+            self._noHealTextBox.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
         self._attackUndoButton.draw(self._screen)
-        self._healTextBox.draw(self._screen)
+        
         
     def drawAttack(self):
         self.alwaysDraw()
@@ -264,9 +270,9 @@ class SubCombatLevel(object):
         if self._animalStats != None:
             self._animalStats.update()
         if self._allies[0] != None and self._potionSelect != None:
-            potions = [x for x in self._allies[0].getInventory() \
+            self._potions = [x for x in self._allies[0].getInventory() \
                        if type(x) == type(Potions())]
-            self._potionSelect.resetItems(potions)
+            self._potionSelect.resetItems(self._potions)
             self._potionSelect.update()
             x = self._potionSelect.getWidth()
             self._potionSelect.setPosition((600-(x//2),165))
