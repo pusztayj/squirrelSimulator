@@ -70,6 +70,8 @@ class MainLevel(Level):
 
         self._xpPerDay = 1
 
+        self._attackThreshold = 20
+
         self._cheatBox = cheatBox
 
         self._SCREEN_SIZE = SCREEN_SIZE
@@ -125,7 +127,7 @@ class MainLevel(Level):
 
         self._stats = StatDisplay((5,5),self._player)
 
-        self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150)
+        self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150, False)
 
         self._atm = None
 
@@ -156,7 +158,7 @@ class MainLevel(Level):
                         creature.equipArmor(random.choice(items.armors)())
                     if random.random() < .33:
                         creature.equipItem(random.choice(items.weapons)())
-                    creature.loseHealth(random.randint(20,80))
+                    creature.loseHealth(random.randint(0,20))
                     creature.setAcorns(random.randint(0,100))
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
@@ -511,15 +513,15 @@ class MainLevel(Level):
                 ##    self._popupWindow.setText(c[1] + " upgraded")
                 ##    self._popupWindow.display()
 
-        for pack in self._packs:
-            leader = pack.getLeader()
-            rect = leader.getWanderRect()
-            if leader.getFriendScore() < 20:
-                if self._player.getCollideRect().colliderect(rect):
-                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
-                    self._popupWindow.display()
-                    for k in self._player._movement.keys(): self._player._movement[k] = False
-                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+##        for pack in self._packs:
+##            leader = pack.getLeader()
+##            rect = leader.getWanderRect()
+##            if leader.getFriendScore() < self._attackThreshold:
+##                if self._player.getCollideRect().colliderect(rect):
+##                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+##                    self._popupWindow.display()
+##                    for k in self._player._movement.keys(): self._player._movement[k] = False
+##                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)

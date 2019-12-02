@@ -58,6 +58,7 @@ class Drawable():
         self._isScaled = False
         self._scaleValue = 1
 
+        
     def getWidth(self):
         """Returns the width of the image surface"""
         return self._image.get_rect().size[0]
