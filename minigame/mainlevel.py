@@ -331,9 +331,16 @@ class MainLevel(Level):
                     for pile in self._spawnedPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                            self._spawnedPiles.remove(pile)
-                            acorns = pile.getAcorns()
-                            self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+                            if self._player.getAcorns() + pile.getAcorns() > self._player.getCheekCapacity():
+                                self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
+                                                                 " won't collect all the acorns")
+                                self._confirmationWindow.display()
+                                self._confirmationProceedure = (2, pile) #Redirect neccessary information
+                            else:
+                                self._spawnedPiles.remove(pile)
+                                acorns = pile.getAcorns()
+                                self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+                            
 
                     for pile in self._dirtPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
@@ -489,6 +496,11 @@ class MainLevel(Level):
                     lostPile.setName("Abandoned Pile")
                     self._spawnedPiles.append(lostPile)
                     self._dirtPiles.append(dp)
+                if self._confirmationProceedure[0] == 2:
+                    pile = self._confirmationProceedure[1]
+                    self._spawnedPiles.remove(pile)
+                    acorns = pile.getAcorns()
+                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)
