@@ -66,7 +66,6 @@ class CombatLevel(Level):
                     y+=150
 
     def draw(self, screen):
-        print(combatFSM.getCurrentState())
         self._background.draw(screen)
         if combatFSM.getCurrentState() == "player turn":
             self._lev.drawPlayerTurn()

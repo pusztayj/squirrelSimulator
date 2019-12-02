@@ -435,6 +435,8 @@ class VictoryScreen(object):
         # graphics settings
         self._FLAG = True
         self._itemCard = None
+
+        self._addedAcorns = False
         
         # fonts
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
@@ -494,7 +496,9 @@ class VictoryScreen(object):
         self._lootedItems.remove(item)
         
     def draw(self,screen):
-        self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
+        if not self._addedAcorns:
+            self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
+            self._addedAcorns = True
         self._victoryText.draw(screen)
         self._acornLooted.draw(screen)
         self._acornCount.draw(screen)
