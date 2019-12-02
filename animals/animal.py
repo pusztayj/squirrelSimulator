@@ -8,6 +8,7 @@ import random, shelve
 from inventory import Inventory
 from items.item import Item
 from minigame.combatUtils import *
+import re
 
 class Animal():
 
@@ -86,7 +87,7 @@ class Animal():
         if self._health <= 20 and len(attacks) == 0:
             for x in self._inventory:
                 if type(x) == type(Potions()) and self._health <= 20:
-                    self._combatStatus = self.getName() + "healed with a potion!"
+                    self._combatStatus = self.getName() + " healed with a potion!"
                     return True
                     
             return False
@@ -401,7 +402,7 @@ class Animal():
         if self._armor == None:
             return ""
         else:
-            return type(self._armor).__name__
+            return re.sub(r"(\w)([A-Z])", r"\1 \2", type(self._armor).__name__)
 
     def getStats(self):
         """Used by weapons and armors to check if they are usable by the entity"""
