@@ -92,13 +92,14 @@ class MainLevel(Level):
 
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
 
-        self._acorns = []
+        self._acorns = [Acorn((random.randint(0,self._WORLD_SIZE[0]),
+                                       random.randint(0,self._WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
         self._dirtPiles = []
 
         self._spawnedPiles = []
 
         # Create timers
-        self._acornSpawnTimer = random.randint(5,10)
+        self._acornSpawnTimer = random.randint(2,5)
         self._pileSpawnTimer = random.randint(20,40)
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
@@ -541,6 +542,7 @@ class MainLevel(Level):
                 enemyPack = self._fightFlag[1]
                 self._fightFlag = (False,)
                 self._interaction = None
+                self._stealWindow = None
                 for e in enemyPack:
                     if e != None:
                         e.changeFriendScore(random.randint(-30,-10))
@@ -570,7 +572,7 @@ class MainLevel(Level):
         if self._acornSpawnTimer <= 0:
             self._acorns.append(Acorn((random.randint(0,self._WORLD_SIZE[0]),
                                        random.randint(0,self._WORLD_SIZE[1]))))
-            self._acornSpawnTimer = random.randint(5,10)
+            self._acornSpawnTimer = random.randint(2,5)
 
         # Spawn Abandoned Piles around the map
         self._pileSpawnTimer -= ticks

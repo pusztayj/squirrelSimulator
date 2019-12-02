@@ -13,7 +13,7 @@ class Acorn(Drawable):
     def __init__(self, pos, worldBound=True):
         super().__init__("acorn.png", pos, worldBound=worldBound)
         self._collected = False
-        self._lifespan = random.randint(20,120)
+        self._lifespan = random.randint(45,120)
 
     def collected(self):
         self._collected = True
