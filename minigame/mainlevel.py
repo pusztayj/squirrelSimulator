@@ -588,9 +588,6 @@ class MainLevel(Level):
         else:
             self._starveTimer = 2 * self._worldClock.getHourLength()
 
-        if self._player.isDead():
-            print("The Player is Dead")
-
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
             self._interactionTimer -= ticks
 
