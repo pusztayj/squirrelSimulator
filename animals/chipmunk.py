@@ -1,6 +1,15 @@
+"""
+@authors: Trevor Stalnaker, Justin Pusztay
 
+This file contains the class for chipmunk. It contains the individual
+stats that effects the NPCs performance.
+
+We also incorporate the image of the chipmunk as well as the
+rows needed from the sprite sheet to create the appropriate animations.
+"""
 from .npc import NPC
 
+# stats needed for the chipmunk
 AGGRESSION   = (0,2)
 SPEED        = (12,18)
 ENDURANCE    = (6,10)
@@ -9,7 +18,10 @@ STRENGTH     = 8
 class Chipmunk(NPC):
 
     def __init__(self, name="", pos=(0,0)):
-
+        """
+        We set the appropriate stats to create the NPC for the chipmunk.
+        We also specify the rows that we need for the animations.
+        """
         NPC.__init__(self, name, "new_chipmunk.png", pos,
                      AGGRESSION, SPEED, ENDURANCE,STRENGTH)
 

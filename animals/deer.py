@@ -1,7 +1,17 @@
+"""
+@authors: Trevor Stalnaker, Justin Pusztay
+
+This file contains the class for deer. It contains the individual
+stats that effects the NPCs performance.
+
+We also incorporate the image of the deer as well as the
+rows needed from the sprite sheet to create the appropriate animations.
+"""
 
 from .npc import NPC
 from modules.animated import Animated
 
+# stats needed for the bear
 AGGRESSION   = (0,1)
 SPEED        = (18,24)
 ENDURANCE    = (6,10)
@@ -11,7 +21,10 @@ STRENGTH     = 12
 class Deer(NPC):
 
     def __init__(self, name="", pos=(0,0)):
-
+        """
+        We set the appropriate stats to create the NPC for the deer.
+        We also specify the rows that we need for the animations.
+        """
         NPC.__init__(self, name, "new_deer.png", pos, AGGRESSION, SPEED,
                          ENDURANCE,STRENGTH)
 
