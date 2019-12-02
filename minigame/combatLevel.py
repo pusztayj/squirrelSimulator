@@ -66,6 +66,7 @@ class CombatLevel(Level):
                     y+=150
 
     def draw(self, screen):
+        print(combatFSM.getCurrentState())
         self._background.draw(screen)
         if combatFSM.getCurrentState() == "player turn":
             self._lev.drawPlayerTurn()
@@ -116,12 +117,14 @@ class CombatLevel(Level):
             retreat(self._allies[0])
             self._backWorld.handleEvent(event, self.setActive, False)
             if not self.isActive():
+                combatFSM.changeState("exit")
                 return (0,)
             
         elif combatFSM.getCurrentState() == "victory":
             self._lev.handleVictory(event)
             self._backWorld.handleEvent(event, self.setActive, False)
             if not self.isActive():
+                combatFSM.changeState("exit")
                 return (0,)
 
     def update(self, ticks):

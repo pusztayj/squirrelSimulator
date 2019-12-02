@@ -46,33 +46,36 @@ class Weapon(Item):
 class Stick(Weapon,Drawable):
 
     def __init__(self,strength = 10, level=1, durability=100,
-                 utility = 100,value = 50, staminaCost = 10,requirements=None,
+                 utility = 100,value = 20, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         Weapon.__init__(self,"Stick", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"stick.png",(0,0))
+        self._value = value
         
 
 class Spear(Weapon,Drawable):
 
     def __init__(self,strength = 15, level=1, durability=100,
-                 utility = 100,value = 150, staminaCost = 10,requirements=None,
+                 utility = 100,value = 35, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         Weapon.__init__(self,"Spear", strength, level, durability,
-                 utility,value, staminaCost,requirements,
+                 utility,35, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"spear.png",(0,0))
+        self._value = value
 
 class IronSword(Weapon,Drawable):
 
     def __init__(self,strength = 25, level=1, durability=100,
-                 utility = 100,value = 450, staminaCost = 10,requirements=None,
+                 utility = 100,value = 80, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         Weapon.__init__(self,"Iron Sword", strength, level, durability,
-                 utility,value, staminaCost,requirements,
+                 utility,80, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"sword.png",(0,0))
+        self._value = value
 
 weapons = [Stick, Spear, IronSword]
 
@@ -104,33 +107,36 @@ class Armor(Item):
 class HideArmor(Armor,Drawable):
     
     def __init__(self,strength = 8, level=1, durability=100,
-                 utility = 100,value = 75,requirements=None,
+                 utility = 100,value = 35,requirements=None,
                  isBuyable = True, isSellable = True):
         Armor.__init__(self,"Hide Armor", strength, level, durability,
-                 utility,value,requirements,
+                 utility,35,requirements,
                  isBuyable, isSellable)
 
         Drawable.__init__(self,"hide_armor.png",(0,0))
+        self._value = value
 
 class LeatherArmor(Armor,Drawable):
     
     def __init__(self,strength = 13, level=1, durability=100,
-                 utility = 100,value = 175,requirements=None,
+                 utility = 100,value = 75,requirements=None,
                  isBuyable = True, isSellable = True):
         Armor.__init__(self,"Leather Armor", strength, level, durability,
-                 utility,value,requirements,
+                 utility,75,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"leather_armor.png",(0,0))
+        self._value = value
 
 class IronArmor(Armor,Drawable):
     
     def __init__(self,strength = 21, level=1, durability=100,
-                 utility = 100,value = 475,requirements=None,
+                 utility = 100,value = 100,requirements=None,
                  isBuyable = True, isSellable = True):
         Armor.__init__(self,"Iron Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"iron_armor.png",(0,0))
+        self._value = value
         
 
 armors = [HideArmor, LeatherArmor, IronArmor]
@@ -165,6 +171,7 @@ class Berries(Food,Drawable):
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"berries.png",(0,0))
+        self._value = value
 
 class NutSoup(Food,Drawable):
 
@@ -175,6 +182,7 @@ class NutSoup(Food,Drawable):
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"nutsoup.png",(0,0))
+        self._value = value
 
 class PecanPie(Food,Drawable):
 
@@ -185,6 +193,7 @@ class PecanPie(Food,Drawable):
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"pecanpie.png",(0,0))
+        self._value = value
 
 ########################################################
 #################### Tool ##############################
@@ -218,6 +227,7 @@ class Shovel(Tool,Drawable):
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"shovel.png",(0,0))
+        self._value = value
 
     def acornModifier(self):
         return 1.1 + self._level*.1
@@ -231,6 +241,7 @@ class PickAx(Tool,Drawable):
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"pickax.png",(0,0))
+        self._value = value
 
     def acornModifier(self):
         return 1.1 + self._level*.1
@@ -244,6 +255,7 @@ class CrowBar(Tool,Drawable):
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"crowbar.png",(0,0))
+        self._value = value
 
     def acornModifier(self):
         return 1.1 + self._level*.1

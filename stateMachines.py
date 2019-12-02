@@ -38,7 +38,9 @@ playerTransitions = [Rule("player turn","attack button","attack"),
                      Rule("heal","go back","player turn"),
                      Rule("fortify","action complete","waiting"),
                      Rule("waiting","all dead","victory"),
-                     Rule("waiting","killed","dead")]
+                     Rule("waiting","killed","dead"),
+                     Rule("victory","exit","player turn"),
+                     Rule("retreat","exit","player turn")]
                      
 combatFSM = FSM(combatStartState,combatPlayerStates,playerTransitions)
 

@@ -3,7 +3,7 @@ In this file we create the functions/classes used for the combat game.
 """
 
 from items.items import *
-import pygame, random, math
+import pygame, random, math, copy
 from rectmanager import getRects
 from economy.acorn import Acorn
 from minigame.threexthreeinventory import threeXthreeInventory
@@ -18,13 +18,86 @@ from graphics.button import Button
 ##from graphics.popupwindow import PopupWindow
 from graphics.tabs import Tabs
 from graphics.particletext import ParticleText
-#from graphics.guiUtils import makeMultiLineTextBox
+from graphics.mysurface import MySurface
+##from graphics.guiUtils import ItemCard
 ##from player import Player
 
 
 attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
                 (1.25,1): 33, (1.5,1): 35, (1.75,1): 40, (2,1): 45, (2.25,1): 47,
                 (2.5,1): 50, (2.75,1): 70, (3,1): 90}
+
+"""
+*Had to move over the ItemCard and makeMultiLineTextBox class the import statement would
+not work properly.
+"""
+
+def makeMultiLineTextBox(text, position, font, color, backgroundColor):
+    """
+    Used to create multiline text boxes which are not native to
+    pygame.  The user supplies the same information to this function
+    that they would supplied to the TextBox Class. The function will
+    split the text along new-lines and return a MySurface object
+    containing all of the text formatted as desired.
+    """
+    lines = text.split("\n")
+    width = TextBox(max(lines, key=len),position, font, color).getWidth() + 10
+    height = font.get_height()
+    surf = pygame.Surface((width,height*len(lines)))
+    surf.fill(backgroundColor)
+    p = (0,0)
+    for line in lines:
+        t = TextBox(line, p, font, color)
+        center = width // 2 - t.getWidth() // 2
+        t.setPosition((center, t.getY()))
+        t.draw(surf)
+        p = (0, p[1] + height)
+    return MySurface(surf, position)
+
+class ItemCard(object):
+
+    def __init__(self, item,position = (471,166),scrollBoxSize = (155,300)):
+        """
+        Creates an item card for the object, this works for both items and GUIs.
+
+        Defaults is set for the merchant GUI which needs to be changed.
+        """
+        self._item = item
+        self._card = self.generate(item,position,scrollBoxSize)
+
+    def getItem(self):
+        """
+        Returns the item that the item card is representing
+        """
+        return self._item
+
+    def getCard(self):
+        """
+        Returns the scorllbox that is the item. 
+        """
+        return self._card
+
+    def generate(self,entity, position,scrollBoxSize):
+        """
+        Generates the item that is the in the item card.
+        """
+        nameFont = pygame.font.SysFont("Times New Roman", 32)
+        detailsFont = pygame.font.SysFont("Times New Roman", 16)
+        s = pygame.Surface((200,600))
+        s.fill((0,0,0))
+        a = copy.copy(entity)
+        a.setWorldBound(False)
+        a.setPosition((10,50))
+        if a.isFlipped():
+            a.flip()
+        a.scale(4)
+        TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
+##        if issubclass(type(entity), Animal) or issubclass(type(entity), Item): 
+        a.draw(s)
+        makeMultiLineTextBox(str(a), (10,200), detailsFont,
+                             (255,255,255), (0,0,0)).draw(s)
+        s = MySurface(s)
+        return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
 
 def attack(attacker, defender):
     """
@@ -115,7 +188,7 @@ def lootItems(opponents):
         if x != None:
             ivt = x.getInventory()
             for y in ivt:
-                if random.randint(0,100) <= 75: # items can be looted only 75% of time
+                if random.randint(0,100) <= 100: # items can be looted only 75% of time
                     lootItems.append(y)
     return lootItems
         
@@ -374,8 +447,7 @@ class VictoryScreen(object):
         self._acornLooted = TextBox("Acorns Looted: "+str(self._lootedAcorns),
                                     (100,25+y+2),self._textFont,(255,255,255))
         y += self._acornLooted.getHeight()
-        self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
-        self._acornCount = TextBox("Your Acorns: "+str(self._player.getAcorns()),
+        self._acornCount = TextBox("Your Acorns: "+str(self._player.getAcorns()+self._lootedAcorns),
                                    (100,25+y+2),self._textFont,(255,255,255))
         y += self._acornCount.getHeight()
 
@@ -404,6 +476,7 @@ class VictoryScreen(object):
 
         self._cancelTransaction = Button("Cancel Transaction",(450+156,self._y+25-50),
                                          self._font,(255,255,255),(207,51,17),48,140,borderWidth = 2)
+
     def selectItem(self,item):
         self._itemCard = ItemCard(item, position = (450,self._y+25+10), scrollBoxSize = (200,300))
 
@@ -421,6 +494,7 @@ class VictoryScreen(object):
         self._lootedItems.remove(item)
         
     def draw(self,screen):
+        self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
         self._victoryText.draw(screen)
         self._acornLooted.draw(screen)
         self._acornCount.draw(screen)

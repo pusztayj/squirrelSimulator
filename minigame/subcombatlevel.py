@@ -48,6 +48,9 @@ class SubCombatLevel(object):
                                         (255,255,255),(0,0,0),50,100)
 
         self._attackTextBox = TextBox("Click on enemy animal to proceed with attack",(0,0),self._textFont,(255,255,255))
+        x = self._attackTextBox.getWidth()
+        self._attackTextBox.setPosition((600-(x//2),200))
+        
         self._healTextBox = TextBox("Click on a potion to heal",(0,0),self._textFont,(255,255,255))
         x = self._healTextBox.getWidth()
         self._healTextBox.setPosition((600-(x//2),225))
@@ -97,7 +100,8 @@ class SubCombatLevel(object):
                    if type(x) == type(Potions())]
 
         # victory GUI items
-        self._victoryScreen = None
+##        self._victoryScreen = None
+        self._victoryScreen = VictoryScreen(self._enemies,self._allies[0])
 
         # retreat GUI Items
         self._retreatScreen = None
@@ -173,8 +177,7 @@ class SubCombatLevel(object):
         self.alwaysDraw()
         
     def drawVictory(self):
-        if self._victoryScreen == None:
-            self._victoryScreen = VictoryScreen(self._enemies,self._allies[0])
+##        if self._victoryScreen == None
         self._victoryScreen.draw(self._screen)
 
     def drawRetreat(self):
@@ -335,7 +338,7 @@ class SubCombatLevel(object):
                     combatFSM.changeState("all dead")
                            
         else:
-            self._turn = not self._turn
+            self._turn = True
             combatFSM.changeState("done")
             self._turnText.setText("Your turn")
             x = self._turnText.getWidth()
