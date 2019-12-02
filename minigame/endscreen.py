@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from modules import *
 from graphics import *
 from animals import *
@@ -8,6 +8,9 @@ from minigame.threexthreeinventory import threeXthreeInventory
 class EndScreen(object):
 
     def __init__(self,screensize,player):
+
+        self._songs = ["death.mp3"]
+        self._currentSong = random.choice(self._songs)
 
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
@@ -52,6 +55,8 @@ class EndScreen(object):
                                      (46,46,218), 50,100,borderWidth = 2)
 
         self._selection = None
+
+        SoundManager.getInstance().playMusic(self._currentSong)
         
 
     def score(self):
@@ -88,6 +93,12 @@ class EndScreen(object):
         self._restartButton.draw(screen)
         self._exitButton.draw(screen)
 
+    def update(self):
+        if not pygame.mixer.music.get_busy():
+            temp = self._currentSong
+            while temp == self._currentSong:
+                self._currentSong = random.choice(self._songs)
+            SoundManager.getInstance().playMusic(self._currentSong)
         
                                 
 

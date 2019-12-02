@@ -258,8 +258,11 @@ def main():
 
       if titleScreen.isDisplayed():
          titleScreen.update(ticks)
-      elif player.isDead():
+      elif player.isDead() and endScreen == None:
+         pygame.mixer.music.fadeout(500)
          endScreen = EndScreen(SCREEN_SIZE, player)
+      elif endScreen != None:
+         endScreen.update()
       else:
          if level.isActive() and not loading.isDisplayed():
              level.update(ticks)
