@@ -1,22 +1,44 @@
 """
 @authors: Justn Pusztay, Trevor Stalnaker
 
-The animal class.
+In this file we abstract the characteristics for each animal that
+is shared by each NPC and the player. We include traits such as
+health, stamina, xp, and strength. We also keep an inventory for the animal
+along with the acorns that the animal can have. We also keep track of the
+hunger of the animal in this class.
+
+We also include the logic for the animal when it comes to buying and selling
+items with the merchant. We also have the logic that the animal uses when it
+comes to combat. Methods such as fortify, heal, attack, and retreat are here.
+
+We also keep track of the pack that animal is a part of is in this class.
+
+In this class we also assign the random names for each animal, from the
+social security database that we scraped. We also equip items in this class
+and keep track of which items are equipped.
+
+All animals will belong to a pack. For more info on Packs please see
+squirrelSimulator/animals/pack.py
 """
 
-import random, shelve
+import random, shelve, re
 from inventory import Inventory
 from items.item import Item
 from minigame.combatUtils import *
-import re
 
 class Animal():
 
-    def __init__(self, name="", health=100, stamina = 100,xp=0, speed=1, endurance=1,
-                 combatDamage=10, strength=1,
-                 intelligence=1, equipment=[], inventorySize=9,
-                 inHand=None, armor=None, buffs=[]):
+    def __init__(self, name="", health=100, stamina = 100,xp=0, speed=1,
+                 endurance=1,strength=1, intelligence=1, equipment=[],
+                 inventorySize=9, inHand=None, armor=None, buffs=[]):
+        """
+        Here pass the traits that make up animal, we set a default value to
+        give to those who implement subclasses an idea about how the data types
+        that would be the best for the trait.
 
+        Note: Health, Stamina are capped at 100. Inventory size is capped at 9
+        for animals. 
+        """
         #Give the animal a random name if none was provided
         if name == "":
             shelf = shelve.open("data")
@@ -57,13 +79,22 @@ class Animal():
         self._buffs = buffs
 
         self._pack = None
-
-        self._combatStatus = ""
+        
+        # string representation of what the animal did in combat
+        self._combatStatus = "" 
 
     def getPack(self):
+        """
+        Here we return the Pack object that the animal belongs too.
+        """
         return self._pack
 
     def setPack(self, pack):
+        """
+        Here we set the pack that the animal belongs too. This method
+        is useful for the creation of a new animal and the transferring
+        of one pack to another. 
+        """
         self._pack = pack
 
     def getName(self):
@@ -75,9 +106,25 @@ class Animal():
         self._name = name
 
     def getCombatStatus(self):
+        """
+        Combat status is a variable that is a string representation
+        of what the animal did during combat. It will write in simple
+        english how the animal acted, ie. healed, fortified, attacked another
+        animal (along with the damage dealt) or if the animal successfully
+        killed another enemy. This will normally be an string type. 
+        """
         return self._combatStatus
 
     def healLogic(self,opponents):
+        """
+        Given a list of opponents this method returns a boolean
+        on whehter or not the animal believes that it is in its best
+        move to heal for the turn. It calculates whether or not it can
+        kill an opponent or do significant damage to the animal.
+
+        Also if it has a low health and believes it will die, it will
+        use a healing potion. We also check for a healing potion.
+        """
         # opponents is a list
         damage = [(x,attackComputation(self,x),x.getHealth())
                   for x in opponents if x!=None]
