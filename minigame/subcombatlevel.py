@@ -136,8 +136,6 @@ class SubCombatLevel(object):
         self._enemyText.draw(self._screen)
         if self._animalStats != None:
             self._animalStats.draw(self._screen)
-        if self._popup != None:
-            self._popup.draw(self._screen)
 
     def drawPlayerTurn(self):
         self.alwaysDraw()
@@ -146,6 +144,8 @@ class SubCombatLevel(object):
         self._healButton.draw(self._screen)
         self._retreatButton.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
+        if self._popup != None:
+            self._popup.draw(self._screen)
 
     def drawHeal(self):
         self.alwaysDraw()
@@ -159,6 +159,8 @@ class SubCombatLevel(object):
         else:
             self._noHealTextBox.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
+        if self._popup != None:
+            self._popup.draw(self._screen)
         self._attackUndoButton.draw(self._screen)
         
         
@@ -167,11 +169,15 @@ class SubCombatLevel(object):
         self._attackUndoButton.draw(self._screen)
         self._attackTextBox.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
+        if self._popup != None:
+            self._popup.draw(self._screen)
 
     def drawWait(self):
         self.alwaysDraw()
         self._combatText.draw(self._screen)
         self._currentTurnHighlight.draw(self._screen)
+        if self._popup != None:
+            self._popup.draw(self._screen)
 
     def drawFortify(self):
         self.alwaysDraw()
