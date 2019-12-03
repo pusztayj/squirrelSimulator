@@ -142,6 +142,10 @@ class Animal():
             return False
         
     def fortifyLogic(self,opponents):
+        """
+        Given a list of opponents this method reuturns a boolean on whether
+        or not the animal 
+        """
         if self.getHealth() >= 20 and self.getHealth() <= 75:
             damage = [(x,attackComputation(self,x),x.getHealth()) \
                   for x in opponents if x!=None]

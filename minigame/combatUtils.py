@@ -446,7 +446,8 @@ class VictoryScreen(object):
         text = "Congratuations! You defeated your enemies."
         self._victoryText = TextBox(text,(100,25),self._textFont,(255,255,255))
         y = self._victoryText.getHeight()
-        self._acornLooted = TextBox("Acorns Looted: "+str(self._lootedAcorns),
+        acorns = min(self._player.getAcorns()+self._lootedAcorns,self._player.getCheekCapacity())
+        self._acornLooted = TextBox("Acorns Looted: "+str(acorns),
                                     (100,25+y+2),self._textFont,(255,255,255))
         y += self._acornLooted.getHeight()
         self._acornCount = TextBox("Your Acorns: "+str(self._player.getAcorns()+self._lootedAcorns),
@@ -494,10 +495,20 @@ class VictoryScreen(object):
     def pickUpItem(self,item):
         self._player.getInventory().addItem(item)
         self._lootedItems.remove(item)
+        self._itemCard = None
+
+    def dropItem(self,item):
+        """
+        This drops the item from the players iventory and inserts
+        it into the looted items. 
+        """
+        self._player.getInventory().removeItem(item)
+        self._lootedItems.append(item)
+        self._itemCard = None
         
     def draw(self,screen):
         if not self._addedAcorns:
-            self._player.setAcorns(self._player.getAcorns()+self._lootedAcorns)
+            self._player.setAcorns(min(self._player.getAcorns()+self._lootedAcorns,self._player.getCheekCapacity()))
             self._addedAcorns = True
         self._victoryText.draw(screen)
         self._acornLooted.draw(screen)
@@ -529,8 +540,7 @@ class VictoryScreen(object):
                                     self.pickUpItem,self._itemCard.getItem())
             else:
                 self._executeDrop.handleEvent(event,
-                                    self._player.getInventory().removeItem,
-                                              self._itemCard.getItem())
+                                    self.dropItem,self._itemCard.getItem())
             self._cancelTransaction.handleEvent(event,
                                         self.cancelTransaction)
 
