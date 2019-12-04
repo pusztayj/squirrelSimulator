@@ -50,7 +50,7 @@ class PauseMenu(Drawable, Window):
 
     def handleEvent(self, event):
         self._resumeButton.handleEvent(event, self.resume, offset=self._offset)
-        self._howToPlayButton.handleEvent(event, self.nothing, offset=self._offset)
+        self._howToPlayButton.handleEvent(event, self.howToPlay, offset=self._offset)
         self._controlsButton.handleEvent(event, self.showControls, offset=self._offset)
         self._quitButton.handleEvent(event, self.quit, offset=self._offset)
         self.updateMenu()
@@ -63,6 +63,9 @@ class PauseMenu(Drawable, Window):
     def showControls(self):
         self._selection = 3
 
+    def howToPlay(self):
+        self._selection = 2
+
     def quit(self):
         self.close()
         self._selection = 4
@@ -71,9 +74,6 @@ class PauseMenu(Drawable, Window):
         sel = self._selection
         self._selection = None
         return sel
-
-    def nothing(self):
-        pass
 
     def updateMenu(self):
 

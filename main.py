@@ -92,7 +92,7 @@ def main():
 
    endScreen = None
 
-   flicker  = False
+   flicker  = False # Used to blit the game background over the controls / tutorials
 
    lag = True #Used to ever so slightly updated paused game at start
 
@@ -213,6 +213,8 @@ def main():
                      if sel == 1:
                         if merchantLevel == None or not merchantLevel.isActive():
                            level.setActive(True)
+                     if sel == 2:
+                        tutorial.display()
                      if sel == 3:
                         controls.display()
                      if sel == 4:
@@ -225,6 +227,8 @@ def main():
             else:
                if tutorial.getDisplay():
                   tutorial.handleEvent(event)
+                  if not tutorial.getDisplay():
+                     flicker = True
 
 
                   
