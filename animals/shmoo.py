@@ -13,7 +13,7 @@ AGGRESSION   = (8,10)
 SPEED        = (15,20)
 ENDURANCE    = (8,10)
 ATTACK_SPEED = (6,8)
-STRENGTH     = 50
+STRENGTH     = 100
 
 class Shmoo(NPC):
 
@@ -23,5 +23,19 @@ class Shmoo(NPC):
         """
         NPC.__init__(self, name, "shmoo.png", pos, AGGRESSION, SPEED,
                          ENDURANCE,STRENGTH)
+
+        self._maxVelocity = 40
+
+        # Specify which rows contain which animations
+        self._standRow = 0
+        self._walkRow = 0
+        self._forwardRow = 0
+        self._backwardRow = 0
+        
+        # Specify how many frames for each animation
+        self._standFrames    = 1
+        self._walkFrames     = 1
+        self._forwardFrames  = 1
+        self._backwardFrames = 1
 
         

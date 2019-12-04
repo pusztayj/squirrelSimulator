@@ -62,7 +62,7 @@ class Cheats():
                     self._code = (4,(int(terms[1]),terms[2]))
         elif len(terms) == 5:
             if terms[0] == "spawnAnimal":
-                if terms[1].lower() in ("chipmunk","fox","bear","hedgehog","deer","rabbit"):
+                if terms[1].lower() in ("chipmunk","fox","bear","hedgehog","deer","rabbit","shmoo"):
                     if terms[2].isdigit() and terms[3].isdigit():
                         if terms[4].isdigit():
                             self._code = (6,terms[1],(int(terms[2]),int(terms[3])),int(terms[4]))

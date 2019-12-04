@@ -40,7 +40,7 @@ class FrameManager(object):
          "tempSnake.png":(128,128),
          "tempDeer.png":(128,128),
          "tempRabbit.png":(128,128),
-         "shmoo.png":(128,128),
+         "shmoo.png":(32,32),
          "tempHedgeHog.png":(128,128),
          "cow.png":(128,128),
          "combatBackground":(1200,500),
