@@ -588,10 +588,7 @@ class MainLevel(Level):
         if self._hungerTimer <= 0:
             self._player.decrementHunger()
             self._hungerTimer = 2 * self._worldClock.getHourLength()
-
-        self._nightFilter.setAlpha(math.sin(self._worldClock.getTime()/
-                                            (self._worldClock.getDayLength()
-                                             /4))*200)
+        self._nightFilter.setAlpha(round((-100*math.sin((math.pi /60)*(self._worldClock.getTime()-5)))+100))
 
         if self._player.isStarving():
             self._starveTimer -= ticks

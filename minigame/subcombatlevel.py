@@ -305,8 +305,6 @@ class SubCombatLevel(object):
 
     def updateWait(self):
         self._damageText = None
-        print(self._counter)
-        print([x.getName() if x!= None else None for x in self._combatOrder])
         if self._counter > 5:
             self._counter = 0
         if self._combatOrder[self._counter] == None:
