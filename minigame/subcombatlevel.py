@@ -25,9 +25,14 @@ class SubCombatLevel(object):
         in the model. The model changes are handled in combat GUI and through
         the pack. Here we simply update the view. 
         """
+        combatFSM.backToStart()
         self._screen = screen
         self._allies = allies
         self._enemies = enemies
+        self._combatOrder = [None]*6
+        self._combatOrder[::2] = self._allies
+        self._combatOrder[1::2] = self._enemies
+        self._counter = 1
         self._combatSprites = combatSprites
         self._font = pygame.font.SysFont("Times New Roman", 20)
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
@@ -163,7 +168,6 @@ class SubCombatLevel(object):
             self._popup.draw(self._screen)
         self._attackUndoButton.draw(self._screen)
         
-        
     def drawAttack(self):
         self.alwaysDraw()
         self._attackUndoButton.draw(self._screen)
@@ -233,12 +237,14 @@ class SubCombatLevel(object):
                         if r.collidepoint(event.pos):
                             self._animalStats = None
                             attack(self._allies[0],creature) # the model is changed here as told by the controller
-                            self._combatText.setText(self._allies.getNextToAttack().getCombatStatus())
-                            x = self._combatText.getWidth()
-                            self._combatText.setPosition((600-(x//2),100))
+                            #self._combatText.setText(self._combatOrder[self._counter].getCombatStatus())
+                            #x = self._combatText.getWidth()
+                            #self._combatText.setPosition((600-(x//2),100))
+                            self._allies.updatePack()
                             self._enemies.updatePack()
                             combatFSM.changeState("animal click")
-                            self._allies.hasAttacked() # here we udpate the model again
+                            self._combatOrder[::2] = self._allies
+                            self._combatOrder[1::2] = self._enemies
                     elif r.collidepoint(pygame.mouse.get_pos()):
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
                         self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
@@ -287,6 +293,8 @@ class SubCombatLevel(object):
             self._potionSelect.setPosition((600-(x//2),165))
         self._allies.updatePack() # the model is updated here
         self._enemies.updatePack() # the model is updated here
+        self._combatOrder[::2] = self._allies
+        self._combatOrder[1::2] = self._enemies
         if self._victoryScreen != None:
             self._victoryScreen.update()
         if self._allies[0] == None:
@@ -296,55 +304,46 @@ class SubCombatLevel(object):
         self._combatSprites[0].getHealthBar().update()
 
     def updateWait(self):
-        # for the enemies
         self._damageText = None
-        if self._turn == True:
-            if self._enemies.getNextToAttack() == None:
-                self._enemies.hasAttacked()
-                self._turn = not self._turn
-            else:
-                move(self._enemies.getNextToAttack(),self._allies) # the model is changed here as told by the controller
-                self._combatText.setText(self._enemies.getNextToAttack().getCombatStatus())
-                x = self._combatText.getWidth()
-                self._combatText.setPosition((600-(x//2),300))
-                self._orbColor = (222,44,44)
-                self._turnText.setText(self._enemies.getNextToAttack().getName()+"'s turn")
-                x = self._turnText.getWidth()
-                self._turnText.setPosition((600-(x//2),470))
-                a = len([x for x in self._allies if x!=None])
-                self._currentTurnHighlight.setPosition(self.getCombatSprite(self._enemies.getNextToAttack()).getPosition())
-                self._allies.updatePack() # the model is updated here
-                self._enemies.updatePack() # the model is updated here
-                self._enemies.hasAttacked() # here we update the model
-                self._turn = not self._turn
-                if self._enemies.isDead():
-                    combatFSM.changeState("all dead")
-##                if self._allies[0].isDead():
-##                    combatFSM.changeState("killed")
-        # for the allies     
-        elif self._turn == False and self._allies.getNextToAttack() != self._allies[0]:
-            if self._allies.getNextToAttack() == None:
-                self._allies.hasAttacked()
-                self._turn = not self._turn
-            else:
-                move(self._allies.getNextToAttack(),self._enemies)
-                self._combatText.setText(self._allies.getNextToAttack().getCombatStatus())
-                x = self._combatText.getWidth()
-                self._combatText.setPosition((600-(x//2),300))
-                self._orbColor = (15,245,107)
-                self._turnText.setText(self._allies.getNextToAttack().getName()+"'s turn")
-                x = self._turnText.getWidth()
-                self._turnText.setPosition((600-(x//2),470))
-                self._currentTurnHighlight.setPosition(self.getCombatSprite(self._allies.getNextToAttack()).getPosition())
-                self._allies.updatePack() # the model is updated here
-                self._enemies.updatePack() # the model is updated here
-                self._allies.hasAttacked() # here we update the model
-                self._turn = not self._turn
-                if self._enemies.isDead():
-                    combatFSM.changeState("all dead")
-                           
-        else:
-            self._turn = True
+        print(self._counter)
+        print([x.getName() if x!= None else None for x in self._combatOrder])
+        if self._counter > 5:
+            self._counter = 0
+        if self._combatOrder[self._counter] == None:
+            pass
+        elif self._counter != 0 and self._counter % 2 == 0: # these are allies
+            move(self._combatOrder[self._counter],self._combatOrder[1::2])
+            self._combatText.setText(self._combatOrder[self._counter].getCombatStatus())
+            x = self._combatText.getWidth()
+            self._combatText.setPosition((600-(x//2),300))
+            self._orbColor = (15,245,107)
+            self._turnText.setText(self._combatOrder[self._counter].getName()+"'s turn")
+            x = self._turnText.getWidth()
+            self._turnText.setPosition((600-(x//2),470))
+            self._currentTurnHighlight.setPosition(self.getCombatSprite(self._combatOrder[self._counter]).getPosition())
+            self._allies.updatePack() # the model is updated here
+            self._enemies.updatePack() # the model is updated here
+            self._combatOrder[::2] = self._allies
+            self._combatOrder[1::2] = self._enemies
+            if self._enemies.isDead():
+                combatFSM.changeState("all dead")
+        elif self._counter % 2 == 1: # these are the enemies
+            move(self._combatOrder[self._counter],self._combatOrder[::2]) # the model is changed here as told by the controller
+            self._combatText.setText(self._combatOrder[self._counter].getCombatStatus())
+            x = self._combatText.getWidth()
+            self._combatText.setPosition((600-(x//2),300))
+            self._orbColor = (222,44,44)
+            self._turnText.setText(self._combatOrder[self._counter].getName()+"'s turn")
+            x = self._turnText.getWidth()
+            self._turnText.setPosition((600-(x//2),470))
+            self._currentTurnHighlight.setPosition(self.getCombatSprite(self._combatOrder[self._counter]).getPosition())
+            self._allies.updatePack() # the model is updated here
+            self._enemies.updatePack() # the model is updated here
+            self._combatOrder[::2] = self._allies
+            self._combatOrder[1::2] = self._enemies
+            if self._enemies.isDead():
+                combatFSM.changeState("all dead")
+        elif self._counter == 0: # this is the player
             combatFSM.changeState("done")
             self._turnText.setText("Your turn")
             x = self._turnText.getWidth()
@@ -353,4 +352,9 @@ class SubCombatLevel(object):
             y = self._combatSprites[0].getTextHeight()
             self._currentTurnHighlight = Box(self._playerPos,(100,107+y),
                                                     (255,255,0),3)
+        self._counter += 1
             
+
+
+
+

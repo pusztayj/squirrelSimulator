@@ -94,8 +94,8 @@ class CombatLevel(Level):
             self._lev.drawRetreat()
             self._backWorld.draw(self._screen)
 
-        elif combatFSM.getCurrentState() == "dead":
-            self._lev.drawDead()
+##        elif combatFSM.getCurrentState() == "dead":
+##            self._lev.drawDead()
 
     def handleEvent(self, event):
         self._lev.handleEvent(event) # for the item popups

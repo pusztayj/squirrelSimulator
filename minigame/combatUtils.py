@@ -447,10 +447,10 @@ class VictoryScreen(object):
         self._victoryText = TextBox(text,(100,25),self._textFont,(255,255,255))
         y = self._victoryText.getHeight()
         acorns = min(self._player.getAcorns()+self._lootedAcorns,self._player.getCheekCapacity())
-        self._acornLooted = TextBox("Acorns Looted: "+str(acorns),
+        self._acornLooted = TextBox("Acorns Looted: "+str(self._lootedAcorns),
                                     (100,25+y+2),self._textFont,(255,255,255))
         y += self._acornLooted.getHeight()
-        self._acornCount = TextBox("Your Acorns: "+str(self._player.getAcorns()+self._lootedAcorns),
+        self._acornCount = TextBox("Your Acorns: "+str(acorns),
                                    (100,25+y+2),self._textFont,(255,255,255))
         y += self._acornCount.getHeight()
 

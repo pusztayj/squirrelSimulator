@@ -12,6 +12,7 @@ class FSM():
 
     def __init__(self, startState, states, transitions):
         self._state = startState
+        self._startState = startState
         self._states = states
         self._transitions = transitions
 
@@ -29,6 +30,9 @@ class FSM():
 
     def getTransitions(self):
         return self._transitions
+
+    def backToStart(self):
+        self._state = self._startState
 
 class Rule():
     """
