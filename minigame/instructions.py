@@ -19,6 +19,7 @@ class Instructions(Drawable, Window):
         self._textLyst = textLyst
         self._current = 0
 
+        # Style Attributes
         self._height = 200
         self._width = 300
         self._textFont = pygame.font.SysFont("Times New Roman",20)
