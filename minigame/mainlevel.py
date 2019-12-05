@@ -296,6 +296,8 @@ class MainLevel(Level):
                     self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
                     self._confirmationWindow.display()
                     self._confirmationProceedure = (1,) #Redirect neccessary information
+                    # Stop the player's movement
+                    for k in self._player._movement.keys(): self._player._movement[k] = False
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                 for pile in self._dirtPiles:
@@ -337,6 +339,8 @@ class MainLevel(Level):
                                                                  " won't collect all the acorns")
                                 self._confirmationWindow.display()
                                 self._confirmationProceedure = (2, pile) #Redirect neccessary information
+                                # Stop the player's movement
+                                for k in self._player._movement.keys(): self._player._movement[k] = False
                             else:
                                 self._spawnedPiles.remove(pile)
                                 acorns = pile.getAcorns()
@@ -349,6 +353,8 @@ class MainLevel(Level):
                             self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
                             self._confirmationWindow.display()
                             self._confirmationProceedure = (0, pile) #Redirect neccessary information
+                            # Stop the player's movement
+                            for k in self._player._movement.keys(): self._player._movement[k] = False
                             
                             
                 if item != None and issubclass(type(item), items.Weapon):
