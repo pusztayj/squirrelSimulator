@@ -164,6 +164,8 @@ def main():
                      merchantLevel = None
                      combatLevel = None
                      endScreen = None
+                     lag = True
+                     tutorial.display()
                      if cheatBox.isDisplayed():
                         cheatBox.toggleDisplay()
                      titleScreen._displayed = True
