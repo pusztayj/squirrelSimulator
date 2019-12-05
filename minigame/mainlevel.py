@@ -303,7 +303,7 @@ class MainLevel(Level):
                 for pile in self._dirtPiles:
                     if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                        self._atm = ATM(self._player, pile)
+                        self._atm = ATM(self._player, pile, self._SCREEN_SIZE)
                         
                 for pack in self._packs:
                     for creature in pack:

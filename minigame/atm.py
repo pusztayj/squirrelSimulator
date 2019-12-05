@@ -9,11 +9,12 @@ from graphics.textbox import TextBox
 from graphics.button import Button
 from graphics.textinput import TextInput
 from graphics.window import Window
+from graphics.popupwindow import PopupWindow
 from economy.acorn import Acorn
 
 class ATM(Drawable, Window):
 
-    def __init__(self, player, hole):
+    def __init__(self, player, hole, screensize):
         Drawable.__init__(self, "",(50,25),worldBound=False)
         Window.__init__(self)
         
@@ -23,6 +24,7 @@ class ATM(Drawable, Window):
         # Style Attributes
         self._font = pygame.font.SysFont("Times New Roman", 24)
         self._fontsmall = pygame.font.SysFont("Times New Roman", 16)
+        self._popupFont = pygame.font.SysFont("Times New Roman", 18)
         self._borderColor = (0,0,0)
         self._borderWidth = 5
         self._width = 400
@@ -66,34 +68,73 @@ class ATM(Drawable, Window):
         self._maxCapacity.setPosition(((self._width//2)-(self._maxCapacity.getWidth()//2),self._height - 55))
         self.__updateATM()
 
+
+        # Popup Windows
+        self._popupWindow = PopupWindow("", (0,0), (285,100), self._popupFont,
+                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
+                                        self._popupFont,(255,255,255), borderWidth=1)
+        self._popupWindow.setPosition((screensize[0]//2 - self._popupWindow.getWidth()//2,
+                                       screensize[1]//3 - self._popupWindow.getHeight()//2))
+        self._popupWindow.close()
+
     def deposit(self, amount):
         if amount != "":
             amount = int(amount)
-            if amount <= self._player.getAcorns() and \
-               amount <= self._hole.getCapacity() - self._hole.getAcorns():
+            if amount == 0:
+                self._popupWindow.setText("You are not depositing any acorns")
+                self._popupWindow.display()
+            elif not amount <= self._player.getAcorns():
+                self._popupWindow.setText("You do not have that many\nacorns to deposit")
+                self._popupWindow.display()
+            elif not amount <= self._hole.getCapacity() - self._hole.getAcorns():
+                self._popupWindow.setText("This stash can't hold that\n many more acorns")
+                self._popupWindow.display()
+            else:
                 self._player.setAcorns(self._player.getAcorns() - amount)
                 self._hole.setAcorns(self._hole.getAcorns() + amount)
+        else:
+            self._popupWindow.setText("You are not depositing any acorns")
+            self._popupWindow.display()
 
     def withdraw(self, amount):
         if amount != "":
             amount = int(amount)
-            if amount <= self._hole.getAcorns() and \
-               amount <= self._player.getCheekCapacity() - self._player.getAcorns():
+            if amount == 0:
+                self._popupWindow.setText("You are not withdrawing any acorns")
+                self._popupWindow.display()
+            elif not amount <= self._hole.getAcorns():
+                self._popupWindow.setText("This stash doesn't have\nthat many acorns")
+                self._popupWindow.display()
+            elif not amount <= self._player.getCheekCapacity() - self._player.getAcorns():
+                self._popupWindow.setText("You can't carry all of\nthose acorns")
+                self._popupWindow.display()
+            else:
                 self._player.setAcorns(self._player.getAcorns() + amount)
                 self._hole.setAcorns(self._hole.getAcorns() - amount)
+        else:
+            self._popupWindow.setText("You are not withdrawing any acorns")
+            self._popupWindow.display()
 
     def handleEvent(self, event):
-        self._withdrawButton.handleEvent(event, self.withdraw, (self._withdrawAmount.getInput()), offset=self._offset)
-        self._withdrawAmount.handleEvent(event, (self._withdrawAmount.getInput()), offset=self._offset,
-                                         func=self.withdraw, clearOnEnter=True)
-        self._depositButton.handleEvent(event, self.deposit, (self._depositAmount.getInput()), offset=self._offset)
-        self._depositAmount.handleEvent(event, (self._depositAmount.getInput()), offset=self._offset,
-                                        func=self.deposit, clearOnEnter=True)
-        self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset,
-                                   func=self._hole.setName)
-        self._exitButton.handleEvent(event, self.close, offset=self._offset)
-        self.__updateATM()
-        
+        if self._popupWindow.getDisplay():
+            self._popupWindow.handleEvent(event)
+        else:
+            self._withdrawButton.handleEvent(event, self.withdraw, (self._withdrawAmount.getInput()), offset=self._offset)
+            self._withdrawAmount.handleEvent(event, (self._withdrawAmount.getInput()), offset=self._offset,
+                                             func=self.withdraw, clearOnEnter=True)
+            self._depositButton.handleEvent(event, self.deposit, (self._depositAmount.getInput()), offset=self._offset)
+            self._depositAmount.handleEvent(event, (self._depositAmount.getInput()), offset=self._offset,
+                                            func=self.deposit, clearOnEnter=True)
+            self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset,
+                                       func=self._hole.setName)
+            self._exitButton.handleEvent(event, self.close, offset=self._offset)
+            self.__updateATM()
+
+    def draw(self, screen):
+        Drawable.draw(self, screen)
+        if self._popupWindow.getDisplay():
+            self._popupWindow.draw(screen)
+            
     def __updateATM(self):
 
         # Draw the border
