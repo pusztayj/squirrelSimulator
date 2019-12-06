@@ -260,10 +260,14 @@ def main():
                      if not controls.getDisplay():
                         flicker = True
             else:
+
+               # Handle events on the tutorial display
                if tutorial.getDisplay():
                   tutorial.handleEvent(event)
                   if not tutorial.getDisplay():
                      flicker = True
+
+               # Handle events on the inital name input
                if nameInput.getDisplay():
                   nameInput.handleEvent(event)
                   if not nameInput.getDisplay():
@@ -313,35 +317,46 @@ def main():
          # Display the loading screen
          loading.setDisplay(True)
 
+      # Update the title screen
       if titleScreen.isDisplayed():
          titleScreen.update(ticks)
+      # Create the end screen
       elif player.isDead() and endScreen == None:
          pygame.mixer.music.fadeout(500)
          endScreen = EndScreen(SCREEN_SIZE, player)
+      # Update the end screen
       elif endScreen != None:
          endScreen.update()
+      # Load the level briefly to create a display behind the tutorial
       elif tutorial.getDisplay():
          if lag:
             lag = False
             level.update(ticks)
+      # Load the level briefly to create a display behind the nameInput
       elif nameInput.getDisplay():
          if lag:
             lag = False
             level.update(ticks)
       else:
+         
+         # Update the main level
          if level.isActive() and not loading.isDisplayed():
              level.update(ticks)
 
+         # Update the merchant level
          if merchantLevel != None and merchantLevel.isActive() and \
             not loading.isDisplayed():
              merchantLevel.update(ticks)
 
+         # Update the combat level
          if combatLevel != None and combatLevel.isActive():
             combatLevel.update(ticks)
 
+         # Update the cheat box
          if cheatBox.isDisplayed():
             cheatBox.update(ticks)
 
+         # Update the loading screen
          if loading.isDisplayed():
             loading.update(ticks)         
                    

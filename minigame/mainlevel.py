@@ -396,7 +396,7 @@ class MainLevel(Level):
                                 self._spawnedPiles.remove(pile)
                                 # Determine the number of acorns the player can collect
                                 # based on the number in the pile and the tool being used
-                                acorns = pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost())
+                                acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
                                 self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                             
                     # Check if the player is trying to dig up their own pile
