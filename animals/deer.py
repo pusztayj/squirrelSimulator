@@ -11,12 +11,12 @@ rows needed from the sprite sheet to create the appropriate animations.
 from .npc import NPC
 from modules.animated import Animated
 
-# stats needed for the bear
+# stats needed for the deer
 AGGRESSION   = (0,1)
 SPEED        = (18,24)
 ENDURANCE    = (6,10)
 ATTACK_SPEED = (1,2)
-STRENGTH     = 12
+STRENGTH     = 22
 
 class Deer(NPC):
 

@@ -1,8 +1,11 @@
 """
-Author: Trevor Stalnaker, Justin Pusztay
+@authors: Trevor Stalnaker, Justin Pusztay
 File: pack.py
 
-A class that models a pack or clan of animals
+A class that models a pack of animals. A pack is a group of three
+animals. In this class we create an object that can hold three
+animal type objects. Here we update packs checking if animals are dead
+set leaders of packs. We can also add and remove anmials from packs.
 """
 
 from player import Player
@@ -10,28 +13,42 @@ from player import Player
 class Pack():
 
     def __init__(self, leader, name=""):
-        """Initialize the pack with a leader and a max size"""
-        self._maxSize = 3
-##        leader.setPack(self)
+        """
+        Initialize the pack with a leader and with a name for the pack.
+        """
+        self._maxSize = 3 # the default max size is 3
         self._members = [leader, None, None]
         self._leader = leader
         self._name = name
-        self._nextToAttackIndex = 0
+        self._nextToAttackIndex = 0 # sets the next to attack to 0
         self._nextToAttack = self[self._nextToAttackIndex]
 
     def getNextToAttack(self):
+        """
+        This method is very useful for the combat turn order, where the
+        next animal from a pack to attack is returned. 
+        """
         if self._nextToAttack != None and self._nextToAttack.isDead():
             return None
         else:
             return self._nextToAttack
 
     def getNextToAttackIndex(self):
+        """
+        Returns the index of the next animal in the pack that needs to attack.
+        """
         return self._nextToAttackIndex
 
     def getPackName(self):
+        """
+        Returns the name of the pack.
+        """
         return self._name
 
     def setPackName(self, name):
+        """
+        Sets of the name of the pack. 
+        """
         self._name = name
 
     def getLeader(self):
@@ -39,17 +56,22 @@ class Pack():
         return self._leader
 
     def isLeader(self,animal):
+        """
+        Returns a boolean if the animal is the leader of the pack.
+        """
         return animal == self._leader
 
     def resetLeader(self, newLeader):
-        """Reset the leader of the pack"""
+        """Reset the leader of the pack."""
         self._leader = newLeader
 
     def addMember(self, member):
-        """Add a new member to the pack if able"""
-        if None not in self._members:
+        """
+        Add a new member to the pack if there is room to add an animal.
+        """
+        if None not in self._members: # checks if there is room
             pass
-        for i,animal in enumerate(self):
+        for i,animal in enumerate(self): # Adds the animal to the pack
             if animal == None:
                 self._members[i] = member
 ##                member.setPack(self)
@@ -60,7 +82,7 @@ class Pack():
         self._members = [None if m==member else m for m in self._members]
 
     def getMembers(self):
-        """Return the members of the pack"""
+        """Returns the members of the pack"""
         return self._members
 
     def getSize(self):
@@ -81,15 +103,20 @@ class Pack():
                     break
 
     def isDead(self):
+        """
+        Returns a boolean if all the animals are dead in the pack.
+        """
         return all(v is None for v in self)
 
     def hasAttacked(self):
+        """
+        Updates the get next to attack index and then sets the next animal
+        to attack.
+        """
         if self._nextToAttackIndex % 3 == 2:
             self._nextToAttackIndex = 0
         else:
             self._nextToAttackIndex += 1
-##        if self[self._nextToAttackIndex] == None and not self.isDead():
-##            self.hasAttacked()
         self._nextToAttack = self[self._nextToAttackIndex]
 
     def __repr__(self):
@@ -106,21 +133,38 @@ class Pack():
         return self._members[index]
 
     def __len__(self):
+        """
+        Returns the length of the pack.
+        """
         return len(self._members)
 
     def __contains__(self,animal):
+        """
+        Returns a boolean if an animal is in the pack.
+        """
         return animal in self._members
 
     def trueLen(self):
+        """
+        Returns the number of elements in a pack that are not None.
+        """
         return len([animal for animal in self._members if animal != None])
 
     def draw(self, screen):
+        """
+        Calls the draw method on every method in the pack. In the order that
+        generates the best layering based on the y-positions. 
+        """
         sortedMembers = [x for x in self._members if x != None]
         sortedMembers.sort(key= lambda x: x._position.y + x.getHeight()) 
         for animal in sortedMembers:
             animal.draw(screen)
 
     def update(self, worldsize, ticks):
+        """
+        Handles the updates for each animal in the pack that is not the leader
+        and calls the respective follow player. 
+        """
         if type(self.getLeader()) == Player:
             flank = 1
             for animal in self._members:
