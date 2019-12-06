@@ -102,25 +102,34 @@ class MainLevel(Level):
         self._SCREEN_SIZE = SCREEN_SIZE
         self._WORLD_SIZE = (4000,2000)
 
+        # Fonts to be used in the main level
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
         self._messageFont = pygame.font.SysFont("Times New Roman", 20)
 
+        # Songs played in the main level
         self._songs = ["main1.mp3","main2.mp3","main3.mp3","main4.mp3"]
         self._currentSong = random.choice(self._songs)
 
+        # Create a world clock
         self._worldClock = WorldClock(self._SCREEN_SIZE[0])
 
+        # Set the player pack
         self._playerPack = player_pack
         self._packManager = PackManager(self._playerPack, self._SCREEN_SIZE)
         self._player = self._playerPack.getLeader()
 
+        # Create the ground
         self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
 
+        # Spawn some acorns at start of the game
         self._acorns = [Acorn((random.randint(0,self._WORLD_SIZE[0]),
                                        random.randint(0,self._WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
+
+        # Create empty list for player dirt piles
         self._dirtPiles = []
 
+        # Create empty list for abandoned piles
         self._spawnedPiles = []
 
         # Create timers
@@ -133,6 +142,7 @@ class MainLevel(Level):
         self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
         self._interactionTimer = self._interactionDelay
 
+        # Set the hover popup to None
         self._popup = None
 
         # Create the popup window
@@ -152,12 +162,14 @@ class MainLevel(Level):
         self._confirmationWindow.close()
         self._confirmationProceedure = None
 
+        # Create the player's stats display
         self._stats = StatDisplay((5,5),self._player)
 
+        # Create the night filter
         self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150, False)
 
+        # Set ATM and Interaction windows to None
         self._atm = None
-
         self._interaction = None
 
         # Add merchants to the world
@@ -168,26 +180,34 @@ class MainLevel(Level):
         self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
                             30, self._merchants, name="tree.png")
 
+        # Add packs to the world
         self._packs = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
                                  self._packPopulation,
                                  self._merchants + self._trees)           
 
+        # Create the player's inventory hud
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), self._player)
 
+        # Create the player's armor and weapon display blocks
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
         self._armor = ItemBlock((SCREEN_SIZE[0]-82,5))
 
+        # Set the bribe and steal windows to None
         self._bribeWindow = None
         self._stealWindow = None
 
+        # Set the fight flag to false initially
         self._fightFlag = (False,)
 
+        # Initialize leak to False
         self._leak = False # A boolean flag for leaking acorns
 
+        # Create the XP Manager
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
 
+        # Start playing music
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def setActive(self, boolean):
@@ -211,6 +231,8 @@ class MainLevel(Level):
         for pile in self._spawnedPiles:
             pile.draw(screen)
 
+        # Determine the proper layering for trees
+        # Allow the player to walk behind and in front of trees
         notDrawnTrees = []
         playerY = self._player.getY()
         for tree in self._trees:
@@ -221,6 +243,8 @@ class MainLevel(Level):
             else:
                 notDrawnTrees.append(tree)
 
+        # Determine the proper layering for merchants
+        # Allow the player to walk behind and in front of merchants
         notDrawnMerchants = []
         for merch in self._merchants:
             merchY = merch.getY()
@@ -235,11 +259,13 @@ class MainLevel(Level):
         for pack in self._packs:
             pack.draw(screen)
 
+        # Draw remaining merchants
         for merchant in notDrawnMerchants:
             merchant.draw(screen)
 
         self._player.draw(screen)
 
+        # Draw remaining trees
         for tree in notDrawnTrees:
             tree.draw(screen)
 
@@ -284,6 +310,7 @@ class MainLevel(Level):
     def handleEvent(self, event):
         """Handles events for the main level"""
 
+        # Handle events when various windows and displays are not open
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._packManager.getDisplay()) and \
@@ -314,12 +341,16 @@ class MainLevel(Level):
                     # Stop the player's movement
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
+            # Check if the left mouse button has been clicked
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+
+                # Check if the player has clicked on a dirtpile
                 for pile in self._dirtPiles:
                     if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         self._atm = ATM(self._player, pile, self._SCREEN_SIZE)
-                        
+
+                # Check if the player has clicked on a creature
                 for pack in self._packs:
                     for creature in pack:
                         if creature != None:
@@ -331,7 +362,8 @@ class MainLevel(Level):
                                     self._interaction = Interaction(creature)
                                     self._interactionTimer = self._interactionDelay
                                     for k in self._player._movement.keys(): self._player._movement[k] = False
-                            
+
+                # Check if the player has clicked on a merchant
                 for merchant in self._merchants:
                     if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
@@ -362,10 +394,12 @@ class MainLevel(Level):
                                 for k in self._player._movement.keys(): self._player._movement[k] = False
                             else:
                                 self._spawnedPiles.remove(pile)
-                                acorns = pile.getAcorns()
+                                # Determine the number of acorns the player can collect
+                                # based on the number in the pile and the tool being used
+                                acorns = pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost())
                                 self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                             
-
+                    # Check if the player is trying to dig up their own pile
                     for pile in self._dirtPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
