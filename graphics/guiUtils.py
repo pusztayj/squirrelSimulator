@@ -84,7 +84,7 @@ class ItemCard(object):
         """
         nameFont = pygame.font.SysFont("Times New Roman", 32)
         detailsFont = pygame.font.SysFont("Times New Roman", 16)
-        s = pygame.Surface((200,600))
+        s = pygame.Surface((240,600))
         s.fill((0,0,0))
         a = copy.copy(entity)
         a.setWorldBound(False)

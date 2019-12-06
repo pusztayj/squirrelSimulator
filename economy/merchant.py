@@ -46,6 +46,7 @@ class Merchant(NPC, Drawable):
         """
         Generates an inventory for the merchant. 
         """
+        self._inventory.clear()
         for x in range(3):
             for x in items.items.__all__:
                 if 50 >= random.randint(0,100):
