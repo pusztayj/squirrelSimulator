@@ -86,9 +86,12 @@ def main():
 
    titleScreen = TitleScreen(SCREEN_SIZE)
 
+   nameInput = NameInput(player, SCREEN_SIZE)
+
    tutorial = Instructions((SCREEN_SIZE[0]//2-150,
                             SCREEN_SIZE[1]//2-100),
                            ["Test text","more text","and some more"])
+   tutorial.close()
 
    endScreen = None
 
@@ -135,6 +138,9 @@ def main():
          if tutorial.getDisplay():
             tutorial.draw(screen)
 
+         if nameInput.getDisplay():
+            nameInput.draw(screen)
+
          if titleScreen.isDisplayed():
             titleScreen.draw(screen)
 
@@ -149,7 +155,8 @@ def main():
          if titleScreen.isDisplayed():
             titleScreen.handleEvent(event)
          else:
-            if not tutorial.getDisplay():
+            
+            if not tutorial.getDisplay() and not nameInput.getDisplay():
 
                if endScreen != None: 
                   c = endScreen.handleEvent(event)
@@ -231,9 +238,14 @@ def main():
                   tutorial.handleEvent(event)
                   if not tutorial.getDisplay():
                      flicker = True
-
-
-                  
+               if nameInput.getDisplay():
+                  nameInput.handleEvent(event)
+                  if not nameInput.getDisplay():
+                     flicker = True
+                     # Update the stats display with the new name
+                     level._stats.update() 
+                     tutorial.display()
+                                  
       #Calculate ticks
       ticks = gameClock.get_time() / 1000
 
@@ -283,6 +295,10 @@ def main():
       elif endScreen != None:
          endScreen.update()
       elif tutorial.getDisplay():
+         if lag:
+            lag = False
+            level.update(ticks)
+      elif nameInput.getDisplay():
          if lag:
             lag = False
             level.update(ticks)

@@ -59,6 +59,11 @@ class StatDisplay(Drawable):
         self.update()
 
     def update(self):
+        
+        # Update the players name incase it changed
+        self._nameDisplay = TextBox(self._entity.getName(), (5,0),
+                                    self._nameFont, self._fontColor)
+                
         surfBack = pygame.Surface((self._width + (self._borderWidth * 2),
                                    self._height + (self._borderWidth * 2)))
         surfBack.fill(self._borderColor)

@@ -99,6 +99,9 @@ class TextInput(Drawable):
     def getInput(self):
         return self._textbox.getText()
 
+    def setText(self, text):
+        self._textbox.setText(text)
+
     def __updateInput(self):
         surfBack = pygame.Surface((self._width+(self._borderWidth*2),
                                    (self._height+(self._borderWidth*2))))
