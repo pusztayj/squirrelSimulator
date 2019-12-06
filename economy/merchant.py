@@ -118,7 +118,7 @@ class Merchant(NPC, Drawable):
         minimumacorns = random.randint(450,700)
         minimumUtility = random.randint(30,50)
         if self._acorns >= cost:
-            if item.isBuyable() == True:
+            if item.isBuyable() == True and item.getName() != "Health Potion":
                 if self._acorns - cost >= minimumacorns:
                     if item.getUtility() >= minimumUtility:
                         self._merchantSpeak = "Item Sold" 
@@ -130,7 +130,10 @@ class Merchant(NPC, Drawable):
                     self._merchantSpeak = "Merchant does not want to spend too many acorns"
                     return False
             else:
-                self._merchantSpeak = "Item is not buyable."
+                if item.getName() != "Health Potion":
+                    self._merchantSpeak = "Item is not buyable."
+                else:
+                    self._merchantSpeak = "You can't sell health potions."
                 return False 
         else:
             self._merchantSpeak = "Merchant did not have enough acorns."

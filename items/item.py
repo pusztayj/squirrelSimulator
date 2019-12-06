@@ -1,3 +1,10 @@
+"""
+@authors: Justin Pusztay, Trevor Stalnaker
+
+We create an abstracted item class that holds its name, level,
+durability, utility, whether or not the item is buyable or sellable. 
+"""
+
 import random, math
 
 class Item():
@@ -5,6 +12,10 @@ class Item():
     def __init__(self, name, level=1, durability=100, utility = 100,
                  value = 50, requirements=None, isBuyable = True,
                  isSellable = True):
+        """
+        Here we initialize the itmem class where we pass its name, utility,
+        value, and whether or not the item is buyable or sellable. 
+        """
         self._name = name
         self._level = level
         self._skillRequirements = requirements
