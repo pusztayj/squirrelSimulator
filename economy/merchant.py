@@ -51,6 +51,9 @@ class Merchant(NPC, Drawable):
             for x in items.items.__all__:
                 if 50 >= random.randint(0,100):
                     self._inventory.addItem(globals()[x]())
+
+    def restock(self):
+        if len(self._inventory)
         
     def getRace(self):
         """Returns the race of the merchant."""

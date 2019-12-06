@@ -766,6 +766,8 @@ class MainLevel(Level):
         # Check if a day has passed in game time
         if self._worldClock.dayPassed():
             self._player.setXP(self._player.getXP() + self._xpPerDay)
+            for x in self._merchants: # do 2 days
+                x.generateInventory()
 
         # Load and play a new song if the current song has ended
         if not pygame.mixer.music.get_busy():
