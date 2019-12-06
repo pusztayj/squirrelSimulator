@@ -1,3 +1,7 @@
+"""
+Author: Trevor Stalnaker
+File: mainlevel.py
+"""
 import pygame, random, math
 from graphics import *
 from modules.vector2D import Vector2
@@ -24,6 +28,7 @@ from minigame.xpmanager import XPManager
 creatures = [Bear, Fox, Rabbit, Deer, Chipmunk, Hedgehog]
 
 def createPack(pos):
+    """Creates a random pack of a size between 1 and 3"""
     leader = random.choice(creatures)(pos=pos)
     p = Pack(leader)
     leader.setPack(p)
@@ -50,6 +55,7 @@ def createPack(pos):
     return p
 
 def spawnPacks(spawnRange, spawnCount, collidables):
+    """Spawns a given number of packs into the world avoiding overlaps"""
     spawns = []
     packs = []
     while len(packs) < spawnCount:
@@ -60,6 +66,7 @@ def spawnPacks(spawnRange, spawnCount, collidables):
     return packs
 
 def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
+    """Spawns a given number of entities into the world avoiding overlaps"""
     spawns = []
     while len(spawns) < spawnCount:
         if name == None:
@@ -79,6 +86,7 @@ def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=Fa
 class MainLevel(Level):
 
     def __init__(self, player_pack, SCREEN_SIZE, cheatBox):
+        """Initializes the main level"""
 
         super().__init__()
 
@@ -183,11 +191,13 @@ class MainLevel(Level):
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def setActive(self, boolean):
+        """Sets the level to its active state"""
         self._active = boolean
         self._currentSong = random.choice(self._songs)
         SoundManager.getInstance().playMusic(self._currentSong)
 
     def draw(self, screen):
+        """Draws the level to the screen"""
         
         #Draw the background to the screen
         self._ground.draw(screen)
@@ -272,6 +282,7 @@ class MainLevel(Level):
             self._confirmationWindow.draw(screen)
 
     def handleEvent(self, event):
+        """Handles events for the main level"""
 
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
@@ -326,15 +337,19 @@ class MainLevel(Level):
                                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                         return (1, merchant) # Set Game Mode to Merchant and provide merchant
 
+            # Check for a right click event
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
-                
+
+                # Get the current active item in the hud
                 item = self._hud.getActiveItem()
-                
+
+                # Player eats a food item
                 if item != None and issubclass(type(item), items.Food):
                     self._player.getInventory().removeItem(item)
                     self._player.eat(item._hungerBoost, item._healthBoost)
-                    
-                if item != None and type(item) == items.Shovel:
+
+                # Uses a tool to dig up an acorn pile
+                if item != None and type(item) in (items.Shovel,items.Hoe,items.PickAx):
                     for pile in self._spawnedPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
@@ -360,7 +375,7 @@ class MainLevel(Level):
                             # Stop the player's movement
                             for k in self._player._movement.keys(): self._player._movement[k] = False
                             
-                            
+                # Sets the current weapon            
                 if item != None and issubclass(type(item), items.Weapon):
                     previous = self._weapon.getItem()
                     if previous != None:
@@ -368,6 +383,8 @@ class MainLevel(Level):
                     self._player.equipItem(item)
                     self._weapon.setItem(item)
                     self._player.getInventory().removeItem(item)
+
+                # Sets the current armor
                 if item != None and issubclass(type(item), items.Armor):
                     previous = self._armor.getItem()
                     if previous != None:
@@ -376,10 +393,12 @@ class MainLevel(Level):
                     self._armor.setItem(item)
                     self._player.getInventory().removeItem(item)
 
+                # Applies a potion
                 if item != None and issubclass(type(item), items.Potions):
                     self._player.getInventory().removeItem(item)
                     self._player.heal(item.getHealthBoost())
 
+        # If a variety of windows and interfaces are not displayed
         if not self._popupWindow.getDisplay() and \
            (self._bribeWindow==None or not self._bribeWindow.getDisplay()) and \
            not self._confirmationWindow.getDisplay() and \
@@ -387,6 +406,7 @@ class MainLevel(Level):
             if self._atm != None and self._atm.getDisplay():
                 self._atm.handleEvent(event)
 
+            # Handle events on the pack manager
             if self._packManager.getDisplay():
                 c = self._packManager.handleEvent(event)
                 if c != None and c[0] == 9:
@@ -397,6 +417,7 @@ class MainLevel(Level):
                     self._packs.append(p)
                     clone.setPack(p)
 
+            # Handle events on the interaction interface
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
                 self._popup = None
                 self._interaction.handleEvent(event)
@@ -436,11 +457,14 @@ class MainLevel(Level):
                     self._stealWindow = Steal(self._player, e, self._SCREEN_SIZE)
                     self._stealWindow.display()
 
+        # Determine the relative position of the mouse
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
         m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
         popup_pos = (mouse[0] + 5, mouse[1] + 5)
 
+        # Create a list of current creatures in the game
+        # for use with popup creation
         creatures = []
         for pack in self._packs:
             for creature in pack:
@@ -449,7 +473,8 @@ class MainLevel(Level):
         for creature in self._playerPack:
             if creature != None:
                 creatures.append(creature)
-        
+
+        # Create the hover popups if the mouse is over an entity
         self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:
             self._popup = self.setPopup(self._dirtPiles, m_pos_offset, popup_pos, self._popupFont)
@@ -458,6 +483,7 @@ class MainLevel(Level):
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
+        # Check if the pack manager should be opened or closed
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
@@ -469,6 +495,7 @@ class MainLevel(Level):
                     self._packManager.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
+        # Check if the XP Manager should be opened or closed
         if (self._atm == None or not self._atm.getDisplay()) and \
            (self._interaction == None or not self._interaction.getDisplay()) and \
            (not self._popupWindow.getDisplay()) and \
@@ -482,6 +509,7 @@ class MainLevel(Level):
                     self._xpManager.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
+        # Once the user confirms, dig up a pile or not
         if self._confirmationWindow.getDisplay():
             c = self._confirmationWindow.handleEvent(event)
             if c == 1 and self._confirmationProceedure!=None:
@@ -513,10 +541,12 @@ class MainLevel(Level):
                     acorns = pile.getAcorns()
                     self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
 
+        # Handle events on the bribe interface
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
+        # Handle events on the steal interface
         if self._stealWindow != None and self._stealWindow.getDisplay():
             bustedRobbery = self._stealWindow.handleEvent(event)
             self._interaction.updateInteraction()
@@ -525,6 +555,7 @@ class MainLevel(Level):
                 self._popupWindow.display()
                 self._fightFlag = (True, self._interaction.getEntity().getPack()) #Start Combat on okay
 
+        # Handle events on the XP Manager
         if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
            not self._confirmationWindow.getDisplay():
             c = self._xpManager.handleEvent(event)
@@ -547,6 +578,7 @@ class MainLevel(Level):
                                 for k in self._player._movement.keys(): self._player._movement[k] = False
                                 self._fightFlag = (True, leader.getPack()) #Start Combat on okay
 
+        # Display the combat window once the player confirms the popup window
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
             if self._popupWindow.getConfirmed() and self._fightFlag[0]:
@@ -560,6 +592,7 @@ class MainLevel(Level):
                 return (2,self._playerPack,enemyPack)
                     
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
+       """Creates and manages hover popups"""
        for entity in lyst:
           x,y = entity.getPosition()
           for rect in entity.getCollideRects():
@@ -571,6 +604,7 @@ class MainLevel(Level):
                  return Popup(name, popup_pos, font)
 
     def update(self, ticks):
+        """Updates the main level based on ticks from the game clock"""
 
         # Check if acorns have been collected or if they have despawned
         for acorn in self._acorns:
@@ -665,13 +699,17 @@ class MainLevel(Level):
         #Update InGame Clock
         self._worldClock.update(ticks)
 
+        # Update the players inventory hud
         self._hud.update(ticks)
 
+        # Update the current weapon and armor displays     
         self._weapon.updateBlock()
         self._armor.updateBlock()
 
+        # Update the player's pack
         self._playerPack.update(self._WORLD_SIZE, ticks)
-        
+
+        # Update the pack manager
         self._packManager.update(ticks)
 
         # Remove dead packs from the game
@@ -689,9 +727,11 @@ class MainLevel(Level):
             if pack.trueLen() > 1:
                 pack.update(self._WORLD_SIZE, ticks)
 
+        # Check if a day has passed in game time
         if self._worldClock.dayPassed():
             self._player.setXP(self._player.getXP() + self._xpPerDay)
 
+        # Load and play a new song if the current song has ended
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
             while temp == self._currentSong:
