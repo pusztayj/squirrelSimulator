@@ -574,6 +574,9 @@ class MainLevel(Level):
                 acorn.collected()
             acorn.update(ticks)
 
+        for pile in self._spawnedPiles:
+            pile.update(ticks)
+
         self._acornSpawnTimer -= ticks
         if self._acornSpawnTimer <= 0:
             self._acorns.append(Acorn((random.randint(0,self._WORLD_SIZE[0]),
