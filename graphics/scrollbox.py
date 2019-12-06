@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: scrollbox.py
+
+A class that models and manages a Scroll Box widget
 """
 
 import pygame
@@ -12,6 +14,7 @@ class ScrollBox(Drawable):
 
     def __init__(self, position, dimensions, internalSurface,
                  borderColor=(0,0,0), borderWidth=0):
+        """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         self._height = dimensions[0]
         self._width = dimensions[1]
@@ -47,12 +50,15 @@ class ScrollBox(Drawable):
         self.updateScrollBox()
 
     def getOffset(self):
+        """Returns the current internal offset of the scroll box"""
         return self._slider.getY() * self._step * -1
 
     def getInternalSurface(self):
+        """Return the surface within the scroll box"""
         return self._internalSurface
 
     def setInternalSurface(self, surface):
+        """Replaces the internal surface of the scroll box with a given surface"""
         if issubclass(type(surface), MySurface):
             self._internalSurface.update(surface.getImage())
         else:
@@ -73,6 +79,7 @@ class ScrollBox(Drawable):
         self._slider.setPosition(tempPos)
 
     def dragSlider(self):
+        """Determines the positioning of the slider and updates it accordingly"""
         if self._scrolling:
             prevY = self._slider.getY()
             x,y = pygame.mouse.get_pos()
@@ -86,6 +93,7 @@ class ScrollBox(Drawable):
                 self.moveBar(y)
 
     def moveBar(self, y):
+        """Updates the side slider's position"""
         # Update the slider's position
         self._slider.setPosition((self._slider.getX(), min(self._height - self._slider.getHeight(),
                                                                    max(0,y))))
@@ -96,7 +104,9 @@ class ScrollBox(Drawable):
         self.updateScrollBox()
         
 
-    def move(self, event):        
+    def move(self, event):
+        """Handles events on the scroll box"""
+        # Check if the side bar is being clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button==1:
                 ex,ey = event.pos
@@ -104,19 +114,21 @@ class ScrollBox(Drawable):
                 pos = (ex-ox, ey-oy)
                 if self._slider.getCollideRect().collidepoint(pos):
                     self._scrolling = True
+            # Check if the scroll wheel is being used
             if event.button==4 and self.getCollideRect().collidepoint(event.pos):
                 self.moveBar(self._slider.getY()-5)
             if event.button==5 and self.getCollideRect().collidepoint(event.pos):
                 self.moveBar(self._slider.getY()+5)
+        # Set scrolling to false when the mouse button is released
         if event.type == pygame.MOUSEBUTTONUP and event.button==1:
             self._scrolling = False
         
-
             # Update the scroll box
             self.updateScrollBox()
         self.dragSlider()
     
     def updateScrollBox(self):
+        """Updates the display of the scroll box based on offsets and parameters"""
         surfBack = pygame.Surface((self._width+(self._borderWidth*2),
                                    (self._height+(self._borderWidth*2))))
         surfBack.fill(self._borderColor)

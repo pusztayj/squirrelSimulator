@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: statdisplay.py
+
+A class that creates a display for the player's stats
 """
 
 from modules.drawable import Drawable
@@ -14,6 +16,7 @@ digitLen = {1:33, 2:38, 3:45, 4:55}
 class StatDisplay(Drawable):
 
     def __init__(self, position, entity):
+        """Initializes the stats display"""
         super().__init__("", position, worldBound=False)
         self._entity = entity
         self._width = 200
@@ -48,7 +51,6 @@ class StatDisplay(Drawable):
                                      self._fontColor)
         self._acornCount = TextBox("", (self._width-50, 4),
                                        self._font, self._fontColor)
-##        self._levelLabel = TextBox("Level " + entity.getLevel())
 
         # Save an image of the entity and of an acorn
         self._entityImage = entity.getImage()
@@ -59,6 +61,7 @@ class StatDisplay(Drawable):
         self.update()
 
     def update(self):
+        """Update the stats display as the player's attributes change"""
         
         # Update the players name incase it changed
         self._nameDisplay = TextBox(self._entity.getName(), (5,0),

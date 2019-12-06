@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: popupwindow.py
+
+A class that models and manages a pop up notification window
 """
 
 import pygame
@@ -16,6 +18,7 @@ class PopupWindow(Drawable, Window):
                  backgroundColor, buttonColor, buttonDimensions, buttonFont,
                  buttonFontColor, buttontext="OK", buttonBorderWidth=1,
                  buttonBorderColor=(0,0,0), borderWidth=0, borderColor=(0,0,0)):
+        """Initializes the widget with a variety of parameters"""
         Drawable.__init__(self, "", position, worldBound=False)
         Window.__init__(self)
         self._height = dimensions[1]
@@ -50,6 +53,7 @@ class PopupWindow(Drawable, Window):
         self.updateWindow()
 
     def setText(self, text):
+        """Sets the text of the pop up and centers the new text"""
         self._t = makeMultiLineTextBox(text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
@@ -58,20 +62,24 @@ class PopupWindow(Drawable, Window):
         self.updateWindow()
 
     def confirm(self):
+        """Closes the window and sets the confirmed flag to true"""
         self.close()
         self._confirmed = True
 
     def getConfirmed(self):
+        """Returns the boolean confirmation and resets it to None"""
         con = self._confirmed
         self._confirmed = None
         return con
 
     def handleEvent(self, event):
+        """Handles events on the pop up window"""
         self._offset = self._position
         self._b.handleEvent(event,self.confirm,offset=self._offset)
         self.updateWindow()
 
     def updateWindow(self):
+        """Updates the attributes of the pop up window"""
         surfBack = pygame.Surface((self._width, self._height))
         surfBack.fill(self._borderColor)
         surf = pygame.Surface((self._width-(self._borderWidth*2),

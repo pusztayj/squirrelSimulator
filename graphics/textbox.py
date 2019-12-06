@@ -36,6 +36,7 @@ class TextBox(Drawable):
         self.__updateTextBox()
 
     def setPosition(self, pos):
+        """Sets the position of the text box"""
         self._position = pos
 
     def getText(self):

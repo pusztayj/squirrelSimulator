@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: scrollselector.py
+
+A class that models a scroll selector, a scroll box with internal buttons
 """
 
 import pygame
@@ -13,6 +15,7 @@ class ScrollSelector(Drawable):
 
     def __init__(self, position, dimensions, selectionHeight, selections, backgroundColor,
                  borderColor=(0,0,0), borderWidth=0):
+        """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -28,6 +31,7 @@ class ScrollSelector(Drawable):
         self.update()
 
     def makeDisplay(self):
+        """Creates the buttons for the internal surface"""
         surf = pygame.Surface((self._width, self._internalHeight))
         font = pygame.font.SysFont("Times New Roman", 16)        
         ypos = 0
@@ -41,6 +45,7 @@ class ScrollSelector(Drawable):
         return MySurface(surf)
 
     def updateSelections(self, selections):
+        """Update the buttons with the new selections"""
         self._internalHeight = self._selectionHeight * len(selections)
         self._selections = selections
         self._buttons = []
@@ -49,12 +54,14 @@ class ScrollSelector(Drawable):
         self.update()
 
     def updateDisplay(self):
+        """Updates the internal surface"""
         surf = pygame.Surface((self._width, self._internalHeight))
         for b in self._buttons:
             b.draw(surf)
         return surf
 
     def handleEvent(self, event):
+        """Handle events on the scroll selector"""
         self._scrollBox.move(event)
         offset = (self._position[0], self._position[1] + self._scrollBox.getOffset())
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP)\
@@ -70,6 +77,7 @@ class ScrollSelector(Drawable):
         self.update()
 
     def update(self):
+        """Update the scroll selector"""
         self._scrollBox.updateScrollBox()
         self._image = self._scrollBox.getImage()
         

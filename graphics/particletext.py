@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: particletext.py
+
+A class that models and manages text that moves and changes in opacity
 """
 
 import pygame
@@ -9,6 +11,7 @@ from graphics import *
 class ParticleText():
 
     def __init__(self, text, startPos, endPos, time, font, fontColor):
+        """Initializes the widget with a variety of parameters"""
         self._text = text
         self._startPos = startPos
         self._endPos = endPos
@@ -30,6 +33,7 @@ class ParticleText():
         
 
     def formatText(self):
+        """Formats the text based on parameters passed in the init"""
         tboxes = []
         lines = self._text.split("\n")
         width = TextBox(max(lines, key=len),self._startPos,
@@ -45,15 +49,18 @@ class ParticleText():
         return tboxes
 
     def draw(self, surface):
+        """Draws the particle text object if its animation is not finished"""
         if not self.finished():
             for t in self._textBoxes:
                 t._image.set_alpha(self._alpha)
                 t.draw(surface)
 
     def finished(self):
+        """Sets done to True"""
         return self._done
 
     def update(self, ticks):
+        """Update the attributes and position of the text based on ticks"""
         
         # Update the position of the textbox
         if self._effectTimer > 0:

@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker, Justin Pusztay
 File: popup.py
+
+A class that models hover over pop ups
 """
 
 import pygame
@@ -38,6 +40,7 @@ class Popup(Drawable):
     def __init__(self, text, position, font,
                  color=(0,0,0), backgroundColor=(255,255,255),
                  borderColor=(0,0,0), borderWidth=1, margin=2,multiLine = False):
+        """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         if multiLine == True:
             self._textbox = makeMultiLineTextBox(text,(0,0),font,color,backgroundColor)
@@ -51,6 +54,7 @@ class Popup(Drawable):
         self.__updatePopup()
 
     def __updatePopup(self):
+        """Update the pop up after parameters have been changed"""
         surfBack = pygame.Surface((self._width+(self._borderWidth*2),
                                    (self._height+(self._borderWidth*2))))
         surfBack.fill(self._borderColor)
