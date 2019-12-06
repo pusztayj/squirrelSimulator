@@ -70,7 +70,8 @@ class MainLevel(Level):
 
         self._xpPerDay = 1
 
-        self._attackThreshold = 20
+        self._attackThreshold = 25 # Friendscore at which animals begin to attack
+        self._aggressionThreshold = 75 # Agression level at which attacks will happen
 
         self._cheatBox = cheatBox
 
@@ -101,6 +102,7 @@ class MainLevel(Level):
         # Create timers
         self._acornSpawnTimer = random.randint(2,5)
         self._pileSpawnTimer = random.randint(20,40)
+        self._acornLeakTimer = self._worldClock.getHourLength()
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
 
@@ -172,6 +174,8 @@ class MainLevel(Level):
         self._stealWindow = None
 
         self._fightFlag = (False,)
+
+        self._leak = False # A boolean flag for leaking acorns
 
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
@@ -528,19 +532,20 @@ class MainLevel(Level):
                 if c[0] == 0:
                     self._popupWindow.setText("You do not have any XP")
                     self._popupWindow.display()
-                ##if c[0] == 1:
-                ##    self._popupWindow.setText(c[1] + " upgraded")
-                ##    self._popupWindow.display()
 
-##        for pack in self._packs:
-##            leader = pack.getLeader()
-##            rect = leader.getWanderRect()
-##            if leader.getFriendScore() < self._attackThreshold:
-##                if self._player.getCollideRect().colliderect(rect):
-##                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
-##                    self._popupWindow.display()
-##                    for k in self._player._movement.keys(): self._player._movement[k] = False
-##                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+        # Check to see if NPC creatures want to attack the player
+        for pack in self._packs:
+            leader = pack.getLeader()
+            rect = leader.getWanderRect()
+            for creature in pack:
+                if creature != None:
+                    if creature.getFriendScore() < self._attackThreshold:
+                        if creature.getAggression() > self._aggressionThreshold:
+                            if self._player.getCollideRect().colliderect(rect):
+                                self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+                                self._popupWindow.display()
+                                for k in self._player._movement.keys(): self._player._movement[k] = False
+                                self._fightFlag = (True, leader.getPack()) #Start Combat on okay
 
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
@@ -567,6 +572,7 @@ class MainLevel(Level):
 
     def update(self, ticks):
 
+        # Check if acorns have been collected or if they have despawned
         for acorn in self._acorns:
             if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \
                 self._player.getCheekCapacity() - self._player.getAcorns() > 0:
@@ -574,9 +580,11 @@ class MainLevel(Level):
                 acorn.collected()
             acorn.update(ticks)
 
+        # Update piles so that they can despawn
         for pile in self._spawnedPiles:
             pile.update(ticks)
 
+        # Spawn acorns around the map
         self._acornSpawnTimer -= ticks
         if self._acornSpawnTimer <= 0:
             self._acorns.append(Acorn((random.randint(0,self._WORLD_SIZE[0]),
@@ -593,12 +601,16 @@ class MainLevel(Level):
             self._spawnedPiles.append(d)
             self._pileSpawnTimer = random.randint(20,40)
 
+        # Decrement the hunger time and update hunger
         self._hungerTimer -= ticks
         if self._hungerTimer <= 0:
             self._player.decrementHunger()
             self._hungerTimer = 2 * self._worldClock.getHourLength()
+
+        # Update the night filter's alpha values
         self._nightFilter.setAlpha(round((-100*math.sin((math.pi /60)*(self._worldClock.getTime()-5)))+100))
 
+        # Control if a player is starving
         if self._player.isStarving():
             self._starveTimer -= ticks
             if self._starveTimer <= 0:
@@ -608,12 +620,33 @@ class MainLevel(Level):
         else:
             self._starveTimer = 2 * self._worldClock.getHourLength()
 
+        # Control acorn leakage if the player is carrying too many acorns
+        if self._player.getAcorns() > self._player.getCheekCapacity():
+            if self._leak == False:
+                self._leak = True
+                self._popupWindow.setText("You are carrying too many acorns!\nStash them or you'll drop them")
+                self._popupWindow.display()
+                for k in self._player._movement.keys(): self._player._movement[k] = False
+            self._acornLeakTimer -= ticks
+            if self._acornLeakTimer <= 0:
+                percentLoss = random.randint(3,4)
+                overflowAcorns = self._player.getAcorns() - self._player.getCheekCapacity()
+                loss = (overflowAcorns // percentLoss) + random.randint(0,5)
+                self._player.setAcorns(self._player.getAcorns() - loss)
+                self._acornLeakTimer = self._worldClock.getHourLength()
+        else:
+            self._acornLeakTimer = self._worldClock.getHourLength()
+            self._leak = False
+
+        # Update the interaction timer (used to prevent instantaneous button clicks)
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
             self._interactionTimer -= ticks
 
+        # Update the bribe window, if one exists
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.update()
 
+        # Update the steal window, if one exists
         if self._stealWindow != None and self._stealWindow.getDisplay():
             self._stealWindow.update()
 

@@ -17,7 +17,7 @@ from stateMachines import npcFSM
 
 class NPC(Animal, Animated):
 
-    def __init__(self, name, image, pos, agression, speed, endurance,strength):
+    def __init__(self, name, image, pos, aggression, speed, endurance,strength):
 
         Animated.__init__(self, image, pos)
         
@@ -33,7 +33,9 @@ class NPC(Animal, Animated):
         self._maxFriendScore = 100
         self._friendScore = random.randint(10,90)
         
-        self._aggressionLevel = agression
+        self._aggressionLevel = min(random.randint(0,100) +
+                                    random.randint(aggression[0],aggression[1]),
+                                    100)
 
         self._fsm = npcFSM
         
@@ -58,7 +60,12 @@ class NPC(Animal, Animated):
         """Changes the friend score to a certain modifer."""
         self._friendScore = max(0, min(100, self._friendScore + change))
 
-    def handleEvent(self, event, screen):     
+    def getAggression(self):
+        """Returns the aggression stat for the animal"""
+        return self._aggressionLevel
+
+    def handleEvent(self, event, screen):
+        """Handle events for NPCs"""
         popupFont = pygame.font.SysFont("Times New Roman", 16)
         x,y = self.getPosition()
         pos = pygame.mouse.get_pos()

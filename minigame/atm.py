@@ -133,6 +133,8 @@ class ATM(Drawable, Window):
                                             func=self.deposit, clearOnEnter=True)
             self._holeName.handleEvent(event, (self._holeName.getInput()), offset=self._offset,
                                        func=self._hole.setName)
+            if self._hole.getName() != self._holeName.getInput():
+                self._hole.setName(self._holeName.getInput())
             self._exitButton.handleEvent(event, self.close, offset=self._offset)
             self.__updateATM()
 
