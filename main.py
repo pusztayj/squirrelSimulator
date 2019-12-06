@@ -13,6 +13,16 @@ from animals import *
 
 SCREEN_SIZE = (1200,500)
 
+instruct = ["Welcome to Squirrel Simulator",
+             "Hit ESC to pause the game",
+             "Use WASD to move",
+             "You must eat acorns to survive.\nCollect them and hit space\nto eat them",
+             "Click on animals and mercant huts\nto interact with them",
+             "Animals can belong to packs.\nHit E to view your pack",
+             "You gain XP points overtime.\nHit R to view XP chart",
+             "You can only carry so many acorns.\nHit B to bury acorns",
+             "Right click to use and equip items"]
+
 def giveAcorns(entity, amount):
    """Gives an entity a given number of acorns"""
    entity.setAcorns(entity.getAcorns() + amount)
@@ -107,7 +117,7 @@ def main():
    # Create the tutorial window
    tutorial = Instructions((SCREEN_SIZE[0]//2-150,
                             SCREEN_SIZE[1]//2-100),
-                           ["Test text","more text","and some more"])
+                           instruct)
    tutorial.close()
 
    flicker  = False # Used to blit the game background over the controls / tutorials
