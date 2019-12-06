@@ -18,7 +18,7 @@ social security database that we scraped. We also equip items in this class
 and keep track of which items are equipped.
 
 All animals will belong to a pack. For more info on Packs please see
-squirrelSimulator/animals/pack.py
+squirrelSimulator/animals/pack.py.
 """
 
 import random, shelve, re
@@ -353,21 +353,39 @@ class Animal():
         return self._speed
 
     def setSpeed(self, speed):
+        """
+        Sets the speed of the animal.
+        """
         self._speed = speed
 
     def incrementSpeed(self, speed):
+        """
+        Increments the speed.
+        """
         self._speed += speed
 
     def getEndurance(self):
+        """
+        Returns the endurance of the animal.
+        """
         return self._endurance
 
     def setEndurance(self, endurance):
+        """
+        Sets the endurance of the animal. 
+        """
         self._endurance = endurance
 
     def getAcorns(self):
+        """
+        Returns the acorns of the animal. 
+        """
         return self._acorns
 
     def setAcorns(self,acorns):
+        """
+        Sets the acorns of the animal.
+        """
         self._acorns = acorns
 
     def buyLogic(self,item,cost):
@@ -415,83 +433,148 @@ class Animal():
         self._acorns = self._acorns + price
 
     def getStrength(self):
+        """
+        Returns the strength of the animal.
+        """
         return self._strength
 
     def setStrength(self, strength):
+        """
+        Sets the strength of the animal.
+        """
         self._strength = strength
 
     def getIntelligence(self):
+        """
+        Returns the intelligence of the animal.
+        """
         return self._intelligence
 
     def setIntelligence(self, intel):
+        """
+        Sets the intelligence of the animal.
+        """
         self._intelligence = intel
 
     def incrementEndurance(self, endurance):
+        """
+        Sets the endurance of the of the animal.
+        """
         self._endurance += endurance
         
     # modifers 
 
     def getAttackModifers(self):
+        """
+        Returns the attack modifers.
+        """
         return self._attackModifers
 
     def addAttackModifers(self,modifer):
+        """
+        Adds to the attack modifers.
+        """
         self._attackModifers += modifer
 
     def resetAttackModifers(self):
+        """
+        Resets the attack modifers.
+        """
         self._attackModifers = 1
 
     def getDefenseModifers(self):
+        """
+        Returns the defense modifers.
+        """
         return self._defenseModifers
 
     def addDefenseModifers(self,modifer):
+        """
+        Adds to the defense modifers.
+        """
         self._defenseModifers += modifer
 
     def resetDefenseModifers(self):
+        """
+        Resets the defense modifers.
+        """
         self._defenseModifers = 1
 
-    def combatMoveLogic(self,target):
-        if self._health <= 25 and (Potions() in self._inventory):
-            return "heal"
-
     def getInventory(self):
+        """
+        Returns the inventory of the animal.
+        """
         return self._inventory
 
     def setInventory(self, inv):
+        """
+        Sets the inventory of the animal. Must be an inventory object.
+        """
         self._inventory = inv
 
     def equipItem(self, item):
+        """
+        This allows the player to equip the item. Must be a weapon item type.
+        """
         self._inhand = item
 
     def unEquipItem(self):
+        """
+        Allows the player unequip an item they are holding.
+        """
         self._inventory.addItem(self._inhand)
         self._inhand = None
 
     def unEquipArmor(self):
+        """
+        Allows the player unequip armor they are holding.
+        """      
         self._inventory.addItem(self._armor)
         self._armor = None
         
     def equipArmor(self, armor):
+        """
+        This allows player to put on armor. Must pass an armor item type.
+        """
         self._armor = armor
 
     def getArmor(self):
+        """
+        Returns the armor the player has.
+        """
         return self._armor
 
     def isEquipped(self):
+        """
+        Checks if animal has an item equipped. Returns a boolean.
+        """
         return self._inhand != None
 
     def getEquipItem(self):
+        """
+        Returns the item in the animal's hand.
+        """
         return self._inhand
 
     def hasArmor(self):
+        """
+        Returns a boolean if the animal has armor. 
+        """
         return self._armor != None
 
     def getEquipItemName(self):
+        """
+        Returns the name of the item that the player has equipped.
+        """
         if self._inhand == None:
-            return "" # Empty string might be better
+            return "" 
         else:
             return type(self._inhand).__name__
 
     def getArmorsName(self):
+        """
+        Returns the name of the armor that the player has equipped.
+        """
         if self._armor == None:
             return ""
         else:
@@ -501,18 +584,10 @@ class Animal():
         """Used by weapons and armors to check if they are usable by the entity"""
         return (self._xp, self._strength, self._intelligence, self._endurance)
 
-    def giveBuff(self, buff):
-        self._buffs.append(buff)
-
-    def removeBuff(self, buff):
-        self._buffs.remove(buff)
-
-    def applyAndUpdateBuffs(self):
-        self._buffs = [buff for buff in self._buffs if not buff.expired()]
-        for buff in self._buffs:
-            buff.applyBuff()
-
     def __repr__(self):
+        """
+        Returns a string representation of the animal.
+        """
         return "Name:          " + self._name + \
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
