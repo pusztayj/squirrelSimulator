@@ -2,7 +2,9 @@
 Author: Trevor Stalnaker
 File: acorn.py
 
-A class modeling acorns
+A class modeling acorns. It also checks whether or not an acorn has been
+collected and handles the draw and update methods for having it appear
+in the main world. 
 """
 
 from modules.drawable import Drawable
