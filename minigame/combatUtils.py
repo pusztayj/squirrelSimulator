@@ -1,5 +1,26 @@
 """
 In this file we create the functions/classes used for the combat game.
+
+We define a useful dictionary attackDamage that holds the amount of damage
+for a combat attack sequence. 
+
+The following functions are created:
+attack
+attackComputation
+fortify
+heal
+retreat
+move
+lootItems
+retreatLostAcorns
+retreatItemLost
+
+The following classes are created:
+CombatSprite
+Box
+AnimalStats
+VictoryScreen
+RetreatScreen
 """
 
 from items.items import *
@@ -115,9 +136,10 @@ def attack(attacker, defender):
 
 def attackComputation(attacker,defender):
     """
-    Calculates the damage dealt.
+    Calculates the damage dealt between an attacker and a defender.
     """
     attacker.resetDefenseModifers()
+    # try/catch needed as animal equipped weapon/armor might be None
     try:
         attack_strength = (attacker.getStrength() + \
                                (attacker.getEquipItem().getStrength())) * \
@@ -188,7 +210,7 @@ def lootItems(opponents):
         if x != None:
             ivt = x.getInventory()
             for y in ivt:
-                if random.randint(0,100) <= 100: # items can be looted only 75% of time
+                if random.randint(0,100) <= 100: # items can be looted only 30% of time
                     lootItems.append(y)
     return lootItems
         
@@ -197,7 +219,7 @@ def lootAcorns(opponents):
     Generates the number of acorns you looted.
     """
     acorns = sum([x.getAcorns() for x in opponents if x!=None])
-    acornsLooted = acorns*random.uniform(.25,1)
+    acornsLooted = acorns*random.uniform(0,0.4)
     return math.floor(acornsLooted)
 
 def retreatLostAcorns(animal):
@@ -219,13 +241,28 @@ def retreatItemLost(animal):
 class CombatSprite(object):
 
     def __init__(self,animal,position,font,enemies = False):
+        """
+        This class creates the combat sprites which includes:
+        animal sprite
+        animal health linked progress bar
+        animal health
+        animal name
+
+        We also draw everything based on the input position that is given.
+
+        Also enemies must be set to True so the sprites are flipped in the
+        right direction for the combat GUI. 
+        """
         self._animal = animal
         self._position = position
         self._animal_xPos = self._position[0] + 50 - (self._animal.getWidth()//2)
         self._animal_yPos = self._position[1] + 52 - (self._animal.getHeight()//2)
         self._enemies = enemies
+        # makes the linked progress bar
         self._bar = LinkedProgressBar(self._animal,(self._position[0],self._position[1]+90),100,
                                       100,self._animal.getHealth())
+        
+        # makes the text box for animal name
         self._nameText = TextBox(self._animal.getName(),
                                  (0,0),
                                  font,(255,255,255))
@@ -233,14 +270,22 @@ class CombatSprite(object):
         x = self._nameText.getWidth()
         self._nameText.setPosition((self._position[0]+50-(x//2),self._position[1]+107))
         healthFont = pygame.font.SysFont("Times New Roman", 12)
+        
+        # makes the text box for the health which will be drawn on top of health linked
+        # progress bar
         self._healthText = TextBox(str(self._animal.getHealth()) + "/100",
                                    (0,0),
                                    healthFont,(255,255,255))
         x = self._healthText.getWidth()
         self._healthText.setPosition((self._position[0]+50-(x//2),self._position[1]+90))
+
+        # sets up the collide rects
         self._collideRects = getRects(self.getAnimalSprite())
 
     def draw(self,screen):
+        """
+        This methods draws the combat sprites. 
+        """
         self._bar.draw(screen)
         self._nameText.draw(screen)
         self._healthText.draw(screen)
@@ -251,30 +296,57 @@ class CombatSprite(object):
             screen.blit(img,(self._animal_xPos,self._animal_yPos))
 
     def getHealthBar(self):
+        """
+        Returns the health bar of the animal. This is a linked progress bar. 
+        """
         return self._bar
 
     def getHealthText(self):
+        """
+        Returns the text box item that is the health text
+        """
         return self._healthText
 
     def getAnimal(self):
+        """
+        Returns the animal.
+        """
         return self._animal
 
     def isEnemy(self):
+        """
+        Returns the boolean if the combat sprite belongs to the enemies.
+        """
         return self._enemies
 
     def getAnimalSprite(self):
+        """
+        Return the animal sprite.
+        """
         return self._animal.getDefaultImage()
 
     def getPosition(self):
+        """
+        Returns the position of the combat sprite.
+        """
         return self._position
 
     def getAnimalPosition(self):
+        """
+        Returns the animal's sprite position.
+        """
         return (self._animal_xPos,self._animal_yPos)
 
     def getCollideRects(self):
+        """
+        Returns the collide rects
+        """
         return self._collideRects
 
     def getTextHeight(self):
+        """
+        Returns the height of the name text. 
+        """
         return self._nameText.getHeight()
 
 
@@ -296,7 +368,7 @@ class Box(object):
 
     def draw(self,screen):
         """
-        Will draw the box on the input screen.
+        Will draw the box on the combat minigame gui.
         """ 
         pygame.draw.line(screen,self._color,(self._position[0],self._position[1]),
                          (self._position[0],self._position[1]+self._y),
@@ -323,35 +395,46 @@ class AnimalStats(object):
     def __init__(self,animal,position):
         """
         Creates an animal display for the user to see. It shows relevant
-        stats as well as other useful stats for combat.
+        stats as well as other useful stats for combat. This is created
+        when the animal sprite is right clicked on.
+
+        It displays the animal's name, health, acorns, inventory,
+        happiness face, and an exit button to close the screen.
         """
+        # self._y is used throughout to get good height spacing
         self._display = True
         self._animal = animal
         self._position = position
         self._xpos = self._position[0]
         self._ypos = self._position[1]
         self._font = pygame.font.SysFont("Times New Roman", 18)
+        
         # Text Stat display along with appropriate images
         self._name = TextBox("Name: " + self._animal.getName(),self._position,
                              self._font,(255,255,255))
         text_y = self._name.getHeight()
+        # the happiness face text
         self._opinionText = TextBox("Opinion: ",(self._xpos,self._ypos+text_y+\
                                                  8),
                                     self._font,(255,255,255))
         x = self._opinionText.getWidth()
+        # checks to see if class is player so no happiness face is drawn
         if str(type(self._animal)) == "<class 'player.Player'>":
             self._opinionText.setText("Opinion: --")
             text_y += self._opinionText.getHeight() + 11
+        # creates the happiness face
         else:
             self._opinion = HappinessFace((self._xpos + x,self._ypos+text_y+2))
             self._opinion.setFace(self._animal.getFriendScore())
             text_y += self._opinion.getHeight()
 
+        # the health text
         self._healthtext = TextBox("Health: "+str(self._animal.getHealth())+\
                                    "/100",
                                    (self._xpos,self._ypos+text_y+2),self._font,
                                    (255,255,255))
         text_y += self._healthtext.getHeight()
+        # the acorns text
         self._acornsText = TextBox("Acorns: "+str(self._animal.getAcorns()),
                                    (self._xpos,self._ypos+text_y+6),self._font,
                                    (255,255,255))
@@ -366,16 +449,21 @@ class AnimalStats(object):
         # Inventory Items
         text_y += self._acornsText.getHeight() + 10
         x = self._healthtext.getWidth()
+        # weapon text 
         self._weaponText = TextBox("Weapon equipped: ",(self._xpos,self._ypos+text_y+10),
                                    self._font,(255,255,255))
         xlen = self._weaponText.getWidth()
+        # draws item block that will have the weapon
         self._weapon = ItemBlock((self._xpos+xlen+5,self._ypos+text_y+10),(50,50), item=self._animal.getEquipItem())
         self._weaponText = TextBox("Weapon equipped: ",(self._xpos,self._ypos+text_y+10),
                                    self._font,(255,255,255))
+        # armor text
         self._armorText = TextBox("Armor equipped: ",(self._xpos+xlen+75,self._ypos+text_y+10),
                                    self._font,(255,255,255))
         xlen += self._armorText.getWidth()
+        # draws item block that will have the armor
         self._armor = ItemBlock((self._xpos+xlen+80,self._ypos+text_y+10),(50,50), item=self._animal.getArmor())
+        # Sets up inventory display screen
         self._inventory = threeXthreeInventory((self._xpos+x+30,self._ypos),(xlen-14,text_y), self._animal)
 
     def getDisplay(self):
@@ -392,7 +480,7 @@ class AnimalStats(object):
 
     def draw(self,screen):
         """
-        Draws the window.
+        Draws the interface onto the combat screen
         """
         if self._display == True:
             self._name.draw(screen)
@@ -418,156 +506,38 @@ class AnimalStats(object):
         self._exitButton.handleEvent(event, self.close)
 
     def update(self):
+        """
+        Updates the text based on any changes in animal health or acorns.
+        """
         self._healthtext.setText("Health: "+str(self._animal.getHealth())+\
                                    "/100")
         self._acornsText.setText("Acorns: "+str(self._animal.getAcorns()))
 
-
-class VictoryScreen(object):
-
-    def __init__(self,dead,player):
-        self._dead = dead
-        self._player = player
-
-        # acorns looted
-        self._lootedAcorns = lootAcorns(self._dead)
-
-        # graphics settings
-        self._FLAG = True
-        self._itemCard = None
-
-        self._addedAcorns = False
-        
-        # fonts
-        self._textFont = pygame.font.SysFont("Times New Roman", 28)
-        self._font = pygame.font.SysFont("Times New Roman", 16)
-
-        # needed text boxes
-        text = "Congratuations! You defeated your enemies."
-        self._victoryText = TextBox(text,(100,25),self._textFont,(255,255,255))
-        y = self._victoryText.getHeight()
-        acorns = min(self._player.getAcorns()+self._lootedAcorns,self._player.getCheekCapacity())
-        self._acornLooted = TextBox("Acorns Looted: "+str(self._lootedAcorns),
-                                    (100,25+y+2),self._textFont,(255,255,255))
-        y += self._acornLooted.getHeight()
-        self._acornCount = TextBox("Your Acorns: "+str(acorns),
-                                   (100,25+y+2),self._textFont,(255,255,255))
-        y += self._acornCount.getHeight()
-
-        # tabs
-        self._tabs = Tabs(["Pickup","Drop"], (100,25+y+5), self._font, (0,0,0), (255,255,255), (200,50),
-               (0,0,0),(255,255,255))
-        y += self._tabs.getHeight()
-        
-        # items looted
-        self._lootedItems = lootItems(self._dead)
-        self._lootItems = [{"text": item.getName(),"func": self.selectItem,"args":item} \
-                      for item in self._lootedItems]
-        self._lootedItemSelect = ScrollSelector((100,25+y+10),(250,300),30,self._lootItems,(0,0,0))
-
-        # player items
-        self._player_items = [{"text": item.getName(),"func": self.selectItem,"args":item} \
-                      for item in self._player.getInventory()]
-        self._playerSelect = ScrollSelector((100,25+y+10),(250,300),30,self._player_items,(0,0,0))
-        self._y = y
-
-        self._executePickUp = Button("Pick up Item",(450,self._y+25-50),
-                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
-
-        self._executeDrop = Button("Drop Item",(450,self._y+25-50),
-                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
-
-        self._cancelTransaction = Button("Cancel Transaction",(450+156,self._y+25-50),
-                                         self._font,(255,255,255),(207,51,17),48,140,borderWidth = 2)
-
-    def selectItem(self,item):
-        self._itemCard = ItemCard(item, position = (450,self._y+25+10), scrollBoxSize = (200,300))
-
-    def updateDisplay(self):
-        if self._tabs.getActive() == 0:
-            return True
-        else:
-            return False
-
-    def cancelTransaction(self):
-        self._itemCard = None
-
-    def pickUpItem(self,item):
-        self._player.getInventory().addItem(item)
-        self._lootedItems.remove(item)
-        self._itemCard = None
-
-    def dropItem(self,item):
-        """
-        This drops the item from the players iventory and inserts
-        it into the looted items. 
-        """
-        self._player.getInventory().removeItem(item)
-        self._lootedItems.append(item)
-        self._itemCard = None
-        
-    def draw(self,screen):
-        if not self._addedAcorns:
-            self._player.setAcorns(min(self._player.getAcorns()+self._lootedAcorns,self._player.getCheekCapacity()))
-            self._addedAcorns = True
-        self._victoryText.draw(screen)
-        self._acornLooted.draw(screen)
-        self._acornCount.draw(screen)
-        if self._FLAG:
-            self._lootedItemSelect.draw(screen)
-        else:
-            self._playerSelect.draw(screen)
-        if self._itemCard != None:
-            self._itemCard.getCard().draw(screen)
-            self._cancelTransaction.draw(screen)
-            if self._FLAG:
-                self._executePickUp.draw(screen)
-            else:
-                self._executeDrop.draw(screen)
-            
-        self._tabs.draw(screen)
-
-    def handleEvent(self,event):
-        self._tabs.handleEvent(event)
-        if self._FLAG:
-            self._lootedItemSelect.handleEvent(event)
-        else:
-            self._playerSelect.handleEvent(event)
-        if self._itemCard != None:
-            self._itemCard.getCard().move(event)
-            if self._FLAG:
-                self._executePickUp.handleEvent(event,
-                                    self.pickUpItem,self._itemCard.getItem())
-            else:
-                self._executeDrop.handleEvent(event,
-                                    self.dropItem,self._itemCard.getItem())
-            self._cancelTransaction.handleEvent(event,
-                                        self.cancelTransaction)
-
-            self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
-                      for item in self._player.getInventory()])
-            self._lootedItemSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
-                      for item in self._lootedItems])
-
-    def update(self):
-        if self._FLAG != self.updateDisplay():
-            self._itemCard = None
-        self._FLAG = self.updateDisplay()
-
-
 class RetreatScreen(object):
 
     def __init__(self,player):
+        """
+        In this class we create the retreat screen that the player sees when
+        they click the retreat button
+
+        The screen consists of:
+
+        The numbers of acorns the player lost
+
+        Displays the inventory along with items lost
+        """
         self._player = player
+        # calculates the number of acorns lost
         self._moneyLost = retreatLostAcorns(self._player)
         player.setAcorns(self._player.getAcorns()-self._moneyLost)
 
         self._font = pygame.font.SysFont("Times New Roman", 20)
-        
+        # calculates the number of items lost
         self._itemLost = retreatItemLost(self._player)
         if self._itemLost != None:
             self._player.getInventory().removeItem(self._itemLost)
-        
+
+        # the text that is displayed in the screen
         self._lostMoneyText = TextBox("You lost "+ str(self._moneyLost) + " acorns.",
                                       (0,0),self._font,(255,255,255))
         x = self._lostMoneyText.getWidth()
@@ -592,6 +562,9 @@ class RetreatScreen(object):
         self._inventory = threeXthreeInventory((450,150+y+5),(300,200), self._player)
         
     def draw(self,screen):
+        """
+        We draw the retreat screen to the screen.
+        """
         self._lostMoneyText.draw(screen)
         if self._itemLost != None:
             self._itemLostText.draw(screen)

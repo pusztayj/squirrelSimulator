@@ -2,7 +2,7 @@
 Author: Justin Pusztay, Trevor Stalnaker
 File: merchantlevel.py
 
-The level of the game in which the player interacts with a merchant
+In this file we have a level that manages the merchant minigame.
 """
 
 import pygame, random
@@ -19,6 +19,15 @@ from level import Level
 class MerchantLevel(Level):
 
     def __init__(self,player,merchant,SCREEN_SIZE):
+        """
+        We import the player, merchant and screen size in order
+        to have the information we need to display a merchant interface
+        where the player can buy and sell items.
+
+        Here we initialize the tabs, the scroll selector boxes with the
+        list of items that each person has along with the acorns of the
+        mercant and the player. 
+        """
         super().__init__()
 
         self._SCREEN_SIZE = (1200,500)
@@ -80,21 +89,34 @@ class MerchantLevel(Level):
 
         
     def selectMerchantItem(self,item):
+        """
+        This generates the item cards that need to go in the scroll
+        box selector
+        """
         self._itemCard = ItemCard(item)
 
     def updateDisplay(self):
+        """
+        This method is responsible for the which tab is active in the
+        display.
+        """
         if self._tabs.getActive() == 0:
             return True
         else:
             return False
 
     def transaction(self,item):
-        if self._itemCard != None:
-            if self._tabs.getTabs()[self._tabs.getActive()].getText() == "Buy":  
+        """
+        Given an item we apply the transaction function and generate the
+        appropriate display items that shoud occur based on what transaction
+        function indicates. 
+        """
+        if self._itemCard != None: #checks if item card is displayed
+            if self._tabs.getTabs()[self._tabs.getActive()].getText() == "Buy":  # checks the tab that is open
                 if self._player.getAcorns() < item.getValue():
                     text = "You do not have the money!"
                     self._itemCard = None
-                elif not self._player.getInventory().hasSpace():
+                elif not self._player.getInventory().hasSpace(): # checks if the inventory has space 
                     text = "You do not have space for this item!"
                     self._itemCard = None
                 else:
@@ -112,9 +134,16 @@ class MerchantLevel(Level):
                                 font,(0,0,0),borderWidth = 3)
 
     def cancelTransaction(self):
+        """
+        When a transaction is cancled this sets the item card to none
+        to longer display it.
+        """
         self._itemCard = None
 
     def draw(self,screen):
+        """
+        Draws the merchant minigame screen to the screen.
+        """
         self._background.draw(screen)
         self._merchant.draw(screen)
         self._tradeDesk.draw(screen)
@@ -134,6 +163,9 @@ class MerchantLevel(Level):
         self._exitButton.draw(screen)
 
     def handleEvent(self,event):
+        """
+        Handles all the events for the merchant minigame screen.
+        """
         self._exitButton.handleEvent(event, self.setActive, False)
         if not self.isActive():
             return (0,)
@@ -143,9 +175,9 @@ class MerchantLevel(Level):
                 self._merchantSelect.handleEvent(event)
             else:
                 self._playerSelect.handleEvent(event)
-        if self._itemCard != None:
+        if self._itemCard != None: # makes sure item card is displayed
             self._itemCard.getCard().move(event)
-            if self._popup == None or not self._popup.getDisplay():
+            if self._popup == None or not self._popup.getDisplay(): # makes sure not item card is not dispayed
                 self._executeTransaction.handleEvent(event, self.transaction,self._itemCard.getItem())
                 self._cancelTransaction.handleEvent(event, self.cancelTransaction)
             self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
@@ -156,6 +188,9 @@ class MerchantLevel(Level):
             self._popup.handleEvent(event)
 
     def update(self,ticks):
+        """
+        Updates the merchant minigame screen.
+        """
         self._FLAG = self.updateDisplay()
         self._playerMoney.setText("Your money: $" + str(self._player.getAcorns()))
         self._merchantMoney.setText(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()))

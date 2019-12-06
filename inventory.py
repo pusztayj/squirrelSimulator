@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: inventory.py
+
+In this class we create an inventory object.
 """
 
 class Inventory():
