@@ -293,6 +293,9 @@ class Tool(Item):
         self._staminaCost = staminaCost
         self._acornBoost = acornBoost
 
+    def getAcornBoost(self):
+        return self._acornBoost
+
     def __repr__(self):
         """
         Returns a string representation of the tool.
