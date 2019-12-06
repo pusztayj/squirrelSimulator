@@ -389,7 +389,7 @@ class MainLevel(Level):
                                 self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
                                                                  " won't collect all the acorns")
                                 self._confirmationWindow.display()
-                                self._confirmationProceedure = (2, pile) #Redirect neccessary information
+                                self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
                                 # Stop the player's movement
                                 for k in self._player._movement.keys(): self._player._movement[k] = False
                             else:
@@ -405,7 +405,7 @@ class MainLevel(Level):
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                             self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
                             self._confirmationWindow.display()
-                            self._confirmationProceedure = (0, pile) #Redirect neccessary information
+                            self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
                             # Stop the player's movement
                             for k in self._player._movement.keys(): self._player._movement[k] = False
                             
@@ -550,8 +550,9 @@ class MainLevel(Level):
                 # Dig up a players acorn pile
                 if self._confirmationProceedure[0] == 0:
                     pile = self._confirmationProceedure[1]
+                    item = self._confirmationProceedure[2]
                     self._dirtPiles.remove(pile)
-                    acorns = pile.getAcorns()
+                    acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
                     self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                 # Create a new acorn pile and forget an old one
                 if self._confirmationProceedure[0] == 1:
@@ -571,8 +572,9 @@ class MainLevel(Level):
                     self._dirtPiles.append(dp)
                 if self._confirmationProceedure[0] == 2:
                     pile = self._confirmationProceedure[1]
+                    item = self._confirmationProceedure[2]
                     self._spawnedPiles.remove(pile)
-                    acorns = pile.getAcorns()
+                    acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
                     self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
 
         # Handle events on the bribe interface
