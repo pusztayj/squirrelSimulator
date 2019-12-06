@@ -1,5 +1,5 @@
 """
-Author: Trevor Stalnaker
+Author: Trevor Stalnaker, Justin Pusztay
 File: inventory.py
 
 In this class we create an inventory object.
@@ -57,6 +57,10 @@ class Inventory():
     def increaseMaxCapacity(self, increase):
         """Increases the max capacity of the inventory"""
         self._maxCapacity += increase
+
+    def clear(self):
+        """Clears the inventory."""
+        self._items = list()
 
     def __iter__(self):
         """Allows iteration over an inventory"""

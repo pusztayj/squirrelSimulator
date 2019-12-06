@@ -77,7 +77,8 @@ class MerchantLevel(Level):
         self._tabs = Tabs(["Buy","Sell"], (100,47), self._font, (0,0,0), (255,255,255), (200,50),
                (0,0,0),(255,255,255))
 
-        # text boxes for player/merchant money
+        # text boxes for player/merchant money/item cost
+        self._itemCost = None
         self._playerMoney = TextBox("Your money: $" + str(self._player.getAcorns()), (791,375), self._textFont, (255,255,255))
         self._merchantMoney = TextBox(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()),
                             (795,410), self._textFont, (255,255,255))
@@ -116,18 +117,22 @@ class MerchantLevel(Level):
                 if self._player.getAcorns() < item.getValue():
                     text = "You do not have the money!"
                     self._itemCard = None
+                    self._itemCost = None
                 elif not self._player.getInventory().hasSpace(): # checks if the inventory has space 
                     text = "You do not have space for this item!"
                     self._itemCard = None
+                    self._itemCost = None
                 else:
                     merchantTransaction(self._player,self._merchantMind,item)
                     text = self._merchantMind.getMerchantSpeak()
                     self._itemCard = None
+                    self._itemCost = None
             elif self._tabs.getTabs()[self._tabs.getActive()].getText() \
                  == "Sell":
                  merchantTransaction(self._merchantMind,self._player,item)
                  text = self._merchantMind.getMerchantSpeak()
                  self._itemCard = None
+                 self._itemCost = None
             font = pygame.font.SysFont("Times New Roman", 16)
             self._popup = PopupWindow(text,(471,166),(303,158),
                                 font,(255,255,255),(0,0,0),(255,255,255),(30,30),
@@ -139,6 +144,7 @@ class MerchantLevel(Level):
         to longer display it.
         """
         self._itemCard = None
+        self._itemCost = None
 
     def draw(self,screen):
         """
@@ -154,6 +160,12 @@ class MerchantLevel(Level):
         else:
             self._playerSelect.draw(screen)
         if self._itemCard != None:
+            if self._itemCost == None:
+                self._itemCost = TextBox("Price: $" + str(self._itemCard.getItem().getValue()),
+                                         (471,335), self._textFont, (255,255,255))
+            else:
+                self._itemCost.setText("Price: $" + str(self._itemCard.getItem().getValue()))
+            self._itemCost.draw(screen)                          
             self._itemCard.getCard().draw(screen)
             self._executeTransaction.draw(screen)
             self._cancelTransaction.draw(screen)
