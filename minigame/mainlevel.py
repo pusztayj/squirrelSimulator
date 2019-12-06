@@ -209,6 +209,10 @@ class MainLevel(Level):
         # Initialize leak to False
         self._leak = False # A boolean flag for leaking acorns
 
+        # Grace period (time between NPC attacks)
+        self._gracePeriod = 5 #ticks
+        self._graceTimer = self._gracePeriod
+
         # Create the XP Manager
         self._xpManager = XPManager((SCREEN_SIZE[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
@@ -607,18 +611,20 @@ class MainLevel(Level):
                     self._popupWindow.display()
 
         # Check to see if NPC creatures want to attack the player
-        for pack in self._packs:
-            leader = pack.getLeader()
-            rect = leader.getWanderRect()
-            for creature in pack:
-                if creature != None:
-                    if creature.getFriendScore() < self._attackThreshold:
-                        if creature.getAggression() > self._aggressionThreshold:
-                            if self._player.getCollideRect().colliderect(rect):
-                                self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
-                                self._popupWindow.display()
-                                for k in self._player._movement.keys(): self._player._movement[k] = False
-                                self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+        if self._graceTimer <= 0:
+            for pack in self._packs:
+                leader = pack.getLeader()
+                rect = leader.getWanderRect()
+                for creature in pack:
+                    if creature != None:
+                        if creature.getFriendScore() < self._attackThreshold:
+                            if creature.getAggression() > self._aggressionThreshold:
+                                if self._player.getCollideRect().colliderect(rect):
+                                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+                                    self._popupWindow.display()
+                                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+                                    self._graceTimer = self._gracePeriod
 
         # Display the combat window once the player confirms the popup window
         if self._popupWindow.getDisplay():
@@ -717,6 +723,9 @@ class MainLevel(Level):
         # Control merchant restocking
         for merchant in self._merchants:
             merchant.update(ticks)
+
+        # Update the grace period between attacks
+        self._graceTimer -= ticks
 
         # Update the interaction timer (used to prevent instantaneous button clicks)
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
