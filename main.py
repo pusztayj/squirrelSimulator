@@ -14,15 +14,19 @@ from animals import *
 SCREEN_SIZE = (1200,500)
 
 def giveAcorns(entity, amount):
+   """Gives an entity a given number of acorns"""
    entity.setAcorns(entity.getAcorns() + amount)
 
 def giveXP(entity, amount):
+   """Gives an entity a given number of XP"""
    entity.setXP(entity.getXP() + amount)
 
 def spawnMerchant(mainGame, position):
+   """Spawns a merchant at a given position"""
    mainGame._merchants.append(Merchant(pos=position))
 
 def fastForward(mainGame, amount):
+   """Fastforwards the game clock by a given amount"""
    hourLen = mainGame._worldClock.getHourLength()
    time, mode = amount
    if mode == "hours":
@@ -31,16 +35,19 @@ def fastForward(mainGame, amount):
       mainGame._worldClock._time += (time*hourLen*24)
 
 def setHealth(entity, amount):
+   """Sets an entity's health to a given amount"""
    amount = max(0,min(amount,entity.getBaseHealth()))
    entity.setHealth(amount)
 
 def spawnAnimal(mainGame, species, position, friendScore):
+   """Spawns an animal given a type, position, and friendScore"""
    animal = eval(species.title())(pos=position)
    animal.setFriendScore(friendScore)
    p = Pack(animal)
    animal.setPack(p)
    mainGame._packs.append(p)
 
+# Dictionary of cheat codes
 cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward,5:setHealth,
               6:spawnAnimal}
 
@@ -48,30 +55,36 @@ def main():
    """
    Main loop for the program
    """
-   #Initialize the module
+   # Initialize the module
    pygame.init()
    pygame.font.init()
    pygame.mixer.init()
 
-   #Update the title for the window
+   # Update the title for the window
    pygame.display.set_caption('Squirrel Simulator')
    
-   #Get the screen
+   # Get the screen
    screen = pygame.display.set_mode(SCREEN_SIZE) #, pygame.FULLSCREEN)
 
-   #Create an instance of the game clock
+   # Create an instance of the game clock
    gameClock = pygame.time.Clock()
 
+   # Create the cheat box
    cheatBox = Cheats(SCREEN_SIZE)
 
+   # Create the player and their pack
    player = Player(pos=(200,200))
    playerPack = Pack(player)
    player.setPack(playerPack)
    player.scale(1.5)
+
+   # Create the different levels
    level = MainLevel(playerPack, SCREEN_SIZE, cheatBox)
    merchantLevel = None
    combatLevel = None
+   endScreen = None
 
+   # Create the loading screen
    loading = LoadingScreen(SCREEN_SIZE, 1)
 
    # Create the pause menu
@@ -81,26 +94,28 @@ def main():
                      (pWidth, pHeight))
    pauseMenu.close()
 
+   # Create the controls scroll display
    controls = Controls((SCREEN_SIZE[0]//2 - 209, SCREEN_SIZE[1]//2 - 100),200)
    controls.close()
 
+   # Create the title display
    titleScreen = TitleScreen(SCREEN_SIZE)
 
+   # Create the name input interface
    nameInput = NameInput(player, SCREEN_SIZE)
 
+   # Create the tutorial window
    tutorial = Instructions((SCREEN_SIZE[0]//2-150,
                             SCREEN_SIZE[1]//2-100),
                            ["Test text","more text","and some more"])
    tutorial.close()
 
-   endScreen = None
-
    flicker  = False # Used to blit the game background over the controls / tutorials
-
    lag = True #Used to ever so slightly updated paused game at start
 
    RUNNING = True
 
+   # Set the initial game code to None
    code = None
 
    while RUNNING:
@@ -158,10 +173,13 @@ def main():
             
             if not tutorial.getDisplay() and not nameInput.getDisplay():
 
-               if endScreen != None: 
+               if endScreen != None:
+                  # Get the code from the endScreen
                   c = endScreen.handleEvent(event)
+                  # End the game
                   if c == 0:
                      RUNNING = False
+                  # Restart the game
                   elif c == 1:
                      player = Player(pos=(200,200))
                      playerPack = Pack(player)
@@ -177,7 +195,8 @@ def main():
                         cheatBox.toggleDisplay()
                      titleScreen._displayed = True
                else:
-               
+
+                  # Open or close the pause display
                   if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
                      (level._atm == None or not level._atm.getDisplay()) and \
                      not loading.isDisplayed() and\
@@ -189,24 +208,29 @@ def main():
                         pauseMenu.display()
                         for k in player._movement.keys(): player._movement[k] = False
 
+                  # Handle the main level events
                   if level.isActive() and not loading.isDisplayed() and \
                      not pauseMenu.getDisplay():
                       code = level.handleEvent(event)
 
+                  # Handle merchant level events
                   if merchantLevel != None and merchantLevel.isActive() and \
                      not loading.isDisplayed() and \
                      not pauseMenu.getDisplay():
                       code = merchantLevel.handleEvent(event)
 
+                  # Handle combat level events
                   if combatLevel != None and combatLevel.isActive() and \
                      not loading.isDisplayed() and \
                      not pauseMenu.getDisplay():
                       code = combatLevel.handleEvent(event)
 
+                  # Toggle the cheats display
                   if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
                      event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
                         cheatBox.toggleDisplay()
 
+                  # Handle events on the cheat box
                   if cheatBox.isDisplayed() and not loading.isDisplayed():
                      cheatCode = cheatBox.handleEvent(event)
                      if cheatCode != None:
@@ -217,6 +241,7 @@ def main():
                         if cheatCode[0] in (6,):
                            cheatCodes[cheatCode[0]](level,cheatCode[1],cheatCode[2],cheatCode[3])
 
+                  # Handle events on the pause menu
                   if pauseMenu.getDisplay() and not controls.getDisplay():
                      sel = pauseMenu.handleEvent(event)
                      if sel == 1:
@@ -229,6 +254,7 @@ def main():
                      if sel == 4:
                         RUNNING = False
 
+                  # Handle events for the controls menu
                   if controls.getDisplay():
                      controls.handleEvent(event)
                      if not controls.getDisplay():
