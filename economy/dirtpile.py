@@ -7,7 +7,7 @@ A class modeling buried acorn piles
 
 from modules.drawable import Drawable
 from inventory import Inventory
-import pygame
+import pygame, random
 
 class DirtPile(Drawable):
 

@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: textinput.py
+
+A class that creates and manages textual input boxes
 """
 
 from modules.drawable import Drawable
@@ -15,6 +17,7 @@ class TextInput(Drawable):
                  backgroundHighlight=(225,225,255), maxLen=10,
                  numerical=False, highlightColor=(0,0,0), defaultText="",
                  clearOnActive=False):
+        """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -36,6 +39,7 @@ class TextInput(Drawable):
         self.__updateInput()
 
     def displayActive(self):
+        """Sets the display mode to active"""
         self._currentBorderColor = self._borderHighlight
         self._borderWidth = self._defaultBorderWidth + 1
         self._backgroundColor = self._backgroundHighlight
@@ -45,6 +49,7 @@ class TextInput(Drawable):
         self.__updateInput()
 
     def displayPassive(self):
+        """Sets the display mode to passive"""
         self._currentBorderColor = self._borderColor
         self._borderWidth = self._defaultBorderWidth
         self._backgroundColor = self._defaultBackgroundColor
@@ -53,6 +58,7 @@ class TextInput(Drawable):
         
     def handleEvent(self, event, *args, offset=(0,0), func=None,
                     clearOnEnter=False):
+        """Handle events on the text input"""
         rect = self.getCollideRect()
         rect = rect.move(offset[0], offset[1])
         if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
@@ -97,12 +103,15 @@ class TextInput(Drawable):
             self.__updateInput()
 
     def getInput(self):
+        """Get the current input text"""
         return self._textbox.getText()
 
     def setText(self, text):
+        """Set the text displayed in the input bar"""
         self._textbox.setText(text)
 
     def __updateInput(self):
+        """Update the widget's display"""
         surfBack = pygame.Surface((self._width+(self._borderWidth*2),
                                    (self._height+(self._borderWidth*2))))
         surfBack.fill(self._currentBorderColor)

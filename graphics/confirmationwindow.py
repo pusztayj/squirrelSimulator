@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: confirmationwindow.py
+
+A class that models and manages a confirmation window
 """
 
 import pygame
@@ -17,6 +19,7 @@ class ConfirmationWindow(Drawable, Window):
                  buttonFontColor, confirmationText="YES", denialText="NO",
                  buttonBorderWidth=1,buttonBorderColor=(0,0,0), borderWidth=0,
                  borderColor=(0,0,0)):
+        """Initializes the widget with a variety of parameters"""
         Drawable.__init__(self, "", position, worldBound=False)
         Window.__init__(self)
         self._height = dimensions[1]
@@ -57,6 +60,7 @@ class ConfirmationWindow(Drawable, Window):
         self.updateWindow()
 
     def setText(self, text):
+        """Sets the text of the window"""
         self._t = makeMultiLineTextBox(text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
@@ -65,6 +69,7 @@ class ConfirmationWindow(Drawable, Window):
         self.updateWindow()
 
     def handleEvent(self, event):
+        """Handles events on the window"""
         self._offset = self._position
         self._b1.handleEvent(event,self.confirm,offset=self._offset)
         self._b2.handleEvent(event,self.reject,offset=self._offset)
@@ -72,19 +77,23 @@ class ConfirmationWindow(Drawable, Window):
         return self.getSelection()
 
     def confirm(self):
+        """Sets selection to confirm and closes the window"""
         self.close()
         self._sel = 1
 
     def reject(self):
+        """Sets selection to reject and closes the window"""
         self.close()
         self._sel = 0
 
     def getSelection(self):
+        """Returns the current selection and resets the selection to None"""
         sel = self._sel
         self._sel = None
         return sel
 
     def updateWindow(self):
+        """Update the window after parameters have been changed"""
         surfBack = pygame.Surface((self._width, self._height))
         surfBack.fill(self._borderColor)
         surf = pygame.Surface((self._width-(self._borderWidth*2),

@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: banner.py
+
+A class that creates and manages a banner
 """
 
 from modules.drawable import Drawable
@@ -9,6 +11,7 @@ import pygame
 class Banner(Drawable):
 
     def __init__(self, position, color, dimensions, borderColor=(0,0,0), borderWidth=0):
+        """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         self._color = color
         self._height = dimensions[0]
@@ -18,6 +21,7 @@ class Banner(Drawable):
         self.__updateBanner()
 
     def __updateBanner(self):
+        """Update the widget's display"""
         surfBack = pygame.Surface((self._width + (self._borderWidth*2),
                                    self._height + (self._borderWidth*2)))
         surfBack.fill(self._borderColor)
