@@ -33,6 +33,20 @@ def createPack(pos):
                                                       pos[1]+(((-1)**x)*30)))
             c.setPack(p)
             p.addMember(c)
+    for creature in p:
+        if creature != None:
+            for _ in range(2):
+                i = items.__all__
+                random.shuffle(i)
+                for x in i:
+                    if .08 >= random.random():
+                        creature.getInventory().addItem(globals()[x]())
+            if random.random() < .33:
+                creature.equipArmor(random.choice(items.armors)())
+            if random.random() < .33:
+                creature.equipItem(random.choice(items.weapons)())
+            creature.loseHealth(random.randint(0,20))
+            creature.setAcorns(random.randint(0,100))
     return p
 
 def spawnPacks(spawnRange, spawnCount, collidables):
@@ -72,6 +86,8 @@ class MainLevel(Level):
 
         self._attackThreshold = 25 # Friendscore at which animals begin to attack
         self._aggressionThreshold = 75 # Agression level at which attacks will happen
+
+        self._packPopulation = 20 # The number of packs in the game
 
         self._cheatBox = cheatBox
 
@@ -145,24 +161,8 @@ class MainLevel(Level):
                             30, self._merchants, name="tree.png")
 
         self._packs = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
-                                 20,
-                                 self._merchants + self._trees)
-        
-        for pack in self._packs:
-            for creature in pack:
-                if creature != None:
-                    for _ in range(2):
-                        i = items.__all__
-                        random.shuffle(i)
-                        for x in i:
-                            if .08 >= random.random():
-                                creature.getInventory().addItem(globals()[x]())
-                    if random.random() < .33:
-                        creature.equipArmor(random.choice(items.armors)())
-                    if random.random() < .33:
-                        creature.equipItem(random.choice(items.weapons)())
-                    creature.loseHealth(random.randint(0,20))
-                    creature.setAcorns(random.randint(0,100))
+                                 self._packPopulation,
+                                 self._merchants + self._trees)           
 
         self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
                                   self._SCREEN_SIZE[1]-52), (700,50), self._player)
@@ -674,8 +674,16 @@ class MainLevel(Level):
         
         self._packManager.update(ticks)
 
-        self.packs = [pack for pack in self._packs if not pack.isDead()]
+        # Remove dead packs from the game
+        self._packs = [pack for pack in self._packs if not pack.isDead()]
 
+        # Spawn a new pack if the pack population has fallen below its default
+        if len(self._packs) < self._packPopulation:
+            pack = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 1,
+                              self._merchants + self._trees + [p.getLeader() for p in self._packs])
+            self._packs += pack
+
+        # Update packs
         for pack in self._packs: 
             pack.getLeader().wander(ticks)
             if pack.trueLen() > 1:
