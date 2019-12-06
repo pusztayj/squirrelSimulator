@@ -19,9 +19,10 @@ from .worldclock import WorldClock
 from .xpmanager import XPManager
 from .endscreen import EndScreen
 from .instructions import Instructions
+from .nameinput import NameInput
 
 __all__ = ["ATM","Bribe","Cheats","CombatLevel","Controls","Interaction",
            "InventoryHUD","ItemBlock","ItemSelect","LoadingScreen",
            "MainLevel","MerchantLevel","PackManager","PauseMenu",
            "Steal","threeXthreeInventory","TitleScreen","WorldClock",
-           "XPManager","EndScreen","Instructions"]
+           "XPManager","EndScreen","Instructions","NameInput"]
