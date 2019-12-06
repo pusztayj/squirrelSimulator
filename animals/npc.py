@@ -1,3 +1,11 @@
+"""
+@authors: Trevor Stalnaker, Justin Pusztay
+
+In this file we create an NPC class. All animal NPCs inherit from this
+class where they obtain certain methods such as wandering and friend scores.
+
+We also create methods for how an NPC can be cloned.
+"""
 
 from .animal import Animal
 from graphics.popup import Popup
@@ -31,6 +39,7 @@ class NPC(Animal, Animated):
         
         self._velocity = Vector2(0,0)
         self._wanderRange = self.getWidth() * 3
+        # sets up the wander rect, which is the set of points an NPC can move to.
         self._wanderRect= ((pos[0]-self._wanderRange,pos[0]+self._wanderRange),
                            (pos[1]-self._wanderRange,pos[1]+self._wanderRange))
 
@@ -38,12 +47,15 @@ class NPC(Animal, Animated):
         self._idleTimer = 0
 
     def getFriendScore(self):
+        """Returns the friend score."""
         return self._friendScore
 
     def setFriendScore(self, score):
+        """Sets the friend score."""
         self._friendScore = score
 
     def changeFriendScore(self, change):
+        """Changes the friend score to a certain modifer."""
         self._friendScore = max(0, min(100, self._friendScore + change))
 
     def handleEvent(self, event, screen):     
@@ -60,16 +72,34 @@ class NPC(Animal, Animated):
                 break
 
     def getWanderRect(self):
+        """
+        This method returns the wander rect. This is the rectangle that the
+        NPC can pick points inside of to move to. This is for the main world
+        so NPCs can move around on. 
+
+        This is only necessary for a leader of a pack because followers will
+        use the follow methods. 
+        """
         return pygame.Rect(self._wanderRect[0][0], self._wanderRect[1][0],
                            self._wanderRange*2, self._wanderRange*2)
 
     def resetWanderRect(self):
+        """
+        This method resets the wander rect of the NPC.
+        """
         posx, posy = self._position
         self._wanderRect= ((round(posx)-self._wanderRange,round(posx)+self._wanderRange),
                            (round(posy)-self._wanderRange,round(posy)+self._wanderRange))
 
     def wander(self, ticks):
+        """
+        This method automates the movement of an animal and the animation
+        that goes with it.
 
+        Here we pick the points that the animal will moves towards, sets the
+        appropriate velocity and computes the appropriate animation that needs
+        to be shown. 
+        """
         # Check if done walking
         if self._walkTimer <= 0:
             self._row = self._walkRow
@@ -121,6 +151,15 @@ class NPC(Animal, Animated):
             self.updateAnimation(ticks)
 
     def followPlayer(self, ticks, target, flank=1):
+        """
+        This method automates the movement of an NPC with respect to the player
+        and the animation that goes with it.
+
+        Here we compute the position that NPC needs to be so that it follows
+        the player around. We also compute the appropriate velocity that
+        we need based on the player movement. Also updates the appropriate
+        animation.
+        """
         follow_x = random.randint(45,55)
         follow_y = random.randint(45,55)
         self._velocity = target._velocity
@@ -172,6 +211,15 @@ class NPC(Animal, Animated):
 
 
     def follow(self, ticks, target):
+        """
+        This method automates the movement of an NPC with respect an NPC pack
+        leader and the animation that goes with it.
+
+        Here we compute the position that NPC needs to be so that it follows
+        the animal around. We also compute the appropriate velocity that we
+        need based on the player movement. Also updates the appropriate
+        animation.
+        """
         self._velocity = target._velocity
         if abs(self._velocity.y) > abs(self._velocity.x):
             if self._velocity.y > 0:
@@ -196,6 +244,9 @@ class NPC(Animal, Animated):
         self._position += (self._velocity * ticks)
 
     def clone(self):
+        """
+        Creates an identical copy of the NPC. 
+        """
         pos = self.getPosition()
         c = type(self)(self.getName(), (round(pos[0]),round(pos[1])))
         c.setAcorns(self.getAcorns())
