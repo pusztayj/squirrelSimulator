@@ -11,6 +11,7 @@ from graphics import *
 class Controls(Window):
 
     def __init__(self, pos, height):
+        """Initializes the controls interface"""
 
         Window.__init__(self)
 
@@ -57,6 +58,7 @@ class Controls(Window):
         self._banner = Banner((pos[0], pos[1]-23),(0,0,0), (21, width), (255,255,255), 1)
 
     def draw(self, surface):
+        """Draws the control interface to the screen"""
         self._banner.draw(surface)
         self._header.draw(surface)
         self._closeButton.draw(surface)
@@ -64,5 +66,6 @@ class Controls(Window):
         
 
     def handleEvent(self, event):
+        """Handles events on the control interface"""
         self._scrollBox.move(event)
         self._closeButton.handleEvent(event, self.close)        

@@ -12,15 +12,17 @@ from graphics.textinput import TextInput
 class Cheats():
 
     def __init__(self, screenDimensions):
+        """Initializes the cheat interface"""
         self._font = pygame.font.SysFont("Times New Roman", 16)
         textDimensions = (200,30)
         self._input = TextInput((0,screenDimensions[1]-textDimensions[1]),
                                 self._font, textDimensions, maxLen=30)
         self._code = None
         self._display = False
-        self._delay = .1
+        self._delay = .1 # Without the delay the input starts with an initial c
 
     def handleEvent(self, event):
+        """Handles events on the cheat box"""
         if self._delay < 0:
             self._input.handleEvent(event, self._input.getInput(), func=self.getCheatCode,
                                 clearOnEnter=True)
@@ -30,6 +32,7 @@ class Cheats():
             return c
 
     def toggleDisplay(self):
+        """Toggles the cheat display"""
         self._display = not self._display
         if self._display:
             self._input._active = True
@@ -39,9 +42,11 @@ class Cheats():
             self._input._active = False
 
     def isDisplayed(self):
+        """Returns true if cheats are displayed, false otherwise"""
         return self._display
 
     def getCheatCode(self, cheat):
+        """Sets code to the current cheat if it is valid"""
         terms = cheat.split()
         if len(terms) == 2:
             if terms[0] == "giveAcorns":
@@ -68,8 +73,10 @@ class Cheats():
                             self._code = (6,terms[1],(int(terms[2]),int(terms[3])),int(terms[4]))
 
     def draw(self, screen):
+        """Draws the cheat input to the screen"""
         self._input.draw(screen)
 
     def update(self, ticks):
+        """Updates the delay on the cheat input"""
         if self._delay >= 0:
             self._delay -= ticks

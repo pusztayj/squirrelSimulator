@@ -12,6 +12,7 @@ from modules.drawable import Drawable
 class XPManager(Window):
 
     def __init__(self, pos, player):
+        """Initializes the XP Manager interface"""
 
         Window.__init__(self)
 
@@ -39,12 +40,14 @@ class XPManager(Window):
                               (0,0,0), 1)
 
     def draw(self, surf):
+        """Draws the XP manager to the screen"""
         self._banner.draw(surf)
         self._availXP.draw(surf)
         for a in self._attrs:
             a.draw(surf)
 
     def handleEvent(self, event):
+        """Handles events on the XP Manager"""
         for a in self._attrs:
             a.handleEvent(event)
             ret = a.getReturn()
@@ -53,12 +56,14 @@ class XPManager(Window):
         return ret
 
     def updateManager(self):
+        """Updates the XP manager interface"""
         self._availXP.setText("Available XP: " + str(self._player.getXP()))
 
 
 class AttributeManager(Drawable):
 
     def __init__(self, pos, dimensions, attribute, player):
+        """Initiates an attribute manager"""
 
         Drawable.__init__(self, "", pos, worldBound=False)
 
@@ -91,10 +96,12 @@ class AttributeManager(Drawable):
         self.updateAttribute()
 
     def handleEvent(self, event):
+        """Handles events on the attribute manager"""
         self._plusButton.handleEvent(event, self.incrementStat, offset=self._position)
         self.updateAttribute()
 
     def incrementStat(self):
+        """Increment the stat of the attribute"""
         if self._player.getXP() <= 0:
             self._ret = (0,)
         else:
@@ -104,11 +111,13 @@ class AttributeManager(Drawable):
             self._ret = (1, self._attr)
 
     def getReturn(self):
+        """Return the return value created by incrementStat"""
         ret = self._ret
         self._ret = None
         return ret
                    
     def updateAttribute(self):
+        """Update the display of the attribute"""
 
         self._current = TextBox(str(eval("self._player.get"+self._attr.title().replace(" ","")+"()")),
                                 (0,0), self._font, (0,0,0))

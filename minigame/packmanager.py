@@ -18,6 +18,7 @@ digitLen = {1:33, 2:38, 3:45, 4:55}
 class PackManager(Drawable, Window):
 
     def __init__(self, pack, screensize):
+        """Initializes the pack manager interface"""
         
         Window.__init__(self)
 
@@ -41,6 +42,7 @@ class PackManager(Drawable, Window):
         self._delay = .1 #Delay between opening and closing the window
 
     def handleEvent(self, event):
+        """Handles events on the pack manager"""
         for tile in self._tiles:
             tile.handleEvent(event)
             if tile.shouldRemove():
@@ -49,26 +51,31 @@ class PackManager(Drawable, Window):
             self.close()
         
     def draw(self, surface):
+        """Draws the tiles of the packmanager to the screen"""
         for tile in self._tiles:
             tile.draw(surface)
 
     def update(self, ticks):
+        """Updates the timer on the pack manager"""
         self._timeSinceClosed += ticks
         self.redraw()
 
     def redraw(self):
+        """Redraws the pack manager"""
         self._tiles = []
         for i, creature in enumerate(self._pack):
             self._tiles.append(MemberCard(creature, (self.getX() + (i * self._cardWidth),
                                                      self.getY())))
 
     def close(self):
+        """Closes the pack manager interface"""
         self._display = False
         self._timeSinceClosed = 0
 
 class MemberCard(Drawable, Window):
 
     def __init__(self, entity, pos=(50,25)):
+        """Initializes a member card"""
 
         Drawable.__init__(self, "", pos, worldBound=False)
         Window.__init__(self)
@@ -140,21 +147,26 @@ class MemberCard(Drawable, Window):
 
 
     def handleEvent(self, event):
+        """"Handles events on the member card"""
         if self._entity != None:
             if type(self._entity) != Player:
                 self._removeButton.handleEvent(event, self.remove, offset=self._offset)
             self.updateCard()
 
     def remove(self):
+        """Sets the remove flag to true"""
         self._remove = True
 
     def getEntity(self):
+        """Returns the entity linked to member card"""
         return self._entity
 
     def shouldRemove(self):
+        """Returns the boolean remove flag"""
         return self._remove
 
     def updateCard(self):
+        """Updates the member card display"""
         
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))

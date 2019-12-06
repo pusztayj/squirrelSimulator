@@ -11,6 +11,7 @@ from graphics import TextBox
 class LoadingScreen():
 
     def __init__(self, screensize, time):
+        """Initializes a loading screen"""
 
         self._font = pygame.font.SysFont("Times New Roman", 28)
         self._text = TextBox("Loading", (0,0), self._font, (255,255,255))
@@ -32,18 +33,22 @@ class LoadingScreen():
         self._displayTimer = self._displayTime
 
     def isDisplayed(self):
+        """Returns true if displayed, false otherwise"""
         return self._displayed
 
     def setDisplay(self, display):
+        """Sets the display to a given boolean value"""
         self._displayed = display
         if self._displayed == True:
             self._displayTimer = self._displayTime
 
     def draw(self, screen):
+        """Draws the loading screen to the screen"""
         screen.blit(self._background, (0,0))
         self._text.draw(screen)
 
     def update(self, ticks):
+        """Updates the timer on the loading screen"""
         if self._displayTimer < 0:
             self.setDisplay(False)
         else:

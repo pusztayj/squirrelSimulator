@@ -17,6 +17,7 @@ digitLen = {1:33, 2:38, 3:45, 4:55}
 class Interaction(Drawable, Window):
 
     def __init__(self, entity):
+        """Initializes the interaction interface"""
         Drawable.__init__(self, "", (50,25), worldBound=False)
         Window.__init__(self)
 
@@ -105,6 +106,7 @@ class Interaction(Drawable, Window):
         self.updateInteraction()
 
     def handleEvent(self, event):
+        """Handles events on the interaction interface"""
         self._fightButton.handleEvent(event, self.fight, offset=self._offset)
         self._befriendButton.handleEvent(event, self.befriend, offset=self._offset)
         self._stealButton.handleEvent(event, self.steal,  offset=self._offset)
@@ -113,29 +115,33 @@ class Interaction(Drawable, Window):
         self.updateInteraction()
 
     def fight(self):
+        """Sets the current selection to fight"""
         self._selection = 2
 
     def befriend(self):
+        """Sets the current selection to befriend"""
         self._selection = 3
 
     def bribe(self):
+        """Sets the current selection to bribe"""
         self._selection = 4
 
     def steal(self):
+        """Sets the current selection to steal"""
         self._selection = 5
 
     def getSelection(self):
+        """Returns the current selection and resets it to None"""
         sel = self._selection
         self._selection = None
         return sel
 
-    def nothing(self):
-        pass
-
     def getEntity(self):
+        """Returns the entity linked to the interaction"""
         return self._entity
 
     def updateInteraction(self):
+        """Updates the interaction interface as the display changes"""
 
         self._acornCount = TextBox("", (self._width-50, 4),
                                     self._fontsmall, (0,0,0))

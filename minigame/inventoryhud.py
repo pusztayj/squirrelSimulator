@@ -15,6 +15,7 @@ from graphics import TextBox
 class InventoryHUD(Drawable):
 
     def __init__(self, pos, dimensions, player):
+        """Initializes the inventory hud"""
         super().__init__("", pos, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -44,18 +45,21 @@ class InventoryHUD(Drawable):
         self._displayTimer = self._activeDisplayTime
 
     def handleEvent(self, event):
+        """Handles events on the inventory hud"""
         if event.type == pygame.KEYDOWN:
             # Check if the keys 1 through 9 were pressed
             if event.key in [x for x in range(49,58)]:
                 self._selected = event.key - 49
                 self._displayTimer = self._activeDisplayTime
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # Check if the mouse wheel is scrolled 
             if event.button == 4:
                 self._selected = (self._selected + 1) % 9
                 self._displayTimer = self._activeDisplayTime
             if event.button == 5:
                 self._selected = (self._selected - 1) % 9
                 self._displayTimer = self._activeDisplayTime
+            # Check if the mouse has been left clicked
             if event.button == 1:
                 for i, b in enumerate(self._blocks):
                     if b.getCollideRect().collidepoint(event.pos):
@@ -64,6 +68,7 @@ class InventoryHUD(Drawable):
                     
 
     def update(self, ticks):
+        """Updates the display of the inventory HUD"""
         self._items = [item for item in self._player.getInventory()]
         self._blocks = []
         for x in range(9):
@@ -87,12 +92,14 @@ class InventoryHUD(Drawable):
         self._displayTimer -= ticks
 
     def getActiveItem(self):
+        """Returns the active item in the inventory hud"""
         if self._selected < len(self._items):
             return self._items[self._selected]
         else:
             return None
         
     def draw(self, screen):
+        """Draws the inventory hud to the screen"""
         # Draw the background
         for block in self._blocks:
             block.draw(screen)

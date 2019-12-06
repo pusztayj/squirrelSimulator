@@ -172,7 +172,7 @@ def main():
                      combatLevel = None
                      endScreen = None
                      lag = True
-                     tutorial.display()
+                     nameInput = NameInput(player, SCREEN_SIZE)
                      if cheatBox.isDisplayed():
                         cheatBox.toggleDisplay()
                      titleScreen._displayed = True

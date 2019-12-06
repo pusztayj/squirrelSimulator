@@ -12,6 +12,7 @@ from modules.drawable import Drawable
 class ItemBlock(Drawable):
 
     def __init__(self, pos, dimensions=(77,50), item=None, selected=False):
+        """Initializes an item block"""
         super().__init__("", pos, worldBound = False)
         self._item = item
         self._width = dimensions[0]
@@ -28,16 +29,16 @@ class ItemBlock(Drawable):
 
         self.updateBlock()
 
-    def getWidth(self):
-        return self._width
-
     def setItem(self, item):
+        """Sets the item in the item block"""
         self._item = item
 
     def getItem(self):
+        """Returns the item linked to the block"""
         return self._item
 
     def updateBlock(self):
+        """Update the display of the item block"""
         surfBack = pygame.Surface((self._width, self._height))
         if self._selected:
             surfBack.fill(self._selectedBorder)

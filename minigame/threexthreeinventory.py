@@ -12,6 +12,7 @@ from .itemblock import ItemBlock
 class threeXthreeInventory(Drawable):
 
     def __init__(self, pos, dimensions, entity):
+        """Initializes the 3 x 3 inventory block"""
         super().__init__("", pos, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -33,9 +34,11 @@ class threeXthreeInventory(Drawable):
                 count += 1
 
     def handleEvent(self, event):
-        pass
+        """Handles events on the 3 x 3 inventory"""
+        pass  ## Complete if ever needed
 
     def update(self):
+        """Updates the display of the 3x3 inventory"""
         self._items = [item for item in self._entity.getInventory()]
         self._blocks = []
         count = 0
@@ -53,12 +56,13 @@ class threeXthreeInventory(Drawable):
                 count += 1
 
     def getActiveItem(self):
+        """Returns the active item if there is one"""
         if self._selected < len(self._items):
             return self._items[self._selected]
         else:
             return None
         
     def draw(self, screen):
-        # Draw the background
+        """Draws the 3x3 inventory to the screen"""
         for block in self._blocks:
             block.draw(screen)

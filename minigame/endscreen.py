@@ -1,3 +1,10 @@
+"""
+Author: Justin Pusztay and Trevor Stalnaker
+File: endscreen.py
+
+A class that controls the game's end screen
+"""
+
 import pygame, random
 from modules import *
 from graphics import *
@@ -8,6 +15,7 @@ from minigame.threexthreeinventory import threeXthreeInventory
 class EndScreen(object):
 
     def __init__(self,screensize,player):
+        """Initializes the end screen level"""
 
         self._songs = ["death.mp3"]
         self._currentSong = random.choice(self._songs)
@@ -60,6 +68,7 @@ class EndScreen(object):
         
 
     def score(self):
+        """Calculates and returns the player's game score"""
         inventoryWorth = sum([x.getValue() for x in self._player.getInventory()])
         followers = len([x.getName() for x in self._player.getPack().getMembers() if x!=None and x!=self._player])
         score = inventoryWorth + self._player.getAcorns() + (5*self._player.getXP()) +\
@@ -67,22 +76,27 @@ class EndScreen(object):
         return score
 
     def handleEvent(self, event):
+        """Handles events in the end game screen"""
         self._restartButton.handleEvent(event, self.restart)
         self._exitButton.handleEvent(event, self.leaveGame)
         return self.getSelection()
 
     def leaveGame(self):
+        """Sets the selection to quit the game"""
         self._selection = 0
 
     def restart(self):
+        """Sets the selection to restart the game"""
         self._selection = 1
 
     def getSelection(self):
+        """Returns the current selection and resets the selection to None"""
         sel = self._selection
         self._selection = None
         return sel
 
     def draw(self,screen):
+        """Draws the end screen to the screen"""
         self._background.draw(screen)
         self._text.draw(screen)
         self._inventory.draw(screen)
@@ -94,6 +108,7 @@ class EndScreen(object):
         self._exitButton.draw(screen)
 
     def update(self):
+        """Update the end screen, that is play its music"""
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
             while temp == self._currentSong:

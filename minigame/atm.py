@@ -1,6 +1,8 @@
 """
 Author: Trevor Stalnaker
 File: atm.py
+
+An interface for interacting with dirt piles
 """
 
 import pygame
@@ -15,6 +17,7 @@ from economy.acorn import Acorn
 class ATM(Drawable, Window):
 
     def __init__(self, player, hole, screensize):
+        """Initialize the interface"""
         Drawable.__init__(self, "",(50,25),worldBound=False)
         Window.__init__(self)
         
@@ -78,6 +81,7 @@ class ATM(Drawable, Window):
         self._popupWindow.close()
 
     def deposit(self, amount):
+        """Executes the deposit logic for a transaction"""
         if amount != "":
             amount = int(amount)
             if amount == 0:
@@ -97,6 +101,7 @@ class ATM(Drawable, Window):
             self._popupWindow.display()
 
     def withdraw(self, amount):
+        """Executes the withdraw logic for a transaction"""
         if amount != "":
             amount = int(amount)
             if amount == 0:
@@ -116,6 +121,7 @@ class ATM(Drawable, Window):
             self._popupWindow.display()
 
     def handleEvent(self, event):
+        """Handles events on the ATM"""
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
         else:
@@ -131,12 +137,14 @@ class ATM(Drawable, Window):
             self.__updateATM()
 
     def draw(self, screen):
+        """Draws the ATM to the screen"""
         Drawable.draw(self, screen)
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
             
     def __updateATM(self):
-
+        """Updates the display of the ATM as attributes change"""
+        
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
         surfBack.fill(self._borderColor)

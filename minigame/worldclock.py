@@ -12,7 +12,7 @@ from graphics.textbox import TextBox
 class WorldClock(Drawable):
 
     def __init__(self, screenWidth, hourLength=5, seasonLength=20):
-        
+        """Initializes the world clock"""
 
         self._width = 225
         self._height = 25
@@ -48,18 +48,23 @@ class WorldClock(Drawable):
         self.update()
 
     def getHourLength(self):
+        """Returns the hour length"""
         return self._hour_length
 
     def getDayLength(self):
+        """Returns the day length"""
         return self._day_length
 
     def getSeason(self):
+        """Returns the current season"""
         return self._current_season
 
     def getTime(self):
+        """Returns the current time"""
         return self._time
 
     def dayPassed(self):
+        """Returns true if a day has past since method was last called"""
         if self._dayTimer + self.getHourLength() >= self._day_length:
             self._dayTimer = 0
             return True
@@ -67,6 +72,7 @@ class WorldClock(Drawable):
             return False
 
     def update(self, ticks=0):
+        """Updates the world clock based on ticks from the game"""
         self._time += ticks
         self._dayTimer += ticks
         surf = pygame.Surface((self._width, self._height))

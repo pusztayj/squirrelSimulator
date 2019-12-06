@@ -12,6 +12,7 @@ from graphics import *
 class TitleScreen():
 
     def __init__(self, screensize):
+        """Initializes the title screen"""
 
         self._titleCard = FRAMES.getFrame("title.png")
         self._font = pygame.font.SysFont("Times New Roman", 28)
@@ -32,13 +33,16 @@ class TitleScreen():
         self._displayed = True
 
     def isDisplayed(self):
+        """Returns true if the title screen is displayed, false otherwise"""
         return self._displayed
 
     def handleEvent(self, event):
+        """Handles events on the title screen"""
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self._displayed = False
 
     def draw(self, screen):
+        """Draws the title screen to the screen"""
         screen.blit(self._background, (0,0))
         tpos = (self._background.get_width()//2 - self._titleCard.get_width()//2,
                 -25)
@@ -46,6 +50,7 @@ class TitleScreen():
         self._text.draw(screen)
 
     def update(self, ticks):
+        """Updates the flashing press space to start"""
         if self._timer < 0:
             self._timer = self._dotTime
             self._state += 1

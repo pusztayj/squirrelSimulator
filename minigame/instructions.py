@@ -12,6 +12,7 @@ import pygame
 class Instructions(Drawable, Window):
 
     def __init__(self, position, textLyst):
+        """Initializes the instructions interface"""
 
         Drawable.__init__(self, "", position, worldBound=False)
         Window.__init__(self)
@@ -54,19 +55,24 @@ class Instructions(Drawable, Window):
         self.updateInstructions()
 
     def nextSlide(self):
+        """Moves the current pointer to the next slide"""
         self._current += 1
 
     def previousSlide(self):
+        """Moves the current pointer to the previous slide"""
         self._current -= 1
 
     def getCurrent(self):
+        """Returns the pointer to the current slide"""
         return self._current
 
     def closeAndReset(self):
+        """Closes the window and resets the pointer"""
         self._current = 0
         self.close()
 
     def handleEvent(self, event):
+        """Handles events on the instructions interface"""
         if self._current > 0:
             self._previous.handleEvent(event, self.previousSlide,offset=self._offset)
         if self._current < len(self._textLyst)-1:
@@ -75,6 +81,7 @@ class Instructions(Drawable, Window):
         self.updateInstructions()
 
     def updateInstructions(self):
+        """Updates the instructions display as the slides change"""
 
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))

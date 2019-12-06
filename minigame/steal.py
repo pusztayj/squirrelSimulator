@@ -11,6 +11,7 @@ from graphics import *
 class Steal(Window):
 
     def __init__(self, player, entity, SCREEN_SIZE):
+        """Initializes the theft interface"""
         
         Window.__init__(self)
 
@@ -56,6 +57,7 @@ class Steal(Window):
         self._bustedRobbery = False
 
     def handleEvent(self, event):
+        """Handles events for the theft interface"""
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
         else:
@@ -65,6 +67,7 @@ class Steal(Window):
             return self.checkRobbery()
             
     def executeTheft(self):
+        """Executes the stealing logic"""
         loot = self._stealAcorns.getInput()
         if loot.isdigit():
             loot = int(loot)
@@ -94,11 +97,13 @@ class Steal(Window):
                         self._bustedRobbery = True
 
     def checkRobbery(self):
+        """Checks if a robbery was busted"""
         bust = self._bustedRobbery
         self._bustedRobbery = False
         return bust
 
     def draw(self, screen):
+        """Draw the theft interface to the screen"""
         
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
@@ -122,5 +127,6 @@ class Steal(Window):
             self._popupWindow.draw(screen)
 
     def update(self):
+        """Update the number of animals available for theft"""
         self._acornsAvailable.setText("/ " + str(self._entity.getAcorns()))
         

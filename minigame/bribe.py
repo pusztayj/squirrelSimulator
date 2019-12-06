@@ -11,6 +11,7 @@ from graphics import *
 class Bribe(Window):
 
     def __init__(self, player, entity, SCREEN_SIZE):
+        """Initializes the bribery interface"""
         
         Window.__init__(self)
 
@@ -51,6 +52,7 @@ class Bribe(Window):
         self._popupWindow.close()
 
     def handleEvent(self, event):
+        """Handles events on the bribery interface"""
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
         else:
@@ -60,6 +62,7 @@ class Bribe(Window):
 
 
     def executeBribe(self):
+        """Executes the bribery logic"""
         bribe = self._bribeAcorns.getInput()
         if bribe.isdigit():
             bribe = int(bribe)
@@ -78,6 +81,7 @@ class Bribe(Window):
                 self._popupWindow.display()  
 
     def draw(self, screen):
+        """Draws the Bribery Interface onto the screen"""
         
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
@@ -101,5 +105,6 @@ class Bribe(Window):
             self._popupWindow.draw(screen)
 
     def update(self):
+        """Updates the number of acorns available"""
         self._acornsAvailable.setText("/ " + str(self._player.getAcorns()))
         

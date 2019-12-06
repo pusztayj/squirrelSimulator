@@ -16,6 +16,7 @@ from .itemblock import ItemBlock
 class ItemSelect(Drawable):
 
     def __init__(self, pos, items, dimensions=(700,50)):
+        """Initializes the item selection interface"""
         super().__init__("", pos, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
@@ -38,9 +39,11 @@ class ItemSelect(Drawable):
             self._blocks.append(i)
 
     def getItemSelected(self):
+        """Returns the selected item"""
         return self._itemSelected.getItem()
 
     def handleEvent(self, event):
+        """Handle events on the item selector"""
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4:
                 self._selected = (self._selected + 1) % 9
@@ -54,6 +57,7 @@ class ItemSelect(Drawable):
                     
 
     def update(self):
+        """Update the display of the item selector"""
         self._blocks = []
         for x in range(len(self._items)):
             if x < len(self._items):
@@ -69,16 +73,20 @@ class ItemSelect(Drawable):
             self._blocks.append(i)
         
     def draw(self, screen):
+        """Draw the item selector to the screen"""
         # Draw the background
         for block in self._blocks:
             block.draw(screen)
 
     def getItemBlocks(self):
+        """Returns the number of blocks in the selection"""
         return len(self._blocks)
 
     def getWidth(self):
+        """Returns the width of the item selector"""
         return sum([x.getWidth() for x in self._blocks])
 
     def resetItems(self,newItems):
+        """"Resets the items in the item selector and resets the selected item to None"""
         self._items = newItems
         self._itemSelected = None
