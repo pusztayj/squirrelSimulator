@@ -2,7 +2,11 @@
 Author: Trevor Stalnaker
 File: dirtpile.py
 
-A class modeling buried acorn piles
+A class modeling buried acorn piles. Holds important data such as the
+name of the pile, its capacity, and methods that regulate the inflow and
+outflow of acorns.
+
+Also handles the drawing and updating of the images of the acorn. 
 """
 
 from modules.drawable import Drawable

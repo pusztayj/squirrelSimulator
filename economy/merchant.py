@@ -1,7 +1,10 @@
 """
 @author: Justin Pusztay
 
-Creates a merchant class.
+In this class we create a merchant. This represents the logic
+behind how buying and selling for the merchant work. It also handles
+the transactions for the merchant with add/removing the item from the
+inventory as well as adding/subtracting the appropriate acorns. 
 """
 
 import random, items, shelve
@@ -144,6 +147,9 @@ class Merchant(NPC, Drawable):
             return False
 
     def __repr__(self):
+        """
+        Returns a string representation of the merchant. 
+        """
         return "Name:          " + self._merchantName + \
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nAcorns:        " + str(self._acorns) + \
