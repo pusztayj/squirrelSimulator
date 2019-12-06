@@ -18,7 +18,7 @@ races = ['Beaver','Turtle','Squirrel','Hedgehog']
 
 class Merchant(NPC, Drawable):
 
-    def __init__(self,name = "", pos=(0,0)):
+    def __init__(self,name = "", pos=(0,0), restockTimer=None):
         """
         Creates the merchant, their race, and the amount of acorns that
         they have. Also generates an invetory. 
@@ -33,6 +33,8 @@ class Merchant(NPC, Drawable):
         self._inventory = Inventory(100)
         self._willTrade = True
         self._merchantSpeak = str()
+        self._restockTimer = restockTimer
+        self._restockTime = restockTimer
         self.generateInventory()
 
     def __iter__(self):
@@ -51,6 +53,11 @@ class Merchant(NPC, Drawable):
             for x in items.items.__all__:
                 if 50 >= random.randint(0,100):
                     self._inventory.addItem(globals()[x]())
+
+    def setRestockTimer(self, ticks):
+        """Sets the restock time and timer for the merchant"""
+        self._restockTimer = ticks
+        self._restockTime = ticks
 
         
     def getRace(self):
@@ -159,6 +166,15 @@ class Merchant(NPC, Drawable):
                "\nSpecies:       " + str(type(self).__name__) + \
                "\nAcorns:        " + str(self._acorns) + \
                "\nInventory:     " + str(self._inventory)
+
+    def update(self, ticks):
+        """Updates the merchant's inventory based on ticks"""
+        if self._restockTimer != None:
+            self._restockTimer -= ticks
+            if self._restockTimer <= 0:
+                self.generateInventory()
+                self._restockTimer = self._restockTime
+
                
 
 

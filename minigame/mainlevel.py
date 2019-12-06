@@ -138,6 +138,7 @@ class MainLevel(Level):
         self._acornLeakTimer = self._worldClock.getHourLength()
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
+        self._restockTimer = 2 * self._worldClock.getHourLength()
 
         self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
         self._interactionTimer = self._interactionDelay
@@ -175,6 +176,11 @@ class MainLevel(Level):
         # Add merchants to the world
         self._merchants = spawn(Merchant, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
                                 random.randint(2,5), [])
+
+        # Set the restocking rates for the merchants
+        dayLen = self._worldClock.getDayLength()
+        for merchant in self._merchants:
+            merchant.setRestockTimer(random.randint(2*dayLen,4*dayLen))
 
         # Add trees to the world
         self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
@@ -708,6 +714,10 @@ class MainLevel(Level):
             self._acornLeakTimer = self._worldClock.getHourLength()
             self._leak = False
 
+        # Control merchant restocking
+        for merchant in self._merchants:
+            merchant.update(ticks)
+
         # Update the interaction timer (used to prevent instantaneous button clicks)
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
             self._interactionTimer -= ticks
@@ -766,8 +776,6 @@ class MainLevel(Level):
         # Check if a day has passed in game time
         if self._worldClock.dayPassed():
             self._player.setXP(self._player.getXP() + self._xpPerDay)
-            for x in self._merchants: # do 2 days
-                x.generateInventory()
 
         # Load and play a new song if the current song has ended
         if not pygame.mixer.music.get_busy():

@@ -198,6 +198,7 @@ class MerchantLevel(Level):
                   for item in self._merchantMind.getInventory()])
         if self._popup != None:
             self._popup.handleEvent(event)
+        
 
     def update(self,ticks):
         """
@@ -206,6 +207,10 @@ class MerchantLevel(Level):
         self._FLAG = self.updateDisplay()
         self._playerMoney.setText("Your money: $" + str(self._player.getAcorns()))
         self._merchantMoney.setText(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()))
+
+        if self._merchantMind._restockTimer == self._merchantMind._restockTime:
+            self._merchantSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+                  for item in self._merchantMind.getInventory()])
 
         if not pygame.mixer.music.get_busy():
             temp = self._currentSong
