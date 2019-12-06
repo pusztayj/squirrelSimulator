@@ -166,13 +166,29 @@ class Animal():
             return False
 
     def damageOnOpponents(self,opponents):
+        """
+        This method calculates the damage that an animal will do to a
+        list of opponents.
+        """
         return [(x,attackComputation(self,x),x.getHealth()) \
                   for x in opponents if x!=None]
 
     def kills(self,opponents):
+        """
+        Taking a list of opponents this method can caluculate the amount of
+        damage that an animal can do to their opponenets.
+        """
         return [x for x in self.damageOnOpponents(opponents) if x[1] >= x[2]]
 
     def attackLogic(self,opponents):
+        """
+        This method determines the logic calculations for attacking
+        for an animal when they are fighing. It returns an animal.
+
+        It first looks whether it can kill another animal, if so it returns
+        the animal. Then it looks for the highest damaage animal
+        and returns that hype. 
+        """
         damage = self.damageOnOpponents(opponents)
         kills = self.kills(opponents) # calculates the kills
         random.shuffle(kills) # shuffles the kill so it's not always the player
@@ -181,7 +197,7 @@ class Animal():
             self._combatStatus = self.getName() + " has killed " + a.getName()
             return kills[0][0]
         else:
-            damage.sort(key = lambda x: x[1]) #could shuffle to make more stupid
+            damage.sort(key = lambda x: x[1])
             # sorts the damage from lowest to highest
             self._combatStatus = self.getName() + " did " + str(damage[-1][1])+ " damage to " + \
                                  (damage[-1][0]).getName()
@@ -189,18 +205,23 @@ class Animal():
         
     # Basic Stats
     def getHealth(self):
+        """Returns the health of the animal."""
         return self._health
 
     def getBaseHealth(self):
+        """Returns the base health of the animal. The default is 100."""
         return self._baseHealth
 
     def increaseBaseHealth(self, increase):
+        """Increases the animal's base health."""
         self._baseHealth += increase
 
     def decreaseBaseHealth(self, decrease):
+        """Decreases the animal's base health."""
         self._baseHealth -= decrease
 
     def setHealth(self, health):
+        """Sets the health of the animal equal to a value."""
         self._health = health
 
     def heal(self, health):
@@ -281,33 +302,54 @@ class Animal():
             self._stamina -= stamina
 
     def getXP(self):
+        """Returns the XP of the player."""
         return self._xp
 
     def setXP(self, xp):
+        """Sets the XP of the player to a value."""
         self._xp = xp
 
     def incrementXP(self, xp):
+        """Increments the for the animal."""
         self._xp += xp
 
     def getHunger(self):
+        """Returns the hunger level of the animal."""
         return self._hunger
 
     def setHunger(self, hunger):
+        """Sets the hunger level of the animal."""
         self._hunger = hunger
 
     def getBaseHunger(self):
+        """
+        Returns the base hunger of an animal. The default is 10 for
+        all animals.
+        """
         return self._baseHunger
 
     def decrementHunger(self,amount=1):
+        """
+        Decrements an animals hunger, the default is one.
+        """
         self._hunger = max(0, self._hunger-amount)
 
     def increaseHunger(self, amount=1):
+        """
+        Increases the hunger of the animal.
+        """
         self._hunger = min(self._hunger+amount, self._baseHunger)
 
     def isStarving(self):
+        """
+        Returns a boolean of the animal has a hunger of 0.
+        """
         return self._hunger == 0
 
     def getSpeed(self):
+        """
+        Returns the speed of the animal.
+        """
         return self._speed
 
     def setSpeed(self, speed):

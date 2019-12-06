@@ -34,7 +34,6 @@ class Merchant(NPC, Drawable):
 
     def __iter__(self):
         """
-
         Creates an iterable item for the inventory.
         """
         for item in self._inventory:
