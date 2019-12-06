@@ -54,6 +54,7 @@ class MerchantLevel(Level):
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
 
+
         # tranasction button
         self._executeTransaction = Button("Execute Transaction",(471,375),
                                          self._font,(255,255,255),(34,139,34),50,145,borderWidth = 2)

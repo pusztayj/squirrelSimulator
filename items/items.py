@@ -275,7 +275,7 @@ class Potions(Item,Drawable):
                  isBuyable = True, isSellable = True)
         Drawable.__init__(self,"healthpotion.png",(0,0))
         self._healthBoost = healthBoost
-        self._value = self._healthBoost*10
+        self._value = 100
 
     def getHealthBoost(self):
         return self._healthBoost
