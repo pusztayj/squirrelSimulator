@@ -85,8 +85,10 @@ class MerchantLevel(Level):
 
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
-
-        SoundManager.getInstance().playMusic(self._currentSong)
+        try:
+            SoundManager.getInstance().playMusic(self._currentSong)
+        except:
+            print("Can't play mp3 file on this machine.")
 
         
     def selectMerchantItem(self,item):
@@ -211,9 +213,11 @@ class MerchantLevel(Level):
         if self._merchantMind._restockTimer == self._merchantMind._restockTime:
             self._merchantSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
                   for item in self._merchantMind.getInventory()])
-
-        if not pygame.mixer.music.get_busy():
-            temp = self._currentSong
-            while temp == self._currentSong:
-                self._currentSong = random.choice(self._songs)
-            SoundManager.getInstance().playMusic(self._currentSong)
+        try:
+            if not pygame.mixer.music.get_busy():
+                temp = self._currentSong
+                while temp == self._currentSong:
+                    self._currentSong = random.choice(self._songs)
+                SoundManager.getInstance().playMusic(self._currentSong)
+        except:
+            print("Can't play mp3 file on this machine.")

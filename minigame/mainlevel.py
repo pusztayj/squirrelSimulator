@@ -120,8 +120,9 @@ class MainLevel(Level):
         self._player = self._playerPack.getLeader()
 
         # Create the ground
-        self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
-
+        #self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
+        self._ground = Banner((0,0),(80,230,80),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
+        
         # Spawn some acorns at start of the game
         self._acorns = [Acorn((random.randint(0,self._WORLD_SIZE[0]),
                                        random.randint(0,self._WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
@@ -218,13 +219,19 @@ class MainLevel(Level):
         self._xpManager.close()
 
         # Start playing music
-        SoundManager.getInstance().playMusic(self._currentSong)
+        try:
+            SoundManager.getInstance().playMusic(self._currentSong)
+        except:
+            print("Can't play mp3 file on this machine.")
 
     def setActive(self, boolean):
         """Sets the level to its active state"""
         self._active = boolean
         self._currentSong = random.choice(self._songs)
-        SoundManager.getInstance().playMusic(self._currentSong)
+        try:
+            SoundManager.getInstance().playMusic(self._currentSong)
+        except:
+            print("Can't play mp3 file on this machine.")
 
     def draw(self, screen):
         """Draws the level to the screen"""
@@ -787,11 +794,14 @@ class MainLevel(Level):
             self._player.setXP(self._player.getXP() + self._xpPerDay)
 
         # Load and play a new song if the current song has ended
-        if not pygame.mixer.music.get_busy():
-            temp = self._currentSong
-            while temp == self._currentSong:
-                self._currentSong = random.choice(self._songs)
-            SoundManager.getInstance().playMusic(self._currentSong)
+        try:
+            if not pygame.mixer.music.get_busy():
+                temp = self._currentSong
+                while temp == self._currentSong:
+                    self._currentSong = random.choice(self._songs)
+                SoundManager.getInstance().playMusic(self._currentSong)
+        except:
+            print("Can't play mp3 file on this machine.")
         
 
 
