@@ -5,6 +5,25 @@ A game made by Justin Pusztay and Trevor Stalnaker
 In the fast paced world of Squirrel Simulator, the player guides a squirrel through a forested wood in the hopes of stashing enough nuts to survive. The player must be on guard against competitors. Will you befriend your fellow creatures to protect your hard won acorns, or will you strive to be the top of the food chain.  
 
 ### How to Play
+To play the game you must only run main.py. 
+
+The purpose of this game is survive. There is no way to win, but the only way to loose is too die. The only way you survive is by collecting acorns. 
+
+These are the following controls: 
+```
+Hit ESC to pause the game
+Use WASD to move
+Pick up acorns by walking over them
+To survive you must eat acorns: hit space to do so
+To bury acorns hit B. Click on dirt pile created to name, deposit and withdraw acorns.
+Every animal is a part of a pack. Hit E to view your pack.
+Hit R to level up your skills using XP you earn.
+Click on an animal to interact with it.
+Click on merchant hut to trade
+To equip/use items right click on the item selected on your inventory display 
+To dig up abandoned piles you must own a tool and click on pile
+Use buttons in combat minigame for fighting strategy
+```
 
 ### Prerequisites
 The entire game and processing is completed on Python3. 
