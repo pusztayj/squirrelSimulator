@@ -8,6 +8,7 @@ Manages more complicated collide rectangles for sprites
 import copy, pygame
 
 def getRects(image):
+    """This fucntion gets the rects for an image."""
     image = copy.copy(image)
     pxa = pygame.PixelArray(image)
     topCorner = pxa[0,0]
@@ -28,5 +29,6 @@ def getRects(image):
     return rects
 
 def moveRects(rects, pos):
+    """This function moves the rects to a certain position."""
     return [rect.move(pos[0],pos[1]) for rect in rects]
                     

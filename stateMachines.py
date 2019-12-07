@@ -1,4 +1,7 @@
-
+"""
+In this file we create the state machine instances for the state
+machines that we need. 
+"""
 from fsm import *
 
 playerStartState = "standing"

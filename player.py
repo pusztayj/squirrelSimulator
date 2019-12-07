@@ -1,3 +1,11 @@
+"""
+@author: Trevor Stalnaker, Justin Pusztay
+
+In this file we define the player class which holds all specific
+data points that are fundamental for the player. 
+"""
+
+
 from animals.squirrel import Squirrel
 from modules.vector2D import Vector2
 import rectmanager
@@ -9,6 +17,10 @@ from modules.soundManager import SoundManager
 class Player(Squirrel):
 
     def __init__(self, name="", pos=(0,0)):
+        """
+        Here we intialize the player along with the starting stats that
+        every player gets at the start of the game.
+        """
         super().__init__(name, pos)
 
         self._acorns = 0
@@ -50,45 +62,65 @@ class Player(Squirrel):
         self._eatClock = self._eatTime
 
     def getXP(self):
+        """
+        Returns XP of the player
+        """
         return self._xp
 
     def getAcorns(self):
+        """Returns the acorns of the player."""
         return self._acorns
 
     def setAcorns(self, acorns):
+        """Sets the acorns of the players."""
         self._acorns = acorns
 
     def getCheekCapacity(self):
+        """Returns the cheek capacity."""
         return self._cheekCapacity
 
     def setCheekCapacity(self, capacity):
+        """Sets the cheek capacity of the player."""
         self._cheekCapacity = capacity
 
     def getMemory(self):
+        """Returns the memory of the player."""
         return self._memory
 
     def getCharisma(self):
+        """Returns the charism of the player."""
         return self._charisma
 
     def getDiggingSkill(self):
+        """Returns the digging skill of the player."""
         return self._diggingSkill
 
     def getStealth(self):
+        """Returns the stealth of the player."""
         return self._stealth
 
     def setMemory(self, amount):
+        """Sets the memory of the player."""
         self._memory = amount
         
     def setCharisma(self, amount):
+        """Sets the charism of the player."""
         self._charisma = amount
 
     def setDiggingSkill(self, amount):
+        """Sets the digging skill of the player."""
         self._diggingSkill = amount
 
     def setStealth(self, amount):
+        """Sets the stealth."""
         self._stealth = amount
 
     def eatAcorn(self):
+        """
+        In this method we eat an acorn and properly change the acorn stash
+        and hunger of the player. Also heals the player by 1HP if health bar
+        is full. 
+        """
         if self._fsm.getCurrentState() != "eating":
             if self._acorns > 0 and self._hunger < self._baseHunger:
                 self._acorns -= 1
@@ -103,6 +135,9 @@ class Player(Squirrel):
                 SoundManager.getInstance().playSound("munch.ogg")
 
     def eat(self, hungerAmount, healthAmount):
+        """
+        This runs the sound effect for the munch noise. 
+        """
         self.increaseHunger(hungerAmount)
         self.heal(healthAmount)
         self._fsm.changeState("eat")
@@ -124,8 +159,7 @@ class Player(Squirrel):
 ##            self._fsm.changeState("bury")
 
     def update(self, worldInfo, ticks):
-        """Updates the position of the star"""
-
+        """Updates the position of the squirrel"""
         if self._fsm.getCurrentState() == "digging":
             self._row = 1
             self._nFrames = 2

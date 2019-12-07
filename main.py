@@ -20,7 +20,7 @@ instruct = ["Welcome to Squirrel Simulator",
              "Click on animals and mercant huts\nto interact with them",
              "Animals can belong to packs.\nHit E to view your pack",
              "You gain XP points overtime.\nHit R to view XP chart",
-             "You can only carry so many acorns.\nHit B to bury acorns",
+             "You can only carry so many acorns.\nHit B to bury acorns.\nYou can dig up piles by right\nclicking with selected tool",
              "Right click to use and equip items"]
 
 def giveAcorns(entity, amount):
