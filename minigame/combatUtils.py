@@ -19,7 +19,6 @@ The following classes are created:
 CombatSprite
 Box
 AnimalStats
-VictoryScreen
 RetreatScreen
 """
 
@@ -555,10 +554,10 @@ class RetreatScreen(object):
         self._acornsText = TextBox("Acorns: "+str(self._player.getAcorns()),
                                    (0,0),self._font,
                                    (255,255,255))
-        self._acornImg = Acorn((0,0))
-        self._acornsText.setPosition((750-(self._acornsText.getWidth()+self._acornImg.getWidth()+5),150+y+20))
-        self._acornImg.setPosition((750-self._acornImg.getWidth(),150+y+15))
-        y += self._acornImg.getHeight() + 20
+##        self._acornImg = Acorn((0,0))
+        self._acornsText.setPosition((750-(self._acornsText.getWidth()+5),150+y+20))
+        #self._acornImg.setPosition((750-self._acornImg.getWidth(),150+y+15))
+        y += self._acornsText.getHeight() + 20
         self._inventory = threeXthreeInventory((450,150+y+5),(300,200), self._player)
         
     def draw(self,screen):
@@ -569,7 +568,7 @@ class RetreatScreen(object):
         if self._itemLost != None:
             self._itemLostText.draw(screen)
         self._acornsText.draw(screen)
-        self._acornImg.draw(screen)
+##        self._acornImg.draw(screen)
         self._inventoryText.draw(screen)    
         self._inventory.draw(screen)
         
