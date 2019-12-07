@@ -219,19 +219,21 @@ class MainLevel(Level):
         self._xpManager.close()
 
         # Start playing music
+        # Can't play mp3 file on this machine
         try:
             SoundManager.getInstance().playMusic(self._currentSong)
         except:
-            print("Can't play mp3 file on this machine.")
-
+            pass
+        
     def setActive(self, boolean):
         """Sets the level to its active state"""
         self._active = boolean
         self._currentSong = random.choice(self._songs)
+        # Can't play mp3 file on this machine
         try:
             SoundManager.getInstance().playMusic(self._currentSong)
         except:
-            print("Can't play mp3 file on this machine.")
+            pass
 
     def draw(self, screen):
         """Draws the level to the screen"""
@@ -794,6 +796,7 @@ class MainLevel(Level):
             self._player.setXP(self._player.getXP() + self._xpPerDay)
 
         # Load and play a new song if the current song has ended
+        # Can't play mp3 file on this machine
         try:
             if not pygame.mixer.music.get_busy():
                 temp = self._currentSong
@@ -801,7 +804,7 @@ class MainLevel(Level):
                     self._currentSong = random.choice(self._songs)
                 SoundManager.getInstance().playMusic(self._currentSong)
         except:
-            print("Can't play mp3 file on this machine.")
+            pass
         
 
 
