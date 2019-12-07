@@ -14,7 +14,7 @@ from .npc import NPC
 AGGRESSION   = (0,5)
 SPEED        = (15,20)
 ENDURANCE    = (8,10)
-STRENGTH     = 18
+STRENGTH     = 22
 
 class Fox(NPC):
 

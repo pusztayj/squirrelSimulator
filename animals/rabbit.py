@@ -14,7 +14,7 @@ from .npc import NPC
 AGGRESSION   = (8,10)
 SPEED        = (15,20)
 ENDURANCE    = (8,10)
-STRENGTH     = 12
+STRENGTH     = 14
 
 class Rabbit(NPC):
 

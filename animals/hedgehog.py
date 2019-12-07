@@ -16,7 +16,7 @@ AGGRESSION   = (0,2)
 SPEED        = (12,18)
 ENDURANCE    = (6,10)
 ATTACK_SPEED = (1,2)
-STRENGTH     = 7
+STRENGTH     = 10
 
 class Hedgehog(NPC):
 

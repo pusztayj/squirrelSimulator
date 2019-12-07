@@ -90,8 +90,8 @@ class Spear(Weapon,Drawable):
 
 class IronSword(Weapon,Drawable):
 
-    def __init__(self,strength = 25, level=1, durability=100,
-                 utility = 100,value = 80, staminaCost = 10,requirements=None,
+    def __init__(self,strength = 20, level=1, durability=100,
+                 utility = 100,value = 70, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific weapon, named an iron sword.
@@ -146,7 +146,7 @@ class Armor(Item):
 class HideArmor(Armor,Drawable):
     
     def __init__(self,strength = 8, level=1, durability=100,
-                 utility = 100,value = 35,requirements=None,
+                 utility = 100,value = 30,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Hide Armor. 
@@ -160,8 +160,8 @@ class HideArmor(Armor,Drawable):
 
 class LeatherArmor(Armor,Drawable):
     
-    def __init__(self,strength = 13, level=1, durability=100,
-                 utility = 100,value = 75,requirements=None,
+    def __init__(self,strength = 12, level=1, durability=100,
+                 utility = 100,value = 45,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Leather Armor. 
@@ -174,8 +174,8 @@ class LeatherArmor(Armor,Drawable):
 
 class IronArmor(Armor,Drawable):
     
-    def __init__(self,strength = 21, level=1, durability=100,
-                 utility = 100,value = 100,requirements=None,
+    def __init__(self,strength = 17, level=1, durability=100,
+                 utility = 100,value = 80,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Iron Armor. 
@@ -309,7 +309,7 @@ class Tool(Item):
 class Shovel(Tool,Drawable):
 
     def __init__(self, strength = 3, level=1, durability=100,
-                 utility = 100,value = 60,staminaCost = 10, acornBoost = .2,
+                 utility = 100,value = 50,staminaCost = 10, acornBoost = .2,
                  requirements=None, isBuyable = True, isSellable = True):
         """
         Here we create a specific type of tool named shovel. 
@@ -326,7 +326,7 @@ class Shovel(Tool,Drawable):
 class PickAx(Tool,Drawable):
 
     def __init__(self, strength = 5, level=1, durability=100,
-                 utility = 100,value = 95,staminaCost = 10, acornBoost = .3,
+                 utility = 100,value = 60,staminaCost = 10, acornBoost = .3,
                  requirements=None, isBuyable = True, isSellable = True):
         """
         Here we create a specific type of tool named pick ax. 

@@ -16,7 +16,7 @@ AGGRESSION   = (0,1)
 SPEED        = (18,24)
 ENDURANCE    = (6,10)
 ATTACK_SPEED = (1,2)
-STRENGTH     = 22
+STRENGTH     = 30
 
 class Deer(NPC):
 
