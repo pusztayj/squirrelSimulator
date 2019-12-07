@@ -7,7 +7,7 @@ In the fast paced world of Squirrel Simulator, the player guides a squirrel thro
 ### How to Play
 To play the game you must only run main.py. 
 
-The purpose of this game is survive. There is no way to win, but the only way to loose is too die. The only way you survive is by collecting acorns. 
+The purpose of this game is survive. There is no way to win, but the only way to lose is too die. The only way you survive is by collecting acorns. 
 
 These are the following controls: 
 ```
