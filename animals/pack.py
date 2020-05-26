@@ -9,6 +9,7 @@ set leaders of packs. We can also add and remove anmials from packs.
 """
 
 from player import Player
+from inventory import Inventory
 
 class Pack():
 
@@ -22,9 +23,14 @@ class Pack():
         self._name = name
         self._nextToAttackIndex = 0 # sets the next to attack to 0
         self._nextToAttack = self[self._nextToAttackIndex]
-        self._resourcePool = list()
+        self._resourcePool = Inventory() # shared resources for the pack
 
     def updateResourcePool(self,member):
+        """
+        Will add sharable items to the resource pool.
+        """
+        for item in member.getInventory():
+
         return 0
 
     def getNextToAttack(self):

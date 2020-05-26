@@ -1,5 +1,5 @@
 """
-Author: Trevor Stalnaker, Justin Pusztay
+@author: Trevor Stalnaker, Justin Pusztay
 File: main.py
 
 The main loop for running Squirrel Simulator
