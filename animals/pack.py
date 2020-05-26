@@ -22,6 +22,10 @@ class Pack():
         self._name = name
         self._nextToAttackIndex = 0 # sets the next to attack to 0
         self._nextToAttack = self[self._nextToAttackIndex]
+        self._resourcePool = list()
+
+    def updateResourcePool(self,member):
+        return 0
 
     def getNextToAttack(self):
         """

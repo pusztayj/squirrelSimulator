@@ -11,7 +11,7 @@ class Item():
 
     def __init__(self, name, level=1, durability=100, utility = 100,
                  value = 50, requirements=None, isBuyable = True,
-                 isSellable = True):
+                 isSellable = True, isShareable = False):
         """
         Here we initialize the itmem class where we pass its name, utility,
         value, and whether or not the item is buyable or sellable. 
@@ -26,6 +26,7 @@ class Item():
         self._isBuyable = isBuyable
         self._isSellable = isSellable
         self._value = value
+        self._isShareable = isShareable
 
     def getValue(self):
         """Returns the value of the item in acorns."""
