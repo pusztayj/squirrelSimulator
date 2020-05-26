@@ -584,6 +584,21 @@ class Animal():
         """Used by weapons and armors to check if they are usable by the entity"""
         return (self._xp, self._strength, self._intelligence, self._endurance)
 
+
+    def shareItem(self,item):
+        """
+        The logic behind why an animal would share an item into
+        their pack inventory
+        """
+        return 0
+
+    def takeItem(self,item):
+        """
+        The logic behind why an animal would take an item from
+        their pack inventory
+        """        
+        return 0
+
     def __repr__(self):
         """
         Returns a string representation of the animal.

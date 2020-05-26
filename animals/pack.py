@@ -29,8 +29,6 @@ class Pack():
         """
         Will add sharable items to the resource pool.
         """
-        for item in member.getInventory():
-
         return 0
 
     def getNextToAttack(self):
