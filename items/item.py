@@ -9,13 +9,14 @@ import random, math
 
 class Item():
 
-    def __init__(self, name, level=1, durability=100, utility = 100,
+    def __init__(self, owner, name, level=1, durability=100, utility = 100,
                  value = 50, requirements=None, isBuyable = True,
                  isSellable = True, isShareable = False):
         """
         Here we initialize the itmem class where we pass its name, utility,
         value, and whether or not the item is buyable or sellable. 
         """
+        self._owner = owner
         self._name = name
         self._level = level
         self._skillRequirements = requirements
@@ -28,6 +29,18 @@ class Item():
         self._value = value
         self._isShareable = isShareable
 
+    def getOwner(self):
+        """
+        Gets the owner of the item.
+        """
+        return self._owner
+
+    def setOwner(self):
+        """
+        Sets the owner of the item.
+        """
+        return self._owner
+        
     def getValue(self):
         """Returns the value of the item in acorns."""
         return self._value
