@@ -149,13 +149,13 @@ class Armor(Item):
 
 class HideArmor(Armor,Drawable):
     
-    def __init__(self,strength = 8, level=1, durability=100,
+    def __init__(self,owner,strength = 8, level=1, durability=100,
                  utility = 100,value = 30,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Hide Armor. 
         """
-        Armor.__init__(self,"Hide Armor", strength, level, durability,
+        Armor.__init__(self,owner,"Hide Armor", strength, level, durability,
                  utility,35,requirements,
                  isBuyable, isSellable)
 
@@ -251,7 +251,7 @@ class NutSoup(Food,Drawable):
         Here we create a specific type of food named Nut Soup/Acorn Chowder. 
         """
         name = ["Nut Soup","Acorn Chowder"]
-        Food.__init__(self,random.choice(name), healthBoost, hungerBoost, level,
+        Food.__init__(self,owner,random.choice(name), healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"nutsoup.png",(0,0))
@@ -265,7 +265,7 @@ class PecanPie(Food,Drawable):
         """
         Here we create a specific type of food named Peacan Pie. 
         """
-        Food.__init__(self,"Pecan Pie", healthBoost, hungerBoost, level,
+        Food.__init__(self,owner,"Pecan Pie", healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"pecanpie.png",(0,0))
