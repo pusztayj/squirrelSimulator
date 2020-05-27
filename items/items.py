@@ -65,7 +65,7 @@ class Stick(Weapon,Drawable):
 
     def __init__(self,strength = 10, level=1, durability=100,
                  utility = 100,value = 20, staminaCost = 10,requirements=None,
-                 isBuyable = True, isSellable = True, isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific weapon, named a stick.
         """
@@ -80,7 +80,7 @@ class Spear(Weapon,Drawable):
 
     def __init__(self,strength = 15, level=1, durability=100,
                  utility = 100,value = 35, staminaCost = 10,requirements=None,
-                 isBuyable = True, isSellable = True, isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific weapon, named a spear.
         """
@@ -151,7 +151,7 @@ class HideArmor(Armor,Drawable):
     
     def __init__(self,strength = 8, level=1, durability=100,
                  utility = 100,value = 30,requirements=None,
-                 isBuyable = True, isSellable = True, isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Hide Armor. 
         """
@@ -166,7 +166,7 @@ class LeatherArmor(Armor,Drawable):
     
     def __init__(self,strength = 12, level=1, durability=100,
                  utility = 100,value = 45,requirements=None,
-                 isBuyable = True, isSellable = True, isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Leather Armor. 
         """
@@ -232,7 +232,7 @@ class Berries(Food,Drawable):
 
     def __init__(self, healthBoost=5, hungerBoost=2, level=1, durability=100,
                  utility = 100,value = 15,requirements=None,
-                 isBuyable = True, isSellable = True, isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Iron Armor. 
         """
@@ -246,8 +246,7 @@ class NutSoup(Food,Drawable):
 
     def __init__(self, healthBoost = 8, hungerBoost=4, level=1, durability=100,
                  utility = 100,value = 20,requirements=None,
-                 isBuyable = True, isSellable = True,
-                 isShareable = True):
+                 isBuyable = True, isSellable = True):
         """
         Here we create a specific type of food named Nut Soup/Acorn Chowder. 
         """

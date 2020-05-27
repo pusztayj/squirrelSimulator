@@ -52,6 +52,12 @@ class Item():
         """
         return self._isSellable
 
+    def isSharable(self):
+        """
+        Returns if an item is sharable. 
+        """
+        return self._isShareable
+
     def getRequirements(self):
         """Display the requirements for the item"""
         return self._skillRequirements

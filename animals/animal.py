@@ -590,6 +590,7 @@ class Animal():
         The logic behind why an animal would share an item into
         their pack inventory
         """
+        #if item.isSharable():
         return 0
 
     def takeItem(self,item):
