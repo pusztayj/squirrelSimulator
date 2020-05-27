@@ -45,11 +45,11 @@ def createPack(pos):
                 random.shuffle(i)
                 for x in i:
                     if .08 >= random.random():
-                        creature.getInventory().addItem(globals()[x]())
+                        creature.getInventory().addItem(globals()[x](creature))
             if random.random() < .33:
-                creature.equipArmor(random.choice(items.armors)())
+                creature.equipArmor(random.choice(items.armors)(creature))
             if random.random() < .33:
-                creature.equipItem(random.choice(items.weapons)())
+                creature.equipItem(random.choice(items.weapons)(creature))
             creature.loseHealth(random.randint(0,20))
             creature.setAcorns(random.randint(0,100))
     return p

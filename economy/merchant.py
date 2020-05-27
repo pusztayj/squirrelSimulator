@@ -52,7 +52,7 @@ class Merchant(NPC, Drawable):
         for x in range(3):
             for x in items.items.__all__:
                 if 50 >= random.randint(0,100):
-                    self._inventory.addItem(globals()[x]())
+                    self._inventory.addItem(globals()[x](self))
 
     def setRestockTimer(self, ticks):
         """Sets the restock time and timer for the merchant"""

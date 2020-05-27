@@ -21,7 +21,7 @@ __all__ = ["Stick","Spear","IronSword","HideArmor","LeatherArmor","IronArmor",
 
 class Weapon(Item):
     
-    def __init__(self,name, strength, level=1, durability=100,
+    def __init__(self,owner,name, strength, level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -32,7 +32,7 @@ class Weapon(Item):
         Value: The market of the item.
         Level: The level of the item
         """
-        Item.__init__(self,name,level=1, durability=100,
+        Item.__init__(self,owner,name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
         self._strength = strength
@@ -63,13 +63,13 @@ class Weapon(Item):
                
 class Stick(Weapon,Drawable):
 
-    def __init__(self,strength = 10, level=1, durability=100,
+    def __init__(self,owner,strength = 10, level=1, durability=100,
                  utility = 100,value = 20, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific weapon, named a stick.
         """
-        Weapon.__init__(self,"Stick", strength, level, durability,
+        Weapon.__init__(self,owner,"Stick", strength, level, durability,
                  utility,value, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"stick.png",(0,0))
@@ -78,13 +78,13 @@ class Stick(Weapon,Drawable):
 
 class Spear(Weapon,Drawable):
 
-    def __init__(self,strength = 15, level=1, durability=100,
+    def __init__(self,owner, strength = 15, level=1, durability=100,
                  utility = 100,value = 35, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific weapon, named a spear.
         """
-        Weapon.__init__(self,"Spear", strength, level, durability,
+        Weapon.__init__(self, owner, "Spear", strength, level, durability,
                  utility,35, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"spear.png",(0,0))
@@ -92,7 +92,7 @@ class Spear(Weapon,Drawable):
 
 class IronSword(Weapon,Drawable):
 
-    def __init__(self,strength = 20, level=1, durability=100,
+    def __init__(self, owner, strength = 20, level=1, durability=100,
                  utility = 100,value = 70, staminaCost = 10,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -100,7 +100,7 @@ class IronSword(Weapon,Drawable):
 
         This item is not sharable.
         """
-        Weapon.__init__(self,"Iron Sword", strength, level, durability,
+        Weapon.__init__(self, owner, "Iron Sword", strength, level, durability,
                  utility,80, staminaCost,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"sword.png",(0,0))
@@ -114,7 +114,7 @@ weapons = [Stick, Spear, IronSword]
 
 class Armor(Item):
 
-    def __init__(self,name, strength, level=1, durability=100,
+    def __init__(self, owner, name, strength, level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -125,7 +125,7 @@ class Armor(Item):
         Value: The market of the item.
         Level: The level of the item
         """
-        Item.__init__(self,name,level=1, durability=100,
+        Item.__init__(self, owner, name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
         self._strength = strength
@@ -164,13 +164,13 @@ class HideArmor(Armor,Drawable):
 
 class LeatherArmor(Armor,Drawable):
     
-    def __init__(self,strength = 12, level=1, durability=100,
+    def __init__(self, owner, strength = 12, level=1, durability=100,
                  utility = 100,value = 45,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Leather Armor. 
         """
-        Armor.__init__(self,"Leather Armor", strength, level, durability,
+        Armor.__init__(self, owner, "Leather Armor", strength, level, durability,
                  utility,75,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"leather_armor.png",(0,0))
@@ -178,13 +178,13 @@ class LeatherArmor(Armor,Drawable):
 
 class IronArmor(Armor,Drawable):
     
-    def __init__(self,strength = 17, level=1, durability=100,
+    def __init__(self, owner, strength = 17, level=1, durability=100,
                  utility = 100,value = 80,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Iron Armor. 
         """
-        Armor.__init__(self,"Iron Armor", strength, level, durability,
+        Armor.__init__(self, owner, "Iron Armor", strength, level, durability,
                  utility,value,requirements,
                  isBuyable, isSellable)
         Drawable.__init__(self,"iron_armor.png",(0,0))
@@ -199,7 +199,7 @@ armors = [HideArmor, LeatherArmor, IronArmor]
 
 class Food(Item):
 
-    def __init__(self,name, healthBoost, hungerBoost, level=1, durability=100,
+    def __init__(self, owner, name, healthBoost, hungerBoost, level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -213,7 +213,7 @@ class Food(Item):
         Value: The market of the item.
         Level: The level of the item
         """
-        Item.__init__(self,name,level=1, durability=100,
+        Item.__init__(self, owner, name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
         self._healthBoost = healthBoost
@@ -230,13 +230,13 @@ class Food(Item):
 
 class Berries(Food,Drawable):
 
-    def __init__(self, healthBoost=5, hungerBoost=2, level=1, durability=100,
+    def __init__(self,  owner, healthBoost=5, hungerBoost=2, level=1, durability=100,
                  utility = 100,value = 15,requirements=None,
                  isBuyable = True, isSellable = True):
         """
         Here we create a specific type of armor named Iron Armor. 
         """
-        Food.__init__(self,"Berries", healthBoost, hungerBoost, level,
+        Food.__init__(self, owner, "Berries", healthBoost, hungerBoost, level,
                          durability, utility,value,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"berries.png",(0,0))
@@ -244,7 +244,7 @@ class Berries(Food,Drawable):
 
 class NutSoup(Food,Drawable):
 
-    def __init__(self, healthBoost = 8, hungerBoost=4, level=1, durability=100,
+    def __init__(self, owner, healthBoost = 8, hungerBoost=4, level=1, durability=100,
                  utility = 100,value = 20,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -259,7 +259,7 @@ class NutSoup(Food,Drawable):
 
 class PecanPie(Food,Drawable):
 
-    def __init__(self, healthBoost = 13, hungerBoost=6, level=1, durability=100,
+    def __init__(self, owner, healthBoost = 13, hungerBoost=6, level=1, durability=100,
                  utility = 100,value = 45,requirements=None,
                  isBuyable = True, isSellable = True):
         """
@@ -277,7 +277,7 @@ class PecanPie(Food,Drawable):
 
 class Tool(Item):
 
-    def __init__(self,name, strength, level=1, durability=100,
+    def __init__(self, owner, name, strength, level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10, acornBoost = .1,
                  requirements=None, isBuyable = True, isSellable = True):
         """
@@ -290,7 +290,7 @@ class Tool(Item):
         Value: The market of the item.
         Level: The level of the item
         """
-        Item.__init__(self,name,level=1, durability=100,
+        Item.__init__(self, owner, name,level=1, durability=100,
                  utility = 100,value = 50,requirements=None,
                  isBuyable = True, isSellable = True)
         self._strength = strength
@@ -312,13 +312,13 @@ class Tool(Item):
 
 class Shovel(Tool,Drawable):
 
-    def __init__(self, strength = 3, level=1, durability=100,
+    def __init__(self, owner, strength = 3, level=1, durability=100,
                  utility = 100,value = 50,staminaCost = 10, acornBoost = .2,
                  requirements=None, isBuyable = True, isSellable = True):
         """
         Here we create a specific type of tool named shovel. 
         """
-        Tool.__init__(self,"Shovel", strength, level,
+        Tool.__init__(self, owner, "Shovel", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"shovel.png",(0,0))
@@ -329,13 +329,13 @@ class Shovel(Tool,Drawable):
 
 class PickAx(Tool,Drawable):
 
-    def __init__(self, strength = 5, level=1, durability=100,
+    def __init__(self, owner, strength = 5, level=1, durability=100,
                  utility = 100,value = 60,staminaCost = 10, acornBoost = .3,
                  requirements=None, isBuyable = True, isSellable = True):
         """
         Here we create a specific type of tool named pick ax. 
         """
-        Tool.__init__(self,"Pick Ax", strength, level,
+        Tool.__init__(self, owner, "Pick Ax", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"pickax.png",(0,0))
@@ -346,13 +346,13 @@ class PickAx(Tool,Drawable):
 
 class Hoe(Tool,Drawable):
 
-    def __init__(self, strength = 8, level=1, durability=100,
+    def __init__(self, owner, strength = 8, level=1, durability=100,
                  utility = 100,value = 40,staminaCost = 10, acornBoost = .1,
                  requirements=None, isBuyable = True, isSellable = True):
         """
         Here we create a specific type of tool named hoe. 
         """
-        Tool.__init__(self,"Hoe", strength, level,
+        Tool.__init__(self, owner, "Hoe", strength, level,
                          durability, utility,value,staminaCost,acornBoost,requirements, isBuyable,
                          isSellable)
         Drawable.__init__(self,"crowbar.png",(0,0))
@@ -368,7 +368,7 @@ class Hoe(Tool,Drawable):
 
 class Potions(Item,Drawable):
 
-    def __init__(self, healthBoost = 50,level=1, durability=100,
+    def __init__(self, owner, healthBoost = 50,level=1, durability=100,
                  utility = 100,value = 50, staminaCost = 10,
                  requirements=None, isBuyable = True, isSellable = True):
         """
@@ -381,7 +381,7 @@ class Potions(Item,Drawable):
 
         This item is not sellable. 
         """
-        super().__init__("Health Potion",level=1, durability=100,
+        super().__init__(owner, "Health Potion",level=1, durability=100,
                  utility = 85,requirements=None,
                  isBuyable = True, isSellable = True)
         Drawable.__init__(self,"healthpotion.png",(0,0))
