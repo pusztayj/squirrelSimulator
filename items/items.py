@@ -56,7 +56,7 @@ class Weapon(Item):
         This is a string representation of the weapon. 
         """
         return "Name: " + self._name + \
-               "Owner: " + self._owner.getName() + \
+               "\nOwner: " + self._owner.getName() + \
                "\nType: " + "Weapon" + \
                Item.__repr__(self) + \
                 "\nBase Strength: " + str(round(self._strength))
@@ -143,7 +143,7 @@ class Armor(Item):
         Returns a string representation of the armor. 
         """
         return "Name: " + self._name + \
-               "Owner: " + self._owner.getName() + \
+               "\nOwner: " + self._owner.getName() + \
                "\nType: " + "Armor" + \
                Item.__repr__(self) + \
                "\nBase Strength: " + str(round(self._strength))
@@ -226,7 +226,7 @@ class Food(Item):
         Returns a string representation of the foodstuff
         """
         return "Name: " + self._name + \
-               "Owner: " + self._owner.getName() + \
+               "\nOwner: " + self._owner.getName() + \
                "\nType: " + "Food" + \
                Item.__repr__(self) + \
                "\nBase Health Boost: " + str(round(self._healthBoost))
@@ -308,7 +308,7 @@ class Tool(Item):
         Returns a string representation of the tool.
         """
         return "Name: " + self._name + \
-               "Owner: " + self._owner.getName() + \
+               "\nOwner: " + self._owner.getName() + \
                "\nType: " + "Tool" + \
                "\nAcorn Bonus: " + str(self._acornBoost/0.01) + "%" + \
                Item.__repr__(self) + \
@@ -403,7 +403,7 @@ class Potions(Item,Drawable):
         Returns a string representation of the health potion.
         """
         return "Name: " + self._name + \
-               "Owner: " + self._owner.getName() + \
+               "\nOwner: " + self._owner.getName() + \
                "\nType: " + "Potions" + \
                Item.__repr__(self) + \
                "\nHealth Boost: " + str(round(self._healthBoost))
