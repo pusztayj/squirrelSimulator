@@ -118,7 +118,7 @@ class SubCombatLevel(object):
 
         self._damageText = None
         self._potions = [x for x in self._allies[0].getInventory() \
-                   if type(x) == type(Potions())]
+                   if type(x) == Potions]
 
         # victory GUI items
 ##        self._victoryScreen = None

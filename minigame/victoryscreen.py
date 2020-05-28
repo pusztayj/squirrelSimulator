@@ -128,6 +128,7 @@ class VictoryScreen(object):
         it into the looted items. 
         """
         self._player.getInventory().removeItem(item)
+        item.setOwner(None)
         self._lootedItems.append(item)
         self._itemCard = None
         

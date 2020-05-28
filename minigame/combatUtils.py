@@ -209,7 +209,7 @@ def lootItems(opponents):
         if x != None:
             ivt = x.getInventory()
             for y in ivt:
-                if random.randint(0,100) <= 25: # items can be looted only 25% of time
+                if random.randint(0,100) <= 100:#25: # items can be looted only 25% of time
                     lootItems.append(y)
     return lootItems
         

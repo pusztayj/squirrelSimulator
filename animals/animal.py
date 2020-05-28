@@ -133,7 +133,7 @@ class Animal():
         # checks to see if the animal can kill an opponent
         if self._health <= 20 and len(attacks) == 0:
             for x in self._inventory:
-                if type(x) == type(Potions()) and self._health <= 20:
+                if type(x) == Potions and self._health <= 20:
                     self._combatStatus = self.getName() + " healed with a potion!"
                     return True
                     
