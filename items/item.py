@@ -35,11 +35,11 @@ class Item():
         """
         return self._owner
 
-    def setOwner(self):
+    def setOwner(self, new):
         """
         Sets the owner of the item.
         """
-        return self._owner
+        self._owner = new
         
     def getValue(self):
         """Returns the value of the item in acorns."""

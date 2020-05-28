@@ -111,6 +111,7 @@ class VictoryScreen(object):
         """
         if self._player.getInventory().hasSpace():
             self._player.getInventory().addItem(item)
+            item.setOwner(self._player)
             self._lootedItems.remove(item)
             self._itemCard = None
             self._popup = None
