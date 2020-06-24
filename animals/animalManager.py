@@ -1,4 +1,4 @@
-import csv
+import re, csv
 
 class AnimalManager():
 
@@ -24,11 +24,32 @@ class AnimalManager():
                     if x == 0:
                         fields = row
                     else:
-                        self._animals[species] = {fields[c]:int(row[c])
-                                if row[c].isdigit()
-                                else row[c] for c in range(1,len(row))}
+                        temp = {}
+                        for c in range(1,len(row)):
+                            
+                            value = row[c]
+                            field = fields[c]
+                            
+                            match = re.match("\(([\d]+)-([\d]+)\)", value)
+                            if match:
+                                temp[field] = (int(match.group(1)),
+                                               int(match.group(2)))
+                            elif value.isdigit():
+                                temp[field] = int(value)
+                            elif value.lower() in ("true","false"):
+                                temp[field] = value.lower() == "true"
+                            else:
+                                temp[field] = value
 
+                            self._animals[species] = temp
+                            
         def getStats(self, animal):
             return self._animals[animal]
+
+        def getSpawnableAnimals(self):
+            return [k for k,v in self._animals.items() if v["spawnable"]]
+
+        def getMerchantRaces(self):
+            return [k for k,v in self._animals.items() if v["merchant"]]
 
 ANIMALS = AnimalManager.getInstance()

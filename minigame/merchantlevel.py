@@ -45,7 +45,7 @@ class MerchantLevel(Level):
                       for item in self._player.getInventory()]
         self._playerSelect = ScrollSelector((100,100),(250,300),30,self._player_items,(0,0,0))
         # merchant
-        self._merchant = Turtle(pos=(1000,170), worldBound=False)
+        self._merchant = Creature(merchant._race, pos=(1000,170), worldBound=False)
         self._merchant.flip()
         self._merchant.scale(1.5)
         self._merchantMind = merchant

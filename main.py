@@ -51,7 +51,7 @@ def setHealth(entity, amount):
 
 def spawnAnimal(mainGame, species, position, friendScore):
    """Spawns an animal given a type, position, and friendScore"""
-   animal = eval(species.title())(pos=position)
+   animal = Creature(species.lower(), pos=position)
    animal.setFriendScore(friendScore)
    p = Pack(animal)
    animal.setPack(p)

@@ -13,8 +13,9 @@ from items.item import Item
 from items.items import *
 from animals import NPC
 from modules import Drawable
+from animals.animalManager import ANIMALS
 
-races = ['Beaver','Turtle','Squirrel','Hedgehog']
+races = ANIMALS.getMerchantRaces()
 
 class Merchant(NPC, Drawable):
 

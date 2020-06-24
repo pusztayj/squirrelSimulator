@@ -46,6 +46,9 @@ class Animal():
             shelf.close()
         self._name = name
 
+        #Set default species as the empty string
+        self._species = ""
+
         #Basic Stats
         self._baseHealth = health
         self._health = health
@@ -605,7 +608,7 @@ class Animal():
         Returns a string representation of the animal.
         """
         return "Name:          " + self._name + \
-               "\nSpecies:       " + str(type(self).__name__) + \
+               "\nSpecies:       " + self._species + \
                "\nHealth:        " + str(self._health) + "/" + str(self._baseHealth) + \
                "\nStamina:       " + str(self._stamina) + "/" + str(self._baseStamina) + \
                "\nAcorns:        " + str(self._acorns) + \

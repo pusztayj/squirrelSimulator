@@ -24,17 +24,18 @@ from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
 from minigame.steal import Steal
 from minigame.xpmanager import XPManager
+from animals.animalManager import ANIMALS
 
-creatures = [Bear, Fox, Rabbit, Deer, Chipmunk, Hedgehog]
+creatures = ANIMALS.getSpawnableAnimals()
 
 def createPack(pos):
     """Creates a random pack of a size between 1 and 3"""
-    leader = random.choice(creatures)(pos=pos)
+    leader = Creature(random.choice(creatures), pos=pos)
     p = Pack(leader)
     leader.setPack(p)
     for x in range(2):
         if random.random() < .25:
-            c = random.choice(creatures)(pos=(pos[0]+(((-1)**x)*30),
+            c = Creature(random.choice(creatures), pos=(pos[0]+(((-1)**x)*30),
                                                       pos[1]+(((-1)**x)*30)))
             c.setPack(p)
             p.addMember(c)

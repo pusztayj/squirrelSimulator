@@ -7,15 +7,18 @@ import pprint
 
 class Creature(NPC):
 
-    def __init__(self, species, name="", pos=(0,0)):
+    def __init__(self, species, name="", pos=(0,0), worldBound=True):
         """
         We set the appropriate stats to create the NPC for the deer.
         We also specify the rows that we need for the animations.
         """
         stats = ANIMALS.getStats(species)
           
-        NPC.__init__(self, name, stats["image"], pos, (stats["aggression"],100),
-                     (stats["speed"],100), (stats["endurance"],100), (stats["strength"],100))
+        NPC.__init__(self, name, stats["image"], pos,
+                     stats["aggression"], stats["speed"],
+                     stats["endurance"], stats["strength"])
+
+        self.setWorldBound(worldBound)
 
         self._species = species
         self._maxVelocity = stats["maxVelocity"]
