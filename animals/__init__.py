@@ -1,5 +1,5 @@
 __all__ = ["Animal","Bear","Chipmunk","Deer","Fox","Hedgehog",
-           "NPC","Pack","Rabbit","Shmoo","Squirrel","Turtle"]
+           "NPC","Pack","Rabbit","Shmoo","Squirrel","Turtle", "Creature"]
 
 from .animal import Animal
 from .bear import Bear
@@ -13,3 +13,4 @@ from .rabbit import Rabbit
 from .shmoo import Shmoo
 from .squirrel import Squirrel
 from .turtle import Turtle
+from .creature import Creature

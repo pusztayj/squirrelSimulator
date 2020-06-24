@@ -368,7 +368,7 @@ def main():
 
          # Update the loading screen
          if loading.isDisplayed():
-            loading.update(ticks)         
+            loading.update(ticks)
                    
    #Close the pygame window and quit pygame
    pygame.quit()

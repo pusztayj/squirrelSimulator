@@ -1,0 +1,3 @@
+﻿type,image,maxVelocity,aggression,speed,endurance,attack_speed,strength,standRow,walkRow,forwardRow,backwardRow,standFrames,walkFrames,forwardFrames,backwardFrames
+Deer,new_deer.png,60,1,22,7,2,30,0,1,2,3,1,3,3,3
+Hedgehog,new_hedgehog.png,60,1,16,8,2,10,0,1,2,3,1,4,4,4
