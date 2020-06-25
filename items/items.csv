@@ -1,0 +1,15 @@
+﻿item,name,type,image,value,strength,staminaCost,acornBoost,healthBoost,hungerBoost,durability,utility,buyable,sellable,sharable,requirements
+stick,Stick,weapon,stick.png,20,10,10,null,null,null,100,100,TRUE,TRUE,TRUE,null
+spear,Spear,weapon,spear.png,35,15,10,null,null,null,100,100,TRUE,TRUE,TRUE,null
+sword,Sword,weapon,sword.png,70,20,10,null,null,null,100,100,TRUE,TRUE,TRUE,null
+hideArmor,Hide Armor,armor,hide_armor.png,30,8,null,null,null,null,100,100,TRUE,TRUE,TRUE,null
+leatherArmor,Leather Armor,armor,leather_armor.png,45,12,null,null,null,null,100,100,TRUE,TRUE,TRUE,null
+ironArmor,Iron Armor,armor,iron_armor.png,80,17,null,null,null,null,100,100,TRUE,TRUE,TRUE,null
+berries,Berries,food,berries.png,15,null,null,null,5,2,100,100,TRUE,TRUE,TRUE,null
+nutSoup,Nut Soup,food,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null
+acornChowder,Acorn Chowder,food,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null
+pecanPie,Pecan Pie,food,pecanpie.png,45,null,null,null,13,6,100,100,TRUE,TRUE,TRUE,null
+shovel,Shovel,tool,shovel.png,50,3,10,0.2,null,null,100,100,TRUE,TRUE,TRUE,null
+pickaxe,Pickaxe,tool,pickax.png,60,5,10,0.3,null,null,100,100,TRUE,TRUE,TRUE,null
+hoe,Hoe,tool,crowbar.png,40,8,10,0.1,null,null,100,100,TRUE,TRUE,TRUE,null
+healthPotion,Health Potion,potion,healthpotion.png,100,null,null,null,50,null,100,85,TRUE,TRUE,TRUE,null

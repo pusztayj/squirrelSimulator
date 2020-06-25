@@ -17,8 +17,8 @@ from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
 from modules.soundManager import SoundManager
 from minigame.inventoryhud import InventoryHUD
-from items.items import *
-from items import items
+from items.item import Item
+from items.itemManager import ITEMS
 from minigame.itemblock import ItemBlock
 from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
@@ -26,31 +26,34 @@ from minigame.steal import Steal
 from minigame.xpmanager import XPManager
 from animals.animalManager import ANIMALS
 
-creatures = ANIMALS.getSpawnableAnimals()
+CREATURES = ANIMALS.getSpawnableAnimals()
+ARMORS = ITEMS.getItemsByType("armor")
+WEAPONS = ITEMS.getItemsByType("weapon")
+ALL_ITEMS = ITEMS.getItems()
 
 def createPack(pos):
     """Creates a random pack of a size between 1 and 3"""
-    leader = Creature(random.choice(creatures), pos=pos)
+    leader = Creature(random.choice(CREATURES), pos=pos)
     p = Pack(leader)
     leader.setPack(p)
     for x in range(2):
         if random.random() < .25:
-            c = Creature(random.choice(creatures), pos=(pos[0]+(((-1)**x)*30),
+            c = Creature(random.choice(CREATURES), pos=(pos[0]+(((-1)**x)*30),
                                                       pos[1]+(((-1)**x)*30)))
             c.setPack(p)
             p.addMember(c)
     for creature in p:
         if creature != None:
             for _ in range(2):
-                i = items.__all__
-                random.shuffle(i)
-                for x in i:
+                items = list(ALL_ITEMS)
+                random.shuffle(items)
+                for item in items:
                     if .08 >= random.random():
-                        creature.getInventory().addItem(globals()[x](creature))
+                        creature.getInventory().addItem(Item(item, creature))
             if random.random() < .33:
-                creature.equipArmor(random.choice(items.armors)(creature))
+                creature.equipArmor(Item(random.choice(ARMORS), creature))
             if random.random() < .33:
-                creature.equipItem(random.choice(items.weapons)(creature))
+                creature.equipItem(Item(random.choice(WEAPONS), creature))
             creature.loseHealth(random.randint(0,20))
             creature.setAcorns(random.randint(0,100))
     return p
@@ -396,12 +399,12 @@ class MainLevel(Level):
                 item = self._hud.getActiveItem()
 
                 # Player eats a food item
-                if item != None and issubclass(type(item), items.Food):
+                if item != None and item.getAttribute("type") == "food":
                     self._player.getInventory().removeItem(item)
-                    self._player.eat(item._hungerBoost, item._healthBoost)
+                    self._player.eat(item.getAttribute("hungerBoost"), item.getAttribute("healthBoost"))
 
-                # Uses a tool to dig up an acorn pile
-                if item != None and type(item) in (items.Shovel,items.Hoe,items.PickAx):
+                # Use a tool to dig up an acorn pile
+                if item != None and item.getAttribute("type") == "tool":
                     for pile in self._spawnedPiles:
                         if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
@@ -416,7 +419,7 @@ class MainLevel(Level):
                                 self._spawnedPiles.remove(pile)
                                 # Determine the number of acorns the player can collect
                                 # based on the number in the pile and the tool being used
-                                acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
+                                acorns = round(pile.getAcorns() * item.acornModifier())
                                 self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                             
                     # Check if the player is trying to dig up their own pile
@@ -430,7 +433,7 @@ class MainLevel(Level):
                             for k in self._player._movement.keys(): self._player._movement[k] = False
                             
                 # Sets the current weapon            
-                if item != None and issubclass(type(item), items.Weapon):
+                if item != None and item.getAttribute("type") == "weapon":
                     previous = self._weapon.getItem()
                     if previous != None:
                         self._player.getInventory().addItem(previous)
@@ -439,7 +442,7 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
 
                 # Sets the current armor
-                if item != None and issubclass(type(item), items.Armor):
+                if item != None and item.getAttribute("type") == "armor":
                     previous = self._armor.getItem()
                     if previous != None:
                         self._player.getInventory().addItem(previous)
@@ -448,9 +451,9 @@ class MainLevel(Level):
                     self._player.getInventory().removeItem(item)
 
                 # Applies a potion
-                if item != None and issubclass(type(item), items.Potions):
+                if item != None and item.getAttribute("type") == "potion":
                     self._player.getInventory().removeItem(item)
-                    self._player.heal(item.getHealthBoost())
+                    self._player.heal(item.getAttribute("healthBoost"))
 
         # If a variety of windows and interfaces are not displayed
         if not self._popupWindow.getDisplay() and \

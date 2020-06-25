@@ -71,7 +71,7 @@ class EndScreen(object):
 
     def score(self):
         """Calculates and returns the player's game score"""
-        inventoryWorth = sum([x.getValue() for x in self._player.getInventory()])
+        inventoryWorth = sum([x.getAttribute("value") for x in self._player.getInventory()])
         followers = len([x.getName() for x in self._player.getPack().getMembers() if x!=None and x!=self._player])
         score = inventoryWorth + self._player.getAcorns() + (5*self._player.getXP()) +\
              (100*followers)

@@ -22,7 +22,6 @@ AnimalStats
 RetreatScreen
 """
 
-from items.items import *
 import pygame, random, math, copy
 from rectmanager import getRects
 from economy.acorn import Acorn

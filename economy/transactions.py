@@ -10,9 +10,9 @@ def merchantTransaction(buyer,seller,item):
     buyer/seller logic and if those are both are true than it executes
     the transacton.
     """
-    if buyer.buyLogic(item,item.getValue()) and \
-    seller.sellLogic(item,item.getValue()):
-        buyer.buyItem(item,item.getValue())
-        seller.sellItem(item,item.getValue())
+    if buyer.buyLogic(item,item.getAttribute("value")) and \
+    seller.sellLogic(item,item.getAttribute("value")):
+        buyer.buyItem(item,item.getAttribute("value"))
+        seller.sellItem(item,item.getAttribute("value"))
         item.setOwner(buyer)
     

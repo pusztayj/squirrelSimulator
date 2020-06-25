@@ -62,12 +62,12 @@ class VictoryScreen(object):
         
         # items looted
         self._lootedItems = lootItems(self._dead)
-        self._lootItems = [{"text": item.getName(),"func": self.selectItem,"args":item} \
+        self._lootItems = [{"text": item.getAttribute("name"),"func": self.selectItem,"args":item} \
                       for item in self._lootedItems]
         self._lootedItemSelect = ScrollSelector((100,25+y+10),(250,300),30,self._lootItems,(0,0,0))
 
         # player items
-        self._player_items = [{"text": item.getName(),"func": self.selectItem,"args":item} \
+        self._player_items = [{"text": item.getAttribute("name"),"func": self.selectItem,"args":item} \
                       for item in self._player.getInventory()]
         self._playerSelect = ScrollSelector((100,25+y+10),(250,300),30,self._player_items,(0,0,0))
         self._y = y

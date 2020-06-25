@@ -13,7 +13,7 @@ from economy.merchant import Merchant
 from economy.transactions import merchantTransaction
 from modules import Drawable, Vector2, SoundManager
 from player import Player
-from items.items import *
+from items.item import Item
 from level import Level
 
 class MerchantLevel(Level):
@@ -41,7 +41,7 @@ class MerchantLevel(Level):
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
         # player
         self._player = player
-        self._player_items = [{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+        self._player_items = [{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                       for item in self._player.getInventory()]
         self._playerSelect = ScrollSelector((100,100),(250,300),30,self._player_items,(0,0,0))
         # merchant
@@ -49,7 +49,7 @@ class MerchantLevel(Level):
         self._merchant.flip()
         self._merchant.scale(1.5)
         self._merchantMind = merchant
-        self._merchant_items = [{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+        self._merchant_items = [{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                       for item in self._merchantMind.getInventory()]
         self._merchantSelect = ScrollSelector((100,100),(250,300),30,self._merchant_items,(0,0,0))
         
@@ -117,7 +117,7 @@ class MerchantLevel(Level):
         """
         if self._itemCard != None: #checks if item card is displayed
             if self._tabs.getTabs()[self._tabs.getActive()].getText() == "Buy":  # checks the tab that is open
-                if self._player.getAcorns() < item.getValue():
+                if self._player.getAcorns() < item.getAttribute("value"):
                     text = "You do not have the money!"
                     self._itemCard = None
                     self._itemCost = None
@@ -164,10 +164,10 @@ class MerchantLevel(Level):
             self._playerSelect.draw(screen)
         if self._itemCard != None:
             if self._itemCost == None:
-                self._itemCost = TextBox("Price: $" + str(self._itemCard.getItem().getValue()),
+                self._itemCost = TextBox("Price: $" + str(self._itemCard.getItem().getAttribute("value")),
                                          (471,335), self._textFont, (255,255,255))
             else:
-                self._itemCost.setText("Price: $" + str(self._itemCard.getItem().getValue()))
+                self._itemCost.setText("Price: $" + str(self._itemCard.getItem().getAttribute("value")))
             self._itemCost.draw(screen)                          
             self._itemCard.getCard().draw(screen)
             self._executeTransaction.draw(screen)
@@ -195,9 +195,9 @@ class MerchantLevel(Level):
             if self._popup == None or not self._popup.getDisplay(): # makes sure not item card is not dispayed
                 self._executeTransaction.handleEvent(event, self.transaction,self._itemCard.getItem())
                 self._cancelTransaction.handleEvent(event, self.cancelTransaction)
-            self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+            self._playerSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._player.getInventory()])
-            self._merchantSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+            self._merchantSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._merchantMind.getInventory()])
         if self._popup != None:
             self._popup.handleEvent(event)
@@ -212,7 +212,7 @@ class MerchantLevel(Level):
         self._merchantMoney.setText(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()))
 
         if self._merchantMind._restockTimer == self._merchantMind._restockTime:
-            self._merchantSelect.updateSelections([{"text": item.getName(),"func": self.selectMerchantItem,"args":item} \
+            self._merchantSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._merchantMind.getInventory()])
         # Can't play mp3 file on this machine
         try:

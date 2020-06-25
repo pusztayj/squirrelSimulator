@@ -8,7 +8,6 @@ A class modeling a heads up display for the player's inventory
 import pygame
 from modules.drawable import Drawable
 from modules.frameManager import FRAMES
-from items.items import Spear
 from .itemblock import ItemBlock
 from graphics import TextBox
 
@@ -84,7 +83,7 @@ class InventoryHUD(Drawable):
                               selected=x==self._selected)
             self._blocks.append(i)
         if self.getActiveItem() != None:
-            self._activeItem.setText(self.getActiveItem().getName())
+            self._activeItem.setText(self.getActiveItem().getAttribute("name"))
         else:
             self._activeItem.setText("")
         self._activeItem.setPosition((self._position[0] + (self._width//2)-self._activeItem.getWidth()//2,

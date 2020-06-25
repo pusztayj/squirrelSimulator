@@ -92,8 +92,7 @@ class ItemCard(object):
         if a.isFlipped():
             a.flip()
         a.scale(4)
-        TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
-##        if issubclass(type(entity), Animal) or issubclass(type(entity), Item): 
+        TextBox(a.getAttribute("name"), (10,10), nameFont, (255,255,255)).draw(s)
         a.draw(s)
         makeMultiLineTextBox(str(a), (10,200), detailsFont,
                              (255,255,255), (0,0,0)).draw(s)

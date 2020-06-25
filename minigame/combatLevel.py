@@ -19,7 +19,6 @@ from .combatUtils import *
 from stateMachines import combatStartState,combatPlayerStates,\
      playerTransitions, combatFSM
 import time
-from items.items import *
 from minigame.itemselect import ItemSelect
 from minigame.subcombatlevel import SubCombatLevel
 from level import Level

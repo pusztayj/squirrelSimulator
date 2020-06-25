@@ -393,7 +393,7 @@ class Animal():
 
     def buyLogic(self,item,cost):
         """Returns boolean if animal wants to buy item."""
-        if self._acorns >= item.getValue() and item.isBuyable():
+        if self._acorns >= item.getAttribute("value") and item.isBuyable():
             return True
         else:
             return False
@@ -408,7 +408,7 @@ class Animal():
         item: an Item object
         cost: an integer representing the cost
         """
-        assert issubclass(type(item),Item)
+        assert type(item) == Item
         assert type(cost) == int
         self._inventory.addItem(item)
         self._acorns = self._acorns - cost
@@ -430,7 +430,7 @@ class Animal():
         item: an Item object
         cost: an integer representing the cost
         """
-        assert issubclass(type(item),Item)
+        assert type(item) == Item
         assert type(price) == int
         self._inventory.removeItem(item)
         self._acorns = self._acorns + price

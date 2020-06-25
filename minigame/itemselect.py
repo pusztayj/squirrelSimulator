@@ -9,7 +9,6 @@ to prompt the user for item selections
 import pygame
 from modules.drawable import Drawable
 from modules.frameManager import FRAMES
-from items.items import Spear
 from .itemblock import ItemBlock
 
 

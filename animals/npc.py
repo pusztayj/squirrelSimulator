@@ -10,7 +10,6 @@ We also create methods for how an NPC can be cloned.
 from .animal import Animal
 from graphics.popup import Popup
 import random, pygame, copy
-from items.items import *
 from modules.animated import Animated
 from modules.vector2D import Vector2
 from stateMachines import npcFSM

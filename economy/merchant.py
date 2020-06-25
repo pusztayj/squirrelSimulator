@@ -10,12 +10,13 @@ inventory as well as adding/subtracting the appropriate acorns.
 import random, items, shelve
 from inventory import Inventory
 from items.item import Item
-from items.items import *
 from animals import NPC
 from modules import Drawable
 from animals.animalManager import ANIMALS
+from items.itemManager import ITEMS
 
-races = ANIMALS.getMerchantRaces()
+RACES = ANIMALS.getMerchantRaces()
+ALL_ITEMS = ITEMS.getItems()
 
 class Merchant(NPC, Drawable):
 
@@ -29,7 +30,7 @@ class Merchant(NPC, Drawable):
         name = random.choice(shelf["names"])
         shelf.close()
         self._merchantName = name
-        self._race = random.choice(races)
+        self._race = random.choice(RACES)
         self._acorns = random.randint(500,1500)
         self._inventory = Inventory(100)
         self._willTrade = True
@@ -50,10 +51,10 @@ class Merchant(NPC, Drawable):
         Generates an inventory for the merchant. 
         """
         self._inventory.clear()
-        for x in range(3):
-            for x in items.items.__all__:
+        for _ in range(3):
+            for item in ALL_ITEMS:
                 if 50 >= random.randint(0,100):
-                    self._inventory.addItem(globals()[x](self))
+                    self._inventory.addItem(Item(item, self))
 
     def setRestockTimer(self, ticks):
         """Sets the restock time and timer for the merchant"""
@@ -91,7 +92,7 @@ class Merchant(NPC, Drawable):
         item: an Item object
         cost: an integer representing the cost
         """
-        assert issubclass(type(item),Item)
+        assert type(item) == Item
         assert type(cost) == int
         item.setUtility(100)
         self._inventory.addItem(item)
@@ -108,7 +109,7 @@ class Merchant(NPC, Drawable):
         item: an Item object
         cost: an integer representing the cost
         """
-        assert issubclass(type(item),Item)
+        assert type(item) == Item
         assert type(price) == int
         self._inventory.removeItem(item)
         self._acorns = self._acorns + price
@@ -128,9 +129,9 @@ class Merchant(NPC, Drawable):
         minimumacorns = random.randint(450,700)
         minimumUtility = random.randint(30,50)
         if self._acorns >= cost:
-            if item.isBuyable() == True and item.getName() != "Health Potion":
+            if item.isBuyable() == True and item.getAttribute("name") != "Health Potion":
                 if self._acorns - cost >= minimumacorns:
-                    if item.getUtility() >= minimumUtility:
+                    if item.getAttribute("utility") >= minimumUtility:
                         self._merchantSpeak = "Item Sold" 
                         return True
                     else:
@@ -140,7 +141,7 @@ class Merchant(NPC, Drawable):
                     self._merchantSpeak = "Merchant does not want to spend too many acorns"
                     return False
             else:
-                if item.getName() != "Health Potion":
+                if item.getAttribute("name") != "Health Potion":
                     self._merchantSpeak = "Item is not buyable."
                 else:
                     self._merchantSpeak = "You can't sell health potions."
@@ -164,7 +165,7 @@ class Merchant(NPC, Drawable):
         Returns a string representation of the merchant. 
         """
         return "Name:          " + self._merchantName + \
-               "\nSpecies:       " + str(type(self).__name__) + \
+               "\nSpecies:       " + self._race + \
                "\nAcorns:        " + str(self._acorns) + \
                "\nInventory:     " + str(self._inventory)
 
