@@ -229,16 +229,6 @@ class MainLevel(Level):
         except:
             pass
         
-    def setActive(self, boolean):
-        """Sets the level to its active state"""
-        self._active = boolean
-        self._currentSong = random.choice(self._songs)
-        # Can't play mp3 file on this machine
-        try:
-            SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            pass
-
     def draw(self, screen):
         """Draws the level to the screen"""
         
@@ -666,7 +656,7 @@ class MainLevel(Level):
 
     def update(self, ticks):
         """Updates the main level based on ticks from the game clock"""
-
+        
         # Check if acorns have been collected or if they have despawned
         for acorn in self._acorns:
             if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \

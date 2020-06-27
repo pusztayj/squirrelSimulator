@@ -120,6 +120,10 @@ def main():
                            instruct)
    tutorial.close()
 
+   # Set the mute option to false
+   mute = False
+   current_volume = 100
+
    flicker  = False # Used to blit the game background over the controls / tutorials
    lag = True #Used to ever so slightly updated paused game at start
 
@@ -175,7 +179,7 @@ def main():
       for event in pygame.event.get():
          # only do something if the event is of type QUIT or K_ESCAPE
          if (event.type == pygame.QUIT):
-            RUNNING = False
+            RUNNING = False   
 
          if titleScreen.isDisplayed():
             titleScreen.handleEvent(event)
@@ -211,7 +215,8 @@ def main():
                      (level._atm == None or not level._atm.getDisplay()) and \
                      not loading.isDisplayed() and\
                      not controls.getDisplay():
-                     level.setActive(not level.isActive())
+                     if not (merchantLevel != None and merchantLevel.isActive()):
+                        level.setActive(not level.isActive())
                      if pauseMenu.getDisplay():
                         pauseMenu.close()
                      else:
@@ -263,6 +268,12 @@ def main():
                         controls.display()
                      if sel == 4:
                         RUNNING = False
+                     if sel == 5:
+                        mute = not mute
+                        if mute:
+                           pygame.mixer.music.set_volume(0)
+                        else:
+                           pygame.mixer.music.set_volume(current_volume)
 
                   # Handle events for the controls menu
                   if controls.getDisplay():

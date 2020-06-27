@@ -85,12 +85,12 @@ class MerchantLevel(Level):
 
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
-        # Can't play mp3 file on this machine
+
+        # Start playing song at initialization for good speed
         try:
             SoundManager.getInstance().playMusic(self._currentSong)
         except:
             pass
-
         
     def selectMerchantItem(self,item):
         """
@@ -181,15 +181,20 @@ class MerchantLevel(Level):
         """
         Handles all the events for the merchant minigame screen.
         """
+        
         self._exitButton.handleEvent(event, self.setActive, False)
+        
         if not self.isActive():
             return (0,)
+        
         self._tabs.handleEvent(event)
+        
         if self._popup == None or not self._popup.getDisplay():
             if self._FLAG:
                 self._merchantSelect.handleEvent(event)
             else:
                 self._playerSelect.handleEvent(event)
+                
         if self._itemCard != None: # makes sure item card is displayed
             self._itemCard.getCard().move(event)
             if self._popup == None or not self._popup.getDisplay(): # makes sure not item card is not dispayed
@@ -199,10 +204,10 @@ class MerchantLevel(Level):
                   for item in self._player.getInventory()])
             self._merchantSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._merchantMind.getInventory()])
+            
         if self._popup != None:
             self._popup.handleEvent(event)
-        
-
+            
     def update(self,ticks):
         """
         Updates the merchant minigame screen.

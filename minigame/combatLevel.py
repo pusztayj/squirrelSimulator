@@ -51,6 +51,7 @@ class CombatLevel(Level):
         # make the background
         self._background = Drawable("merchantForest2.png",
                                     (0,0), worldBound=False)
+
         # Can't play mp3 file on this machine
         try:
             SoundManager.getInstance().playMusic(self._currentSong)
@@ -66,6 +67,8 @@ class CombatLevel(Level):
         # create the back to world function
         self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
                                  (124,252,0),80,150,borderWidth = 2)
+
+
 
     def createCombatSprites(self):
         """
