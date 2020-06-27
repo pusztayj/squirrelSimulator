@@ -121,16 +121,11 @@ class SubCombatLevel(object):
                    if x.getAttribute("type") == "potion"]
 
         # victory GUI items
-##        self._victoryScreen = None
         self._victoryScreen = VictoryScreen(self._enemies,self._allies[0])
 
         # retreat GUI Items
         self._retreatScreen = None
-
-        # death GUI
-        self._endScreen = EndScreen((1200,500),self._allies[0])
-
-                                 
+                           
     def getCombatSprite(self,animal):
         """
         Given an input animal it returns the combatsprite that is for the

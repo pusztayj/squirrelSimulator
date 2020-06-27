@@ -30,8 +30,8 @@ class SoundManager(object):
       """An internal SoundManager class to contain the actual code. Is a private class."""
       
       # Folders in which sounds are stored
-      _MUSIC_FOLDER = os.path.join("sounds", "music")
-      _SFX_FOLDER = os.path.join("sounds", "sfx")
+      _MUSIC_FOLDER = os.path.join("resources","sounds","music")
+      _SFX_FOLDER = os.path.join("resources","sounds","sfx")
       
       _FOLDER = {
          "munch.ogg" : _SFX_FOLDER,

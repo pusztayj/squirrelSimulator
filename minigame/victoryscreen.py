@@ -180,9 +180,9 @@ class VictoryScreen(object):
             self._cancelTransaction.handleEvent(event,
                                         self.cancelTransaction)
 
-            self._playerSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
+            self._playerSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectItem,"args":item} \
                       for item in self._player.getInventory()])
-            self._lootedItemSelect.updateSelections([{"text": item.getName(),"func": self.selectItem,"args":item} \
+            self._lootedItemSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectItem,"args":item} \
                       for item in self._lootedItems])
         if self._popup != None:
             self._popup.handleEvent(event)

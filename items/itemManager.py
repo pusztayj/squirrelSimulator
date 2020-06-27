@@ -17,7 +17,7 @@ class ItemManager():
 
         def __init__(self):
     
-            with open("items\items.csv") as file:
+            with open("resources\data\items.csv") as file:
                 reader = csv.reader(file, delimiter=",")
                 self._items = {}
                 for x, row in enumerate(reader):

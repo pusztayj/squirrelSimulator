@@ -16,7 +16,7 @@ class AnimalManager():
 
         def __init__(self):
 
-            with open("animals/animals.csv") as file:
+            with open("resources/data/animals.csv") as file:
                 reader = csv.reader(file, delimiter=",")
                 self._animals = {}
                 for x, row in enumerate(reader):

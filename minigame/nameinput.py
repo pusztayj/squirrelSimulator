@@ -86,7 +86,7 @@ class NameInput(Window):
 
     def randomName(self):
         """Gives the player a new random name"""
-        shelf = shelve.open("data")
+        shelf = shelve.open("resources/data/data")
         name = random.choice(shelf["names"])
         shelf.close()
         self._inputField.setText(name)

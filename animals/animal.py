@@ -41,7 +41,7 @@ class Animal():
         """
         #Give the animal a random name if none was provided
         if name == "":
-            shelf = shelve.open("data")
+            shelf = shelve.open("resources/data/data")
             name = random.choice(shelf["names"])
             shelf.close()
         self._name = name
@@ -136,7 +136,7 @@ class Animal():
         # checks to see if the animal can kill an opponent
         if self._health <= 20 and len(attacks) == 0:
             for x in self._inventory:
-                if type(x) == Potions and self._health <= 20:
+                if x.getAttribute("type") == "potions" and self._health <= 20:
                     self._combatStatus = self.getName() + " healed with a potion!"
                     return True
                     

@@ -63,10 +63,12 @@ class EndScreen(object):
                                      (46,46,218), 50,100,borderWidth = 2)
 
         self._selection = None
+
         try:
             SoundManager.getInstance().playMusic(self._currentSong)
         except:
             print("Can't play mp3 file on this machine.")
+       
         
 
     def score(self):

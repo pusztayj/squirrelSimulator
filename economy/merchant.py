@@ -26,7 +26,7 @@ class Merchant(NPC, Drawable):
         they have. Also generates an invetory. 
         """
         Drawable.__init__(self, "merchant.png", pos)
-        shelf = shelve.open("data")
+        shelf = shelve.open("resources/data/data")
         name = random.choice(shelf["names"])
         shelf.close()
         self._merchantName = name

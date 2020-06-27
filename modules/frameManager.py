@@ -1,7 +1,6 @@
 
 from pygame import image, Surface, Rect
-from os.path import join
-
+import os
 
 class FrameManager(object):
    """A singleton factory class to create and store frames on demand."""
@@ -22,7 +21,7 @@ class FrameManager(object):
       """An internal FrameManager class to contain the actual code. Is a private class."""
       
       # Folder in which images are stored
-      _IMAGE_FOLDER = "images"
+      _IMAGE_FOLDER = os.path.join("resources","images")
       
       # Static information about the frame sizes of particular image sheets.
       _FRAME_SIZES = {
@@ -129,7 +128,7 @@ class FrameManager(object):
       
       def _loadImage(self, fileName, sheet=False):
          # Load the full image
-         fullImage = image.load(join(FrameManager._FM._IMAGE_FOLDER, fileName))
+         fullImage = image.load(os.path.join(FrameManager._FM._IMAGE_FOLDER, fileName))
          
          # Look up some information about the image to be loaded
          transparent = fileName in FrameManager._FM._TRANSPARENCY
