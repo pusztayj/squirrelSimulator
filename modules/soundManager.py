@@ -6,10 +6,7 @@ Provides on-demand loading of sounds for a pygame program.
 
 """
 
-
-import pygame
-import os
-
+import pygame, os, random
 
 class SoundManager(object):
    """A singleton factory class to create and store sounds on demand."""
@@ -22,7 +19,6 @@ class SoundManager(object):
       """Used to obtain the singleton instance"""
       if cls._INSTANCE == None:
          cls._INSTANCE = cls._SM()
-      
       return cls._INSTANCE
    
    # Do not directly instantiate this class!
@@ -47,8 +43,6 @@ class SoundManager(object):
          "death.mp3" : _MUSIC_FOLDER
       }
       
-      
-      
       def __init__(self):
          # 
          if not pygame.mixer.get_init():
@@ -56,23 +50,33 @@ class SoundManager(object):
             
          self._sounds = {}
          self._music = {}
+         self._currentSong = None
+         self._songs = {"main":["main1.mp3","main2.mp3","main3.mp3","main4.mp3"],
+                        "merchant":["shop1.mp3","shop2.mp3","shop3.mp3"],
+                        "combat":["battle1.mp3","battle2.mp3"]}
          self._musicStatus = "stop" # or "play" or "pause"
       
       def playSound(self, fileName, loop=0):
          # Plays the requested sound effect, default only once
          if fileName not in self._sounds.keys():
-            self._load(fileName)
-               
+            self._load(fileName)     
          return self._sounds[fileName].play(loop)
       
-      def playMusic(self, fileName, loop=0):
-         if self._musicStatus != "stop":
-            self.stopMusic()
-            
-         pygame.mixer.music.load(os.path.join(SoundManager._SM._MUSIC_FOLDER, fileName))
-         pygame.mixer.music.play()
-         
-         self._musicStatus = "play"
+      def playMusic(self, fileName):
+         # Some machines can't play mp3 files
+         try:
+            pygame.mixer.music.load(os.path.join(SoundManager._SM._MUSIC_FOLDER, fileName))
+            pygame.mixer.music.play()
+            self._currentSong = fileName
+         except:
+            pass
+
+      def manageSongs(self, level):
+         if not pygame.mixer.music.get_busy():
+            temp = self._currentSong
+            while temp == self._currentSong:
+               self._currentSong = random.choice(self._songs[level])
+            self.playMusic(self._currentSong)
       
       def stopMusic(self):
          pygame.mixer.music.stop()

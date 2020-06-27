@@ -33,9 +33,6 @@ class MerchantLevel(Level):
         self._SCREEN_SIZE = (1200,500)
         self._WORLD_SIZE = (1200,500)
 
-        self._songs = ["shop1.mp3","shop2.mp3","shop3.mp3"]
-        self._currentSong = random.choice(self._songs)
-
         # fonts
         self._font = pygame.font.SysFont("Times New Roman", 16)
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
@@ -86,12 +83,9 @@ class MerchantLevel(Level):
         self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
 
-        # Start playing song at initialization for good speed
-        try:
-            SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            pass
-        
+        # Start playing song at initialization for good a transition
+        SoundManager.getInstance().manageSongs("merchant")
+   
     def selectMerchantItem(self,item):
         """
         This generates the item cards that need to go in the scroll
@@ -219,12 +213,6 @@ class MerchantLevel(Level):
         if self._merchantMind._restockTimer == self._merchantMind._restockTime:
             self._merchantSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._merchantMind.getInventory()])
-        # Can't play mp3 file on this machine
-        try:
-            if not pygame.mixer.music.get_busy():
-                temp = self._currentSong
-                while temp == self._currentSong:
-                    self._currentSong = random.choice(self._songs)
-                SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            pass
+
+        # Load and play a new song if the current song has ended
+        SoundManager.getInstance().manageSongs("merchant")

@@ -36,10 +36,6 @@ class CombatLevel(Level):
 
         self._SCREEN_SIZE = (1200,500)
 
-        # imput the songs
-        self._songs = ["battle1.mp3","battle2.mp3"]
-        self._currentSong = random.choice(self._songs)
-
         self._player = player
         self._allies = allies
         self._enemies = enemies
@@ -52,11 +48,7 @@ class CombatLevel(Level):
         self._background = Drawable("merchantForest2.png",
                                     (0,0), worldBound=False)
 
-        # Can't play mp3 file on this machine
-        try:
-            SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            pass
+        SoundManager.getInstance().manageSongs("combat")
             
         # create the combat sprites
         self._combatSprites = list()
@@ -189,13 +181,5 @@ class CombatLevel(Level):
         # here we update the wait state
         if combatFSM.getCurrentState() != "waiting":
             self._lev.update()
-        # Can't play mp3 file on this machine
-        try:
-            if not pygame.mixer.music.get_busy():
-                temp = self._currentSong
-                while temp == self._currentSong:
-                    self._currentSong = random.choice(self._songs)
-                SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            pass
+        SoundManager.getInstance().manageSongs("combat")
             
