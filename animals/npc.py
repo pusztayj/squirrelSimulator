@@ -8,6 +8,7 @@ We also create methods for how an NPC can be cloned.
 """
 
 from .animal import Animal
+#from .creature import Creature
 from graphics.popup import Popup
 import random, pygame, copy
 from modules.animated import Animated
@@ -254,7 +255,7 @@ class NPC(Animal, Animated):
         Creates an identical copy of the NPC. 
         """
         pos = self.getPosition()
-        c = type(self)(self.getName(), (round(pos[0]),round(pos[1])))
+        c = type(self)(self._species, self.getName(), (round(pos[0]),round(pos[1])))
         c.setAcorns(self.getAcorns())
         c.setFriendScore(self.getFriendScore())
         c.setHealth(self.getHealth())
