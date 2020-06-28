@@ -10,15 +10,13 @@ from modules import *
 from graphics import *
 from animals import *
 from minigame.threexthreeinventory import threeXthreeInventory
+from managers.soundManager import SoundManager
 
 
 class EndScreen(object):
 
     def __init__(self,screensize,player):
         """Initializes the end screen level"""
-
-        self._songs = ["death.mp3"]
-        self._currentSong = random.choice(self._songs)
 
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
@@ -64,10 +62,8 @@ class EndScreen(object):
 
         self._selection = None
 
-        try:
-            SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            print("Can't play mp3 file on this machine.")
+        # Start playing song at initialization for good a transition
+        SoundManager.getInstance().manageSongs("end")
        
         
 
@@ -113,14 +109,8 @@ class EndScreen(object):
 
     def update(self):
         """Update the end screen, that is play its music"""
-        try:
-            if not pygame.mixer.music.get_busy():
-                temp = self._currentSong
-                while temp == self._currentSong:
-                    self._currentSong = random.choice(self._songs)
-                SoundManager.getInstance().playMusic(self._currentSong)
-        except:
-            print("Can't play mp3 file on this machine.")
+        # Load and play a new song if the current song has ended
+        SoundManager.getInstance().manageSongs("end")
                                 
 
         
