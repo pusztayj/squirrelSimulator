@@ -21,10 +21,11 @@ All animals will belong to a pack. For more info on Packs please see
 squirrelSimulator/animals/pack.py.
 """
 
-import random, shelve, re
+import random, re
 from inventory import Inventory
 from items.item import Item
 from minigame.combatUtils import *
+from managers.nameManager import NAMES
 
 class Animal():
 
@@ -41,9 +42,7 @@ class Animal():
         """
         #Give the animal a random name if none was provided
         if name == "":
-            shelf = shelve.open("resources/data/data")
-            name = random.choice(shelf["names"])
-            shelf.close()
+            name = NAMES.getRandomName("standard")
         self._name = name
 
         #Set default species as the empty string

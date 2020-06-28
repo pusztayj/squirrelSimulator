@@ -5,8 +5,9 @@ File: nameinput.py
 An interface that allows the player to choose their own name
 """
 
-import pygame, shelve, random
+import pygame, random
 from graphics import *
+from managers.nameManager import NAMES
 
 class NameInput(Window):
 
@@ -86,9 +87,7 @@ class NameInput(Window):
 
     def randomName(self):
         """Gives the player a new random name"""
-        shelf = shelve.open("resources/data/data")
-        name = random.choice(shelf["names"])
-        shelf.close()
+        name = NAMES.getRandomName()
         self._inputField.setText(name)
 
     def draw(self, screen):

@@ -7,13 +7,14 @@ the transactions for the merchant with add/removing the item from the
 inventory as well as adding/subtracting the appropriate acorns. 
 """
 
-import random, items, shelve
+import random, items
 from inventory import Inventory
 from items.item import Item
 from animals import NPC
 from modules import Drawable
 from managers.animalManager import ANIMALS
 from managers.itemManager import ITEMS
+from managers.nameManager import NAMES
 
 RACES = ANIMALS.getMerchantRaces()
 ALL_ITEMS = ITEMS.getItems()
@@ -26,9 +27,8 @@ class Merchant(NPC, Drawable):
         they have. Also generates an invetory. 
         """
         Drawable.__init__(self, "merchant.png", pos)
-        shelf = shelve.open("resources/data/data")
-        name = random.choice(shelf["names"])
-        shelf.close()
+        if name == "":
+            name = NAMES.getRandomName("standard")
         self._merchantName = name
         self._race = random.choice(RACES)
         self._acorns = random.randint(500,1500)

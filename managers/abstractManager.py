@@ -3,7 +3,7 @@ import csv, re
 
 class AbstractManager():
 
-    def __init__(self, files, ds):
+    def __init__(self, files, ds, lower=True):
         if type(files)==str and type(ds)==dict:
             files = [files]
             ds = [ds]
@@ -12,7 +12,8 @@ class AbstractManager():
             with open("resources/data/" + f) as file:
                 reader = csv.reader(file, delimiter=",")
                 for x, row in enumerate(reader):
-                    obj = row[0].lower()
+                    obj = row[0]
+                    if lower: obj = obj.lower()
                     if x == 0:
                         fields = row
                     else:
