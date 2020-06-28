@@ -11,7 +11,8 @@ from animals import *
 from economy.tradedesk import TradeDesk
 from economy.merchant import Merchant
 from economy.transactions import merchantTransaction
-from modules import Drawable, Vector2, SoundManager
+from modules import Drawable, Vector2
+from managers.soundManager import SoundManager
 from player import Player
 from items.item import Item
 from level import Level

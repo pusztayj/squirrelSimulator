@@ -23,7 +23,7 @@ from minigame.itemselect import ItemSelect
 from minigame.subcombatlevel import SubCombatLevel
 from level import Level
 from modules.drawable import Drawable
-from modules.soundManager import SoundManager
+from managers.soundManager import SoundManager
 
 class CombatLevel(Level):
 

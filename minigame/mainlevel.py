@@ -15,16 +15,17 @@ from minigame.interaction import Interaction
 from level import Level
 from economy.merchant import Merchant
 from minigame.worldclock import WorldClock
-from modules.soundManager import SoundManager
+
 from minigame.inventoryhud import InventoryHUD
 from items.item import Item
-from items.itemManager import ITEMS
 from minigame.itemblock import ItemBlock
 from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
 from minigame.steal import Steal
 from minigame.xpmanager import XPManager
-from animals.animalManager import ANIMALS
+from managers.animalManager import ANIMALS
+from managers.itemManager import ITEMS
+from managers.soundManager import SoundManager
 
 CREATURES = ANIMALS.getSpawnableAnimals()
 ARMORS = ITEMS.getItemsByType("armor")

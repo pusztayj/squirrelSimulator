@@ -12,8 +12,8 @@ from inventory import Inventory
 from items.item import Item
 from animals import NPC
 from modules import Drawable
-from animals.animalManager import ANIMALS
-from items.itemManager import ITEMS
+from managers.animalManager import ANIMALS
+from managers.itemManager import ITEMS
 
 RACES = ANIMALS.getMerchantRaces()
 ALL_ITEMS = ITEMS.getItems()

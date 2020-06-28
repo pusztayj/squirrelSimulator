@@ -1,26 +1,18 @@
-import re, csv
 
-class AnimalManager():
+import csv, re
 
-    # The singleton instance variable
-    _INSTANCE = None
-   
-    @classmethod
-    def getInstance(cls):
-        """Used to obtain the singleton instance"""
-        if cls._INSTANCE == None:
-            cls._INSTANCE = cls._AM()
-        return cls._INSTANCE
+class AbstractManager():
 
-    class _AM():
-
-        def __init__(self):
-
-            with open("resources/data/animals.csv") as file:
+    def __init__(self, files, ds):
+        if type(files)==str and type(ds)==dict:
+            files = [files]
+            ds = [ds]
+        assert len(files) == len(ds)
+        for n, f in enumerate(files):
+            with open("resources/data/" + f) as file:
                 reader = csv.reader(file, delimiter=",")
-                self._animals = {}
                 for x, row in enumerate(reader):
-                    species = row[0].lower()
+                    obj = row[0].lower()
                     if x == 0:
                         fields = row
                     else:
@@ -29,27 +21,22 @@ class AnimalManager():
                             
                             value = row[c]
                             field = fields[c]
-                            
+
+                            # Normalize and format the different data types
                             match = re.match("\(([\d]+)-([\d]+)\)", value)
                             if match:
                                 temp[field] = (int(match.group(1)),
                                                int(match.group(2)))
+                            elif value == "null":
+                                temp[field] = None
                             elif value.isdigit():
                                 temp[field] = int(value)
+                            elif value.replace(".","",1).isdigit():
+                                temp[field] = float(value)
                             elif value.lower() in ("true","false"):
                                 temp[field] = value.lower() == "true"
                             else:
                                 temp[field] = value
 
-                            self._animals[species] = temp
-                            
-        def getStats(self, animal):
-            return self._animals[animal]
-
-        def getSpawnableAnimals(self):
-            return [k for k,v in self._animals.items() if v["spawnable"]]
-
-        def getMerchantRaces(self):
-            return [k for k,v in self._animals.items() if v["merchant"]]
-
-ANIMALS = AnimalManager.getInstance()
+                            ds[n][obj] = temp
+        

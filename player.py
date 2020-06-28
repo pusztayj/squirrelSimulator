@@ -11,7 +11,7 @@ from modules.vector2D import Vector2
 import rectmanager
 import pygame
 from stateMachines import playerFSM
-from modules.soundManager import SoundManager
+from managers.soundManager import SoundManager
 
 
 class Player(Squirrel):

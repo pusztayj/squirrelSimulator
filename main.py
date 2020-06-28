@@ -10,7 +10,7 @@ from minigame import *
 from player import Player
 from economy.merchant import Merchant
 from animals import *
-from modules.soundManager import SoundManager
+from managers.soundManager import SoundManager
 
 SCREEN_SIZE = (1200,500)
 

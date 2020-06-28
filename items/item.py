@@ -7,7 +7,7 @@ durability, utility, whether or not the item is buyable or sellable.
 
 import random, math
 from modules.drawable import Drawable
-from .itemManager import ITEMS
+from managers.itemManager import ITEMS
 
 class Item(Drawable):
 

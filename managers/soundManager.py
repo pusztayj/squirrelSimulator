@@ -6,9 +6,10 @@ Provides on-demand loading of sounds for a pygame program.
 
 """
 
-import pygame, os, random
+from .abstractManager import AbstractManager
+import pygame, os, random, csv
 
-class SoundManager(object):
+class SoundManager():
    """A singleton factory class to create and store sounds on demand."""
    
    # The singleton instance variable
@@ -21,42 +22,31 @@ class SoundManager(object):
          cls._INSTANCE = cls._SM()
       return cls._INSTANCE
    
-   # Do not directly instantiate this class!
-   class _SM(object):
+   class _SM(AbstractManager):
       """An internal SoundManager class to contain the actual code. Is a private class."""
       
       # Folders in which sounds are stored
       _MUSIC_FOLDER = os.path.join("resources","sounds","music")
       _SFX_FOLDER = os.path.join("resources","sounds","sfx")
       
-      _FOLDER = {
-         "munch.ogg" : _SFX_FOLDER,
-         "main1.mp3" : _MUSIC_FOLDER,
-         "main1.mp3" : _MUSIC_FOLDER,
-         "main3.mp3" : _MUSIC_FOLDER,
-         "main4.mp3" : _MUSIC_FOLDER,
-         "shop1.mp3" : _MUSIC_FOLDER,
-         "shop2.mp3" : _MUSIC_FOLDER,
-         "shop3.mp3" : _MUSIC_FOLDER,
-         "battle1.mp3" : _MUSIC_FOLDER,
-         "battle2.mp3" : _MUSIC_FOLDER,
-         "death.mp3" : _MUSIC_FOLDER
-      }
+      _FOLDER = {"munch.ogg" : _SFX_FOLDER}
       
       def __init__(self):
-         # 
+         
          if not pygame.mixer.get_init():
             pygame.mixer.init()
             
-         self._sounds = {}
          self._music = {}
+         self._sounds = {}
+         AbstractManager.__init__(self, "music.csv", self._music)
+
          self._currentSong = None
          self._currentVolume = 100
-         self._songs = {"main":["main1.mp3","main2.mp3","main3.mp3","main4.mp3"],
-                        "merchant":["shop1.mp3","shop2.mp3","shop3.mp3"],
-                        "combat":["battle1.mp3","battle2.mp3"]}
          self._musicStatus = "stop" # or "play" or "pause"
          self._mute = False
+
+      def getSongsByLevel(self, level):
+         return [k for k,v in self._music.items() if v["level"]==level]
       
       def playSound(self, fileName, loop=0):
          # Plays the requested sound effect, default only once
@@ -77,7 +67,7 @@ class SoundManager(object):
          if not pygame.mixer.music.get_busy():
             temp = self._currentSong
             while temp == self._currentSong:
-               self._currentSong = random.choice(self._songs[level])
+               self._currentSong = random.choice(self.getSongsByLevel(level))
             self.playMusic(self._currentSong)
 
       def mute(self):
