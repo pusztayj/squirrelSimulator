@@ -51,10 +51,12 @@ class SoundManager(object):
          self._sounds = {}
          self._music = {}
          self._currentSong = None
+         self._currentVolume = 100
          self._songs = {"main":["main1.mp3","main2.mp3","main3.mp3","main4.mp3"],
                         "merchant":["shop1.mp3","shop2.mp3","shop3.mp3"],
                         "combat":["battle1.mp3","battle2.mp3"]}
          self._musicStatus = "stop" # or "play" or "pause"
+         self._mute = False
       
       def playSound(self, fileName, loop=0):
          # Plays the requested sound effect, default only once
@@ -77,6 +79,21 @@ class SoundManager(object):
             while temp == self._currentSong:
                self._currentSong = random.choice(self._songs[level])
             self.playMusic(self._currentSong)
+
+      def mute(self):
+         self._mute = True
+         pygame.mixer.music.set_volume(0)
+
+      def unmute(self):
+         self._mute = False
+         pygame.mixer.music.set_volume(self._currentVolume)
+
+      def toggleMute(self):
+         if self._mute: self.unmute()
+         else: self.mute()
+
+      def fadeOut(self, time):
+         pygame.mixer.music.fadeout(time)
       
       def stopMusic(self):
          pygame.mixer.music.stop()

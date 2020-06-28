@@ -10,6 +10,7 @@ from minigame import *
 from player import Player
 from economy.merchant import Merchant
 from animals import *
+from modules.soundManager import SoundManager
 
 SCREEN_SIZE = (1200,500)
 
@@ -82,6 +83,9 @@ def main():
    # Create the cheat box
    cheatBox = Cheats(SCREEN_SIZE)
 
+   # Create an instance of the sound manager
+   sound_manager = SoundManager.getInstance()
+
    # Create the player and their pack
    player = Player(pos=(200,200))
    playerPack = Pack(player)
@@ -119,10 +123,6 @@ def main():
                             SCREEN_SIZE[1]//2-100),
                            instruct)
    tutorial.close()
-
-   # Set the mute option to false
-   mute = False
-   current_volume = 100
 
    flicker  = False # Used to blit the game background over the controls / tutorials
    lag = True #Used to ever so slightly updated paused game at start
@@ -269,16 +269,14 @@ def main():
                      if sel == 4:
                         RUNNING = False
                      if sel == 5:
-                        mute = not mute
-                        if mute:
-                           pygame.mixer.music.set_volume(0)
-                        else:
-                           pygame.mixer.music.set_volume(current_volume)
+                        sound_manager.toggleMute()
 
                   # Handle events for the controls menu
                   if controls.getDisplay():
                      controls.handleEvent(event)
                      if not controls.getDisplay():
+                        # Allow the controls menu to be
+                        # taken off the screen
                         flicker = True
             else:
 
@@ -303,7 +301,8 @@ def main():
       # Set Game Mode to Merchant
       if code != None and code[0] == 1:
           level.setActive(False)
-          pygame.mixer.music.fadeout(1000)
+          # Fade out the music
+          sound_manager.fadeOut(1000)
           merch = code[1]
           merchantLevel = MerchantLevel(player, merch, SCREEN_SIZE)
           code = None
@@ -317,7 +316,7 @@ def main():
 
       # Set Game Mode to Main Game
       elif code != None and code[0] == 0:
-          pygame.mixer.music.fadeout(1000)
+          sound_manager.fadeOut(1000)
           level.setActive(True)
           code = None
 
@@ -327,7 +326,7 @@ def main():
       # Set Game Mode to Combat
       elif code != None and code[0] == 2:
          level.setActive(False)
-         pygame.mixer.music.fadeout(1000)
+         sound_manager.fadeOut(1000)
          combatLevel = CombatLevel(player, SCREEN_SIZE, code[1], code[2], screen)
          code = None
 
@@ -343,7 +342,7 @@ def main():
          titleScreen.update(ticks)
       # Create the end screen
       elif player.isDead() and endScreen == None:
-         pygame.mixer.music.fadeout(500)
+         sound_manager.fadeOut(1000)
          endScreen = EndScreen(SCREEN_SIZE, player)
       # Update the end screen
       elif endScreen != None:
