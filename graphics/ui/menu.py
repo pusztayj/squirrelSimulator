@@ -1,0 +1,99 @@
+"""
+Author: Trevor Stalnaker
+File: menu.py
+
+The menu that displays when the game is paused
+"""
+
+import pygame
+from graphics import *
+from modules.drawable import Drawable
+
+class Menu(Drawable, Window):
+
+    def __init__(self, pos, dims, commands, padding=0, spacing=0,
+                 color=(80,80,80), borderColor=(0,0,0),
+                 borderWidth=2, font=None):
+        """Initializes the pause menu"""
+
+        Drawable.__init__(self, "", pos, worldBound=False)
+        Window.__init__(self)
+
+        self._offset = (pos[0], pos[1])
+
+        self._width  = dims[0]
+        self._height = dims[1]
+
+        h_padding = padding[0]
+        v_padding = padding[1]
+
+        if font == None:
+            self._font = pygame.font.SysFont("Times New Roman", 24)
+        else:
+            self._font = font
+            
+        self._borderColor = borderColor
+        self._borderWidth = borderWidth
+        self._backgroundColor = color
+
+        n = len(commands)
+
+        buttonWidth  = self._width - (2*h_padding) - (2*borderWidth)
+        buttonHeight = (self._height - (2*v_padding) - \
+                       ((n-1)*spacing) - (2*borderWidth)) // n
+
+        xStart = h_padding
+        yStart = v_padding
+
+        self._buttons = []
+        for x, b in enumerate(commands):
+            self._buttons.append((Button(b["text"],(xStart, yStart + \
+                                               (x*buttonHeight) + \
+                                                x*spacing),
+                                    self._font, b["fontColor"], b["color"],
+                                    buttonHeight, buttonWidth, b["borderColor"],
+                                         b["borderWidth"]),
+                                  x+1, b["closeOnPress"]))
+
+        self._selection = None
+
+        self.updateMenu()
+
+    def handleEvent(self, event):
+        """Handles events on the pause menu"""
+        for b in self._buttons:
+            b[0].handleEvent(event,self.select,b[1],b[2],offset=self._offset)
+        self.updateMenu()
+        return self.getSelection()
+
+    def select(self, selection, closeOnPress):
+        if closeOnPress:
+            self.close()
+        self._selection = selection
+
+
+    def getSelection(self):
+        """Returns the current selection and resets it to None"""
+        sel = self._selection
+        self._selection = None
+        return sel
+
+    def updateMenu(self):
+        """Updates the display of the pause menu"""
+
+        # Draw the border
+        surfBack = pygame.Surface((self._width, self._height))
+        surfBack.fill(self._borderColor)
+
+        # Draw the background
+        surf = pygame.Surface((self._width - (self._borderWidth * 2),
+                              self._height - (self._borderWidth * 2)))
+        surf.fill(self._backgroundColor)
+
+        # Draw widgets
+        for b in self._buttons:
+            b[0].draw(surf)
+        
+        # Blit the widget layer onto the back surface
+        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
+        self._image = surfBack

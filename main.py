@@ -7,12 +7,50 @@ The main loop for running Squirrel Simulator
 
 import pygame, random, math
 from minigame import *
+from graphics.ui.menu import Menu
 from player import Player
 from economy.merchant import Merchant
 from animals import *
 from managers.soundManager import SoundManager
 
 SCREEN_SIZE = (1200,500)
+
+# Move these to spreadsheet or external file
+pause_commands = [{"text":"Resume",
+           "color":(0,255,0),
+           "fontColor":(0,0,0),
+           "borderColor":(0,0,0),
+           "borderWidth":2,
+           "closeOnPress":True
+           },
+          {"text":"Mute",
+           "color":(120,120,150),
+           "fontColor":(0,0,0),
+           "borderColor":(0,0,0),
+           "borderWidth":2,
+           "closeOnPress":False
+           },
+          {"text":"How To Play",
+           "color":(120,120,150),
+           "fontColor":(0,0,0),
+           "borderColor":(0,0,0),
+           "borderWidth":2,
+           "closeOnPress":False
+           },
+          {"text":"Controls",
+           "color":(120,120,150),
+           "fontColor":(0,0,0),
+           "borderColor":(0,0,0),
+           "borderWidth":2,
+           "closeOnPress":False
+           },
+          {"text":"Quit",
+           "color":(255,0,0),
+           "fontColor":(0,0,0),
+           "borderColor":(0,0,0),
+           "borderWidth":2,
+           "closeOnPress":True
+           }]
 
 instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
@@ -104,8 +142,8 @@ def main():
    # Create the pause menu
    pWidth = SCREEN_SIZE[0] // 4
    pHeight = 2 * (SCREEN_SIZE[1] // 3)
-   pauseMenu = PauseMenu((SCREEN_SIZE[0]//2 - pWidth//2, SCREEN_SIZE[1]//2 - pHeight//2),
-                     (pWidth, pHeight))
+   pauseMenu = Menu(((SCREEN_SIZE[0]//2 - pWidth//2), SCREEN_SIZE[1]//2 - pHeight//2),
+             (pWidth, pHeight), pause_commands, (37,16), -1)
    pauseMenu.close()
 
    # Create the controls scroll display
@@ -263,13 +301,14 @@ def main():
                         if merchantLevel == None or not merchantLevel.isActive():
                            level.setActive(True)
                      if sel == 2:
-                        tutorial.display()
-                     if sel == 3:
-                        controls.display()
-                     if sel == 4:
-                        RUNNING = False
-                     if sel == 5:
                         sound_manager.toggleMute()
+                     if sel == 3:
+                        tutorial.display()
+                     if sel == 4:
+                        controls.display()
+                     if sel == 5:
+                        RUNNING = False
+                     
 
                   # Handle events for the controls menu
                   if controls.getDisplay():

@@ -119,14 +119,19 @@ class Button(Drawable):
     
     def __updateButton(self):
         """Update the button after parameters have been changed"""
-        surfBack = pygame.Surface((self._width+(self._borderWidth*2),
-                                   (self._height+(self._borderWidth*2))))
+        surfBack = pygame.Surface((self._width,self._height))
         surfBack.fill(self._borderColor)
-        surf = pygame.Surface((self._width, self._height))
+
+        # Find the true size of the button (excluding the border)
+        true_width = self._width - (self._borderWidth * 2)
+        true_height = self._height - (self._borderWidth * 2)
+        
+        surf = pygame.Surface((true_width,true_height))
         surf.fill(self._backgroundColor)
+        
         t = TextBox(self._text, (0,0), self._font, self._fontColor)
-        y_pos = (self._height // 2) - (t.getHeight() // 2)
-        x_pos = (self._width // 2) - (t.getWidth() // 2)
+        y_pos = (true_height // 2) - (t.getHeight() // 2)
+        x_pos = (true_width // 2) - (t.getWidth() // 2)
         t.setPosition((x_pos, y_pos))
         t.draw(surf)
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
