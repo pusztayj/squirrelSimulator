@@ -25,7 +25,7 @@ class Menu(Drawable, Window):
 
     def __init__(self, pos, dims, commands, padding=0, spacing=0,
                  color=(80,80,80), borderColor=(0,0,0),
-                 borderWidth=2, font=None, orientation="vertical"):
+                 borderWidth=2, orientation="vertical"):
         """Initializes the menu"""
 
         Drawable.__init__(self, "", pos, worldBound=False)
@@ -38,11 +38,6 @@ class Menu(Drawable, Window):
 
         h_padding = padding[0]
         v_padding = padding[1]
-
-        if font == None:
-            self._font = pygame.font.SysFont("Times New Roman", 24)
-        else:
-            self._font = font
             
         self._borderColor = borderColor
         self._borderWidth = borderWidth
@@ -63,11 +58,12 @@ class Menu(Drawable, Window):
                            ((n-1)*spacing) - (2*borderWidth)) // n
         
             for x, b in enumerate(commands):
+                font = pygame.font.SysFont(b["font"], b["fontSize"])
                 self._buttons.append((Button(b["text"],
                                          (xStart + self._offset[0],
                                           yStart + (x*buttonHeight) + \
                                           (x*spacing) + self._offset[1]),
-                                    self._font, b["fontColor"], b["color"],
+                                    font, b["fontColor"], b["color"],
                                     buttonHeight, buttonWidth, b["borderColor"],
                                          b["borderWidth"]),
                                   x+1, b["closeOnPress"]))
@@ -80,11 +76,12 @@ class Menu(Drawable, Window):
             buttonHeight = self._height - (2*v_padding) - (2*borderWidth)
             
             for x, b in enumerate(commands):
+                font = pygame.font.SysFont(b["font"], b["fontSize"])
                 self._buttons.append((Button(b["text"],
                                          (xStart + self._offset[0] +\
                                           (x*buttonWidth) + (x*spacing),
                                           yStart + self._offset[1]),
-                                    self._font, b["fontColor"], b["color"],
+                                    font, b["fontColor"], b["color"],
                                     buttonHeight, buttonWidth, b["borderColor"],
                                          b["borderWidth"]),
                                   x+1, b["closeOnPress"]))

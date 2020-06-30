@@ -1,0 +1,10 @@
+﻿menu,text,color,font,fontSize,fontColor,borderColor,borderWidth,closeOnPress,toggleText
+interaction,Fight,"(255,0,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+interaction,Befriend,"(0,255,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+interaction,Steal,"(40,80,150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+interaction,Bribe,"(255,215,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+pause,Resume,"(0,255,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,TRUE,null
+pause,Mute,"(120,120,150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,Unmute
+pause,How To Play,"(120,120,150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+pause,Controls,"(120,120,150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
+pause,Quit,"(255,0,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,TRUE,null
