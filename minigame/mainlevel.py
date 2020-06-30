@@ -460,16 +460,16 @@ class MainLevel(Level):
             # Handle events on the interaction interface
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
                 self._popup = None
-                self._interaction.handleEvent(event)
-                code = self._interaction.getSelection()
-                if (code == 2):
+                code = self._interaction.handleEvent(event)
+##                code = self._interaction.getSelection()
+                if (code == 1):
                     enemyPack = self._interaction.getEntity().getPack()
                     for e in enemyPack:
                         if e != None:
                             e.changeFriendScore(random.randint(-30,-10))
                     self._interaction = None
-                    return (code,self._playerPack,enemyPack)
-                elif (code == 3):
+                    return (2,self._playerPack,enemyPack)
+                elif (code == 2):
                     e = self._interaction.getEntity()
                     if self._playerPack.trueLen() < 3:
                         if e.getPack().trueLen() == 1:
@@ -488,14 +488,15 @@ class MainLevel(Level):
                     else:
                         self._popupWindow.setText("Your pack is already full")
                         self._popupWindow.display()
+                elif (code == 3):
+                    e = self._interaction.getEntity()
+                    self._stealWindow = Steal(self._player, e, self._SCREEN_SIZE)
+                    self._stealWindow.display()
                 elif (code == 4):
                     e = self._interaction.getEntity()
                     self._bribeWindow = Bribe(self._player, e, self._SCREEN_SIZE)
                     self._bribeWindow.display()
-                elif (code == 5):
-                    e = self._interaction.getEntity()
-                    self._stealWindow = Steal(self._player, e, self._SCREEN_SIZE)
-                    self._stealWindow.display()
+                
 
         # Determine the relative position of the mouse
         mouse = pygame.mouse.get_pos()

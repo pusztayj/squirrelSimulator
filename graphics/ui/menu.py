@@ -105,7 +105,6 @@ class Menu(Drawable, Window):
             self.close()
         self._selection = selection
 
-
     def getSelection(self):
         """Returns the current selection and resets it to None"""
         sel = self._selection

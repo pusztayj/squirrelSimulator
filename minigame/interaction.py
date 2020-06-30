@@ -7,6 +7,7 @@ The user interface for interacting with NPCs
 
 from modules.drawable import Drawable
 from graphics import Window, Button, TextBox, ProgressBar, HappinessFace
+from graphics.ui.menu import Menu 
 from economy.acorn import Acorn
 from .threexthreeinventory import threeXthreeInventory
 from .itemblock import ItemBlock
@@ -18,7 +19,10 @@ class Interaction(Drawable, Window):
 
     def __init__(self, entity):
         """Initializes the interaction interface"""
-        Drawable.__init__(self, "", (50,25), worldBound=False)
+
+        pos = (50,25)
+        
+        Drawable.__init__(self, "", pos, worldBound=False)
         Window.__init__(self)
 
         self._entity = entity
@@ -40,15 +44,41 @@ class Interaction(Drawable, Window):
         self._offset = self.getPosition()
 
         # Buttons
-        self._fightButton = Button("Fight", (15,75 + self._avHeight), self._font, (0,0,0),
-                                   (255,0,0), 35, 125, (0,0,0), 2)
-        self._befriendButton = Button("Befriend", (15,120 + self._avHeight), self._font, (0,0,0),
-                                   (0,255,0), 35, 125, (0,0,0), 2)
-        self._stealButton = Button("Steal", (15,165 + self._avHeight), self._font, (0,0,0),
-                                   (40,80,150), 35, 125, (0,0,0), 2)
-        self._bribeButton = Button("Bribe", (15,210 + self._avHeight), self._font, (0,0,0),
-                                   (255,215,0), 35, 125, (0,0,0), 2)
 
+        commands = [{"text":"Fight",
+             "color":(255,0,0),
+             "fontColor":(0,0,0),
+             "borderColor":(0,0,0),
+             "borderWidth":2,
+             "closeOnPress":True
+             },
+            {"text":"Befriend",
+             "color":(0,255,0),
+             "fontColor":(0,0,0),
+             "borderColor":(0,0,0),
+             "borderWidth":2,
+             "closeOnPress":False
+             },
+            {"text":"Steal",
+             "color":(40,80,150),
+             "fontColor":(0,0,0),
+             "borderColor":(0,0,0),
+             "borderWidth":2,
+             "closeOnPress":False
+             },
+            {"text":"Bribe",
+             "color":(255,215,0),
+             "fontColor":(0,0,0),
+             "borderColor":(0,0,0),
+             "borderWidth":2,
+             "closeOnPress":False
+             }]
+
+        self._menu = Menu((0+self._offset[0]+self._borderWidth,
+                           150+self._offset[1]+self._borderWidth),
+                          (155, 170), commands, (15,0), 10, color=None,
+                          borderWidth=0, orientation="vertical")
+        
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
 
@@ -107,28 +137,10 @@ class Interaction(Drawable, Window):
 
     def handleEvent(self, event):
         """Handles events on the interaction interface"""
-        self._fightButton.handleEvent(event, self.fight, offset=self._offset)
-        self._befriendButton.handleEvent(event, self.befriend, offset=self._offset)
-        self._stealButton.handleEvent(event, self.steal,  offset=self._offset)
-        self._bribeButton.handleEvent(event, self.bribe,  offset=self._offset)
+        self._selection = self._menu.handleEvent(event)
         self._exitButton.handleEvent(event, self.close, offset=self._offset)
         self.updateInteraction()
-
-    def fight(self):
-        """Sets the current selection to fight"""
-        self._selection = 2
-
-    def befriend(self):
-        """Sets the current selection to befriend"""
-        self._selection = 3
-
-    def bribe(self):
-        """Sets the current selection to bribe"""
-        self._selection = 4
-
-    def steal(self):
-        """Sets the current selection to steal"""
-        self._selection = 5
+        return self.getSelection()
 
     def getSelection(self):
         """Returns the current selection and resets it to None"""
@@ -139,6 +151,10 @@ class Interaction(Drawable, Window):
     def getEntity(self):
         """Returns the entity linked to the interaction"""
         return self._entity
+
+    def draw(self, screen):
+        super().draw(screen)
+        self._menu.draw(screen)
 
     def updateInteraction(self):
         """Updates the interaction interface as the display changes"""
@@ -163,10 +179,6 @@ class Interaction(Drawable, Window):
         # Draw widgets
         self._name.draw(surf)
         self._pack.draw(surf)
-        self._fightButton.draw(surf)
-        self._befriendButton.draw(surf)
-        self._stealButton.draw(surf)
-        self._bribeButton.draw(surf)
         self._exitButton.draw(surf)
         self._inventory.draw(surf)
         self._armor.draw(surf)
