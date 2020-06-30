@@ -6,6 +6,7 @@ The user interface for interacting with NPCs
 """
 
 from modules.drawable import Drawable
+from managers.uiManager import USER_INTERFACE
 from graphics import Window, Button, TextBox, ProgressBar, HappinessFace
 from graphics.ui.menu import Menu 
 from economy.acorn import Acorn
@@ -44,44 +45,7 @@ class Interaction(Drawable, Window):
         self._offset = self.getPosition()
 
         # Buttons
-
-        commands = [{"text":"Fight",
-             "color":(255,0,0),
-             "font":"Times New Roman",
-             "fontSize":24,
-             "fontColor":(0,0,0),
-             "borderColor":(0,0,0),
-             "borderWidth":2,
-             "closeOnPress":False
-             },
-            {"text":"Befriend",
-             "color":(0,255,0),
-             "font":"Times New Roman",
-             "fontSize":24,
-             "fontColor":(0,0,0),
-             "borderColor":(0,0,0),
-             "borderWidth":2,
-             "closeOnPress":False
-             },
-            {"text":"Steal",
-             "color":(40,80,150),
-             "font":"Times New Roman",
-             "fontSize":24,
-             "fontColor":(0,0,0),
-             "borderColor":(0,0,0),
-             "borderWidth":2,
-             "closeOnPress":False
-             },
-            {"text":"Bribe",
-             "color":(255,215,0),
-             "font":"Times New Roman",
-             "fontSize":24,
-             "fontColor":(0,0,0),
-             "borderColor":(0,0,0),
-             "borderWidth":2,
-             "closeOnPress":False
-             }]
-
+        commands = USER_INTERFACE.getControlsForMenu("interaction")
         self._menu = Menu((0+self._offset[0]+self._borderWidth,
                            150+self._offset[1]+self._borderWidth),
                           (155, 170), commands, (15,0), 10, color=None,

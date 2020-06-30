@@ -3,7 +3,7 @@ import csv, re
 
 class AbstractManager():
 
-    def __init__(self, files, ds, lower=True):
+    def __init__(self, files, ds, lower=True, toLyst=[]):
         if type(files)==str and type(ds)==dict:
             files = [files]
             ds = [ds]
@@ -24,10 +24,15 @@ class AbstractManager():
                             field = fields[c]
 
                             # Normalize and format the different data types
-                            match = re.match("\(([\d]+)-([\d]+)\)", value)
-                            if match:
-                                temp[field] = (int(match.group(1)),
-                                               int(match.group(2)))
+                            rangeMatch = re.match("\(([\d]+)-([\d]+)\)", value)
+                            rgbMatch = re.match("\(([\d]+),[ ]?([\d]+),[ ]?([\d]+)\)", value)
+                            if rangeMatch:
+                                temp[field] = (int(rangeMatch.group(1)),
+                                               int(rangeMatch.group(2)))
+                            elif rgbMatch:
+                                temp[field] = (int(rgbMatch.group(1)),
+                                               int(rgbMatch.group(2)),
+                                               int(rgbMatch.group(3)))
                             elif value == "null":
                                 temp[field] = None
                             elif value.isdigit():
@@ -39,5 +44,12 @@ class AbstractManager():
                             else:
                                 temp[field] = value
 
+                        # Check if the result dictionary should be appended to a list
+                        if n in toLyst:
+                            if obj in self._menuButtons.keys():
+                                ds[n][obj].append(temp)
+                            else:
+                                ds[n][obj] = [temp]
+                        else:
                             ds[n][obj] = temp
         

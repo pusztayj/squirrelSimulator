@@ -12,55 +12,9 @@ from player import Player
 from economy.merchant import Merchant
 from animals import *
 from managers.soundManager import SoundManager
+from managers.uiManager import USER_INTERFACE
 
 SCREEN_SIZE = (1200,500)
-
-# Move these to spreadsheet or external file
-pause_commands = [{"text":"Resume",
-           "color":(0,255,0),
-           "font":"Times New Roman",
-           "fontSize":24,
-           "fontColor":(0,0,0),
-           "borderColor":(0,0,0),
-           "borderWidth":2,
-           "closeOnPress":True
-           },
-          {"text":"Mute",
-           "color":(120,120,150),
-           "font":"Times New Roman",
-           "fontSize":24,
-           "fontColor":(0,0,0),
-           "borderColor":(0,0,0),
-           "borderWidth":2,
-           "closeOnPress":False
-           },
-          {"text":"How To Play",
-           "color":(120,120,150),
-           "font":"Times New Roman",
-           "fontSize":24,
-           "fontColor":(0,0,0),
-           "borderColor":(0,0,0),
-           "borderWidth":2,
-           "closeOnPress":False
-           },
-          {"text":"Controls",
-           "color":(120,120,150),
-           "font":"Times New Roman",
-           "fontSize":24,
-           "fontColor":(0,0,0),
-           "borderColor":(0,0,0),
-           "borderWidth":2,
-           "closeOnPress":False
-           },
-          {"text":"Quit",
-           "color":(255,0,0),
-           "font":"Times New Roman",
-           "fontSize":24,
-           "fontColor":(0,0,0),
-           "borderColor":(0,0,0),
-           "borderWidth":2,
-           "closeOnPress":True
-           }]
 
 instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
@@ -152,6 +106,7 @@ def main():
    # Create the pause menu
    pWidth = SCREEN_SIZE[0] // 4
    pHeight = 2 * (SCREEN_SIZE[1] // 3)
+   pause_commands = USER_INTERFACE.getControlsForMenu("pause")
    pauseMenu = Menu(((SCREEN_SIZE[0]//2 - pWidth//2), SCREEN_SIZE[1]//2 - pHeight//2),
              (pWidth, pHeight), pause_commands, (37,16), -1)
    pauseMenu.close()
