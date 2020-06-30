@@ -2,7 +2,18 @@
 Author: Trevor Stalnaker
 File: menu.py
 
-The menu that displays when the game is paused
+A general class for creating menus
+
+Parameters:
+    pos - (x,y) position for the top-left corner of the menu
+    dims - (width, height) pixels of the menu
+    commands - list of dictionaries specifying the button attributes
+    padding - (horizontal, vertical) padding between border and buttons
+    spacing - space in pixels between buttons
+    color - rgb color of the menu background (None for transparent)
+    borderColor - rgb color value for border
+    borderWidth - pixel width for the border
+    font - Supplied as a pygame font
 """
 
 import pygame
@@ -14,7 +25,7 @@ class Menu(Drawable, Window):
     def __init__(self, pos, dims, commands, padding=0, spacing=0,
                  color=(80,80,80), borderColor=(0,0,0),
                  borderWidth=2, font=None):
-        """Initializes the pause menu"""
+        """Initializes the menu"""
 
         Drawable.__init__(self, "", pos, worldBound=False)
         Window.__init__(self)
@@ -67,6 +78,7 @@ class Menu(Drawable, Window):
         return self.getSelection()
 
     def select(self, selection, closeOnPress):
+        """Sets the current selection"""
         if closeOnPress:
             self.close()
         self._selection = selection
@@ -79,7 +91,7 @@ class Menu(Drawable, Window):
         return sel
 
     def updateMenu(self):
-        """Updates the display of the pause menu"""
+        """Updates the display of the menu"""
 
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
@@ -88,7 +100,13 @@ class Menu(Drawable, Window):
         # Draw the background
         surf = pygame.Surface((self._width - (self._borderWidth * 2),
                               self._height - (self._borderWidth * 2)))
-        surf.fill(self._backgroundColor)
+
+        # Apply the background color or make transparent
+        if self._backgroundColor == None:
+            surf.fill((1,1,1))
+            surfBack.set_colorkey((1,1,1))
+        else:
+            surf.fill(self._backgroundColor)
 
         # Draw widgets
         for b in self._buttons:
@@ -96,4 +114,5 @@ class Menu(Drawable, Window):
         
         # Blit the widget layer onto the back surface
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
+        
         self._image = surfBack
