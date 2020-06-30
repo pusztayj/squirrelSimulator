@@ -58,9 +58,10 @@ class Menu(Drawable, Window):
 
         self._buttons = []
         for x, b in enumerate(commands):
-            self._buttons.append((Button(b["text"],(xStart, yStart + \
-                                               (x*buttonHeight) + \
-                                                x*spacing),
+            self._buttons.append((Button(b["text"],
+                                         (xStart + self._offset[0],
+                                          yStart + (x*buttonHeight) + \
+                                          (x*spacing) + self._offset[1]),
                                     self._font, b["fontColor"], b["color"],
                                     buttonHeight, buttonWidth, b["borderColor"],
                                          b["borderWidth"]),
@@ -68,12 +69,12 @@ class Menu(Drawable, Window):
 
         self._selection = None
 
-        self.updateMenu()
+        self.createDisplay()
 
     def handleEvent(self, event):
         """Handles events on the pause menu"""
         for b in self._buttons:
-            b[0].handleEvent(event,self.select,b[1],b[2],offset=self._offset)
+            b[0].handleEvent(event,self.select,b[1],b[2])#,offset=self._offset)
         self.updateMenu()
         return self.getSelection()
 
@@ -90,8 +91,15 @@ class Menu(Drawable, Window):
         self._selection = None
         return sel
 
-    def updateMenu(self):
-        """Updates the display of the menu"""
+    def draw(self, screen):
+        """Draws the menu on the screen"""
+        super().draw(screen)
+        # Draw buttons
+        for b in self._buttons:
+            b[0].draw(screen)
+
+    def createDisplay(self):
+        """Create the display of the menu"""
 
         # Draw the border
         surfBack = pygame.Surface((self._width, self._height))
@@ -108,10 +116,6 @@ class Menu(Drawable, Window):
         else:
             surf.fill(self._backgroundColor)
 
-        # Draw widgets
-        for b in self._buttons:
-            b[0].draw(surf)
-        
         # Blit the widget layer onto the back surface
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
         
