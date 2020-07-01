@@ -66,7 +66,7 @@ class Menu(Drawable, Window):
                                     font, b["fontColor"], b["color"],
                                     buttonHeight, buttonWidth, b["borderColor"],
                                          b["borderWidth"]),
-                                  x+1, b["closeOnPress"]))
+                                  x+1, b["closeOnPress"], (b.get("toggleText",None),b["text"])))
 
         # Create buttons with a horizontal configuration
         elif orientation == "horizontal":
@@ -84,7 +84,7 @@ class Menu(Drawable, Window):
                                     font, b["fontColor"], b["color"],
                                     buttonHeight, buttonWidth, b["borderColor"],
                                          b["borderWidth"]),
-                                  x+1, b["closeOnPress"]))
+                                  x+1, b["closeOnPress"], (b.get("toggleText",None),b["text"])))
 
         self._selection = None
 
@@ -93,13 +93,20 @@ class Menu(Drawable, Window):
     def handleEvent(self, event):
         """Handles events on the pause menu"""
         for b in self._buttons:
-            b[0].handleEvent(event,self.select,b[1],b[2])
+            b[0].handleEvent(event,self.select,b)
         return self.getSelection()
 
-    def select(self, selection, closeOnPress):
+    def select(self, button):
         """Sets the current selection"""
+        b, selection, closeOnPress, toggleText = button
         if closeOnPress:
             self.close()
+        if toggleText[0] != None:
+            currentText = b._text
+            if toggleText[0] == currentText:
+                b.setText(toggleText[1])
+            else:
+                b.setText(toggleText[0])
         self._selection = selection
 
     def getSelection(self):
