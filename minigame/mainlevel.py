@@ -175,7 +175,7 @@ class MainLevel(Level):
         self._stats = StatDisplay((5,5),self._player)
 
         # Create the night filter
-        self._nightFilter = Mask((0,0),(1200,500),(20,20,50),150, False)
+        self._nightFilter = Mask((0,0),SCREEN_SIZE,(20,20,50),150, False)
 
         # Set ATM and Interaction windows to None
         self._atm = None
