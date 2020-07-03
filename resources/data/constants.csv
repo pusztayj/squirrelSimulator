@@ -1,4 +1,12 @@
-﻿variable,value
-screen_size,"(1200, 500)"
-world_size,"(4000, 2000)"
-player_start_pos,"(200, 200)"
+﻿variable,value,description
+screen_size,"(1200, 500)",The width and height of the screen
+world_size,"(4000, 2000)",The width and height of the world
+player_start_pos,"(200, 200)",The in-world start position of the player
+attackThreshold,25,Friendscore at which animals begin to attack
+aggressionThreshold,75,Agression level at which attacks will happen
+xpPerDay,1,The amount of xp awarded to the player at the end of each day
+packPopulation,20,The number of packs in the main level
+groundColor,"(80, 230, 80)",The color of the ground in the main level
+initialAcornRange,(20-30),A range of acorns to spawn at the game's start
+acornSpawnTime,(2-5),Range of times it takes for an acorn to spawn
+pileSpawnTime,(20-40),Range of times it takes for a dirt pile to spawn

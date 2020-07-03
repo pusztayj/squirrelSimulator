@@ -99,12 +99,16 @@ class MainLevel(Level):
 
         super().__init__()
 
-        self._xpPerDay = 1
+        self._xpPerDay = CONSTANTS.get("xpPerDay")
+        
+        # Friendscore at which animals begin to attack
+        self._attackThreshold = CONSTANTS.get("attackThreshold")
+        
+        # Agression level at which attacks will happen
+        self._aggressionThreshold = CONSTANTS.get("aggressionThreshold") 
 
-        self._attackThreshold = 25 # Friendscore at which animals begin to attack
-        self._aggressionThreshold = 75 # Agression level at which attacks will happen
-
-        self._packPopulation = 20 # The number of packs in the game
+        # The number of packs in the game
+        self._packPopulation = CONSTANTS.get("packPopulation")
 
         self._cheatBox = cheatBox
 
@@ -122,12 +126,14 @@ class MainLevel(Level):
         self._player = self._playerPack.getLeader()
 
         # Create the ground
-        #self._ground = Banner((0,0),(100,255,100),(WORLD_SIZE[1],WORLD_SIZE[0]))
-        self._ground = Banner((0,0),(80,230,80),(WORLD_SIZE[1],WORLD_SIZE[0]))
+        self._ground = Banner((0,0),CONSTANTS.get("groundColor"),
+                              (WORLD_SIZE[1],WORLD_SIZE[0]))
         
         # Spawn some acorns at start of the game
+        initialAcornRange = CONSTANTS.get("initialAcornRange")
         self._acorns = [Acorn((random.randint(0,WORLD_SIZE[0]),
-                                       random.randint(0,WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
+                                       random.randint(0,WORLD_SIZE[1])))
+                        for x in range(random.randint(*initialAcornRange))]
 
         # Create empty list for player dirt piles
         self._dirtPiles = []
@@ -136,8 +142,8 @@ class MainLevel(Level):
         self._spawnedPiles = []
 
         # Create timers
-        self._acornSpawnTimer = random.randint(2,5)
-        self._pileSpawnTimer = random.randint(20,40)
+        self._acornSpawnTimer = random.randint(*CONSTANTS.get("acornSpawnTime"))
+        self._pileSpawnTimer = random.randint(*CONSTANTS.get("pileSpawnTime"))
         self._acornLeakTimer = self._worldClock.getHourLength()
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()

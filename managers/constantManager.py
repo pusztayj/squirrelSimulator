@@ -1,4 +1,5 @@
 from .abstractManager import AbstractManager
+import pprint
 
 class ConstantManager():
 
@@ -17,9 +18,11 @@ class ConstantManager():
         def __init__(self):
             self._constants = {}
             AbstractManager.__init__(self,"constants.csv",
-                                     self._constants)
+                                     self._constants, lower=False,
+                                     ignoreFields=["description"])
     
         def get(self, constant):
             return self._constants[constant]["value"]
 
 CONSTANTS = ConstantManager.getInstance()
+pprint.pprint(CONSTANTS._constants)
