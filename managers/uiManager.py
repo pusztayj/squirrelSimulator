@@ -16,7 +16,8 @@ class UIManager():
 
         def __init__(self):
             self._menuButtons = {}
-            AbstractManager.__init__(self,"menuButtons.csv",self._menuButtons,toLyst=[0])
+            AbstractManager.__init__(self,"menuButtons.csv",
+                                     self._menuButtons,toLyst=[0])
     
         def getControlsForMenu(self, menu):
             return self._menuButtons[menu]

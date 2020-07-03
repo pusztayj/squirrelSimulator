@@ -25,7 +25,11 @@ from minigame.steal import Steal
 from minigame.xpmanager import XPManager
 from managers.animalManager import ANIMALS
 from managers.itemManager import ITEMS
+from managers.constantManager import CONSTANTS
 from managers.soundManager import SoundManager
+
+SCREEN_SIZE = CONSTANTS.get("screen_size")
+WORLD_SIZE = CONSTANTS.get("world_size")
 
 CREATURES = ANIMALS.getSpawnableAnimals()
 ARMORS = ITEMS.getItemsByType("armor")
@@ -90,7 +94,7 @@ def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=Fa
 
 class MainLevel(Level):
 
-    def __init__(self, player_pack, SCREEN_SIZE, cheatBox):
+    def __init__(self, player_pack, cheatBox):
         """Initializes the main level"""
 
         super().__init__()
@@ -104,29 +108,26 @@ class MainLevel(Level):
 
         self._cheatBox = cheatBox
 
-        self._SCREEN_SIZE = SCREEN_SIZE
-        self._WORLD_SIZE = (4000,2000)
-
         # Fonts to be used in the main level
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
         self._messageFont = pygame.font.SysFont("Times New Roman", 20)
 
         # Create a world clock
-        self._worldClock = WorldClock(self._SCREEN_SIZE[0])
+        self._worldClock = WorldClock(SCREEN_SIZE[0])
 
         # Set the player pack
         self._playerPack = player_pack
-        self._packManager = PackManager(self._playerPack, self._SCREEN_SIZE)
+        self._packManager = PackManager(self._playerPack, SCREEN_SIZE)
         self._player = self._playerPack.getLeader()
 
         # Create the ground
-        #self._ground = Banner((0,0),(100,255,100),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
-        self._ground = Banner((0,0),(80,230,80),(self._WORLD_SIZE[1],self._WORLD_SIZE[0]))
+        #self._ground = Banner((0,0),(100,255,100),(WORLD_SIZE[1],WORLD_SIZE[0]))
+        self._ground = Banner((0,0),(80,230,80),(WORLD_SIZE[1],WORLD_SIZE[0]))
         
         # Spawn some acorns at start of the game
-        self._acorns = [Acorn((random.randint(0,self._WORLD_SIZE[0]),
-                                       random.randint(0,self._WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
+        self._acorns = [Acorn((random.randint(0,WORLD_SIZE[0]),
+                                       random.randint(0,WORLD_SIZE[1]))) for x in range(random.randint(20,30))]
 
         # Create empty list for player dirt piles
         self._dirtPiles = []
@@ -176,7 +177,7 @@ class MainLevel(Level):
         self._interaction = None
 
         # Add merchants to the world
-        self._merchants = spawn(Merchant, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+        self._merchants = spawn(Merchant, (WORLD_SIZE[0]-128, WORLD_SIZE[1]+128),
                                 random.randint(2,5), [])
 
         # Set the restocking rates for the merchants
@@ -185,17 +186,17 @@ class MainLevel(Level):
             merchant.setRestockTimer(random.randint(2*dayLen,4*dayLen))
 
         # Add trees to the world
-        self._trees = spawn(Drawable, (self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+        self._trees = spawn(Drawable, (WORLD_SIZE[0]-128, WORLD_SIZE[1]+128),
                             30, self._merchants, name="tree.png")
 
         # Add packs to the world
-        self._packs = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128),
+        self._packs = spawnPacks((WORLD_SIZE[0]-128, WORLD_SIZE[1]+128),
                                  self._packPopulation,
                                  self._merchants + self._trees)           
 
         # Create the player's inventory hud
-        self._hud = InventoryHUD(((self._SCREEN_SIZE[0]//2)-350,
-                                  self._SCREEN_SIZE[1]-52), (700,50), self._player)
+        self._hud = InventoryHUD(((SCREEN_SIZE[0]//2)-350,
+                                  SCREEN_SIZE[1]-52), (700,50), self._player)
 
         # Create the player's armor and weapon display blocks
         self._weapon = ItemBlock((SCREEN_SIZE[0]-164,5))
@@ -354,7 +355,7 @@ class MainLevel(Level):
                 for pile in self._dirtPiles:
                     if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
                               event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                        self._atm = ATM(self._player, pile, self._SCREEN_SIZE)
+                        self._atm = ATM(self._player, pile, SCREEN_SIZE)
 
                 # Check if the player has clicked on a creature
                 for pack in self._packs:
@@ -490,11 +491,11 @@ class MainLevel(Level):
                         self._popupWindow.display()
                 elif (code == 3):
                     e = self._interaction.getEntity()
-                    self._stealWindow = Steal(self._player, e, self._SCREEN_SIZE)
+                    self._stealWindow = Steal(self._player, e, SCREEN_SIZE)
                     self._stealWindow.display()
                 elif (code == 4):
                     e = self._interaction.getEntity()
-                    self._bribeWindow = Bribe(self._player, e, self._SCREEN_SIZE)
+                    self._bribeWindow = Bribe(self._player, e, SCREEN_SIZE)
                     self._bribeWindow.display()
                 
 
@@ -666,15 +667,15 @@ class MainLevel(Level):
         # Spawn acorns around the map
         self._acornSpawnTimer -= ticks
         if self._acornSpawnTimer <= 0:
-            self._acorns.append(Acorn((random.randint(0,self._WORLD_SIZE[0]),
-                                       random.randint(0,self._WORLD_SIZE[1]))))
+            self._acorns.append(Acorn((random.randint(0,WORLD_SIZE[0]),
+                                       random.randint(0,WORLD_SIZE[1]))))
             self._acornSpawnTimer = random.randint(2,5)
 
         # Spawn Abandoned Piles around the map
         self._pileSpawnTimer -= ticks
         if self._pileSpawnTimer <=0:
-            d = DirtPile((random.randint(0,self._WORLD_SIZE[0]),
-                          random.randint(0,self._WORLD_SIZE[1])),
+            d = DirtPile((random.randint(0,WORLD_SIZE[0]),
+                          random.randint(0,WORLD_SIZE[1])),
                          "Abandoned Pile")
             d.setAcorns(random.randint(1,20))
             self._spawnedPiles.append(d)
@@ -737,13 +738,13 @@ class MainLevel(Level):
             self._stealWindow.update()
 
         #Update the player's position
-        self._player.update(self._WORLD_SIZE, ticks)
+        self._player.update(WORLD_SIZE, ticks)
 
         # Update the players stats
         self._stats.update()
 
         #Update the offset based on the player's location
-        self._player.updateOffset(self._player, self._SCREEN_SIZE, self._WORLD_SIZE)
+        self._player.updateOffset(self._player, SCREEN_SIZE, WORLD_SIZE)
 
         # Remove acorns from the world that have been collected
         self._acorns = [acorn for acorn in self._acorns if not acorn.isCollected()]
@@ -759,7 +760,7 @@ class MainLevel(Level):
         self._armor.updateBlock()
 
         # Update the player's pack
-        self._playerPack.update(self._WORLD_SIZE, ticks)
+        self._playerPack.update(WORLD_SIZE, ticks)
 
         # Update the pack manager
         self._packManager.update(ticks)
@@ -769,7 +770,7 @@ class MainLevel(Level):
 
         # Spawn a new pack if the pack population has fallen below its default
         if len(self._packs) < self._packPopulation:
-            pack = spawnPacks((self._WORLD_SIZE[0]-128, self._WORLD_SIZE[1]+128), 1,
+            pack = spawnPacks((WORLD_SIZE[0]-128, WORLD_SIZE[1]+128), 1,
                               self._merchants + self._trees + [p.getLeader() for p in self._packs])
             self._packs += pack
 
@@ -777,7 +778,7 @@ class MainLevel(Level):
         for pack in self._packs: 
             pack.getLeader().wander(ticks)
             if pack.trueLen() > 1:
-                pack.update(self._WORLD_SIZE, ticks)
+                pack.update(WORLD_SIZE, ticks)
 
         # Check if a day has passed in game time
         if self._worldClock.dayPassed():

@@ -26,6 +26,7 @@ class AbstractManager():
                             # Normalize and format the different data types
                             rangeMatch = re.match("\(([\d]+)-([\d]+)\)", value)
                             rgbMatch = re.match("\(([\d]+),[ ]?([\d]+),[ ]?([\d]+)\)", value)
+                            tupleMatch = re.match("\(([\d]+),[ ]?([\d]+)\)", value)
                             if rangeMatch:
                                 temp[field] = (int(rangeMatch.group(1)),
                                                int(rangeMatch.group(2)))
@@ -33,6 +34,9 @@ class AbstractManager():
                                 temp[field] = (int(rgbMatch.group(1)),
                                                int(rgbMatch.group(2)),
                                                int(rgbMatch.group(3)))
+                            elif tupleMatch:
+                                temp[field] = (int(tupleMatch.group(1)),
+                                               int(tupleMatch.group(2)))
                             elif value == "null":
                                 temp[field] = None
                             elif value.isdigit():

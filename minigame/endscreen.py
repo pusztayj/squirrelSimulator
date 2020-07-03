@@ -11,25 +11,27 @@ from graphics import *
 from animals import *
 from minigame.threexthreeinventory import threeXthreeInventory
 from managers.soundManager import SoundManager
+from managers.constantManager import CONSTANTS
+
+SCREEN_SIZE = CONSTANTS.get("screen_size")
 
 
 class EndScreen(object):
 
-    def __init__(self,screensize,player):
+    def __init__(self,player):
         """Initializes the end screen level"""
 
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
         
-        self._screensize = screensize
         self._player = player
         self._font = pygame.font.SysFont("Times New Roman", 28)
 
         self._text = TextBox("You died. Below are your stats: ",
                              (0,0),self._font,(255,255,255))
 
-        self._text.setPosition(((self._screensize[0]-self._text.getWidth())//2,
-                                self._screensize[1]//5))
+        self._text.setPosition(((SCREEN_SIZE[0]-self._text.getWidth())//2,
+                                SCREEN_SIZE[1]//5))
 
 
         self._inventory = threeXthreeInventory(((screensize[0]//4)-50,150),

@@ -13,8 +13,9 @@ from economy.merchant import Merchant
 from animals import *
 from managers.soundManager import SoundManager
 from managers.uiManager import USER_INTERFACE
+from managers.constantManager import CONSTANTS
 
-SCREEN_SIZE = (1200,500)
+SCREEN_SIZE = CONSTANTS.get("screen_size")
 
 instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
@@ -89,13 +90,13 @@ def main():
    sound_manager = SoundManager.getInstance()
 
    # Create the player and their pack
-   player = Player(pos=(200,200))
+   player = Player(pos=CONSTANTS.get("player_start_pos"))
    playerPack = Pack(player)
    player.setPack(playerPack)
    player.scale(1.5)
 
    # Create the different levels
-   level = MainLevel(playerPack, SCREEN_SIZE, cheatBox)
+   level = MainLevel(playerPack, cheatBox)
    merchantLevel = None
    combatLevel = None
    endScreen = None
@@ -198,11 +199,11 @@ def main():
                      RUNNING = False
                   # Restart the game
                   elif c == 1:
-                     player = Player(pos=(200,200))
+                     player = Player(pos=CONSTANTS.get("player_start_pos"))
                      playerPack = Pack(player)
                      player.setPack(playerPack)
                      player.scale(1.5)
-                     level = MainLevel(playerPack, SCREEN_SIZE, cheatBox)
+                     level = MainLevel(playerPack, cheatBox)
                      merchantLevel = None
                      combatLevel = None
                      endScreen = None
@@ -308,7 +309,7 @@ def main():
           # Fade out the music
           sound_manager.fadeOut(1000)
           merch = code[1]
-          merchantLevel = MerchantLevel(player, merch, SCREEN_SIZE)
+          merchantLevel = MerchantLevel(player, merch)
           code = None
 
            # Reset the movement dictionary for the player
@@ -347,7 +348,7 @@ def main():
       # Create the end screen
       elif player.isDead() and endScreen == None:
          sound_manager.fadeOut(1000)
-         endScreen = EndScreen(SCREEN_SIZE, player)
+         endScreen = EndScreen(player)
       # Update the end screen
       elif endScreen != None:
          endScreen.update()

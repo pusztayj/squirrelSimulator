@@ -1,0 +1,4 @@
+﻿variable,value
+screen_size,"(1200, 500)"
+world_size,"(4000, 2000)"
+player_start_pos,"(200, 200)"

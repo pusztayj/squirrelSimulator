@@ -13,13 +13,16 @@ from economy.merchant import Merchant
 from economy.transactions import merchantTransaction
 from modules import Drawable, Vector2
 from managers.soundManager import SoundManager
+from managers.constantManager import CONSTANTS
 from player import Player
 from items.item import Item
 from level import Level
 
+SCREEN_SIZE = CONSTANTS.get("screen_size")
+
 class MerchantLevel(Level):
 
-    def __init__(self,player,merchant,SCREEN_SIZE):
+    def __init__(self,player,merchant):
         """
         We import the player, merchant and screen size in order
         to have the information we need to display a merchant interface
@@ -30,9 +33,6 @@ class MerchantLevel(Level):
         mercant and the player. 
         """
         super().__init__()
-
-        self._SCREEN_SIZE = (1200,500)
-        self._WORLD_SIZE = (1200,500)
 
         # fonts
         self._font = pygame.font.SysFont("Times New Roman", 16)
@@ -81,7 +81,7 @@ class MerchantLevel(Level):
         self._merchantMoney = TextBox(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()),
                             (795,410), self._textFont, (255,255,255))
 
-        self._exitButton = Button("X", (self._SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
+        self._exitButton = Button("X", (SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
 
         # Start playing song at initialization for good a transition
