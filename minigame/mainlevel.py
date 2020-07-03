@@ -147,7 +147,6 @@ class MainLevel(Level):
         self._acornLeakTimer = self._worldClock.getHourLength()
         self._hungerTimer = 2 * self._worldClock.getHourLength()
         self._starveTimer = 2 * self._worldClock.getHourLength()
-        self._restockTimer = 2 * self._worldClock.getHourLength()
 
         self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
         self._interactionTimer = self._interactionDelay
@@ -188,8 +187,10 @@ class MainLevel(Level):
 
         # Set the restocking rates for the merchants
         dayLen = self._worldClock.getDayLength()
+        restockTime = CONSTANTS.get("restockTime")
         for merchant in self._merchants:
-            merchant.setRestockTimer(random.randint(2*dayLen,4*dayLen))
+            merchant.setRestockTimer(random.randint(restockTime[0]*dayLen,
+                                                    restockTime[1]*dayLen))
 
         # Add trees to the world
         self._trees = spawn(Drawable, (WORLD_SIZE[0]-128, WORLD_SIZE[1]+128),
@@ -219,7 +220,7 @@ class MainLevel(Level):
         self._leak = False # A boolean flag for leaking acorns
 
         # Grace period (time between NPC attacks)
-        self._gracePeriod = 5 #ticks
+        self._gracePeriod = CONSTANTS.get("gracePeriod")
         self._graceTimer = self._gracePeriod
 
         # Create the XP Manager

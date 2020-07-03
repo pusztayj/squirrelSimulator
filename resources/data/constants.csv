@@ -10,3 +10,7 @@ groundColor,"(80, 230, 80)",The color of the ground in the main level
 initialAcornRange,(20-30),A range of acorns to spawn at the game's start
 acornSpawnTime,(2-5),Range of times it takes for an acorn to spawn
 pileSpawnTime,(20-40),Range of times it takes for a dirt pile to spawn
+hungerTimer,2,Number of hours before dropping in hunger
+starveTimer,2,Number of hours before taking another starvation hit
+restockTime,(2-4),Range of possible time in days that it can take merchants to restock
+gracePeriod,5,Grace period in seconds after retreating from a fight

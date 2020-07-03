@@ -1,5 +1,4 @@
 from .abstractManager import AbstractManager
-import pprint
 
 class ConstantManager():
 
@@ -25,4 +24,3 @@ class ConstantManager():
             return self._constants[constant]["value"]
 
 CONSTANTS = ConstantManager.getInstance()
-pprint.pprint(CONSTANTS._constants)
