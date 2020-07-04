@@ -11,9 +11,7 @@ from graphics.ui.menu import Menu
 from player import Player
 from economy.merchant import Merchant
 from animals import *
-from managers.soundManager import SoundManager
-from managers.uiManager import USER_INTERFACE
-from managers.constantManager import CONSTANTS
+from managers import CONSTANTS, USER_INTERFACE, SOUNDS
 
 SCREEN_SIZE = CONSTANTS.get("screen_size")
 
@@ -85,9 +83,6 @@ def main():
 
    # Create the cheat box
    cheatBox = Cheats(SCREEN_SIZE)
-
-   # Create an instance of the sound manager
-   sound_manager = SoundManager.getInstance()
 
    # Create the player and their pack
    player = Player(pos=CONSTANTS.get("player_start_pos"))
@@ -267,7 +262,7 @@ def main():
                         if merchantLevel == None or not merchantLevel.isActive():
                            level.setActive(True)
                      if sel == 2:
-                        sound_manager.toggleMute()
+                        SOUNDS.toggleMute()
                      if sel == 3:
                         tutorial.display()
                      if sel == 4:
@@ -307,7 +302,7 @@ def main():
       if code != None and code[0] == 1:
           level.setActive(False)
           # Fade out the music
-          sound_manager.fadeOut(1000)
+          SOUNDS.fadeOut(1000)
           merch = code[1]
           merchantLevel = MerchantLevel(player, merch)
           code = None
@@ -321,7 +316,7 @@ def main():
 
       # Set Game Mode to Main Game
       elif code != None and code[0] == 0:
-          sound_manager.fadeOut(1000)
+          SOUNDS.fadeOut(1000)
           level.setActive(True)
           code = None
 
@@ -331,7 +326,7 @@ def main():
       # Set Game Mode to Combat
       elif code != None and code[0] == 2:
          level.setActive(False)
-         sound_manager.fadeOut(1000)
+         SOUNDS.fadeOut(1000)
          combatLevel = CombatLevel(player, SCREEN_SIZE, code[1], code[2], screen)
          code = None
 
@@ -347,7 +342,7 @@ def main():
          titleScreen.update(ticks)
       # Create the end screen
       elif player.isDead() and endScreen == None:
-         sound_manager.fadeOut(1000)
+         SOUNDS.fadeOut(1000)
          endScreen = EndScreen(player)
       # Update the end screen
       elif endScreen != None:

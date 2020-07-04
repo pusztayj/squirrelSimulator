@@ -171,6 +171,8 @@ class SoundManager():
          self._sounds[fileName] = pygame.mixer.Sound(os.path.join(SoundManager._SM._FOLDER.get(fileName,
                                                                                                SoundManager._SM._MUSIC_FOLDER),
                                                                   fileName))
+
+SOUNDS = SoundManager.getInstance()
                
             
          
