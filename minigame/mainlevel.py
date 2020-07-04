@@ -232,7 +232,11 @@ class MainLevel(Level):
         
     def draw(self, screen):
         """Draws the level to the screen"""
-        
+        self.drawWorld(screen)
+        self.drawInterfaces(screen)    
+
+    def drawWorld(self, screen):
+        """Draw the in-game objects to the screen"""
         #Draw the background to the screen
         self._ground.draw(screen)
 
@@ -251,12 +255,14 @@ class MainLevel(Level):
                   self._playerPack.getTrueMembers()
         for pack in self._packs:
             layering += pack.getTrueMembers()
-        layering.sort(key=lambda x: x.getY()+x.getMaskHeight())
+        layering.sort(key=lambda x: x.getY()+x.getTrueBottom())
         for ob in layering:
             ob.draw(screen)
 
         self._nightFilter.draw(screen)
 
+    def drawInterfaces(self, screen):
+        """Draw huds, menus, and popups to the screen"""
         if self._popup != None:
             self._popup.draw(screen)
 

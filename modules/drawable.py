@@ -93,15 +93,12 @@ class Drawable():
         """
         return self._image.get_rect().move(self.getX(), self.getY())
 
-    def getMaskSize(self):
-        """Returns the size of the image's mask (transparency excluded)"""
-        return self._mask.get_size()
-
-    def getMaskWidth(self):
-        return self._mask.get_size()[0]
-
-    def getMaskHeight(self):
-        return self._mask.get_size()[1]
+    def getTrueBottom(self):
+        """Returns the lowest non-transparent
+        y-value of the image, ie the distance in
+        pixels from the top of the image to the
+        bottom of the sprite"""
+        return max(self._mask.outline(), key=lambda x: x[1])[1]
 
     def getCollideRects(self):
         if self.isFlipped():
