@@ -23,10 +23,7 @@ from minigame.packmanager import PackManager
 from minigame.bribe import Bribe
 from minigame.steal import Steal
 from minigame.xpmanager import XPManager
-from managers.animalManager import ANIMALS
-from managers.itemManager import ITEMS
-from managers.constantManager import CONSTANTS
-from managers.soundManager import SoundManager
+from managers import ANIMALS, ITEMS, CONSTANTS, SOUNDS
 
 SCREEN_SIZE = CONSTANTS.get("screen_size")
 WORLD_SIZE = CONSTANTS.get("world_size")
@@ -228,7 +225,7 @@ class MainLevel(Level):
         self._xpManager.close()
 
         # Start playing music
-        SoundManager.getInstance().manageSongs("main")
+        SOUNDS.manageSongs("main")
         
     def draw(self, screen):
         """Draws the level to the screen"""
@@ -770,7 +767,7 @@ class MainLevel(Level):
             self._player.setXP(self._player.getXP() + self._xpPerDay)
 
         # Load and play a new song if the current song has ended
-        SoundManager.getInstance().manageSongs("main")
+        SOUNDS.manageSongs("main")
         
 
 

@@ -1,82 +1,45 @@
-"""
-Author: Trevor Stalnaker
-File: cheats.py
-
-A class that models a cheats box
-"""
-
-import pygame
-from graphics.textinput import TextInput
+from economy.merchant import Merchant
+from animals import Creature, Pack
 
 
-class Cheats():
+        
+def giveAcorns(entity, amount):
+   """Gives an entity a given number of acorns"""
+   entity.setAcorns(entity.getAcorns() + amount)
 
-    def __init__(self, screenDimensions):
-        """Initializes the cheat interface"""
-        self._font = pygame.font.SysFont("Times New Roman", 16)
-        textDimensions = (200,30)
-        self._input = TextInput((0,screenDimensions[1]-textDimensions[1]),
-                                self._font, textDimensions, maxLen=30)
-        self._code = None
-        self._display = False
-        self._delay = .1 # Without the delay the input starts with an initial c
+def giveXP(entity, amount):
+   """Gives an entity a given number of XP"""
+   entity.setXP(entity.getXP() + amount)
 
-    def handleEvent(self, event):
-        """Handles events on the cheat box"""
-        if self._delay < 0:
-            self._input.handleEvent(event, self._input.getInput(), func=self.getCheatCode,
-                                clearOnEnter=True)
-        if self._code != None:
-            c = self._code
-            self._code = None
-            return c
+def spawnMerchant(mainGame, position):
+   """Spawns a merchant at a given position"""
+   mainGame._merchants.append(Merchant(pos=position))
 
-    def toggleDisplay(self):
-        """Toggles the cheat display"""
-        self._display = not self._display
-        if self._display:
-            self._input._active = True
-            self._input.displayActive()
-            self._delay = .1
-        else:
-            self._input._active = False
+def fastForward(mainGame, amount):
+   """Fastforwards the game clock by a given amount"""
+   hourLen = mainGame._worldClock.getHourLength()
+   time, mode = amount
+   if mode == "hours":
+      mainGame._worldClock._time += (time*hourLen)
+   if mode == "days":
+      mainGame._worldClock._time += (time*hourLen*24)
 
-    def isDisplayed(self):
-        """Returns true if cheats are displayed, false otherwise"""
-        return self._display
+def setHealth(entity, amount):
+   """Sets an entity's health to a given amount"""
+   amount = max(0,min(amount,entity.getBaseHealth()))
+   entity.setHealth(amount)
 
-    def getCheatCode(self, cheat):
-        """Sets code to the current cheat if it is valid"""
-        terms = cheat.split()
-        if len(terms) == 2:
-            if terms[0] == "giveAcorns":
-                if terms[1].isdigit():
-                    self._code = (1,int(terms[1]))
-            if terms[0] == "giveXP":
-                if terms[1].isdigit():
-                    self._code = (2,int(terms[1]))
-            if terms[0] == "setHealth":
-                if terms[1].isdigit():
-                    self._code = (5,int(terms[1]))
-        elif len(terms) == 3:
-            if terms[0] == "spawnMerchant":
-                if terms[1].isdigit() and terms[2].isdigit():
-                    self._code = (3, (int(terms[1]),int(terms[2])))
-            if terms[0] == "fastForward":
-                if terms[1].isdigit() and terms[2] in ["hours","days"]:
-                    self._code = (4,(int(terms[1]),terms[2]))
-        elif len(terms) == 5:
-            if terms[0] == "spawnAnimal":
-                if terms[1].lower() in ("chipmunk","fox","bear","hedgehog","deer","rabbit","shmoo"):
-                    if terms[2].isdigit() and terms[3].isdigit():
-                        if terms[4].isdigit():
-                            self._code = (6,terms[1],(int(terms[2]),int(terms[3])),int(terms[4]))
+def spawnAnimal(mainGame, species, position, friendScore):
+   """Spawns an animal given a type, position, and friendScore"""
+   animal = Creature(species.lower(), pos=position)
+   animal.setFriendScore(friendScore)
+   p = Pack(animal)
+   animal.setPack(p)
+   mainGame._packs.append(p)
 
-    def draw(self, screen):
-        """Draws the cheat input to the screen"""
-        self._input.draw(screen)
+# Dictionary of cheat codes
+codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
+               4:fastForward,5:setHealth,6:spawnAnimal}
 
-    def update(self, ticks):
-        """Updates the delay on the cheat input"""
-        if self._delay >= 0:
-            self._delay -= ticks
+# Group codes into types by their inputs
+types = {1:(1,2,4), 2:(3,4), 3:(6,)}

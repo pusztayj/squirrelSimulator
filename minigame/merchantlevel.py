@@ -12,8 +12,7 @@ from economy.tradedesk import TradeDesk
 from economy.merchant import Merchant
 from economy.transactions import merchantTransaction
 from modules import Drawable, Vector2
-from managers.soundManager import SoundManager
-from managers.constantManager import CONSTANTS
+from managers import CONSTANTS, SOUNDS
 from player import Player
 from items.item import Item
 from level import Level
@@ -85,7 +84,7 @@ class MerchantLevel(Level):
                           (100,100,100),25,25,(0,0,0), 1)
 
         # Start playing song at initialization for good a transition
-        SoundManager.getInstance().manageSongs("merchant")
+        SOUNDS.manageSongs("merchant")
    
     def selectMerchantItem(self,item):
         """
@@ -216,4 +215,4 @@ class MerchantLevel(Level):
                   for item in self._merchantMind.getInventory()])
 
         # Load and play a new song if the current song has ended
-        SoundManager.getInstance().manageSongs("merchant")
+        SOUNDS.manageSongs("merchant")

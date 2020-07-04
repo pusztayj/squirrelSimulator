@@ -1,6 +1,6 @@
 from .atm import ATM
 from .bribe import Bribe
-from .cheats import Cheats
+from .cheatbox import CheatBox
 from .combatLevel import CombatLevel
 from .controls import Controls
 from .interaction import Interaction
@@ -20,7 +20,7 @@ from .endscreen import EndScreen
 from .instructions import Instructions
 from .nameinput import NameInput
 
-__all__ = ["ATM","Bribe","Cheats","CombatLevel","Controls","Interaction",
+__all__ = ["ATM","Bribe","CheatBox","CombatLevel","Controls","Interaction",
            "InventoryHUD","ItemBlock","ItemSelect","LoadingScreen",
            "MainLevel","MerchantLevel","PackManager",
            "Steal","threeXthreeInventory","TitleScreen","WorldClock",

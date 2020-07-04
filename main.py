@@ -25,44 +25,6 @@ instruct = ["Welcome to Squirrel Simulator",
              "You can only carry so many acorns.\nHit B to bury acorns.\nYou can dig up piles by right\nclicking with selected tool",
              "Right click to use and equip items"]
 
-def giveAcorns(entity, amount):
-   """Gives an entity a given number of acorns"""
-   entity.setAcorns(entity.getAcorns() + amount)
-
-def giveXP(entity, amount):
-   """Gives an entity a given number of XP"""
-   entity.setXP(entity.getXP() + amount)
-
-def spawnMerchant(mainGame, position):
-   """Spawns a merchant at a given position"""
-   mainGame._merchants.append(Merchant(pos=position))
-
-def fastForward(mainGame, amount):
-   """Fastforwards the game clock by a given amount"""
-   hourLen = mainGame._worldClock.getHourLength()
-   time, mode = amount
-   if mode == "hours":
-      mainGame._worldClock._time += (time*hourLen)
-   if mode == "days":
-      mainGame._worldClock._time += (time*hourLen*24)
-
-def setHealth(entity, amount):
-   """Sets an entity's health to a given amount"""
-   amount = max(0,min(amount,entity.getBaseHealth()))
-   entity.setHealth(amount)
-
-def spawnAnimal(mainGame, species, position, friendScore):
-   """Spawns an animal given a type, position, and friendScore"""
-   animal = Creature(species.lower(), pos=position)
-   animal.setFriendScore(friendScore)
-   p = Pack(animal)
-   animal.setPack(p)
-   mainGame._packs.append(p)
-
-# Dictionary of cheat codes
-cheatCodes = {1:giveAcorns,2:giveXP,3:spawnMerchant,4:fastForward,5:setHealth,
-              6:spawnAnimal}
-
 def main():
    """
    Main loop for the program
@@ -82,7 +44,7 @@ def main():
    gameClock = pygame.time.Clock()
 
    # Create the cheat box
-   cheatBox = Cheats(SCREEN_SIZE)
+   cheatBox = CheatBox(SCREEN_SIZE)
 
    # Create the player and their pack
    player = Player(pos=CONSTANTS.get("player_start_pos"))
@@ -248,12 +210,13 @@ def main():
                   if cheatBox.isDisplayed() and not loading.isDisplayed():
                      cheatCode = cheatBox.handleEvent(event)
                      if cheatCode != None:
-                        if cheatCode[0] in (1,2,5):
-                           cheatCodes[cheatCode[0]](player, cheatCode[1])
-                        if cheatCode[0] in (3,4):
-                           cheatCodes[cheatCode[0]](level, cheatCode[1])
-                        if cheatCode[0] in (6,):
-                           cheatCodes[cheatCode[0]](level,cheatCode[1],cheatCode[2],cheatCode[3])
+                        if cheatCode[0] in cheatBox.getCodesByType(1):
+                           cheatBox.execute((cheatCode[0], player, cheatCode[1]))
+                        if cheatCode[0] in cheatBox.getCodesByType(2):
+                           cheatBox.execute((cheatCode[0], level, cheatCode[1]))
+                        if cheatCode[0] in cheatBox.getCodesByType(3):
+                           cheatBox.execute((cheatCode[0], level, cheatCode[1],
+                                             cheatCode[2], cheatCode[3]))
 
                   # Handle events on the pause menu
                   if pauseMenu.getDisplay() and not controls.getDisplay():
