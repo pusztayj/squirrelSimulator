@@ -50,6 +50,7 @@ class Drawable():
             self._imageName = imageName
             self._image = FRAMES.getFrame(self._imageName, offset)
             self._defaultImage = self._image
+            self._mask = pygame.mask.from_surface(self._image)
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
         self._isFlipped = False
@@ -57,8 +58,7 @@ class Drawable():
         self._flippedCollideRects = None
         self._isScaled = False
         self._scaleValue = 1
-
-        
+       
     def getWidth(self):
         """Returns the width of the image surface"""
         return self._image.get_rect().size[0]
@@ -93,6 +93,16 @@ class Drawable():
         """
         return self._image.get_rect().move(self.getX(), self.getY())
 
+    def getMaskSize(self):
+        """Returns the size of the image's mask (transparency excluded)"""
+        return self._mask.get_size()
+
+    def getMaskWidth(self):
+        return self._mask.get_size()[0]
+
+    def getMaskHeight(self):
+        return self._mask.get_size()[1]
+
     def getCollideRects(self):
         if self.isFlipped():
             if self._flippedCollideRects == None:
@@ -115,6 +125,7 @@ class Drawable():
         """Flip the object's image"""
         self._isFlipped = not self._isFlipped
         self._image = pygame.transform.flip(self._image, True, False)
+        self._mask = pygame.mask.from_surface(self._image)
 
     def isFlipped(self):
         """Returns a boolean value revealing if the object has been flipped"""
@@ -130,6 +141,7 @@ class Drawable():
         """
         self._image = pygame.transform.scale(self._image,(round(scalar*self.getSize()[0]),
                                                          round(scalar*self.getSize()[1])))
+        self._mask = pygame.mask.from_surface(self._image)
         self._scaleValue = scalar
         self._isScaled = True
 

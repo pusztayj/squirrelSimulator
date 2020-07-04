@@ -244,44 +244,16 @@ class MainLevel(Level):
 
         for pile in self._spawnedPiles:
             pile.draw(screen)
-
-        # Determine the proper layering for trees
-        # Allow the player to walk behind and in front of trees
-        notDrawnTrees = []
-        playerY = self._player.getY()
-        for tree in self._trees:
-            treeY = tree.getY()
-            treeHeight = tree.getHeight()
-            if playerY > (treeY + treeHeight) - (self._player.getHeight()-4):
-                tree.draw(screen)
-            else:
-                notDrawnTrees.append(tree)
-
-        # Determine the proper layering for merchants
-        # Allow the player to walk behind and in front of merchants
-        notDrawnMerchants = []
-        for merch in self._merchants:
-            merchY = merch.getY()
-            merchHeight = merch.getHeight()
-            if playerY > (merchY + merchHeight) - self._player.getHeight():
-                merch.draw(screen)
-            else:
-                notDrawnTrees.append(merch)
-
-        self._playerPack.draw(screen)
-
+            
+        # Determine the layering of objects and 
+        # draw them to the screen
+        layering = self._trees + self._merchants + \
+                  self._playerPack.getTrueMembers()
         for pack in self._packs:
-            pack.draw(screen)
-
-        # Draw remaining merchants
-        for merchant in notDrawnMerchants:
-            merchant.draw(screen)
-
-        self._player.draw(screen)
-
-        # Draw remaining trees
-        for tree in notDrawnTrees:
-            tree.draw(screen)
+            layering += pack.getTrueMembers()
+        layering.sort(key=lambda x: x.getY()+x.getMaskHeight())
+        for ob in layering:
+            ob.draw(screen)
 
         self._nightFilter.draw(screen)
 

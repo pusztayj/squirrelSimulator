@@ -93,6 +93,10 @@ class Pack():
         """Returns the members of the pack"""
         return self._members
 
+    def getTrueMembers(self):
+        """Return only pack members that exist"""
+        return [m for m in self._members if m != None]
+
     def getSize(self):
         """Return the current size of the pack"""
         return len(self._members)
@@ -157,16 +161,6 @@ class Pack():
         Returns the number of elements in a pack that are not None.
         """
         return len([animal for animal in self._members if animal != None])
-
-    def draw(self, screen):
-        """
-        Calls the draw method on every method in the pack. In the order that
-        generates the best layering based on the y-positions. 
-        """
-        sortedMembers = [x for x in self._members if x != None]
-        sortedMembers.sort(key= lambda x: x._position.y + x.getHeight()) 
-        for animal in sortedMembers:
-            animal.draw(screen)
 
     def update(self, worldsize, ticks):
         """
