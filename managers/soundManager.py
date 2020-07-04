@@ -1,6 +1,7 @@
 """
 A Singleton Sound Manager class
 Author: Liz Matthews, 9/20/2019
+Edited by: Trevor Stalnaker
 
 Provides on-demand loading of sounds for a pygame program.
 

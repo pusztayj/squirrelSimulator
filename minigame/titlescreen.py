@@ -6,7 +6,7 @@ The start screen of the game
 """
 
 import pygame
-from modules.frameManager import FRAMES
+from managers.frameManager import FRAMES
 from graphics import *
 
 class TitleScreen():

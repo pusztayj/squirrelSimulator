@@ -1,0 +1,37 @@
+﻿image,frame_dimensions,color_key
+acorn.png,"(32 ,32)",TRUE
+berries.png,"(32 ,32)",TRUE
+crowbar.png,"(32 ,32)",TRUE
+dirtpile.png,"(32 ,32)",TRUE
+face_0.png,"(32, 32)",TRUE
+face_1.png,"(32, 32)",TRUE
+face_2.png,"(32, 32)",TRUE
+face_3.png,"(32, 32)",TRUE
+face_4.png,"(32, 32)",TRUE
+healthpotion.png,"(32, 32)",TRUE
+hide_armor.png,"(32, 32)",TRUE
+iron_armor.png,"(32, 32)",TRUE
+leather_armor.png,"(32, 32)",TRUE
+merchant.png,"(64, 64)",TRUE
+merchantForest.png,null,FALSE
+merchantForest2.png,null,FALSE
+new_bear.png,"(64, 64)",TRUE
+new_chipmunk.png,"(32, 25)",TRUE
+new_deer.png,"(72, 75)",TRUE
+new_fox.png,"(48, 34)",TRUE
+new_hedgehog.png,"(34, 32)",TRUE
+new_rabbit.png,"(40, 40)",TRUE
+new_squirrel.png,"(32, 32)",TRUE
+nutsoup.png,"(32, 32)",TRUE
+pecanpie.png,"(32, 32)",TRUE
+pickax.png,"(32, 32)",TRUE
+rocks.png,"(32, 32)",TRUE
+shmoo.png,"(32, 32)",TRUE
+shovel.png,"(32, 32)",TRUE
+spear.png,"(32, 32)",TRUE
+stick.png,"(32, 32)",TRUE
+sword.png,"(32, 32)",TRUE
+title.png,null,FALSE
+tradeDesk.png,null,TRUE
+tree.png,"(128, 128)",TRUE
+turtle.png,"(128, 128)",TRUE

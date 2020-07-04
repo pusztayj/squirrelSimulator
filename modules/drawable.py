@@ -7,7 +7,7 @@ A super class with methods subclasses like Orb and Star inherit from
 
 import pygame
 from .vector2D import Vector2
-from .frameManager import FRAMES
+from managers.frameManager import FRAMES
 import rectmanager
 
 class Drawable():

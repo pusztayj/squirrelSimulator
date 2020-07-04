@@ -11,7 +11,6 @@ from .loadingscreen import LoadingScreen
 from .mainlevel import MainLevel
 from .merchantlevel import MerchantLevel
 from .packmanager import PackManager
-from .pausemenu import PauseMenu
 from .steal import Steal
 from .threexthreeinventory import threeXthreeInventory
 from .titlescreen import TitleScreen
@@ -23,6 +22,6 @@ from .nameinput import NameInput
 
 __all__ = ["ATM","Bribe","Cheats","CombatLevel","Controls","Interaction",
            "InventoryHUD","ItemBlock","ItemSelect","LoadingScreen",
-           "MainLevel","MerchantLevel","PackManager","PauseMenu",
+           "MainLevel","MerchantLevel","PackManager",
            "Steal","threeXthreeInventory","TitleScreen","WorldClock",
            "XPManager","EndScreen","Instructions","NameInput"]

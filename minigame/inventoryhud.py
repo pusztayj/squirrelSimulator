@@ -7,7 +7,7 @@ A class modeling a heads up display for the player's inventory
 
 import pygame
 from modules.drawable import Drawable
-from modules.frameManager import FRAMES
+from managers.frameManager import FRAMES
 from .itemblock import ItemBlock
 from graphics import TextBox
 

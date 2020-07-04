@@ -6,7 +6,7 @@ A class that manages an emoticon image
 """
 
 from modules.drawable import Drawable
-from modules.frameManager import FRAMES
+from managers.frameManager import FRAMES
 import pygame
 
 class HappinessFace(Drawable):
