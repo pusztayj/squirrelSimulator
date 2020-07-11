@@ -58,6 +58,11 @@ class Drawable():
         self._flippedCollideRects = None
         self._isScaled = False
         self._scaleValue = 1
+
+        # Create wrappers for getWidth and getHeight
+        # to make them more consistent with pygame
+        self.get_width = self.getWidth
+        self.get_height = self.getHeight
        
     def getWidth(self):
         """Returns the width of the image surface"""
