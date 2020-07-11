@@ -24,7 +24,7 @@ squirrelSimulator/animals/pack.py.
 import random, re
 from inventory import Inventory
 from items.item import Item
-from minigame.combatUtils import *
+from minigame.combat.utils import *
 from managers.nameManager import NAMES
 
 class Animal():

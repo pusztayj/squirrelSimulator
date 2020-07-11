@@ -290,7 +290,7 @@ def main():
       elif code != None and code[0] == 2:
          level.setActive(False)
          SOUNDS.fadeOut(1000)
-         combatLevel = CombatLevel(player, SCREEN_SIZE, code[1], code[2], screen)
+         combatLevel = CombatLevel(code[1], code[2])
          code = None
 
          # Reset the movement dictionary for the player

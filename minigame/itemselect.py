@@ -39,7 +39,7 @@ class ItemSelect(Drawable):
 
     def getItemSelected(self):
         """Returns the selected item"""
-        return self._itemSelected.getItem()
+        return None if self._itemSelected==None else self._itemSelected.getItem()
 
     def handleEvent(self, event):
         """Handle events on the item selector"""
