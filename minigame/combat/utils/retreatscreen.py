@@ -34,7 +34,7 @@ class RetreatScreen(object):
         self._lostMoneyText.setPosition((600-(x//2),150))
         y = self._lostMoneyText.getHeight()
         if self._itemLost != None:
-            self._itemLostText = TextBox("You lost your " + self._itemLost.getName(),
+            self._itemLostText = TextBox("You lost your " + self._itemLost.getAttribute("name"),
                                          (0,0),self._font,(255,255,255))
             x = self._itemLostText.getWidth()
             self._itemLostText.setPosition((600-(x//2),150+y+5))

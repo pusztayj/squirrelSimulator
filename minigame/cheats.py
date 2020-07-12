@@ -36,10 +36,11 @@ def spawnAnimal(mainGame, species, position, friendScore):
    animal.setPack(p)
    mainGame._packs.append(p)
 
-def giveItem(entity, i):
+def giveItem(entity, i, quant=1):
    """Gives an entity an item"""
-   item = Item(i)
-   entity.getInventory().addItem(item)
+   for x in range(quant):
+      item = Item(i)
+      entity.getInventory().addItem(item)
 
 # Dictionary of cheat codes
 codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
@@ -47,4 +48,4 @@ codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
          7:giveItem}
 
 # Group codes into types by their inputs
-types = {1:(1,2,5,7), 2:(3,4), 3:(6,)}
+types = {1:(1,2,5,7), 2:(3,4), 3:(6,), 4:(7,)}

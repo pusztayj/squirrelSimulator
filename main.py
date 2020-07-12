@@ -210,13 +210,18 @@ def main():
                   if cheatBox.isDisplayed() and not loading.isDisplayed():
                      cheatCode = cheatBox.handleEvent(event)
                      if cheatCode != None:
-                        if cheatCode[0] in cheatBox.getCodesByType(1):
+                        if cheatCode[0] in cheatBox.getCodesByType(1) and \
+                           len(cheatCode)==2:
                            cheatBox.execute((cheatCode[0], player, cheatCode[1]))
                         if cheatCode[0] in cheatBox.getCodesByType(2):
                            cheatBox.execute((cheatCode[0], level, cheatCode[1]))
                         if cheatCode[0] in cheatBox.getCodesByType(3):
                            cheatBox.execute((cheatCode[0], level, cheatCode[1],
                                              cheatCode[2], cheatCode[3]))
+                        if cheatCode[0] in cheatBox.getCodesByType(4) and\
+                           len(cheatCode)==3:
+                           cheatBox.execute((cheatCode[0], player, cheatCode[1],
+                                             cheatCode[2]))
 
                   # Handle events on the pause menu
                   if pauseMenu.getDisplay() and not controls.getDisplay():

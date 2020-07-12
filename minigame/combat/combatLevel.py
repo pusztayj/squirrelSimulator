@@ -189,8 +189,17 @@ class CombatLevel(Level):
                                 attack(self._player,creature) # the model is changed here as told by the controller
                                 self._playerDone = True
                     else:
-                        text = "Holding: " + sprite.getAnimal().getEquipItemName() + \
-                               "\nArmor: " + sprite.getAnimal().getArmorsName() + \
+                        animal = sprite.getAnimal()
+                        if animal.isEquipped():
+                            item = sprite.getAnimal().getEquipItem().getAttribute("name")
+                        else:
+                            item = ""
+                        if animal.hasArmor():
+                            armor = sprite.getAnimal().getArmor().getAttribute("name")
+                        else:
+                            armor = ""
+                        text = "Holding: " + item + \
+                               "\nArmor: " + armor + \
                                "\nStrength: " + str(sprite.getAnimal().getStrength())
                     self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
                                         self._popupFont,multiLine = True)

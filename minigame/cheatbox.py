@@ -69,6 +69,10 @@ class CheatBox():
             if terms[0] == "fastForward":
                 if terms[1].isdigit() and terms[2] in ["hours","days"]:
                     self._code = (4,(int(terms[1]),terms[2]))
+            if terms[0] == "giveItem":
+                if terms[1].lower() in ITEMS.getItems():
+                    if terms[2].isdigit():
+                        self._code = (7,terms[1].lower(),int(terms[2]))
         elif len(terms) == 5:
             if terms[0] == "spawnAnimal":
                 if terms[1].lower() in ("chipmunk","fox","bear","hedgehog","deer","rabbit","shmoo"):
