@@ -81,23 +81,15 @@ class Button(TextGraphic):
                                                            (-40,-40,-40))
         self.updateGraphic()
 
-    def updateGraphic(self):
+    def internalUpdate(self, surf):
         """Update the button after parameters have been changed"""
-        surfBack = pygame.Surface((self._width,self._height))
-        surfBack.fill(self._borderColor)
 
-        # Find the true size of the button (excluding the border)
-        true_width = self._width - (self._borderWidth * 2)
-        true_height = self._height - (self._borderWidth * 2)
-        
-        surf = pygame.Surface((true_width,true_height))
+        # Use the current background color
         surf.fill(self._currentBackgroundColor)
-        
+
+        # Create and draw the internal textbox
         t = TextBox(self._text, (0,0), self._font,
                     self._currentFontColor, self._antialias)
         t.center(surf)
         t.draw(surf)
-        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
-        self._image = surfBack
 
-        self.updateCentering()

@@ -63,5 +63,35 @@ class AbstractGraphic(Drawable):
     def updateCentering(self):
         if self._keepCenter:
             self.center(*self._centeringData)
+
+    def updateGraphic(self):
+        """A default method for updating a graphic"""
+
+        # Draw the base layer (what will become the border)
+        surfBack = pygame.Surface((self._width, self._height))
+        surfBack.fill(self._borderColor)
+
+        # Draw the primary surface
+        surf = pygame.Surface((self._width-(self._borderWidth*2),
+                               self._height-(self._borderWidth*2)))
+        
+        # Apply the background color or make transparent
+        if self._backgroundColor == None:
+            surf.fill((1,1,1))
+            surfBack.set_colorkey((1,1,1))
+        else:
+            surf.fill(self._backgroundColor)
+
+        # Add widgets to the primary surface according to kind
+        self.internalUpdate(surf)
+
+        # Draw the primary surface onto the base layer
+        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
+
+        # Set the image to the created surface
+        self._image = surfBack
+
+        # Update the centering on the graphic
+        self.updateCentering()
         
         

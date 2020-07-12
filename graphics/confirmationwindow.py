@@ -46,7 +46,7 @@ class ConfirmationWindow(TextGraphic, Window):
                          buttonColor,buttonDimensions[1],
                          buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
         self._b1.keepCentered(self, (1/3,3/4))
-
+        
         self._b2 = Button(denialText, (0,0), buttonFont, buttonFontColor,
                          buttonColor,buttonDimensions[1],
                          buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
@@ -58,18 +58,22 @@ class ConfirmationWindow(TextGraphic, Window):
 
     def setText(self, text):
         """Sets the text of the window"""
+        self._text = text
         self._t.setText(text)
         self.updateGraphic()
 
     def setFont(self, font):
+        self._font = font
         self._t.setFont(font)
         self.updateGraphic()
 
     def setFontColor(self, fontColor):
+        self._fontColor = fontColor
         self._t.setFontColor(fontColor)
         self.updateGraphic()
 
     def setAntiAlias(self, antialias):
+        self._antialias = antialias
         self._t.setAntiAlias(antialias)
         self._updateGraphic()
 
@@ -97,15 +101,8 @@ class ConfirmationWindow(TextGraphic, Window):
         self._sel = None
         return sel
 
-    def updateGraphic(self):
-        """Update the window after parameters have been changed"""
-        surfBack = pygame.Surface((self._width, self._height))
-        surfBack.fill(self._borderColor)
-        surf = pygame.Surface((self._width-(self._borderWidth*2),
-                               self._height-(self._borderWidth*2)))
-        surf.fill(self._backgroundColor)       
+    def internalUpdate(self, surf):
+        """Update the window after parameters have been changed"""     
         self._t.draw(surf)
         self._b1.draw(surf)
         self._b2.draw(surf)
-        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
-        self._image = surfBack

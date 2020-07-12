@@ -94,7 +94,7 @@ class MultiLineTextBox(TextGraphic):
         else:
             self._alignment = alignment.lower()
         self.updateGraphic()
-        
+
     def updateGraphic(self):
         """Update the textbox after parameters have been changed"""
         
@@ -109,7 +109,14 @@ class MultiLineTextBox(TextGraphic):
         
         lines = self._text.split("\n")
         surf = pygame.Surface((self._width, self._height))
-        surf.fill(self._backgroundColor)
+        
+        # Apply the background color or make transparent
+        if self._backgroundColor == None:
+            surf.fill((1,1,1))
+            surf.set_colorkey((1,1,1))
+        else:
+            surf.fill(self._backgroundColor)
+            
         p = (0,self._vpadding)
         for line in self._lines:
             t = TextBox(line, p, self._font, self._fontColor,
