@@ -15,6 +15,8 @@ from modules.animated import Animated
 from modules.vector2D import Vector2
 from stateMachines import npcFSM
 
+from minigame.combat.utils.combatfunctions import *
+
 class NPC(Animal, Animated):
 
     def __init__(self, name, image, pos, aggression, speed, endurance,strength):
@@ -249,6 +251,22 @@ class NPC(Animal, Animated):
             self._nFrames = self._standFrames
         self.updateAnimation(ticks)
         self._position += (self._velocity * ticks)
+
+
+    def move(self,opponents):
+        """
+        Tests the animal logic so the NPC can decide their move.
+        """
+        if self.healLogic(opponents):
+            potions = [x for x in self.getInventory() if x.getAttribute("type") == "potion"] 
+            potions.sort(key = lambda x: x.getHealthBoost())
+            if len(potions) != 0:
+                heal(self,potions[-1])
+        elif self.fortifyLogic(opponents):
+            fortify(self)
+        else:
+            an = self.attackLogic(opponents)
+            attack(self,an)
 
     def clone(self):
         """

@@ -7,11 +7,13 @@ An interface for interacting with dirt piles
 
 import pygame
 from modules.drawable import Drawable
+
 from graphics.textbox import TextBox
 from graphics.button import Button
 from graphics.textinput import TextInput
 from graphics.window import Window
 from graphics.popupwindow import PopupWindow
+
 from economy.acorn import Acorn
 
 class ATM(Drawable, Window):

@@ -5,8 +5,10 @@ In this file we create a victory screen that works when the player wins a
 combat game.
 """
 
-from .combatUtils import *
+from .combat.utils import *
 from graphics import *
+import pygame
+
 
 class VictoryScreen(object):
 

@@ -5,11 +5,11 @@ attackDamage = {(0.0,1):0,(0.25,1): 5, (0.5,1): 10, (0.75,1): 20, (1,1): 30,
 
 def attack(attacker, defender):
     """
-    Executes an attack where one characer gives damage to another player.
+    Executes an attack where one creature gives damage to another one.
     Damage dealt is calculated on a ratio of strengths. It takes a ratio
     between attacker's strength and defenders strength.
 
-    It awards damage based on the attackdamage dictionary.
+    It awards damage based on the attack-damage dictionary.
     """
     
     damage = attackComputation(attacker,defender)
@@ -23,19 +23,18 @@ def attackComputation(attacker,defender):
     Calculates the damage dealt between an attacker and a defender.
     """
     attacker.resetDefenseModifers()
-    # try/catch needed as animal equipped weapon/armor might be None
-    try:
+    if attacker.getEquipItem() != None:
         attack_strength = (attacker.getStrength() + \
-                               (attacker.getEquipItem().getStrength())) * \
+                               (attacker.getEquipItem().getAttribute("strength"))) * \
                                attacker.getAttackModifers()
-    except AttributeError:
+    else:
         attack_strength = attacker.getStrength()*attacker.getAttackModifers()
 
-    try:
+    if defender.getArmor() != None:
         defense_strength = (defender.getStrength() + \
-                           (defender.getArmor().getStrength())) * \
+                           (defender.getArmor().getAttribute("strength"))) * \
                            defender.getDefenseModifers()
-    except AttributeError:
+    else:
         defense_strength = defender.getStrength()*defender.getDefenseModifers()
                          
     ratio = (round((attack_strength/defense_strength) * 4))/ 4
@@ -68,19 +67,3 @@ def retreat(animal):
     Forces an animal to retreat
     """
     animal.resetDefenseModifers()
-
-
-def move(animal,opponents):
-    """
-    Tests the animal logic so the NPC can decide their move.
-    """
-    if animal.healLogic(opponents):
-        potions = [x for x in animal.getInventory() if type(x) == type(Potions())]
-        potions.sort(key = lambda x: x.getHealthBoost())
-        if len(potions) != 0:
-            heal(animal,potions[-1])
-    elif animal.fortifyLogic(opponents):
-        fortify(animal)
-    else:
-        an = animal.attackLogic(opponents)
-        attack(animal,an)
