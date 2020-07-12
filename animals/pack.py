@@ -13,12 +13,12 @@ from inventory import Inventory
 
 class Pack():
 
-    def __init__(self, leader, name=""):
+    def __init__(self, leader, name="", maxSize=3):
         """
         Initialize the pack with a leader and with a name for the pack.
         """
-        self._maxSize = 3 # the default max size is 3
-        self._members = [leader, None, None]
+        self._maxSize = maxSize # the default max size is 3
+        self._members = [leader] + [None for x in range(maxSize-1)]
         self._leader = leader
         self._name = name
         self._nextToAttackIndex = 0 # sets the next to attack to 0

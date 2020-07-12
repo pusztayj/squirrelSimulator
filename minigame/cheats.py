@@ -1,8 +1,7 @@
 from economy.merchant import Merchant
 from animals import Creature, Pack
+from items.item import Item
 
-
-        
 def giveAcorns(entity, amount):
    """Gives an entity a given number of acorns"""
    entity.setAcorns(entity.getAcorns() + amount)
@@ -37,9 +36,15 @@ def spawnAnimal(mainGame, species, position, friendScore):
    animal.setPack(p)
    mainGame._packs.append(p)
 
+def giveItem(entity, i):
+   """Gives an entity an item"""
+   item = Item(i)
+   entity.getInventory().addItem(item)
+
 # Dictionary of cheat codes
 codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
-               4:fastForward,5:setHealth,6:spawnAnimal}
+         4:fastForward,5:setHealth,6:spawnAnimal,
+         7:giveItem}
 
 # Group codes into types by their inputs
-types = {1:(1,2,4), 2:(3,4), 3:(6,)}
+types = {1:(1,2,5,7), 2:(3,4), 3:(6,)}

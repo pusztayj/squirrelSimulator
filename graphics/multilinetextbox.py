@@ -55,6 +55,18 @@ class MultiLineTextBox(TextGraphic):
             self._lines[lineNumber-1]=text
             self.updateGraphic()
 
+    def appendLine(self, line):
+        """Adds a line to the current text"""
+        self._lines.append(text)
+        self._text = "\n".join(self._lines)
+        self.updateGraphic()
+
+    def insertLine(self, line, index):
+        """Insert a line at a given index"""
+        self._lines[:index-1] + [line] +self._lines[index-1:]
+        self._text = "\n".join(self._lines)
+        self.updateGraphic()
+
     def getBackgroundColor(self):
         """Get the current background color"""
         return self._backgroundColor

@@ -8,6 +8,7 @@ A class that models a cheats box
 import pygame
 from graphics.textinput import TextInput
 from .cheats import *
+from managers import ITEMS
 
 class CheatBox():
 
@@ -58,6 +59,9 @@ class CheatBox():
             if terms[0] == "setHealth":
                 if terms[1].isdigit():
                     self._code = (5,int(terms[1]))
+            if terms[0] == "giveItem":
+                if terms[1].lower() in ITEMS.getItems():
+                    self._code = (7,terms[1].lower())
         elif len(terms) == 3:
             if terms[0] == "spawnMerchant":
                 if terms[1].isdigit() and terms[2].isdigit():
