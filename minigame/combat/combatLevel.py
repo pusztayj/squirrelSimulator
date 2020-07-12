@@ -28,7 +28,7 @@ class CombatLevel(Level):
         self._combatOrder = TurnOrder(self._allies, self._enemies)
         self._current = self._combatOrder.getCurrent()
         
-        self._npcTurnLength = 7
+        self._npcTurnLength = 3
         self._npcTurnTimer = self._npcTurnLength
 
 
@@ -65,10 +65,11 @@ class CombatLevel(Level):
 
         # text box that displays your turn
         self._turnText = TextBox("Your turn",(0,470),self._font,(255,255,255))
-        centerGraphicsElement(self._turnText,axes=(True, False))
+        self._turnText.keepCentered(cen_point=(1/2,None))
 
         # combat text displaying what each NPC did
         self._combatText = TextBox("",(600,100),self._textFont,(255,255,255))
+        self._combatText.keepCentered(cen_point=(1/2,None))
 
         self._potions = [x for x in self._allies[0].getInventory() \
                    if x.getAttribute("type") == "potion"]
@@ -137,7 +138,9 @@ class CombatLevel(Level):
                 if self._animalStats != None:
                     self._animalStats.draw(screen)
                 if not self._movesMenu.getDisplay():
-                    if self._menuSelection == 1: # draws what is seen after clicking attack button
+                    if self._playerDone:
+                        self._combatText.draw(screen)
+                    elif self._menuSelection == 1: # draws what is seen after clicking attack button
                         self._backToMenuButton.draw(screen)
                         self._moveText.setText("Click on enemy animal to proceed with attack")
                         self._moveText.setPosition((0,200))
@@ -188,6 +191,12 @@ class CombatLevel(Level):
                             if r.collidepoint(event.pos):
                                 attack(self._player,creature) # the model is changed here as told by the controller
                                 self._playerDone = True
+
+                                # Show the player's attack on the screen
+                                self._player.attackLogic([creature])
+                                text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
+                                self._combatText.setText(text)
+                                
                     else:
                         animal = sprite.getAnimal()
                         if animal.isEquipped():
@@ -218,6 +227,9 @@ class CombatLevel(Level):
                     fortify(self._player) # the model is changed here as told by the controller
                     self._playerDone = True
                     
+                    # Show the player's move on the screen
+                    self._combatText.setText("You have fortified!")
+                    
                 if self._menuSelection == 3: # handles heal
                     self._backToMenuButton.handleEvent(event,self._movesMenu.display)
                     self._potionSelect.handleEvent(event)
@@ -225,6 +237,9 @@ class CombatLevel(Level):
                     if potionPick != None:
                         heal(self._player,potionPick) # the model is changed here as told by the controller
                         self._playerDone = True
+                        
+                        # Show the player's move on the screen
+                        self._combatText.setText("You healed with a potion!")
                     
                 if self._menuSelection == 4: # handles retreat
                     retreat(self._player)
@@ -261,9 +276,12 @@ class CombatLevel(Level):
 
         if not self._enemies.isDead():
             if self._playerDone:
-                self._combatOrder.getNext()
-                self._playerDone = False
-                self._menuSelection = None
+                self._npcTurnTimer -= ticks
+                if self._npcTurnTimer <= 0:
+                    self._npcTurnTimer = self._npcTurnLength
+                    self._combatOrder.getNext()
+                    self._playerDone = False
+                    self._menuSelection = None
                 
             if self._current != self._combatOrder.getCurrent():
                 self._creatureSpriteMap[self._current].deselect()
@@ -280,10 +298,13 @@ class CombatLevel(Level):
                     else:
                         self._current.move(self._allies.getTrueMembers())
                         self._orbColor = (222,44,44)
-                    self._combatText.setText(self._current.getCombatStatus())
-                    centerGraphicsElement(self._combatText,axes=(True, False))
+
+                    # Replace the player's name with you (use reverses to find the last instance of the name)
+                    text = self._current.getCombatStatus()
+                    text = text[::-1].replace(self._player.getName()[::-1], "you"[::-1], 1)[::-1]
+                    self._combatText.setText(text)
+                    
                     self._turnText.setText(self._current.getName()+"'s turn")
-                    centerGraphicsElement(self._turnText,axes=(True, False))
                     self._npcDone = True
                 self._npcTurnTimer -= ticks
                 if self._npcTurnTimer <= 0:
@@ -300,7 +321,6 @@ class CombatLevel(Level):
                     self._potionSelect.update()
                     centerGraphicsElement(self._potionSelect,axes=(True, False))
                 self._turnText.setText("Your turn")
-                centerGraphicsElement(self._turnText,axes=(True, False))
                 self._orbColor = (255,255,255)
             
                 

@@ -39,7 +39,7 @@ def createPack(pos):
     p = Pack(leader)
     leader.setPack(p)
     for x in range(2):
-        if random.random() < 1:
+        if random.random() < .25:
             c = Creature(random.choice(CREATURES), pos=(pos[0]+(((-1)**x)*30),
                                                       pos[1]+(((-1)**x)*30)))
             c.setPack(p)
