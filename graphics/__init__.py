@@ -1,25 +1,27 @@
 
-from .banner import Banner
-from .button import Button
-from .guiUtils import makeMultiLineTextBox,getInfoCard,ItemCard
-from .linkedprogressbar import LinkedProgressBar
-from .mask import Mask
-from .mysurface import MySurface
-from .popup import Popup
-from .popupwindow import PopupWindow
-from .progressbar import ProgressBar
-from .scrollbox import ScrollBox
-from .scrollselector import ScrollSelector
-from .statdisplay import StatDisplay
-from .tabs import Tabs
-from .textbox import TextBox
-from .textinput import TextInput
-from .window import Window
-from .happinessface import HappinessFace
-from .particletext import ParticleText
-from .confirmationwindow import ConfirmationWindow
+from graphics.banner import Banner
+from graphics.button import Button
+from graphics.centergraphicselement import centerGraphicsElement
+from graphics.guiUtils import makeMultiLineTextBox,getInfoCard,ItemCard
+from graphics.linkedprogressbar import LinkedProgressBar
+from graphics.mask import Mask
+from graphics.mysurface import MySurface
+from graphics.popup import Popup
+from graphics.popupwindow import PopupWindow
+from graphics.progressbar import ProgressBar
+from graphics.scrollbox import ScrollBox
+from graphics.scrollselector import ScrollSelector
+from graphics.statdisplay import StatDisplay
+from graphics.tabs import Tabs
+from graphics.textbox import TextBox
+from graphics.textinput import TextInput
+from graphics.window import Window
+from graphics.happinessface import HappinessFace
+from graphics.particletext import ParticleText
+from graphics.confirmationwindow import ConfirmationWindow
 
-__all__ = ["Banner","Button","makeMultiLineTextBox","getInfoCard","ItemCard",
+__all__ = ["Banner","Button","centerGraphicsElement",
+           "makeMultiLineTextBox","getInfoCard","ItemCard",
            "LinkedProgressBar","Mask","MySurface","Popup","PopupWindow",
            "ProgressBar","ScrollBox","ScrollSelector","StatDisplay","Tabs",
            "TextBox","TextInput","Window", "HappinessFace","ParticleText",

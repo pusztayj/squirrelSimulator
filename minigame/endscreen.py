@@ -34,7 +34,7 @@ class EndScreen(object):
                                 SCREEN_SIZE[1]//5))
 
 
-        self._inventory = threeXthreeInventory(((screensize[0]//4)-50,150),
+        self._inventory = threeXthreeInventory(((SCREEN_SIZE[0]//4)-50,150),
                                                (300,200), self._player)
 
         self._xpText = TextBox("XP: "+str(self._player.getXP()),
@@ -56,10 +56,10 @@ class EndScreen(object):
 
         # Buttons
 
-        self._restartButton = Button("Restart",((screensize[0]//4)-30,400),self._font,
+        self._restartButton = Button("Restart",((SCREEN_SIZE[0]//4)-30,400),self._font,
                                      (255,255,255),(222,44,44),50,100,
                                      borderWidth = 2)
-        self._exitButton = Button("Exit",((((screensize[0]//4)+250)-120),400),self._font,(255,255,255),
+        self._exitButton = Button("Exit",((((SCREEN_SIZE[0]//4)+250)-120),400),self._font,(255,255,255),
                                      (46,46,218), 50,100,borderWidth = 2)
 
         self._selection = None

@@ -8,3 +8,7 @@ pause,Mute,"(120, 120, 150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,Unmu
 pause,How To Play,"(120, 120, 150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
 pause,Controls,"(120, 120, 150)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,FALSE,null
 pause,Quit,"(255,0,0)",Times New Roman,24,"(0,0,0)","(0,0,0)",2,TRUE,null
+combat,Attack,"(222, 44, 44)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRUE,null
+combat,Fortify,"(46, 46, 218)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRUE,null
+combat,Heal,"(10, 200, 40)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRUE,null
+combat,Retreat,"(206, 218, 46)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRUE,null
