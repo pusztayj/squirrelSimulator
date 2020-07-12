@@ -1,3 +1,6 @@
+import random
+import math
+
 def lootItems(opponents):
     """
     Generates a list of items that can be used

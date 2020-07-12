@@ -4,9 +4,13 @@ from .utils import *
 from level import Level
 from modules import Drawable
 from managers import CONSTANTS, USER_INTERFACE, SOUNDS
+
 from minigame.turnOrder import TurnOrder
+from minigame.victoryscreen import VictoryScreen
+
 from graphics.ui.menu import Menu
 from graphics import *
+
 from minigame.itemselect import ItemSelect
 
 
@@ -24,7 +28,7 @@ class CombatLevel(Level):
         self._combatOrder = TurnOrder(self._allies, self._enemies)
         self._current = self._combatOrder.getCurrent()
         
-        self._npcTurnLength = 3
+        self._npcTurnLength = 7
         self._npcTurnTimer = self._npcTurnLength
 
 
@@ -246,48 +250,49 @@ class CombatLevel(Level):
         if self._animalStats != None:
             self._animalStats.update()
 
-        if self._playerDone:
-            self._combatOrder.getNext()
-            self._playerDone = False
-            self._menuSelection = None
-            
-        if self._current != self._combatOrder.getCurrent():
-            self._creatureSpriteMap[self._current].deselect()
-            self._current = self._combatOrder.getCurrent()
-            if self._current == self._player:
-                self._movesMenu.display()
-            self._creatureSpriteMap[self._current].select()
-
-        if self._current != self._player:
-            if not self._npcDone:
-                if self._current in self._allies.getTrueMembers():
-                    move(self._current,self._enemies.getTrueMembers())
-                    self._orbColor = (15,245,107)
-                else:
-                    move(self._current,self._allies.getTrueMembers())
-                    self._orbColor = (222,44,44)
-                self._combatText.setText(self._current.getCombatStatus())
-                centerGraphicsElement(self._combatText,axes=(True, False))
-                self._turnText.setText(self._current.getName()+"'s turn")
-                centerGraphicsElement(self._turnText,axes=(True, False))
-                self._npcDone = True
-            self._npcTurnTimer -= ticks
-            if self._npcTurnTimer <= 0:
-                self._npcTurnTimer = self._npcTurnLength
+        if not self._enemies.isDead():
+            if self._playerDone:
                 self._combatOrder.getNext()
-                self._npcDone = False
+                self._playerDone = False
+                self._menuSelection = None
+                
+            if self._current != self._combatOrder.getCurrent():
+                self._creatureSpriteMap[self._current].deselect()
+                self._current = self._combatOrder.getCurrent()
+                if self._current == self._player:
+                    self._movesMenu.display()
+                self._creatureSpriteMap[self._current].select()
+
+            if self._current != self._player:
+                if not self._npcDone:
+                    if self._current in self._allies.getTrueMembers():
+                        self._current.move(self._enemies.getTrueMembers())
+                        self._orbColor = (15,245,107)
+                    else:
+                        self._current.move(self._allies.getTrueMembers())
+                        self._orbColor = (222,44,44)
+                    self._combatText.setText(self._current.getCombatStatus())
+                    centerGraphicsElement(self._combatText,axes=(True, False))
+                    self._turnText.setText(self._current.getName()+"'s turn")
+                    centerGraphicsElement(self._turnText,axes=(True, False))
+                    self._npcDone = True
+                self._npcTurnTimer -= ticks
+                if self._npcTurnTimer <= 0:
+                    self._npcTurnTimer = self._npcTurnLength
+                    self._combatOrder.getNext()
+                    self._npcDone = False
                 
             
-        else:
-            if self._potionSelect != None:
-                self._potions = [x for x in self._player.getInventory() \
-                           if x.getAttribute("type") == "potion"]
-                self._potionSelect.resetItems(self._potions)
-                self._potionSelect.update()
-                centerGraphicsElement(self._potionSelect,axes=(True, False))
-            self._turnText.setText("Your turn")
-            centerGraphicsElement(self._turnText,axes=(True, False))
-            self._orbColor = (255,255,255)
+            else:
+                if self._potionSelect != None:
+                    self._potions = [x for x in self._player.getInventory() \
+                               if x.getAttribute("type") == "potion"]
+                    self._potionSelect.resetItems(self._potions)
+                    self._potionSelect.update()
+                    centerGraphicsElement(self._potionSelect,axes=(True, False))
+                self._turnText.setText("Your turn")
+                centerGraphicsElement(self._turnText,axes=(True, False))
+                self._orbColor = (255,255,255)
             
                 
         SOUNDS.manageSongs("combat")

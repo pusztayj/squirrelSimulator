@@ -2,14 +2,16 @@ import pygame
 
 from graphics.textbox import TextBox
 from graphics.happinessface import HappinessFace
+from graphics.window import Window
 from graphics.button import Button
+
 from minigame.itemblock import ItemBlock
 from minigame.threexthreeinventory import threeXthreeInventory
 
 from economy.acorn import Acorn
 
 
-class AnimalStats(object):
+class AnimalStats(Window):
 
     def __init__(self,animal,position):
         """
@@ -21,7 +23,7 @@ class AnimalStats(object):
         happiness face, and an exit button to close the screen.
         """
         # self._y is used throughout to get good height spacing
-        self._display = True
+        Window.__init__(self)
         self._animal = animal
         self._position = position
         self._xpos = self._position[0]
@@ -84,18 +86,6 @@ class AnimalStats(object):
         self._armor = ItemBlock((self._xpos+xlen+80,self._ypos+text_y+10),(50,50), item=self._animal.getArmor())
         # Sets up inventory display screen
         self._inventory = threeXthreeInventory((self._xpos+x+30,self._ypos),(xlen-14,text_y), self._animal)
-
-    def getDisplay(self):
-        """
-        Returns the display boolean.
-        """
-        return self._display
-        
-    def close(self):
-        """
-        This method closes the stats window.
-        """
-        self._display = False
 
     def draw(self,screen):
         """
