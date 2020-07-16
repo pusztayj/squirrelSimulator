@@ -19,9 +19,9 @@ instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
              "Use WASD to move",
              "You must eat acorns to survive.\nCollect them and hit space\nto eat them",
-             "Click on animals and mercant huts\nto interact with them",
+             "Click on animals and merchant huts\nto interact with them",
              "Animals can belong to packs.\nHit E to view your pack",
-             "You gain XP points overtime.\nHit R to view XP chart",
+             "You gain XP points over time.\nHit R to view XP chart",
              "You can only carry so many acorns.\nHit B to bury acorns.\nYou can dig up piles by right\nclicking with selected tool",
              "Right click to use and equip items"]
 
@@ -38,7 +38,7 @@ def main():
    pygame.display.set_caption('Squirrel Simulator')
    
    # Get the screen
-   screen = pygame.display.set_mode(SCREEN_SIZE) #, pygame.FULLSCREEN)
+   screen = pygame.display.set_mode(SCREEN_SIZE)#, pygame.FULLSCREEN)
 
    # Create an instance of the game clock
    gameClock = pygame.time.Clock()

@@ -189,12 +189,13 @@ class CombatLevel(Level):
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
                         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                             if r.collidepoint(event.pos):
+                                self._player.attackLogic([creature])
                                 attack(self._player,creature) # the model is changed here as told by the controller
                                 self._playerDone = True
 
                                 # Show the player's attack on the screen
-                                self._player.attackLogic([creature])
                                 text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
+                                text = text.replace("You has", "You have")
                                 self._combatText.setText(text)
                                 
                     else:

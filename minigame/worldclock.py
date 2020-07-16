@@ -39,9 +39,9 @@ class WorldClock(Drawable):
         self._current_season = 0
 
         # Create Text Boxes
-        self._txtDay = TextBox("", (0,0), self._small_font, (255,255,255))
-        self._txtHour = TextBox("", (0,0), self._small_font, (255,255,255))
-        self._txtSeason = TextBox("", (0,0), self._small_font, (255,255,255))
+        self._txtDay = TextBox("", (0,0), self._small_font, (255,255,255), False)
+        self._txtHour = TextBox("", (0,0), self._small_font, (255,255,255), False)
+        self._txtSeason = TextBox("", (0,0), self._small_font, (255,255,255), False)
 
         self._dayTimer = 0
 
