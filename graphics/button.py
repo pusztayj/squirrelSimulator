@@ -13,9 +13,10 @@ class Button(TextGraphic):
 
     def __init__(self, text, position, font, fontColor, backgroundColor,
                  height, width, borderColor=(0,0,0), borderWidth=0,
-                 antialias=True):
+                 antialias=True, control=(pygame.MOUSEBUTTONDOWN, 1),
+                 curser=pygame.mouse):
         """Initializes the widget with a variety of parameters"""
-        
+ 
         super().__init__(position, text, font, fontColor, antialias)
         
         self._width = width
@@ -28,6 +29,16 @@ class Button(TextGraphic):
         # Current button colors
         self._currentFontColor = fontColor
         self._currentBackgroundColor = backgroundColor
+
+        # Set the controls for interacting with the button
+        self._press = control
+        if control[0] == pygame.MOUSEBUTTONDOWN:
+            self._release = (pygame.MOUSEBUTTONUP, control[1])
+        elif control[0] == pygame.KEYDOWN:
+            self._release = (pygame.KEYUP, control[1])
+
+        # Set the item that interacts with the button (the mouse by default)
+        self._curser = curser
 
         self.updateGraphic()
 
@@ -64,13 +75,15 @@ class Button(TextGraphic):
         """Handles events on the button"""
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            if rect.collidepoint(event.pos):
+        if event.type == self._press[0] and ((hasattr(event, 'button') and event.button == self._press[1]) or \
+                                             (hasattr(event, 'key') and event.key == self._press[1])):
+            if rect.collidepoint(self._curser.get_pos()):
                 self.buttonPressed()
                 func(*args)
-        elif event.type == pygame.MOUSEBUTTONUP and event.button==1:
+        elif event.type == self._release[0] and ((hasattr(event, 'button') and event.button == self._release[1]) or \
+                                                 (hasattr(event, 'key') and event.key == self._release[1])):
                 self.setToDefaultStyling()
-        elif rect.collidepoint(pygame.mouse.get_pos()):
+        elif rect.collidepoint(self._curser.get_pos()):
             self.setHover()
         else:
             self.setToDefaultStyling()
