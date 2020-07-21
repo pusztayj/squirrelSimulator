@@ -1,4 +1,4 @@
-from economy.merchant import Merchant
+from minigame.merchant.utils import *
 from animals import Creature, Pack
 from items.item import Item
 

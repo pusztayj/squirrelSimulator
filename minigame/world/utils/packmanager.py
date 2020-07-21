@@ -7,8 +7,8 @@ A user interface that allows the player to alter and adjust their pack
 
 from modules.drawable import Drawable
 from graphics import Window, Button, TextBox, ProgressBar
-from .threexthreeinventory import threeXthreeInventory
-from .itemblock import ItemBlock
+from minigame.threexthreeinventory import threeXthreeInventory
+from minigame.itemblock import ItemBlock
 from economy.acorn import Acorn
 from player import Player
 import pygame

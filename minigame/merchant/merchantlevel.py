@@ -8,14 +8,12 @@ In this file we have a level that manages the merchant minigame.
 import pygame, random
 from graphics import *
 from animals import *
-from economy.tradedesk import TradeDesk
-from economy.merchant import Merchant
-from economy.transactions import merchantTransaction
+from .utils import *
 from modules import Drawable, Vector2
 from managers import CONSTANTS, SOUNDS
 from player import Player
 from items.item import Item
-from level import Level
+from minigame.level import Level
 
 SCREEN_SIZE = CONSTANTS.get("screen_size")
 

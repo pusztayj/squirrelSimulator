@@ -9,7 +9,7 @@ import pygame, random, math
 from minigame import *
 from graphics.ui.menu import Menu
 from player import Player
-from economy.merchant import Merchant
+
 from animals import *
 from managers import CONSTANTS, USER_INTERFACE, SOUNDS
 
@@ -17,7 +17,7 @@ SCREEN_SIZE = CONSTANTS.get("screen_size")
 
 instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
-             "Use WASD to move",
+             "Use WASD to move",    
              "You must eat acorns to survive.\nCollect them and hit space\nto eat them",
              "Click on animals and merchant huts\nto interact with them",
              "Animals can belong to packs.\nHit E to view your pack",

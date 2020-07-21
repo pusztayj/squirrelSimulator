@@ -71,7 +71,7 @@ class ATM(Drawable, Window):
         self._maxCapacity = TextBox("Max Capacity: " + str(self._hole.getCapacity()),
                                     (200,250),self._fontsmall,(255,255,255))
         self._maxCapacity.setPosition(((self._width//2)-(self._maxCapacity.getWidth()//2),self._height - 55))
-        self.__updateATM()
+        self.updateATM()
 
 
         # Popup Windows
@@ -138,7 +138,7 @@ class ATM(Drawable, Window):
             if self._hole.getName() != self._holeName.getInput():
                 self._hole.setName(self._holeName.getInput())
             self._exitButton.handleEvent(event, self.close, offset=self._offset)
-            self.__updateATM()
+            self.updateATM()
 
     def draw(self, screen):
         """Draws the ATM to the screen"""
@@ -146,7 +146,7 @@ class ATM(Drawable, Window):
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
             
-    def __updateATM(self):
+    def updateATM(self):
         """Updates the display of the ATM as attributes change"""
         
         # Draw the border

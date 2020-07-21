@@ -5,8 +5,14 @@ In this file we create a victory screen that works when the player wins a
 combat game.
 """
 
-from .combat.utils import *
-from graphics import *
+
+from .lootingfunctions import lootItems,lootAcorns
+from graphics.textbox import TextBox
+from graphics.tabs import Tabs
+from graphics.scrollselector import ScrollSelector
+from graphics.button import Button
+from graphics.itemcard import ItemCard
+
 import pygame
 
 

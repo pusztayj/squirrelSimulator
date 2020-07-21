@@ -1,13 +1,9 @@
 
 import pygame
 from .utils import *
-from level import Level
+from minigame.level import Level
 from modules import Drawable
 from managers import CONSTANTS, USER_INTERFACE, SOUNDS
-
-from minigame.turnOrder import TurnOrder
-from minigame.victoryscreen import VictoryScreen
-
 from graphics.ui.menu import Menu
 from graphics import *
 
@@ -105,6 +101,8 @@ class CombatLevel(Level):
 
         # victory GUI items
         self._victoryScreen = None
+        self._victoryScreenProper = VictoryScreen(self._enemies,self._player)
+        
 
         # retreat GUI Items
         self._retreatScreen = None
@@ -261,7 +259,7 @@ class CombatLevel(Level):
 
     def update(self, ticks):
         if self._enemies.isDead() and self._victoryScreen == None:
-            self._victoryScreen = VictoryScreen(self._enemies,self._player)
+            self._victoryScreen = self._victoryScreenProper
   
         self._combatSprites = [x for x in self._combatSprites if not x.getHealthBar().getEntity().isDead()] # the model is updated here as told by the controller
         for x in self._combatSprites:

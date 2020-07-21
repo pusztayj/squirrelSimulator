@@ -1,3 +1,10 @@
+from graphics.mysurface import MySurface
+from graphics.textbox import TextBox
+from graphics.scrollbox import ScrollBox
+from graphics.multilinetextbox import MultiLineTextBox
+from items.item import Item
+import pygame, copy
+
 class ItemCard(object):
 
     def __init__(self, item,position = (471,166),scrollBoxSize = (155,300)):
@@ -27,7 +34,7 @@ class ItemCard(object):
         """
         nameFont = pygame.font.SysFont("Times New Roman", 32)
         detailsFont = pygame.font.SysFont("Times New Roman", 16)
-        s = pygame.Surface((200,600))
+        s = pygame.Surface((240,600))
         s.fill((0,0,0))
         a = copy.copy(entity)
         a.setWorldBound(False)
@@ -35,10 +42,9 @@ class ItemCard(object):
         if a.isFlipped():
             a.flip()
         a.scale(4)
-        TextBox(a.getName(), (10,10), nameFont, (255,255,255)).draw(s)
-##        if issubclass(type(entity), Animal) or issubclass(type(entity), Item): 
+        TextBox(a.getAttribute("name"), (10,10), nameFont, (255,255,255)).draw(s)
         a.draw(s)
-        makeMultiLineTextBox(str(a), (10,200), detailsFont,
+        MultiLineTextBox(str(a), (10,200), detailsFont,
                              (255,255,255), (0,0,0)).draw(s)
         s = MySurface(s)
         return ScrollBox(position, scrollBoxSize, s, borderWidth=2)

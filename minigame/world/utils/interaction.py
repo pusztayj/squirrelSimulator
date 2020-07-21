@@ -10,8 +10,8 @@ from managers.uiManager import USER_INTERFACE
 from graphics import Window, Button, TextBox, ProgressBar, HappinessFace
 from graphics.ui.menu import Menu 
 from economy.acorn import Acorn
-from .threexthreeinventory import threeXthreeInventory
-from .itemblock import ItemBlock
+from minigame.threexthreeinventory import threeXthreeInventory
+from minigame.itemblock import ItemBlock
 import pygame
 
 digitLen = {1:33, 2:38, 3:45, 4:55}
