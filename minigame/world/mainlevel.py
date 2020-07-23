@@ -17,7 +17,7 @@ from minigame.inventoryhud import InventoryHUD
 from items.item import Item
 from minigame.itemblock import ItemBlock
 from minigame.xpmanager import XPManager
-from managers import ANIMALS, ITEMS, CONSTANTS, SOUNDS
+from managers import ANIMALS, ITEMS, CONSTANTS, SOUNDS, CONTROLS
 
 SCREEN_SIZE = CONSTANTS.get("screen_size")
 WORLD_SIZE = CONSTANTS.get("world_size")
@@ -304,7 +304,7 @@ class MainLevel(Level):
             self._player.move(event, self._atm)
             
             # Allow the player to create dirt piles
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+            if CONTROLS.get("bury").check(event):
                 # Check if the player can remember this new pile
                 if len(self._dirtPiles) < self._player.getMemory():
                     self._player._fsm.changeState("bury")
@@ -325,7 +325,7 @@ class MainLevel(Level):
                     for k in self._player._movement.keys(): self._player._movement[k] = False
 
             # Check if the left mouse button has been clicked
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+            if CONTROLS.get("select").check(event):
 
                 # Check if the player has clicked on a dirtpile
                 for pile in self._dirtPiles:
@@ -353,7 +353,7 @@ class MainLevel(Level):
                         return (1, merchant) # Set Game Mode to Merchant and provide merchant
 
             # Check for a right click event
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button==3:
+            if CONTROLS.get("use_item").check(event):
 
                 # Get the current active item in the hud
                 item = self._hud.getActiveItem()
@@ -508,7 +508,7 @@ class MainLevel(Level):
            not self._xpManager.getDisplay() and \
            not self._confirmationWindow.getDisplay() and \
            not self._cheatBox.isDisplayed():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+            if CONTROLS.get("open_pack_manager").check(event):
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
                     for k in self._player._movement.keys(): self._player._movement[k] = False
@@ -520,7 +520,7 @@ class MainLevel(Level):
            not self._packManager.getDisplay() and \
            not self._confirmationWindow.getDisplay() and \
            not self._cheatBox.isDisplayed():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+            if CONTROLS.get("open_xp_manager").check(event):
                 if self._xpManager.getDisplay():
                     self._xpManager.close()
                 else:

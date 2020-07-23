@@ -32,11 +32,8 @@ class Button(TextGraphic):
 
         # Set the controls for interacting with the button
         self._press = control
-        if control[0] == pygame.MOUSEBUTTONDOWN:
-            self._release = (pygame.MOUSEBUTTONUP, control[1])
-        elif control[0] == pygame.KEYDOWN:
-            self._release = (pygame.KEYUP, control[1])
-
+        self._release = (control[0]+1, control[1])
+        
         # Set the item that interacts with the button (the mouse by default)
         self._curser = curser
 

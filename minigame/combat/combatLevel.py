@@ -3,7 +3,7 @@ import pygame
 from .utils import *
 from minigame.level import Level
 from modules import Drawable
-from managers import CONSTANTS, USER_INTERFACE, SOUNDS
+from managers import CONSTANTS, USER_INTERFACE, SOUNDS, CONTROLS
 from graphics.ui.menu import Menu
 from graphics import *
 
@@ -178,14 +178,14 @@ class CombatLevel(Level):
             creature = self._spriteToCreatureMap[sprite]
             for rect in sprite.getCollideRects():
                 r = rect.move(x,y)
-                if (event.type == pygame.MOUSEBUTTONDOWN and event.button==3 and self._current == self._player):
+                if (CONTROLS.get("display_animal_stats").check(event) and self._current == self._player):
                     if r.collidepoint(event.pos):
                         self._animalStats = AnimalStats(sprite.getAnimal(),(400,220))
                 elif r.collidepoint(pygame.mouse.get_pos()):
                     if (not self._movesMenu.getDisplay()) and self._menuSelection == 1 and \
                        creature in self._enemies.getTrueMembers():
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
-                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        if CONTROLS.get("select").check(event):
                             if r.collidepoint(event.pos):
                                 self._player.attackLogic([creature])
                                 attack(self._player,creature) # the model is changed here as told by the controller

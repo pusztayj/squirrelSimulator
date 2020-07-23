@@ -11,7 +11,7 @@ from modules.vector2D import Vector2
 import rectmanager
 import pygame
 from stateMachines import playerFSM
-from managers.soundManager import SoundManager
+from managers import SOUNDS, CONTROLS
 
 
 class Player(Squirrel):
@@ -48,10 +48,10 @@ class Player(Squirrel):
         self._velocity = Vector2(0,0)
         self._maxVelocity = 100
         self._acceleration = 0.5
-        self._movement = {pygame.K_w:False,
-                          pygame.K_s:False,
-                          pygame.K_a:False,
-                          pygame.K_d:False}
+        self._movement = {CONTROLS.get("walk_up").getKey():False,
+                          CONTROLS.get("walk_left").getKey():False,
+                          CONTROLS.get("walk_down").getKey():False,
+                          CONTROLS.get("walk_right").getKey():False}
 
         self._fsm = playerFSM
 
@@ -126,13 +126,13 @@ class Player(Squirrel):
                 self._acorns -= 1
                 self.increaseHunger()
                 self._fsm.changeState("eat")
-                SoundManager.getInstance().playSound("munch.ogg")
+                SOUNDS.playSound("munch.ogg")
             elif self._acorns > 0 and self._hunger == self._baseHunger and \
                  self._health < self._baseHealth:
                 self._acorns -= 1
                 self.heal(1)
                 self._fsm.changeState("eat")
-                SoundManager.getInstance().playSound("munch.ogg")
+                SOUNDS.playSound("munch.ogg")
 
     def eat(self, hungerAmount, healthAmount):
         """
@@ -152,11 +152,9 @@ class Player(Squirrel):
             self._movement[event.key] = True
         elif event.type == pygame.KEYUP:
             self._movement[event.key] = False
-        if event.type == pygame.KEYDOWN and event.key==pygame.K_SPACE and \
+        if CONTROLS.get("eat").check(event) and \
            (atm == None or not atm.getDisplay()):
             self.eatAcorn()
-##        if event.type == pygame.KEYDOWN and event.key==pygame.K_b:
-##            self._fsm.changeState("bury")
 
     def update(self, worldInfo, ticks):
         """Updates the position of the squirrel"""
@@ -196,22 +194,22 @@ class Player(Squirrel):
             self._velocity.x = 0
             self._velocity.y = 0
         else:
-            #Update the velocity of the star based on the keyboard inputs
-            if self._movement[pygame.K_w]:
+            #Update the velocity of the player based on the inputs
+            if self._movement[CONTROLS.get("walk_up").getKey()]:
                 self._velocity.y = -self._maxVelocity
                 self._fsm.changeState("walk")
-            elif self._movement[pygame.K_s]:
+            elif self._movement[CONTROLS.get("walk_down").getKey()]:
                 self._velocity.y = self._maxVelocity
                 self._fsm.changeState("walk")
             else:
                 self._velocity.y = 0
                 
-            if self._movement[pygame.K_a]:
+            if self._movement[CONTROLS.get("walk_left").getKey()]:
                 self._velocity.x = -self._maxVelocity
                 self._fsm.changeState("walk")
                 if not self.isFlipped():
                     self.flip()
-            elif self._movement[pygame.K_d]:
+            elif self._movement[CONTROLS.get("walk_right").getKey()]:
                 self._velocity.x = self._maxVelocity
                 self._fsm.changeState("walk")
                 if self.isFlipped():

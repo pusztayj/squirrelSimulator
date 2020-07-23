@@ -5,6 +5,7 @@ from .itemManager import ITEMS
 from .nameManager import NAMES
 from .soundManager import SOUNDS
 from .uiManager import USER_INTERFACE
+from .controlsManager import CONTROLS
 
 __all__ = ["ANIMALS","CONSTANTS","FRAMES","ITEMS",
-           "NAMES","SOUNDS","USER_INTERFACE"]
+           "NAMES","SOUNDS","USER_INTERFACE","CONTROLS"]

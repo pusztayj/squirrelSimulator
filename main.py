@@ -11,7 +11,7 @@ from graphics.ui.menu import Menu
 from player import Player
 
 from animals import *
-from managers import CONSTANTS, USER_INTERFACE, SOUNDS
+from managers import CONSTANTS, USER_INTERFACE, SOUNDS, CONTROLS
 
 SCREEN_SIZE = CONSTANTS.get("screen_size")
 
@@ -33,6 +33,12 @@ def main():
    pygame.init()
    pygame.font.init()
    pygame.mixer.init()
+
+   #Makes the mouse pointer invisible
+   #pygame.mouse.set_visible(False)
+
+   #Makes a custom cursor
+   #pygame.mouse.set_cursor()
 
    # Update the title for the window
    pygame.display.set_caption('Squirrel Simulator')
@@ -172,7 +178,7 @@ def main():
                else:
 
                   # Open or close the pause display
-                  if(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE) and \
+                  if(CONTROLS.get("pause").check(event)) and \
                      (level._atm == None or not level._atm.getDisplay()) and \
                      not loading.isDisplayed() and\
                      not controls.getDisplay():
@@ -202,8 +208,7 @@ def main():
                       code = combatLevel.handleEvent(event)
 
                   # Toggle the cheats display
-                  if event.type == pygame.KEYDOWN and event.key == pygame.K_c and \
-                     event.mod & pygame.KMOD_CTRL and event.mod & pygame.KMOD_SHIFT:
+                  if CONTROLS.get("display_cheat_box").check(event):
                         cheatBox.toggleDisplay()
 
                   # Handle events on the cheat box

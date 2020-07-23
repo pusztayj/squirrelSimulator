@@ -6,7 +6,7 @@ The start screen of the game
 """
 
 import pygame
-from managers.frameManager import FRAMES
+from managers import FRAMES, CONTROLS
 from graphics import *
 
 class TitleScreen():
@@ -38,7 +38,7 @@ class TitleScreen():
 
     def handleEvent(self, event):
         """Handles events on the title screen"""
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        if CONTROLS.get("start").check(event):
             self._displayed = False
 
     def draw(self, screen):
