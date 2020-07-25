@@ -6,7 +6,7 @@ The start screen of the game
 """
 
 import pygame
-from managers import FRAMES, CONTROLS
+from polybius.managers import FRAMES, CONTROLS
 from graphics import *
 
 class TitleScreen():

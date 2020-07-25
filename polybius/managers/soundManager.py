@@ -25,40 +25,51 @@ class SoundManager():
    
    class _SM(AbstractManager):
       """An internal SoundManager class to contain the actual code. Is a private class."""
-      
-      # Folders in which sounds are stored
-      _MUSIC_FOLDER = os.path.join("resources","sounds","music")
-      _SFX_FOLDER = os.path.join("resources","sounds","sfx")
-      
-      _FOLDER = {"munch.ogg" : _SFX_FOLDER}
+            
+      #_FOLDER = {"munch.ogg" : _SFX_FOLDER}
       
       def __init__(self):
          
          if not pygame.mixer.get_init():
             pygame.mixer.init()
+
+         self._music_folder = None
+         self._sfx_folder = None
             
          self._music = {}
          self._sounds = {}
-         AbstractManager.__init__(self, "music.csv", self._music)
-
+         
          self._currentSong = None
          self._currentVolume = 100
          self._musicStatus = "stop" # or "play" or "pause"
          self._mute = False
 
+      def setResourcePath(self, path):
+         AbstractManager.__init__(self, path, self._music)
+
+      def setMusicFolderPath(self, path):
+         self._music_folder = path
+
+      def setSFXFolderPath(self, path):
+         self._sfx_folder = path
+         
       def getSongsByLevel(self, level):
          return [k for k,v in self._music.items() if v["level"]==level]
       
       def playSound(self, fileName, loop=0):
+         if self._sfx_folder == None:
+            raise AttributeError("The folder path for sfx has not been defined")
          # Plays the requested sound effect, default only once
          if fileName not in self._sounds.keys():
             self._load(fileName)     
          return self._sounds[fileName].play(loop)
       
       def playMusic(self, fileName):
+         if self._music_folder == None:
+            raise AttributeError("The folder path for music has not been defined")
          # Some machines can't play mp3 files
          try:
-            pygame.mixer.music.load(os.path.join(SoundManager._SM._MUSIC_FOLDER, fileName))
+            pygame.mixer.music.load(os.path.join(self._music_folder, fileName))
             pygame.mixer.music.play()
             self._currentSong = fileName
          except:
@@ -150,8 +161,6 @@ class SoundManager():
          self.unpauseSoundAll()
          self.unpauseMusicAll()
       
-         
-      
       def updateVolumePositional(self, channel, relativePosition, soundPosition, distance=300, minVolume=0.2):
          
          if (channel.get_busy()):
@@ -168,11 +177,8 @@ class SoundManager():
          
      
       def _load(self, fileName):
-         self._sounds[fileName] = pygame.mixer.Sound(os.path.join(SoundManager._SM._FOLDER.get(fileName,
-                                                                                               SoundManager._SM._MUSIC_FOLDER),
-                                                                  fileName))
+        self._sounds[fileName] = pygame.mixer.Sound(os.path.join(self._sfx_folder,fileName))
 
-SOUNDS = SoundManager.getInstance()
-               
+SOUNDS = SoundManager.getInstance()         
             
          

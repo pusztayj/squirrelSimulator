@@ -11,7 +11,7 @@ from modules.vector2D import Vector2
 import rectmanager
 import pygame
 from stateMachines import playerFSM
-from managers import SOUNDS, CONTROLS
+from polybius.managers import SOUNDS, CONTROLS
 
 
 class Player(Squirrel):

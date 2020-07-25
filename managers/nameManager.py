@@ -1,4 +1,4 @@
-from .abstractManager import AbstractManager
+from polybius.managers.abstractManager import AbstractManager
 import random
 
 class NameManager():
@@ -17,7 +17,9 @@ class NameManager():
 
         def __init__(self):
             self._names = {}
-            AbstractManager.__init__(self,"names.csv",self._names,False)
+            
+        def setResourcePath(self, path):
+            AbstractManager.__init__(self,path,self._names,False)
 
         def getNames(self):
             """Return all available names"""
@@ -33,5 +35,4 @@ class NameManager():
             else:
                 return random.choice(self.getNamesByType(t))
 
-          
 NAMES = NameManager.getInstance()

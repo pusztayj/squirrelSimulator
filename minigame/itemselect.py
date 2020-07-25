@@ -8,7 +8,6 @@ to prompt the user for item selections
 
 import pygame
 from modules.drawable import Drawable
-from managers.frameManager import FRAMES
 from .itemblock import ItemBlock
 
 

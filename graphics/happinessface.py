@@ -6,7 +6,7 @@ A class that manages an emoticon image
 """
 
 from modules.drawable import Drawable
-from managers.frameManager import FRAMES
+from polybius.managers.frameManager import FRAMES
 import pygame
 
 class HappinessFace(Drawable):

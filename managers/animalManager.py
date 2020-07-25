@@ -1,4 +1,4 @@
-from .abstractManager import AbstractManager
+from polybius.managers.abstractManager import AbstractManager
 
 class AnimalManager():
 
@@ -16,7 +16,9 @@ class AnimalManager():
 
         def __init__(self):
             self._animals = {}
-            AbstractManager.__init__(self,"animals.csv",self._animals)
+            
+        def setResourcePath(self, path):
+            AbstractManager.__init__(self,path,self._animals)
                             
         def getStats(self, animal):
             return self._animals[animal]
@@ -28,3 +30,4 @@ class AnimalManager():
             return [k for k,v in self._animals.items() if v["merchant"]]
 
 ANIMALS = AnimalManager.getInstance()
+

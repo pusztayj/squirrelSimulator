@@ -1,4 +1,4 @@
-from managers import CONSTANTS
+from polybius.managers import CONSTANTS
 
 def centerGraphicsElement(element, axes=(True, True)):
     new_x = element.getX()

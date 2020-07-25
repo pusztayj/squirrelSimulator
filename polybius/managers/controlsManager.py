@@ -17,11 +17,14 @@ class ControlsManager():
     class _CM(AbstractManager):
 
         def __init__(self):
-            self._temp = {}
-            AbstractManager.__init__(self,"default_controls.csv",self._temp)
+            self._controls = {}
+
+        def setResourcePath(self, path):
+            temp = {}
+            AbstractManager.__init__(self,path,temp)
 
             self._controls = {}
-            for action, control in self._temp.items():
+            for action, control in temp.items():
                 t = eval("pygame." + control["event_type"])
                 if t == pygame.MOUSEBUTTONDOWN:
                     key = control["event_key"]

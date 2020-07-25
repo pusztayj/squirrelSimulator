@@ -3,19 +3,22 @@ import pygame
 from .utils import *
 from minigame.level import Level
 from modules import Drawable
-from managers import CONSTANTS, USER_INTERFACE, SOUNDS, CONTROLS
+from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
+from managers import USER_INTERFACE
 from graphics.ui.menu import Menu
 from graphics import *
 
 from minigame.itemselect import ItemSelect
 
 
-SCREEN_SIZE = CONSTANTS.get("screen_size")
+
 
 class CombatLevel(Level):
 
     def __init__(self,allies,enemies):
         super().__init__()
+
+        self._screen_size = CONSTANTS.get("screen_size")
 
         self._player = allies.getLeader()
         self._allies = allies

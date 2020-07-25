@@ -9,7 +9,7 @@ class AbstractManager():
             ds = [ds]
         assert len(files) == len(ds)
         for n, f in enumerate(files):
-            with open("resources/data/" + f) as file:
+            with open(f) as file:
                 reader = csv.reader(file, delimiter=",")
                 for x, row in enumerate(reader):
                     obj = row[0]

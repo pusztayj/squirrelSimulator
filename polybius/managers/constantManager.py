@@ -16,7 +16,9 @@ class ConstantManager():
 
         def __init__(self):
             self._constants = {}
-            AbstractManager.__init__(self,"constants.csv",
+
+        def setResourcePath(self, path):
+            AbstractManager.__init__(self,path,
                                      self._constants, lower=False,
                                      ignoreFields=["description"])
     

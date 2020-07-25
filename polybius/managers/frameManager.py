@@ -30,13 +30,16 @@ class FrameManager():
    class _FM(AbstractManager):
       """An internal FrameManager class to contain the actual code. Is a private class."""
       
-      # Folder in which images are stored
-      _IMAGE_FOLDER = os.path.join("resources","images")
-      
       def __init__(self):
          self._surfaces = {}
          self._images = {}
-         AbstractManager.__init__(self, "images.csv", self._images, lower=False)
+         self._image_folder = None
+         
+      def setResourcePath(self, path):
+         AbstractManager.__init__(self, path, self._images, lower=False)
+
+      def setImageFolderPath(self, path):
+         self._image_folder = path
         
       def __getitem__(self, key):
          return self._surfaces[key]
@@ -57,8 +60,11 @@ class FrameManager():
          return self[fileName]
       
       def _loadImage(self, fileName, sheet=False):
+         if self._image_folder == None:
+            raise AttributeError("The folder path for images has not been defined")
+         
          # Load the full image
-         fullImage = image.load(os.path.join(FrameManager._FM._IMAGE_FOLDER, fileName))
+         fullImage = image.load(os.path.join(self._image_folder, fileName))
          
          colorKey = self._images[fileName]["color_key"]
          fullImage = fullImage.convert()

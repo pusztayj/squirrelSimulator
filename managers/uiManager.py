@@ -1,4 +1,4 @@
-from .abstractManager import AbstractManager
+from polybius.managers.abstractManager import AbstractManager
 
 class UIManager():
 
@@ -16,10 +16,13 @@ class UIManager():
 
         def __init__(self):
             self._menuButtons = {}
-            AbstractManager.__init__(self,"menuButtons.csv",
+            
+        def setResourcePath(self, path):
+            AbstractManager.__init__(self,path,
                                      self._menuButtons,toLyst=[0])
     
         def getControlsForMenu(self, menu):
             return self._menuButtons[menu]
 
 USER_INTERFACE = UIManager.getInstance()
+

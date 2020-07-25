@@ -16,8 +16,7 @@ from managers.animalManager import ANIMALS
 from managers.itemManager import ITEMS
 from managers.nameManager import NAMES
 
-RACES = ANIMALS.getMerchantRaces()
-ALL_ITEMS = ITEMS.getItems()
+
 
 class Merchant(NPC, Drawable):
 
@@ -30,7 +29,7 @@ class Merchant(NPC, Drawable):
         if name == "":
             name = NAMES.getRandomName("standard")
         self._merchantName = name
-        self._race = random.choice(RACES)
+        self._race = random.choice(ANIMALS.getMerchantRaces())
         self._acorns = random.randint(500,1500)
         self._inventory = Inventory(100)
         self._willTrade = True
@@ -52,7 +51,7 @@ class Merchant(NPC, Drawable):
         """
         self._inventory.clear()
         for _ in range(3):
-            for item in ALL_ITEMS:
+            for item in ITEMS.getItems():
                 if 50 >= random.randint(0,100):
                     self._inventory.addItem(Item(item, self))
 

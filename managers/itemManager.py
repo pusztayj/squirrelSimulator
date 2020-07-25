@@ -1,4 +1,4 @@
-from .abstractManager import AbstractManager
+from polybius.managers.abstractManager import AbstractManager
 
 class ItemManager():
 
@@ -16,7 +16,9 @@ class ItemManager():
 
         def __init__(self):
             self._items = {}
-            AbstractManager.__init__(self,"items.csv",self._items)
+        
+        def setResourcePath(self, path):
+            AbstractManager.__init__(self,path,self._items)
     
         def getAttributes(self, item):
             return self._items[item]

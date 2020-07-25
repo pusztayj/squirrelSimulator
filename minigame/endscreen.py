@@ -10,16 +10,14 @@ from modules import *
 from graphics import *
 from animals import *
 from minigame.threexthreeinventory import threeXthreeInventory
-from managers.soundManager import SoundManager
-from managers.constantManager import CONSTANTS
-
-SCREEN_SIZE = CONSTANTS.get("screen_size")
-
+from polybius.managers import SOUNDS, CONSTANTS
 
 class EndScreen(object):
 
     def __init__(self,player):
         """Initializes the end screen level"""
+
+        SCREEN_SIZE = CONSTANTS.get("screen_size")
 
         # background
         self._background = Drawable("merchantForest2.png", Vector2(0,0), worldBound=False)
@@ -65,7 +63,7 @@ class EndScreen(object):
         self._selection = None
 
         # Start playing song at initialization for good a transition
-        SoundManager.getInstance().manageSongs("end")
+        SOUNDS.manageSongs("end")
        
         
 
@@ -112,7 +110,7 @@ class EndScreen(object):
     def update(self):
         """Update the end screen, that is play its music"""
         # Load and play a new song if the current song has ended
-        SoundManager.getInstance().manageSongs("end")
+        SOUNDS.getInstance().manageSongs("end")
                                 
 
         

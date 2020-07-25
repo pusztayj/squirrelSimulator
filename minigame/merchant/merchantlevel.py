@@ -10,12 +10,12 @@ from graphics import *
 from animals import *
 from .utils import *
 from modules import Drawable, Vector2
-from managers import CONSTANTS, SOUNDS
+from polybius.managers import CONSTANTS, SOUNDS
 from player import Player
 from items.item import Item
 from minigame.level import Level
 
-SCREEN_SIZE = CONSTANTS.get("screen_size")
+
 
 class MerchantLevel(Level):
 
@@ -30,6 +30,8 @@ class MerchantLevel(Level):
         mercant and the player. 
         """
         super().__init__()
+
+        self._screen_size = CONSTANTS.get("screen_size")
 
         # fonts
         self._font = pygame.font.SysFont("Times New Roman", 16)
@@ -78,7 +80,7 @@ class MerchantLevel(Level):
         self._merchantMoney = TextBox(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()),
                             (795,410), self._textFont, (255,255,255))
 
-        self._exitButton = Button("X", (SCREEN_SIZE[0]-45,10),self._font,(0,0,0),
+        self._exitButton = Button("X", (self._screen_size[0]-45,10),self._font,(0,0,0),
                           (100,100,100),25,25,(0,0,0), 1)
 
         # Start playing song at initialization for good a transition

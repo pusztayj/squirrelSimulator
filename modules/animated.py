@@ -1,7 +1,7 @@
 import pygame, os
 from pygame import image
-from managers.frameManager import FRAMES
 from .drawable import Drawable
+from polybius.managers import FRAMES
 
 class Animated(Drawable):
    

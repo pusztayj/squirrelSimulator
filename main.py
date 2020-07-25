@@ -5,15 +5,14 @@ File: main.py
 The main loop for running Squirrel Simulator
 """
 
-import pygame, random, math
+import pygame, random, math, os
 from minigame import *
 from graphics.ui.menu import Menu
 from player import Player
 
 from animals import *
-from managers import CONSTANTS, USER_INTERFACE, SOUNDS, CONTROLS
-
-SCREEN_SIZE = CONSTANTS.get("screen_size")
+from polybius.managers import CONSTANTS, SOUNDS, FRAMES, CONTROLS
+from managers import USER_INTERFACE, NAMES, ANIMALS, ITEMS
 
 instruct = ["Welcome to Squirrel Simulator",
              "Hit ESC to pause the game",
@@ -29,6 +28,7 @@ def main():
    """
    Main loop for the program
    """
+   
    # Initialize the module
    pygame.init()
    pygame.font.init()
@@ -39,6 +39,11 @@ def main():
 
    #Makes a custom cursor
    #pygame.mouse.set_cursor()
+
+   # Initialize the managers
+   initializeManagers()
+   
+   SCREEN_SIZE = CONSTANTS.get("screen_size")
 
    # Update the title for the window
    pygame.display.set_caption('Squirrel Simulator')
@@ -355,6 +360,24 @@ def main():
                    
    #Close the pygame window and quit pygame
    pygame.quit()
+
+def initializeManagers():
+
+   SOUNDS.setResourcePath(os.path.join("resources","data","music.csv"))
+   SOUNDS.setMusicFolderPath(os.path.join("resources","sounds","music"))
+   SOUNDS.setSFXFolderPath(os.path.join("resources","sounds","sfx"))
+
+   FRAMES.setResourcePath(os.path.join("resources","data","images.csv"))
+   FRAMES.setImageFolderPath(os.path.join("resources","images"))
+
+   CONTROLS.setResourcePath(os.path.join("resources","data","default_controls.csv"))
+
+   CONSTANTS.setResourcePath(os.path.join("resources","data","constants.csv"))
+   
+   NAMES.setResourcePath(os.path.join("resources","data","names.csv"))
+   ITEMS.setResourcePath(os.path.join("resources","data","items.csv"))
+   ANIMALS.setResourcePath(os.path.join("resources","data","animals.csv"))
+   USER_INTERFACE.setResourcePath(os.path.join("resources","data","menuButtons.csv"))
 
 if __name__ == "__main__":
     main()
