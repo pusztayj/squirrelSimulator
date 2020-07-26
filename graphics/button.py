@@ -8,12 +8,13 @@ A class that creates and manages a button object
 import pygame
 from graphics.textgraphic import TextGraphic
 from graphics.textbox import TextBox
+from event import EventWrapper
 
 class Button(TextGraphic):
 
     def __init__(self, text, position, font, fontColor, backgroundColor,
-                 height, width, borderColor=(0,0,0), borderWidth=0,
-                 antialias=True, control=(pygame.MOUSEBUTTONDOWN, 1),
+                 height, width, borderColor=(0,0,0), borderWidth=0, antialias=True,
+                 control=EventWrapper(pygame.MOUSEBUTTONDOWN, 1, []),
                  curser=pygame.mouse):
         """Initializes the widget with a variety of parameters"""
  
@@ -32,7 +33,8 @@ class Button(TextGraphic):
 
         # Set the controls for interacting with the button
         self._press = control
-        self._release = (control[0]+1, control[1])
+        self._release = EventWrapper(self._press.getType()+1,
+                                     self._press.getKey, [])
         
         # Set the item that interacts with the button (the mouse by default)
         self._curser = curser
@@ -72,13 +74,15 @@ class Button(TextGraphic):
         """Handles events on the button"""
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
-        if event.type == self._press[0] and ((hasattr(event, 'button') and event.button == self._press[1]) or \
-                                             (hasattr(event, 'key') and event.key == self._press[1])):
+##        if event.type == self._press[0] and ((hasattr(event, 'button') and event.button == self._press[1]) or \
+##                                             (hasattr(event, 'key') and event.key == self._press[1])):
+        if self._press.check(event):
             if rect.collidepoint(self._curser.get_pos()):
                 self.buttonPressed()
                 func(*args)
-        elif event.type == self._release[0] and ((hasattr(event, 'button') and event.button == self._release[1]) or \
-                                                 (hasattr(event, 'key') and event.key == self._release[1])):
+        elif self._release.check(event):
+##        elif event.type == self._release[0] and ((hasattr(event, 'button') and event.button == self._release[1]) or \
+##                                                 (hasattr(event, 'key') and event.key == self._release[1])):
                 self.setToDefaultStyling()
         elif rect.collidepoint(self._curser.get_pos()):
             self.setHover()

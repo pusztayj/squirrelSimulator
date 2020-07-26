@@ -1,3 +1,4 @@
+import pygame
 
 class EventWrapper():
     """A wrapper class for pygame events"""
@@ -13,8 +14,10 @@ class EventWrapper():
         """Checks if the event has happened by comparing
         to an event from the event queue"""
         if event.type == self._type:
-            if (hasattr(event, 'button') and event.button==self._key) or \
-               (hasattr(event, 'key') and event.key==self._key):
+            if hasattr(event, 'button') and event.button==self._key:
+                if all(pygame.key.get_mods() & mod for mod in self._mods):
+                    return True
+            elif hasattr(event, 'key') and event.key==self._key:
                 if all(event.mod & mod for mod in self._mods):
                     return True
         return False

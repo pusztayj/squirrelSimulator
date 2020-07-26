@@ -298,7 +298,7 @@ class MainLevel(Level):
            (not self._confirmationWindow.getDisplay()) and \
            (not self._cheatBox.isDisplayed()):
             self._hud.handleEvent(event)
-            self._player.move(event, self._atm)
+            self._player.move(event)
             
             # Allow the player to create dirt piles
             if CONTROLS.get("bury").check(event):
@@ -319,7 +319,7 @@ class MainLevel(Level):
                     self._confirmationWindow.display()
                     self._confirmationProceedure = (1,) #Redirect neccessary information
                     # Stop the player's movement
-                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                    self._player.stop()
 
             # Check if the left mouse button has been clicked
             if CONTROLS.get("select").check(event):
@@ -341,7 +341,7 @@ class MainLevel(Level):
                                                      event.pos[1] + Drawable.WINDOW_OFFSET[1])):
                                     self._interaction = Interaction(creature)
                                     self._interactionTimer = self._interactionDelay
-                                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                                    self._player.stop()
 
                 # Check if the player has clicked on a merchant
                 for merchant in self._merchants:
@@ -371,7 +371,7 @@ class MainLevel(Level):
                                 self._confirmationWindow.display()
                                 self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
                                 # Stop the player's movement
-                                for k in self._player._movement.keys(): self._player._movement[k] = False
+                                self._player.stop()
                             else:
                                 self._spawnedPiles.remove(pile)
                                 # Determine the number of acorns the player can collect
@@ -387,7 +387,7 @@ class MainLevel(Level):
                             self._confirmationWindow.display()
                             self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
                             # Stop the player's movement
-                            for k in self._player._movement.keys(): self._player._movement[k] = False
+                            self._player.stop()
                             
                 # Sets the current weapon            
                 if item != None and item.getAttribute("type") == "weapon":
@@ -435,7 +435,6 @@ class MainLevel(Level):
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
                 self._popup = None
                 code = self._interaction.handleEvent(event)
-##                code = self._interaction.getSelection()
                 if (code == 1):
                     enemyPack = self._interaction.getEntity().getPack()
                     for e in enemyPack:
@@ -508,7 +507,8 @@ class MainLevel(Level):
             if CONTROLS.get("open_pack_manager").check(event):
                 if self._packManager._timeSinceClosed > self._packManager._delay:
                     self._packManager.display()
-                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                    self._player.stop()
+
 
         # Check if the XP Manager should be opened or closed
         if (self._atm == None or not self._atm.getDisplay()) and \
@@ -522,7 +522,7 @@ class MainLevel(Level):
                     self._xpManager.close()
                 else:
                     self._xpManager.display()
-                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                    self._player.stop()
 
         # Once the user confirms, dig up a pile or not
         if self._confirmationWindow.getDisplay():

@@ -286,8 +286,7 @@ def main():
           code = None
 
            # Reset the movement dictionary for the player
-          for k in player._movement.keys():
-             player._movement[k] = False
+          player.stop()
 
           # Display the loading screen
           loading.setDisplay(True)
@@ -309,8 +308,7 @@ def main():
          code = None
 
          # Reset the movement dictionary for the player
-         for k in player._movement.keys():
-            player._movement[k] = False
+         player.stop()
 
          # Display the loading screen
          loading.setDisplay(True)
@@ -362,6 +360,7 @@ def main():
    pygame.quit()
 
 def initializeManagers():
+   """A function that sets the resource paths for the various managers"""
 
    SOUNDS.setResourcePath(os.path.join("resources","data","music.csv"))
    SOUNDS.setMusicFolderPath(os.path.join("resources","sounds","music"))

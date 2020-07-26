@@ -152,9 +152,11 @@ class Player(Squirrel):
             self._movement[event.key] = True
         elif event.type == pygame.KEYUP:
             self._movement[event.key] = False
-        if CONTROLS.get("eat").check(event) and \
-           (atm == None or not atm.getDisplay()):
+        if CONTROLS.get("eat").check(event):
             self.eatAcorn()
+
+    def stop(self):
+        for k in self._movement.keys(): self._movement[k] = False
 
     def update(self, worldInfo, ticks):
         """Updates the position of the squirrel"""
