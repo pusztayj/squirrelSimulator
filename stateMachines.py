@@ -2,7 +2,7 @@
 In this file we create the state machine instances for the state
 machines that we need. 
 """
-from fsm import *
+from polybius.utils.fsm import *
 
 playerStartState = "standing"
 playerStates = ["standing","walking"]

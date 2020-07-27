@@ -8,7 +8,7 @@ A class that creates and manages a button object
 import pygame
 from .textgraphic import TextGraphic
 from .textbox import TextBox
-from event import EventWrapper
+from polybius.utils.eventwrapper import EventWrapper
 
 class Button(TextGraphic):
 

@@ -1,6 +1,6 @@
 from .abstractManager import AbstractManager
 import pygame, random,pprint
-from event import EventWrapper
+from polybius.utils.eventwrapper import EventWrapper
 
 class ControlsManager():
 
