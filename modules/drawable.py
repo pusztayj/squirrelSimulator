@@ -8,7 +8,7 @@ A super class with methods subclasses like Orb and Star inherit from
 import pygame
 from .vector2D import Vector2
 from polybius.managers.frameManager import FRAMES
-import rectmanager
+from polybius.utils.rectmanager import getRects
 
 class Drawable():
 
@@ -108,11 +108,11 @@ class Drawable():
     def getCollideRects(self):
         if self.isFlipped():
             if self._flippedCollideRects == None:
-                self._flippedCollideRects = rectmanager.getRects(self._image)
+                self._flippedCollideRects = getRects(self._image)
             return self._flippedCollideRects
         else:
             if self._collideRects == None:
-                self._collideRects = rectmanager.getRects(self._image)
+                self._collideRects = getRects(self._image)
             return self._collideRects
 
     def draw(self, surface):

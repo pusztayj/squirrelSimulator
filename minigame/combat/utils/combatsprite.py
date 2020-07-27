@@ -3,7 +3,7 @@ from .box import Box
 from graphics.linkedprogressbar import LinkedProgressBar
 from polybius.graphics.textbox import TextBox
 #from graphics import LinkedProgressBar, TextBox
-from rectmanager import getRects
+from polybius.utils.rectmanager import getRects
 
 class CombatSprite(object):
 
