@@ -7,7 +7,7 @@ The main loop for running Squirrel Simulator
 
 import pygame, random, math, os
 from minigame import *
-from graphics.ui.menu import Menu
+from polybius.graphics.ui.menu import Menu
 from player import Player
 
 from animals import *

@@ -6,7 +6,7 @@ A class for displaying the games controls
 """
 
 import pygame
-from graphics import *
+from polybius.graphics import *
 
 class Controls(Window):
 
@@ -43,7 +43,7 @@ class Controls(Window):
             if i < len(controls)-1:
                 t += "\n"
 
-        text = makeMultiLineTextBox(t, (5,5), self._font, self._fontColor,
+        text = MultiLineTextBox(t, (5,5), self._font, self._fontColor,
                                     self._backgroundColor)
 
         width = text.getWidth() + 20

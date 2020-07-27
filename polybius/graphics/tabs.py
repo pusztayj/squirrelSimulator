@@ -6,7 +6,7 @@ Contains classes that model and manage tabs and groups of tabs
 """
 
 from modules.drawable import Drawable
-from graphics.textbox import TextBox
+from .textbox import TextBox
 import pygame
 
 class Tabs(Drawable):

@@ -6,6 +6,7 @@ In this file we have a level that manages the merchant minigame.
 """
 
 import pygame, random
+from polybius.graphics import *
 from graphics import *
 from animals import *
 from .utils import *

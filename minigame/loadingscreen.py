@@ -6,7 +6,7 @@ A class that is displayed between game levels, while the game loads
 """
 
 import pygame
-from graphics import TextBox
+from polybius.graphics import TextBox
 
 class LoadingScreen():
 

@@ -8,7 +8,7 @@ the entity that is attached, hence the bar being linked.
 
 
 import pygame
-from .progressbar import ProgressBar
+from polybius.graphics.progressbar import ProgressBar
 
 class LinkedProgressBar():
 

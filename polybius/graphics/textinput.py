@@ -6,7 +6,7 @@ A class that creates and manages textual input boxes
 """
 
 from modules.drawable import Drawable
-from graphics.textbox import TextBox
+from .textbox import TextBox
 import pygame
 
 class TextInput(Drawable):

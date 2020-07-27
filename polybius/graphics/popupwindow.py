@@ -7,10 +7,10 @@ A class that models and manages a pop up notification window
 
 import pygame
 from modules.drawable import Drawable
-from graphics.window import Window
-from graphics.textbox import TextBox
-from graphics.button import Button
-from graphics.guiUtils import makeMultiLineTextBox
+from .window import Window
+from .textbox import TextBox
+from .button import Button
+from .multilinetextbox import MultiLineTextBox
 
 class PopupWindow(Drawable, Window):
 
@@ -36,7 +36,7 @@ class PopupWindow(Drawable, Window):
 
         # Create the textbox
 ##        self._t = TextBox(self._text, (0,0), self._font, self._fontColor)
-        self._t = makeMultiLineTextBox(self._text, (0,0), self._font,
+        self._t = MultiLineTextBox(self._text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
         x_pos = (self._width // 2) - (self._t.getWidth() // 2)
@@ -54,7 +54,7 @@ class PopupWindow(Drawable, Window):
 
     def setText(self, text):
         """Sets the text of the pop up and centers the new text"""
-        self._t = makeMultiLineTextBox(text, (0,0), self._font,
+        self._t = MultiLineTextBox(text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
         y_pos = (self._height // 4) - (self._t.getHeight() // 2)
         x_pos = (self._width // 2) - (self._t.getWidth() // 2)

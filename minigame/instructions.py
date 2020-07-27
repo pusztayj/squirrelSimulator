@@ -6,7 +6,7 @@ This class models the how to play instruction manual
 """
 
 from modules.drawable import Drawable
-from graphics import *
+from polybius.graphics import *
 import pygame
 
 class Instructions(Drawable, Window):
@@ -99,7 +99,7 @@ class Instructions(Drawable, Window):
             self._next.draw(surf)
         self._exitButton.draw(surf)
 
-        self._text = makeMultiLineTextBox(self._textLyst[self._current], (0,0), self._textFont,
+        self._text = MultiLineTextBox(self._textLyst[self._current], (0,0), self._textFont,
                                           self._fontColor, self._backgroundColor)
         self._text.setPosition((self._width//2 - self._text.getWidth()//2,
                                 self._height//3 - self._text.getHeight()//2))

@@ -6,7 +6,7 @@ A class that models and manages text that moves and changes in opacity
 """
 
 import pygame
-from graphics.multilinetextbox import MultiLineTextBox
+from .multilinetextbox import MultiLineTextBox
 
 
 class ParticleText():

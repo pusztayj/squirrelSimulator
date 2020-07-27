@@ -6,8 +6,8 @@ A class that creates a display for the player's stats
 """
 
 from modules.drawable import Drawable
-from graphics.progressbar import ProgressBar
-from graphics.textbox import TextBox
+from polybius.graphics.progressbar import ProgressBar
+from polybius.graphics.textbox import TextBox
 from economy.acorn import Acorn
 import pygame
 

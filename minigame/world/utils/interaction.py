@@ -7,8 +7,9 @@ The user interface for interacting with NPCs
 
 from modules.drawable import Drawable
 from managers.uiManager import USER_INTERFACE
-from graphics import Window, Button, TextBox, ProgressBar, HappinessFace
-from graphics.ui.menu import Menu 
+from polybius.graphics import Window, Button, TextBox, ProgressBar
+from graphics import HappinessFace
+from polybius.graphics.ui.menu import Menu 
 from economy.acorn import Acorn
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock

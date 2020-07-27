@@ -1,7 +1,7 @@
-from graphics.mysurface import MySurface
-from graphics.textbox import TextBox
-from graphics.scrollbox import ScrollBox
-from graphics.multilinetextbox import MultiLineTextBox
+from polybius.graphics.mysurface import MySurface
+from polybius.graphics.textbox import TextBox
+from polybius.graphics.scrollbox import ScrollBox
+from polybius.graphics.multilinetextbox import MultiLineTextBox
 from items.item import Item
 import pygame, copy
 

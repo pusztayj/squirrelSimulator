@@ -5,8 +5,8 @@ from minigame.level import Level
 from modules import Drawable
 from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
 from managers import USER_INTERFACE
-from graphics.ui.menu import Menu
-from graphics import *
+from polybius.graphics.ui.menu import Menu
+from polybius.graphics import *
 
 from minigame.itemselect import ItemSelect
 
@@ -73,7 +73,7 @@ class CombatLevel(Level):
         self._potions = [x for x in self._allies[0].getInventory() \
                    if x.getAttribute("type") == "potion"]
         self._potionSelect = ItemSelect((0,165),self._potions)
-        centerGraphicsElement(self._potionSelect,axes=(True, False))
+        self._potionSelect.keepCentered(cen_point=(1/2,None))
 
         self._orbColor = (255,255,255)
 
@@ -145,20 +145,20 @@ class CombatLevel(Level):
                         self._backToMenuButton.draw(screen)
                         self._moveText.setText("Click on enemy animal to proceed with attack")
                         self._moveText.setPosition((0,200))
-                        centerGraphicsElement(self._moveText,axes=(True, False))
-                        self._moveText.draw(screen) # NEEDS REFACTOR SINCE WE ARE INTEGRATING MULTIPLE TEXT BOXES
+                        self._moveText.center(cen_point=(1/2,None))
+                        self._moveText.draw(screen)
                     elif self._menuSelection == 3: # draws what is seen after clicking heal button
                         if len(self._potions) > 0:
                             self._potionSelect.draw(screen)
                             self._moveText.setText("Click on a potion to heal")
                             self._moveText.setPosition((0,225))
-                            centerGraphicsElement(self._moveText,axes=(True, False))
-                            self._moveText.draw(screen)# NEEDS REFACTOR SINCE WE ARE INTEGRATING MULTIPLE TEXT BOXES
+                            self._moveText.center(cen_point=(1/2,None))
+                            self._moveText.draw(screen)
                         else:
                             self._moveText.setText("You have no potions!")
                             self._moveText.setPosition((0,225))
-                            centerGraphicsElement(self._moveText,axes=(True, False))
-                            self._moveText.draw(screen) # NEEDS REFACTOR SINCE WE ARE INTEGRATING MULTIPLE TEXT BOXES
+                            self._moveText.center(cen_point=(1/2,None))
+                            self._moveText.draw(screen)
                         self._backToMenuButton.draw(screen)
                 else:
                     self._movesMenu.draw(screen)
@@ -321,7 +321,6 @@ class CombatLevel(Level):
                                if x.getAttribute("type") == "potion"]
                     self._potionSelect.resetItems(self._potions)
                     self._potionSelect.update()
-                    centerGraphicsElement(self._potionSelect,axes=(True, False))
                 self._turnText.setText("Your turn")
                 self._orbColor = (255,255,255)
             

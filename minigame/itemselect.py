@@ -8,14 +8,15 @@ to prompt the user for item selections
 
 import pygame
 from modules.drawable import Drawable
+from polybius.graphics.abstractgraphic import AbstractGraphic
 from .itemblock import ItemBlock
 
 
-class ItemSelect(Drawable):
+class ItemSelect(AbstractGraphic):
 
     def __init__(self, pos, items, dimensions=(700,50)):
         """Initializes the item selection interface"""
-        super().__init__("", pos, worldBound=False)
+        super().__init__(pos)
         self._width = dimensions[0]
         self._height = dimensions[1]
         self._items = items
@@ -35,6 +36,9 @@ class ItemSelect(Drawable):
                           (self._width//9,self._height),item=None,
                               selected=x==self._selected)
             self._blocks.append(i)
+
+        # Used purely for centering purposes
+        self._image = pygame.Surface((self.getWidth(), self._height))
 
     def getItemSelected(self):
         """Returns the selected item"""
@@ -88,3 +92,5 @@ class ItemSelect(Drawable):
         """"Resets the items in the item selector and resets the selected item to None"""
         self._items = newItems
         self._itemSelected = None
+        self._image = pygame.Surface((self.getWidth(), self._height))
+        self.updateCentering()

@@ -6,7 +6,7 @@ A user interface that allows the player to alter and adjust their pack
 """
 
 from modules.drawable import Drawable
-from graphics import Window, Button, TextBox, ProgressBar
+from polybius.graphics import Window, Button, TextBox, ProgressBar
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock
 from economy.acorn import Acorn

@@ -6,7 +6,7 @@ An interface that allows the player to choose their own name
 """
 
 import pygame, random
-from graphics import *
+from polybius.graphics import *
 from managers.nameManager import NAMES
 
 class NameInput(Window):

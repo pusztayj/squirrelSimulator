@@ -7,10 +7,10 @@ combat game.
 
 
 from .lootingfunctions import lootItems,lootAcorns
-from graphics.textbox import TextBox
-from graphics.tabs import Tabs
-from graphics.scrollselector import ScrollSelector
-from graphics.button import Button
+from polybius.graphics.textbox import TextBox
+from polybius.graphics.tabs import Tabs
+from polybius.graphics.scrollselector import ScrollSelector
+from polybius.graphics.button import Button
 from graphics.itemcard import ItemCard
 
 import pygame

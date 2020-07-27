@@ -6,7 +6,7 @@ The user interface for bribing NPCs
 """
 
 import pygame
-from graphics import *
+from polybius.graphics import *
 
 class Bribe(Window):
 

@@ -1,6 +1,6 @@
 from .retreatfunctions import retreatLostAcorns,retreatItemLost
 import pygame
-from graphics.textbox import TextBox
+from polybius.graphics.textbox import TextBox
 from minigame.threexthreeinventory import threeXthreeInventory
 
 class RetreatScreen(object):

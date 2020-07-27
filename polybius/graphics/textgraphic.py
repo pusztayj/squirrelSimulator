@@ -1,5 +1,5 @@
 
-from graphics.abstractgraphic import AbstractGraphic
+from .abstractgraphic import AbstractGraphic
 
 class TextGraphic(AbstractGraphic):
 

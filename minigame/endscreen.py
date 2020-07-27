@@ -7,7 +7,7 @@ A class that controls the game's end screen
 
 import pygame, random
 from modules import *
-from graphics import *
+from polybius.graphics import *
 from animals import *
 from minigame.threexthreeinventory import threeXthreeInventory
 from polybius.managers import SOUNDS, CONSTANTS

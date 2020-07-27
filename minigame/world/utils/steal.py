@@ -6,7 +6,7 @@ The user interface for stealing from NPCs
 """
 
 import pygame, random
-from graphics import *
+from polybius.graphics import *
 
 class Steal(Window):
 

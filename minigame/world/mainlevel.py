@@ -3,6 +3,7 @@ Author: Trevor Stalnaker
 File: mainlevel.py
 """
 import pygame, random, math
+from polybius.graphics import *
 from graphics import *
 from .utils import *
 from modules.vector2D import Vector2
