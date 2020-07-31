@@ -11,7 +11,7 @@ import random, items
 from inventory import Inventory
 from items.item import Item
 from animals import NPC
-from modules import Drawable
+from polybius.graphics import Drawable
 from managers.animalManager import ANIMALS
 from managers.itemManager import ITEMS
 from managers.nameManager import NAMES

@@ -6,8 +6,8 @@ stats that effects the NPCs performance.
 """
 
 from .animal import Animal
-from modules.animated import Animated
-from modules.vector2D import Vector2
+from polybius.graphics.animated import Animated
+from polybius.utils.vector2D import Vector2
 import pygame
 
 class Squirrel(Animal, Animated):

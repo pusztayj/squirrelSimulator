@@ -6,7 +6,7 @@ A super class with methods subclasses like Orb and Star inherit from
 """
 
 import pygame
-from .vector2D import Vector2
+from polybius.utils import Vector2
 from polybius.managers.frameManager import FRAMES
 from polybius.utils.rectmanager import getRects
 

@@ -6,7 +6,7 @@ A class that models and manages a Scroll Box widget
 """
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 from .mysurface import MySurface
 from .banner import Banner
 

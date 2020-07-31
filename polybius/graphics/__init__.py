@@ -15,11 +15,14 @@ from .window import Window
 from .particletext import ParticleText
 from .confirmationwindow import ConfirmationWindow
 from .multilinetextbox import MultiLineTextBox
+from .drawable import Drawable
+from .animated import Animated
 
 __all__ = ["Banner","Button","Mask","MySurface","Popup","PopupWindow",
            "ProgressBar","ScrollBox","ScrollSelector","Tabs",
            "TextBox","TextInput","Window","ParticleText",
-           "ConfirmationWindow","MultiLineTextBox"]
+           "ConfirmationWindow","MultiLineTextBox", "Drawable",
+           "Animated"]
 
 
 

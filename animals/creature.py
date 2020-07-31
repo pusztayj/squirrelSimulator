@@ -1,9 +1,6 @@
 
 from managers.animalManager import ANIMALS
 from .npc import NPC
-from modules.animated import Animated
-import csv
-import pprint
 
 class Creature(NPC):
 

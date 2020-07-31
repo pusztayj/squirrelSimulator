@@ -7,7 +7,7 @@ data points that are fundamental for the player.
 
 
 from animals.squirrel import Squirrel
-from modules.vector2D import Vector2
+from polybius.utils.vector2D import Vector2
 import pygame
 from stateMachines import playerFSM
 from polybius.managers import SOUNDS, CONTROLS

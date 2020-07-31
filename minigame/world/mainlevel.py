@@ -6,8 +6,7 @@ import pygame, random, math
 from polybius.graphics import *
 from graphics import *
 from .utils import *
-from modules.vector2D import Vector2
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 from player import Player
 from economy.acorn import Acorn
 from economy.dirtpile import DirtPile

@@ -9,7 +9,7 @@ outflow of acorns.
 Also handles the drawing and updating of the images of the acorn. 
 """
 
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 from inventory import Inventory
 import pygame, random
 

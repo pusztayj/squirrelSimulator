@@ -10,7 +10,8 @@ from polybius.graphics import *
 from graphics import *
 from animals import *
 from .utils import *
-from modules import Drawable, Vector2
+from polybius.graphics import Drawable
+from polybius.utils import Vector2
 from polybius.managers import CONSTANTS, SOUNDS
 from player import Player
 from items.item import Item

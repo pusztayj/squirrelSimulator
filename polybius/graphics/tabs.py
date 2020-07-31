@@ -5,7 +5,7 @@ File: tabs.py
 Contains classes that model and manage tabs and groups of tabs
 """
 
-from modules.drawable import Drawable
+from .drawable import Drawable
 from .textbox import TextBox
 import pygame
 

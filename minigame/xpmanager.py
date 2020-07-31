@@ -7,7 +7,7 @@ The user interface for managing xp
 
 import pygame
 from polybius.graphics import *
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 
 class XPManager(Window):
 

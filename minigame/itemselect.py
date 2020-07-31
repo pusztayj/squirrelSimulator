@@ -7,7 +7,7 @@ to prompt the user for item selections
 """
 
 import pygame
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 from polybius.graphics.abstractgraphic import AbstractGraphic
 from .itemblock import ItemBlock
 

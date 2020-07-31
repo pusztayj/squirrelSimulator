@@ -6,7 +6,7 @@ Models and manages a rectangle of varying transparency
 """
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 
 class Mask(Drawable):
 

@@ -1,6 +1,6 @@
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 
 class AbstractGraphic(Drawable):
 

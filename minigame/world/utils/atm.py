@@ -6,8 +6,7 @@ An interface for interacting with dirt piles
 """
 
 import pygame
-from modules.drawable import Drawable
-
+from polybius.graphics.drawable import Drawable
 from polybius.graphics.textbox import TextBox
 from polybius.graphics.button import Button
 from polybius.graphics.textinput import TextInput

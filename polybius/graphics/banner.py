@@ -5,7 +5,7 @@ File: banner.py
 A class that creates and manages a banner
 """
 
-from modules.drawable import Drawable
+from .drawable import Drawable
 import pygame
 
 class Banner(Drawable):

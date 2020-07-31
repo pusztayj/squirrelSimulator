@@ -6,7 +6,7 @@ A GUI widget that can be used to model progress bars or health bars
 """
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 
 class ProgressBar(Drawable):
 

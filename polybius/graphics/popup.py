@@ -8,7 +8,7 @@ A class that models hover over pop ups
 import pygame
 from .textbox import TextBox
 from .mysurface import MySurface
-from modules import Drawable
+from .drawable import Drawable
 
 def makeMultiLineTextBox(text, position, font, color, backgroundColor):
     """

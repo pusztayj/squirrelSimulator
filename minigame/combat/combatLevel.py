@@ -2,7 +2,7 @@
 import pygame
 from .utils import *
 from minigame.level import Level
-from modules import Drawable
+from polybius.graphics import Drawable
 from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
 from managers import USER_INTERFACE
 from polybius.graphics.ui.menu import Menu

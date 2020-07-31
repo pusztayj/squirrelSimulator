@@ -6,7 +6,7 @@ A class that models a scroll selector, a scroll box with internal buttons
 """
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 from .scrollbox import ScrollBox
 from .button import Button
 from .mysurface import MySurface

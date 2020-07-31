@@ -6,7 +6,7 @@ A class that models and manages a pop up notification window
 """
 
 import pygame
-from modules.drawable import Drawable
+from .drawable import Drawable
 from .window import Window
 from .textbox import TextBox
 from .button import Button

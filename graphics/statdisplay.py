@@ -5,7 +5,7 @@ File: statdisplay.py
 A class that creates a display for the player's stats
 """
 
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 from polybius.graphics.progressbar import ProgressBar
 from polybius.graphics.textbox import TextBox
 from economy.acorn import Acorn

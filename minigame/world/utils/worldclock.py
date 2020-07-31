@@ -6,7 +6,7 @@ A class that maintains and displays the in-game clock
 """
 
 import pygame
-from modules.drawable import Drawable
+from polybius.graphics.drawable import Drawable
 from polybius.graphics.textbox import TextBox
 
 class WorldClock(Drawable):
