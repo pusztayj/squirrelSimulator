@@ -366,8 +366,8 @@ def initializeManagers():
    SOUNDS.setMusicFolderPath(os.path.join("resources","sounds","music"))
    SOUNDS.setSFXFolderPath(os.path.join("resources","sounds","sfx"))
 
-   FRAMES.setResourcePath(os.path.join("resources","data","images.csv"))
-   FRAMES.setImageFolderPath(os.path.join("resources","images"))
+   FRAMES.prepareImagesFromCSV(os.path.join("resources","data","images.csv"),
+                               os.path.join("resources","images"))
 
    CONTROLS.setResourcePath(os.path.join("resources","data","default_controls.csv"))
 

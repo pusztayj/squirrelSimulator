@@ -1,15 +1,17 @@
 """
-A Singleton Sound Manager class
+A Singleton Frame Manager class
 Author: Liz Matthews, 9/20/2019
-Edited by: Trevor Stalnaker
+Author: Trevor Stalnaker
 
-Provides on-demand loading of sounds for a pygame program.
+Provides on-demand loading of images for a pygame program.
 
 """
 
 from pygame import image, Surface, Rect
 from .abstractManager import AbstractManager
+from pathlib import Path
 import os
+
 
 
 class FrameManager():
@@ -33,13 +35,26 @@ class FrameManager():
       def __init__(self):
          self._surfaces = {}
          self._images = {}
-         self._image_folder = None
-         
-      def setResourcePath(self, path):
-         AbstractManager.__init__(self, path, self._images, lower=False)
+         #self._image_folder = None
 
-      def setImageFolderPath(self, path):
-         self._image_folder = path
+      def prepareImage(self, filePath, dimensions=(32,32), colorKey=False):
+         """Prepare an image to be loaded later"""
+         if not os.path.exists(filePath):
+            raise Exception("The path " + filePath + " does not exist")
+         else:
+            fileName = Path(filePath).name
+            self._images[fileName]={"frame_dimensions":dimensions, "color_key":colorKey,
+                                    "path":filePath}
+         
+      def prepareImagesFromCSV(self, csv_path, folder_path=""):
+         """Prepare a group of images from a csv file"""
+         AbstractManager.__init__(self, csv_path, self._images, lower=False)
+         for key in self._images.keys():
+            path = os.path.join(folder_path, key)
+            if not os.path.exists(path):
+               raise Exception("The path " + path + " does not exist")
+            else:
+               self._images[key]["path"] = path
         
       def __getitem__(self, key):
          return self._surfaces[key]
@@ -48,9 +63,21 @@ class FrameManager():
          self._surfaces[key] = item
       
       def getFrame(self, fileName, offset=None):
+         """Returns the requested frame if possible"""
+
+         # Check if the file name provided is a full path to a known image
+         if fileName in [self._images[k]["path"] for k in self._images.keys()]:
+            fileName = Path(fileName).name
+            
+         # Check if this is a novel image
+         elif fileName not in self._images.keys():
+            self.prepareImage(fileName)
+            fileName = Path(fileName).name
+            
          # If this frame has not already been loaded, load the image from memory
          if fileName not in self._surfaces.keys():
-            self._loadImage(fileName, offset != None)
+            
+            self._loadImage(fileName, sheet=offset!=None)
          
          # If this is an image sheet, return the correctly offset sub surface
          if offset != None:
@@ -58,31 +85,30 @@ class FrameManager():
          
          # Otherwise, return the sheet created
          return self[fileName]
-      
+
       def _loadImage(self, fileName, sheet=False):
-         if self._image_folder == None:
-            raise AttributeError("The folder path for images has not been defined")
-         
-         # Load the full image
-         fullImage = image.load(os.path.join(self._image_folder, fileName))
-         
+         """Loads an image and saves it to the internal surfaces dictionary"""
+
          colorKey = self._images[fileName]["color_key"]
+
+         # Load the full image
+         fullImage = image.load(self._images[fileName]["path"])
          fullImage = fullImage.convert()
          
          # If the image to be loaded is an image sheet, split it up based on the frame size
          if sheet:
                
             self[fileName] = []
-            spriteSize = self._images[fileName]["frame_dimensions"]
-            
+
+            dimensions = self._images[fileName]["frame_dimensions"]
             sheetDimensions = fullImage.get_size()
             
-            for y in range(0, sheetDimensions[1], spriteSize[1]):
+            for y in range(0, sheetDimensions[1], dimensions[1]):
                self[fileName].append([])
-               for x in range(0, sheetDimensions[0], spriteSize[0]):
+               for x in range(0, sheetDimensions[0], dimensions[0]):
                   
-                  frame = Surface(spriteSize)    
-                  frame.blit(fullImage, (0,0), Rect((x,y), spriteSize))
+                  frame = Surface(dimensions)    
+                  frame.blit(fullImage, (0,0), Rect((x,y), dimensions))
                   
                   # If we need to set the color key
                   if colorKey:
@@ -96,9 +122,7 @@ class FrameManager():
             # If we need to set the color key
             if colorKey:
                self[fileName].set_colorkey(self[fileName].get_at((0,0)))
-               
-            
-         
-         
+
+                     
 # Set up an instance for others to import         
 FRAMES = FrameManager.getInstance()

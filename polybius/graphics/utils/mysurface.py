@@ -5,7 +5,7 @@ File: mysurface.py
 A class that converts pygame surfaces to surfaces inheriting from Drawable
 """
 
-from .drawable import Drawable
+from polybius.graphics.basics.drawable import Drawable
 
 class MySurface(Drawable):
 

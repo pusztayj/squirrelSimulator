@@ -1,8 +1,7 @@
 import pygame
 from .box import Box
-from graphics.linkedprogressbar import LinkedProgressBar
-from polybius.graphics.textbox import TextBox
-#from graphics import LinkedProgressBar, TextBox
+from polybius.graphics import TextBox
+from graphics import LinkedProgressBar
 from polybius.utils.rectmanager import getRects
 
 class CombatSprite(object):

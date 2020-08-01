@@ -5,9 +5,8 @@ File: interaction.py
 The user interface for interacting with NPCs
 """
 
-from polybius.graphics.drawable import Drawable
 from managers.uiManager import USER_INTERFACE
-from polybius.graphics import Window, Button, TextBox, ProgressBar
+from polybius.graphics import Window, Button, TextBox, ProgressBar, Drawable
 from graphics import HappinessFace
 from polybius.graphics.ui.menu import Menu 
 from economy.acorn import Acorn

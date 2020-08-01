@@ -6,7 +6,7 @@ A class that models a cheats box
 """
 
 import pygame
-from polybius.graphics.textinput import TextInput
+from polybius.graphics import TextInput
 from .cheats import *
 from managers import ITEMS
 

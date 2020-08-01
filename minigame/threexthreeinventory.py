@@ -6,7 +6,7 @@ The inventory HUD displayed as a 3x3 grid
 """
 
 import pygame
-from polybius.graphics.drawable import Drawable
+from polybius.graphics import Drawable
 from .itemblock import ItemBlock
 
 class threeXthreeInventory(Drawable):

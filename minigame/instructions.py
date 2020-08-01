@@ -5,7 +5,6 @@ File: instructions.py
 This class models the how to play instruction manual
 """
 
-from polybius.graphics.drawable import Drawable
 from polybius.graphics import *
 import pygame
 

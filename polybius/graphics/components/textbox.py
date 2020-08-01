@@ -5,7 +5,7 @@ File Name: textbox.py
 A textbox class that inherits from the Drawable class
 """
 
-from .textgraphic import TextGraphic
+from polybius.graphics.utils.textgraphic import TextGraphic
 
 class TextBox(TextGraphic):
 

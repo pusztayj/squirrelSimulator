@@ -5,7 +5,7 @@ File: textinput.py
 A class that creates and manages textual input boxes
 """
 
-from .drawable import Drawable
+from polybius.graphics.basics.drawable import Drawable
 from .textbox import TextBox
 import pygame
 

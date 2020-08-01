@@ -2,7 +2,7 @@
 Author: Trevor Stalnaker
 File Name: drawable.py
 
-A super class with methods subclasses like Orb and Star inherit from
+A super class with methods for interacting with visual game components
 """
 
 import pygame
@@ -98,13 +98,6 @@ class Drawable():
         """
         return self._image.get_rect().move(self.getX(), self.getY())
 
-    def getTrueBottom(self):
-        """Returns the lowest non-transparent
-        y-value of the image, ie the distance in
-        pixels from the top of the image to the
-        bottom of the sprite"""
-        return max(self._mask.outline(), key=lambda x: x[1])[1]
-
     def getCollideRects(self):
         if self.isFlipped():
             if self._flippedCollideRects == None:
@@ -114,6 +107,13 @@ class Drawable():
             if self._collideRects == None:
                 self._collideRects = getRects(self._image)
             return self._collideRects
+
+    def getTrueBottom(self):
+        """Returns the lowest non-transparent
+        y-value of the image, ie the distance in
+        pixels from the top of the image to the
+        bottom of the sprite"""
+        return max(self._mask.outline(), key=lambda x: x[1])[1]
 
     def draw(self, surface):
         """Draws the object's image at the current position on the given surface"""
@@ -147,6 +147,10 @@ class Drawable():
         self._scaleValue = scalar
         self._isScaled = True
 
+        # Update the saved width and height of the image
+        self._width  = self.getWidth()
+        self._height = self.getHeight()
+
     def getImage(self):
         """Returns the drawable's current image"""
         return self._image
@@ -158,4 +162,14 @@ class Drawable():
     def setWorldBound(self, boolean):
         """Determines if drawable should be fixed or world bound"""
         self._worldBound = boolean
+
+    def makePickleSafe(self):
+        """Make the drawbale object pickle safe"""
+        self._image = pygame.image.tostring(self._image, "RGBA")
+
+    def undoPickleSafe(self):
+        """Return the drawable object to its original form after pickling"""
+        self._image = pygame.image.fromstring(self._image,
+                                              (self._width, self._height),
+                                              "RGBA")
 

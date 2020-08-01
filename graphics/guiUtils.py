@@ -5,9 +5,7 @@ File: guiUtils
 A file containing various utility functions for the creation
 of GUIs
 """
-from polybius.graphics.mysurface import MySurface
-from polybius.graphics.textbox import TextBox
-from polybius.graphics.scrollbox import ScrollBox
+from polybius.graphics import MySurface, TextBox, ScrollBox
 from animals.animal import Animal
 from items.item import Item
 import pygame, copy

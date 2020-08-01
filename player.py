@@ -140,7 +140,7 @@ class Player(Squirrel):
         self.increaseHunger(hungerAmount)
         self.heal(healthAmount)
         self._fsm.changeState("eat")
-        SoundManager.getInstance().playSound("munch.ogg")
+        SOUNDS.playSound("munch.ogg")
 
     def move(self, event, atm=None):
         """

@@ -6,7 +6,7 @@ durability, utility, whether or not the item is buyable or sellable.
 """
 
 import random, math
-from polybius.graphics.drawable import Drawable
+from polybius.graphics import Drawable
 from managers.itemManager import ITEMS
 
 class Item(Drawable):

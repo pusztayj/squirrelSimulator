@@ -6,9 +6,9 @@ A class that models and manages a Scroll Box widget
 """
 
 import pygame
-from .drawable import Drawable
-from .mysurface import MySurface
-from .banner import Banner
+from polybius.graphics.basics.drawable import Drawable
+from polybius.graphics.utils.mysurface import MySurface
+from polybius.graphics.basics.banner import Banner
 
 class ScrollBox(Drawable):
 

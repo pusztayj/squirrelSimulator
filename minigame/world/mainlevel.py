@@ -6,7 +6,6 @@ import pygame, random, math
 from polybius.graphics import *
 from graphics import *
 from .utils import *
-from polybius.graphics.drawable import Drawable
 from player import Player
 from economy.acorn import Acorn
 from economy.dirtpile import DirtPile

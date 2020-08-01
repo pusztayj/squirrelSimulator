@@ -1,6 +1,6 @@
 
 import pygame
-from .drawable import Drawable
+from polybius.graphics.basics.drawable import Drawable
 
 class AbstractGraphic(Drawable):
 
@@ -93,5 +93,9 @@ class AbstractGraphic(Drawable):
 
         # Update the centering on the graphic
         self.updateCentering()
+
+    def internalUpdate(self, surf):
+        """A placeholder method that can be replaced in child classes"""
+        pass
         
         

@@ -6,7 +6,7 @@ stats that effects the NPCs performance.
 """
 
 from .animal import Animal
-from polybius.graphics.animated import Animated
+from polybius.graphics import Animated
 from polybius.utils.vector2D import Vector2
 import pygame
 

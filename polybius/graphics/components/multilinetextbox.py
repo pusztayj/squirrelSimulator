@@ -1,7 +1,7 @@
 
 import pygame
 from .textbox import TextBox
-from .textgraphic import TextGraphic
+from polybius.graphics.utils.textgraphic import TextGraphic
 
 class MultiLineTextBox(TextGraphic):
 

@@ -6,11 +6,11 @@ A class that models and manages a confirmation window
 """
 
 import pygame
-from .textgraphic import TextGraphic
-from .window import Window
-from .textbox import TextBox
-from .button import Button
-from .multilinetextbox import MultiLineTextBox
+from polybius.graphics.utils.textgraphic import TextGraphic
+from polybius.graphics.utils.window import Window
+from polybius.graphics.components.textbox import TextBox
+from polybius.graphics.components.button import Button
+from polybius.graphics.components.multilinetextbox import MultiLineTextBox
 
 class ConfirmationWindow(TextGraphic, Window):
 

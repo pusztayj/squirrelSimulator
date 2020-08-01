@@ -18,7 +18,9 @@ Parameters:
 """
 
 import pygame
-from polybius.graphics import Window, Button, Drawable
+from polybius.graphics.components import Button
+from polybius.graphics.basics.drawable import Drawable
+from polybius.graphics.utils.window import Window
 
 class Menu(Drawable, Window):
 

@@ -1,9 +1,7 @@
 import pygame
 
-from polybius.graphics.textbox import TextBox
 from graphics.happinessface import HappinessFace
-from polybius.graphics.window import Window
-from polybius.graphics.button import Button
+from polybius.graphics import Button, TextBox, Window
 
 from minigame.itemblock import ItemBlock
 from minigame.threexthreeinventory import threeXthreeInventory

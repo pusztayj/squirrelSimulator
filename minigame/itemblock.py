@@ -7,7 +7,7 @@ inventory themed classes or used on its own as an item frame
 """
 
 import pygame
-from polybius.graphics.drawable import Drawable
+from polybius.graphics import Drawable
 
 class ItemBlock(Drawable):
 

@@ -6,9 +6,8 @@ A class modeling a heads up display for the player's inventory
 """
 
 import pygame
-from polybius.graphics.drawable import Drawable
+from polybius.graphics import Drawable, TextBox
 from .itemblock import ItemBlock
-from polybius.graphics import TextBox
 
 class InventoryHUD(Drawable):
 

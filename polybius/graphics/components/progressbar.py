@@ -6,7 +6,7 @@ A GUI widget that can be used to model progress bars or health bars
 """
 
 import pygame
-from .drawable import Drawable
+from polybius.graphics.basics.drawable import Drawable
 
 class ProgressBar(Drawable):
 

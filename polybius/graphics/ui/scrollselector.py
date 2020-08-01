@@ -6,10 +6,10 @@ A class that models a scroll selector, a scroll box with internal buttons
 """
 
 import pygame
-from .drawable import Drawable
-from .scrollbox import ScrollBox
-from .button import Button
-from .mysurface import MySurface
+from polybius.graphics.basics.drawable import Drawable
+from polybius.graphics.components.scrollbox import ScrollBox
+from polybius.graphics.components.button import Button
+from polybius.graphics.utils.mysurface import MySurface
 
 class ScrollSelector(Drawable):
 

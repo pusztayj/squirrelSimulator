@@ -5,7 +5,7 @@ In this file we create a class that holds the trade desk image that appears
 in the merchant minigame GUI.
 """
 
-from polybius.graphics.drawable import Drawable 
+from polybius.graphics import Drawable 
 
 class TradeDesk(Drawable):
 

@@ -5,8 +5,7 @@ File: packmanager.py
 A user interface that allows the player to alter and adjust their pack
 """
 
-from polybius.graphics.drawable import Drawable
-from polybius.graphics import Window, Button, TextBox, ProgressBar
+from polybius.graphics import Drawable, Window, Button, TextBox, ProgressBar
 from minigame.threexthreeinventory import threeXthreeInventory
 from minigame.itemblock import ItemBlock
 from economy.acorn import Acorn

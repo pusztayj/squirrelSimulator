@@ -8,9 +8,8 @@ We also create methods for how an NPC can be cloned.
 """
 
 from .animal import Animal
-from polybius.graphics.popup import Popup
+from polybius.graphics import Animated, Popup
 import random, pygame, copy
-from polybius.graphics.animated import Animated
 from polybius.utils.vector2D import Vector2
 from stateMachines import npcFSM
 

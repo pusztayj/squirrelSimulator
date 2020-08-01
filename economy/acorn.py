@@ -7,7 +7,7 @@ collected and handles the draw and update methods for having it appear
 in the main world. 
 """
 
-from polybius.graphics.drawable import Drawable
+from polybius.graphics import Drawable
 import random
 
 class Acorn(Drawable):
