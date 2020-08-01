@@ -48,7 +48,7 @@ class FrameManager():
          
       def prepareImagesFromCSV(self, csv_path, folder_path=""):
          """Prepare a group of images from a csv file"""
-         AbstractManager.__init__(self, csv_path, self._images, lower=False)
+         self.readFromCSV(csv_path, self._images, lower=False)
          for key in self._images.keys():
             path = os.path.join(folder_path, key)
             if not os.path.exists(path):

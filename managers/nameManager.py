@@ -19,7 +19,7 @@ class NameManager():
             self._names = {}
             
         def setResourcePath(self, path):
-            AbstractManager.__init__(self,path,self._names,False)
+            self.readFromCSV(path,self._names,False)
 
         def getNames(self):
             """Return all available names"""

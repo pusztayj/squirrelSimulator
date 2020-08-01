@@ -18,8 +18,7 @@ class ConstantManager():
             self._constants = {}
 
         def setResourcePath(self, path):
-            AbstractManager.__init__(self,path,
-                                     self._constants, lower=False,
+            self.readFromCSV(path,self._constants, lower=False,
                                      ignoreFields=["description"])
     
         def get(self, constant):

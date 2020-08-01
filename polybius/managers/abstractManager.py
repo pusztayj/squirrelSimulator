@@ -3,7 +3,7 @@ import csv, re
 
 class AbstractManager():
 
-    def __init__(self, files, ds, lower=True, toLyst=[], ignoreFields=[]):
+    def readFromCSV(self, files, ds, lower=True, toLyst=[], ignoreFields=[]):
         if type(files)==str and type(ds)==dict:
             files = [files]
             ds = [ds]

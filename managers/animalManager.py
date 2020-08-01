@@ -18,7 +18,7 @@ class AnimalManager():
             self._animals = {}
             
         def setResourcePath(self, path):
-            AbstractManager.__init__(self,path,self._animals)
+            self.readFromCSV(path,self._animals)
                             
         def getStats(self, animal):
             return self._animals[animal]

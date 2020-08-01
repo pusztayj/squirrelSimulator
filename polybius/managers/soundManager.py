@@ -45,7 +45,7 @@ class SoundManager():
          self._mute = False
 
       def setResourcePath(self, path):
-         AbstractManager.__init__(self, path, self._music)
+         self.readFromCSV(path, self._music)
 
       def setMusicFolderPath(self, path):
          self._music_folder = path

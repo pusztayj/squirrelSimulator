@@ -18,7 +18,7 @@ class ItemManager():
             self._items = {}
         
         def setResourcePath(self, path):
-            AbstractManager.__init__(self,path,self._items)
+            self.readFromCSV(path,self._items)
     
         def getAttributes(self, item):
             return self._items[item]

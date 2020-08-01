@@ -21,7 +21,7 @@ class ControlsManager():
 
         def setResourcePath(self, path):
             temp = {}
-            AbstractManager.__init__(self,path,temp)
+            self.readFromCSV(path,temp)
 
             self._controls = {}
             for action, control in temp.items():
