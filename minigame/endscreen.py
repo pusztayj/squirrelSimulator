@@ -110,7 +110,7 @@ class EndScreen(object):
     def update(self):
         """Update the end screen, that is play its music"""
         # Load and play a new song if the current song has ended
-        SOUNDS.getInstance().manageSongs("end")
+        SOUNDS.manageSongs("end")
                                 
 
         

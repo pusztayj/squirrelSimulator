@@ -429,6 +429,8 @@ class MainLevel(Level):
                     p = Pack(clone)
                     self._packs.append(p)
                     clone.setPack(p)
+                    
+                    
 
             # Handle events on the interaction interface
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
@@ -448,6 +450,7 @@ class MainLevel(Level):
                             if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
                                 self._playerPack.addMember(e)
                                 self._packs.remove(e.getPack())
+                                e.setPack(self._playerPack)
                                 self._popupWindow.setText(e.getName() + " has joined your pack")
                                 self._popupWindow.display()
                                 self._interaction = None # Close the interaction window

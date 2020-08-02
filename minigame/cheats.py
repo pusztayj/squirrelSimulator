@@ -1,6 +1,7 @@
 from minigame.merchant.utils import *
 from animals import Creature, Pack
 from items.item import Item
+from polybius.managers import CONSTANTS
 
 def giveAcorns(entity, amount):
    """Gives an entity a given number of acorns"""
@@ -39,7 +40,7 @@ def spawnAnimal(mainGame, species, position, friendScore):
 def giveItem(entity, i, quant=1):
    """Gives an entity an item"""
    for x in range(quant):
-      item = Item(i)
+      item = Item(i, CONSTANTS.get("player"))
       entity.getInventory().addItem(item)
 
 # Dictionary of cheat codes

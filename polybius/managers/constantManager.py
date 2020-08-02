@@ -24,4 +24,7 @@ class ConstantManager():
         def get(self, constant):
             return self._constants[constant]["value"]
 
+        def addConstant(self, constant, value):
+            self._constants[constant] = {"value":value}
+
 CONSTANTS = ConstantManager.getInstance()

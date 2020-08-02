@@ -63,6 +63,8 @@ def main():
    player.setPack(playerPack)
    player.scale(1.5)
 
+   CONSTANTS.addConstant("player", player)
+
    # Create the different levels
    level = MainLevel(playerPack, cheatBox)
    merchantLevel = None

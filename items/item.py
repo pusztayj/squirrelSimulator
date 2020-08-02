@@ -5,7 +5,7 @@ We create an abstracted item class that holds its name, level,
 durability, utility, whether or not the item is buyable or sellable. 
 """
 
-import random, math
+import random, math, copy
 from polybius.graphics import Drawable
 from managers.itemManager import ITEMS
 
@@ -16,7 +16,7 @@ class Item(Drawable):
         Here we initialize the itmem class where we pass its name, utility,
         value, and whether or not the item is buyable or sellable. 
         """
-        self._attributes = ITEMS.getAttributes(item)
+        self._attributes = copy.copy(ITEMS.getAttributes(item))
 
         Drawable.__init__(self,self._attributes["image"],(0,0))
 
