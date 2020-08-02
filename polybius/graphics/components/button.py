@@ -74,15 +74,11 @@ class Button(TextGraphic):
         """Handles events on the button"""
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
-##        if event.type == self._press[0] and ((hasattr(event, 'button') and event.button == self._press[1]) or \
-##                                             (hasattr(event, 'key') and event.key == self._press[1])):
         if self._press.check(event):
             if rect.collidepoint(self._curser.get_pos()):
                 self.buttonPressed()
                 func(*args)
         elif self._release.check(event):
-##        elif event.type == self._release[0] and ((hasattr(event, 'button') and event.button == self._release[1]) or \
-##                                                 (hasattr(event, 'key') and event.key == self._release[1])):
                 self.setToDefaultStyling()
         elif rect.collidepoint(self._curser.get_pos()):
             self.setHover()
@@ -103,7 +99,7 @@ class Button(TextGraphic):
 
         # Create and draw the internal textbox
         t = TextBox(self._text, (0,0), self._font,
-                    self._currentFontColor, self._antialias)
+                    self._currentFontColor, antialias=self._antialias)
         t.center(surf)
         t.draw(surf)
 

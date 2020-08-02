@@ -91,6 +91,16 @@ class Menu(Drawable, Window):
 
         self.createDisplay()
 
+    def getButtonByText(self, text):
+        """Return the button with the provided text"""
+        for button in self._buttons:
+            if button[0].getText() == text:
+                return button[0]
+
+    def getButtonByPosition(self, position):
+        """Return the button at the given position in the menu"""
+        return self._buttons[position][0]
+
     def handleEvent(self, event):
         """Handles events on the pause menu"""
         for b in self._buttons:

@@ -35,7 +35,10 @@ class threeXthreeInventory(Drawable):
 
     def handleEvent(self, event):
         """Handles events on the 3 x 3 inventory"""
-        pass  ## Complete if ever needed
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            for block in self._blocks:
+                if block.getCollideRect().collidepoint(pygame.mouse.get_pos()):
+                    return block.getItem()
 
     def update(self):
         """Updates the display of the 3x3 inventory"""
@@ -61,6 +64,9 @@ class threeXthreeInventory(Drawable):
             return self._items[self._selected]
         else:
             return None
+
+    def getEntity(self):
+        return self._entity
         
     def draw(self, screen):
         """Draws the 3x3 inventory to the screen"""

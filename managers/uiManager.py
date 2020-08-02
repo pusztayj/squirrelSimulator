@@ -18,7 +18,7 @@ class UIManager():
             self._menuButtons = {}
             
         def setResourcePath(self, path):
-           self.readFromCSV(path,self._menuButtons,toLyst=[0])
+           self.readFromCSV(path,self._menuButtons,toLyst=[0], lower=False)
     
         def getControlsForMenu(self, menu):
             return self._menuButtons[menu]

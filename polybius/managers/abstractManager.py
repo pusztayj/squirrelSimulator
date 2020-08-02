@@ -48,6 +48,9 @@ class AbstractManager():
                                 elif value.lower() in ("true","false"):
                                     temp[field] = value.lower() == "true"
                                 else:
+                                    # Clean up the text input
+                                    value = value.replace("\\n","\n")
+                                    value = value.replace("â€¦", "...")
                                     temp[field] = value
 
                         # Check if the result dictionary should be appended to a list
