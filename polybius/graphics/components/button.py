@@ -70,14 +70,17 @@ class Button(TextGraphic):
         self._currentFontColor = self._fontColor
         self.updateGraphic()
 
-    def handleEvent(self, event, func, *args, offset=(0,0)):
+    def handleEvent(self, event, func, args=None, offset=(0,0)):
         """Handles events on the button"""
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
         if self._press.check(event):
             if rect.collidepoint(self._curser.get_pos()):
                 self.buttonPressed()
-                func(*args)
+                if args == None:
+                    func()
+                else:
+                    func(*args)
         elif self._release.check(event):
                 self.setToDefaultStyling()
         elif rect.collidepoint(self._curser.get_pos()):

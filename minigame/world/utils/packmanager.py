@@ -30,6 +30,8 @@ class PackManager(Drawable, Window):
         self._cardWidth = 300
         self._cardHeight = 275 + 75
 
+        self._copyReference = copy.copy(self._pack.getMembers())
+
         pos = ((screensize[0]//2)-((self._cardWidth*3)//2),
                (screensize[1]//2)-(self._cardHeight//2))
 
@@ -72,7 +74,10 @@ class PackManager(Drawable, Window):
     def update(self, ticks):
         """Updates the timer on the pack manager"""
         self._timeSinceClosed += ticks
-        self.redraw()
+        # Only redraw the cards if the pack has changed
+        if not self._copyReference == self._pack.getMembers():
+            self.redraw()
+            self._copyReference = copy.copy(self._pack.getMembers())
         for tile in self._tiles:
             tile.updateCard()
 
