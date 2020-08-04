@@ -58,6 +58,10 @@ class Inventory():
         """Increases the max capacity of the inventory"""
         self._maxCapacity += increase
 
+    def getItems(self):
+        """Return a list of all the items in the inventory"""
+        return self._items
+
     def clear(self):
         """Clears the inventory."""
         self._items = list()

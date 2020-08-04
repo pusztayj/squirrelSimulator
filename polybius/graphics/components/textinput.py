@@ -16,7 +16,7 @@ class TextInput(Drawable):
                  borderColor=(0,0,0), borderHighlight=(100,100,200),
                  backgroundHighlight=(225,225,255), maxLen=10,
                  numerical=False, highlightColor=(0,0,0), defaultText="",
-                 clearOnActive=False):
+                 clearOnActive=False, allowNegative=False):
         """Initializes the widget with a variety of parameters"""
         super().__init__("", position, worldBound=False)
         self._width = dimensions[0]
@@ -32,6 +32,7 @@ class TextInput(Drawable):
         self._active = False
         self._clearOnActive = clearOnActive
         self._numerical = numerical
+        self._allowNegative = allowNegative
         self._currentBorderColor = self._borderColor
         self._borderWidth = borderWidth
         self._color = color
@@ -88,6 +89,10 @@ class TextInput(Drawable):
                 # Check for numpad presses
                 elif pygame.K_KP0 <= event.key <= pygame.K_KP9:
                     self._textbox.setText(text + chr(event.key-208))
+                elif (event.key == pygame.K_KP_MINUS or \
+                     event.key ==pygame.K_MINUS) and \
+                     (not self._numerical or self._allowNegative):
+                    self._textbox.setText(text + "-")
                     
             # Check if backspace was pressed
             if event.key == 8:
