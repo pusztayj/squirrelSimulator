@@ -5,20 +5,20 @@ File: textinput.py
 A class that creates and manages textual input boxes
 """
 
-from polybius.graphics.basics.drawable import Drawable
+from polybius.graphics.utils.abstractgraphic import AbstractGraphic
 from .textbox import TextBox
 import pygame
 
-class TextInput(Drawable):
+class TextInput(AbstractGraphic):
 
     def __init__(self, position, font, dimensions, color=(0,0,0),
                  borderWidth=2, backgroundColor=(255,255,255),
                  borderColor=(0,0,0), borderHighlight=(100,100,200),
                  backgroundHighlight=(225,225,255), maxLen=10,
                  numerical=False, highlightColor=(0,0,0), defaultText="",
-                 clearOnActive=False, allowNegative=False):
+                 clearOnActive=False, allowNegative=False, antialias=True):
         """Initializes the widget with a variety of parameters"""
-        super().__init__("", position, worldBound=False)
+        super().__init__(position)
         self._width = dimensions[0]
         self._height = dimensions[1]
         self._defaultBorderWidth = borderWidth
@@ -27,7 +27,7 @@ class TextInput(Drawable):
         self._defaultBackgroundColor = backgroundColor
         self._backgroundHighlight = backgroundHighlight
         self._backgroundColor = backgroundColor
-        self._textbox = TextBox(defaultText,(0,0),font,color)
+        self._textbox = TextBox(defaultText,(0,0),font,color,antialias)
         self._maxLen = maxLen
         self._active = False
         self._clearOnActive = clearOnActive
@@ -37,7 +37,8 @@ class TextInput(Drawable):
         self._borderWidth = borderWidth
         self._color = color
         self._highlightColor = highlightColor
-        self.__updateInput()
+        self._antialias = antialias
+        self.updateGraphic()
 
     def displayActive(self):
         """Sets the display mode to active"""
@@ -47,7 +48,7 @@ class TextInput(Drawable):
         self._textbox.setFontColor(self._highlightColor)
         if self._clearOnActive:
             self._textbox.setText("")
-        self.__updateInput()
+        self.updateGraphic()
 
     def displayPassive(self):
         """Sets the display mode to passive"""
@@ -55,7 +56,7 @@ class TextInput(Drawable):
         self._borderWidth = self._defaultBorderWidth
         self._backgroundColor = self._defaultBackgroundColor
         self._textbox.setFontColor(self._color)
-        self.__updateInput()
+        self.updateGraphic()
         
     def handleEvent(self, event, *args, offset=(0,0), func=None,
                     clearOnEnter=False):
@@ -105,7 +106,7 @@ class TextInput(Drawable):
                     func(*args)
                 if clearOnEnter:
                     self._textbox.setText("")
-            self.__updateInput()
+            self.updateGraphic()
 
     def getInput(self):
         """Get the current input text"""
@@ -114,18 +115,11 @@ class TextInput(Drawable):
     def setText(self, text):
         """Set the text displayed in the input bar"""
         self._textbox.setText(text)
-        self.__updateInput()
+        self.updateGraphic()
 
-    def __updateInput(self):
+    def internalUpdate(self, surf):
         """Update the widget's display"""
-        surfBack = pygame.Surface((self._width+(self._borderWidth*2),
-                                   (self._height+(self._borderWidth*2))))
-        surfBack.fill(self._currentBorderColor)
-        surf = pygame.Surface((self._width, self._height))
-        surf.fill(self._backgroundColor)
         y_pos = (self._height // 2) - (self._textbox.getHeight() // 2)
         x_pos = (self._width // 2) - (self._textbox.getWidth() // 2)
         self._textbox.setPosition((x_pos, y_pos))
         self._textbox.draw(surf)
-        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
-        self._image = surfBack
