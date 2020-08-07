@@ -1,10 +1,14 @@
 
 import pygame
-from polybius.graphics import AbstractGraphic, TextInput, Button, TextBox
+from polybius.graphics.utils.abstractgraphic import AbstractGraphic
+from polybius.graphics.components.textinput import TextInput
+from polybius.graphics.components.button import Button
+from polybius.graphics.components.textbox import TextBox
+from polybius.graphics.utils.mysurface import MySurface
 
 class Incrementer(AbstractGraphic):
 
-    def __init__(self, pos, font=None, boxDims=(30,30),
+    def __init__(self, pos, buttonFont=None, valueFont=None, boxDims=(30,30),
                  buttonDims=(20,20), spacing=5, increments=[1,5,"all"],
                  padding=(0,0), backgroundColor=None, borderWidth=0,
                  borderColor=(0,0,0), maxValue=None, minValue=None,
@@ -12,13 +16,16 @@ class Incrementer(AbstractGraphic):
                  onlyDecrement=False, buttonBorderWidth=4, buttonFontColor=(255,255,255),
                  buttonText=[], decrementColor=(255,0,0), incrementColor=(25,130,30),
                  valueBoxBorderWidth=2, valueBoxBackgroundColor=(255,255,255),
-                 valueBoxBorderColor=(0,0,0), valueBoxAntialias=True):
+                 valueBoxBorderColor=(0,0,0), valueBoxAntialias=True, clearOnActive=False):
 
         AbstractGraphic.__init__(self, pos)
 
-        if font==None:
-            font = pygame.font.SysFont("Arial", 16)
-        self._font = font
+        if buttonFont == None:
+            buttonFont = pygame.font.SysFont("Arial", 16)
+        if valueFont == None:
+            valueFont = pygame.font.SysFont("Arial", 16)
+        self._buttonFont = buttonFont
+        self._valueFont = valueFont
 
         self._borderColor = borderColor
         self._borderWidth = borderWidth
@@ -50,6 +57,8 @@ class Incrementer(AbstractGraphic):
         self._onlyIncrement = onlyIncrement
         self._onlyDecrement = onlyDecrement
 
+        self._clearOnActive = clearOnActive
+
         if "all" in increments and (maxValue == None or minValue == None):
             raise Exception("All can only be used if their are caps provided")
 
@@ -71,6 +80,8 @@ class Incrementer(AbstractGraphic):
                 
         self.updateDisplay()
 
+        self._displayUpdated = False # Variable to prevent infinite recursion
+
     def updateDisplay(self):
         # Create the decrement buttons
         self._buttons = []
@@ -79,12 +90,13 @@ class Incrementer(AbstractGraphic):
 
         if not self._onlyIncrement:
             for i, x in enumerate(self._increments[::-1]):
-                buttonWidth = max(TextBox(self._buttonText[i], (0,0), self._font, (0,0,0)).getWidth() + \
+                buttonWidth = max(TextBox(self._buttonText[i], (0,0), self._buttonFont,
+                                          (0,0,0)).getWidth() + \
                                   (2*self._buttonBorderWidth) + 6,
                                   self._buttonDims[0])
 
                 # Create the button
-                b = Button(self._buttonText[i], (button_x, button_y), self._font,
+                b = Button(self._buttonText[i], (button_x, button_y), self._buttonFont,
                            self._buttonFontColor, self._decrementColor,
                        self._buttonDims[1], buttonWidth, borderWidth=self._buttonBorderWidth,
                            borderColor=self.shiftRGBValues(self._decrementColor, (-30,-30,-30)))
@@ -107,9 +119,9 @@ class Incrementer(AbstractGraphic):
         valueBox_x = button_x
         valueBox_y = self.getY() + self._padding[1] + self._borderWidth
         defaultText = "" if self._defaultValue == None else str(self._defaultValue)
-        self._valueBox = TextInput((valueBox_x, valueBox_y), self._font, (20,20),
+        self._valueBox = TextInput((valueBox_x, valueBox_y), self._valueFont, self._boxDims,
                                    numerical=True, defaultText=defaultText,
-                                   clearOnActive=True, allowNegative=True,
+                                   clearOnActive=self._clearOnActive, allowNegative=True,
                                    borderColor=self._valueBoxBorderColor,
                                    backgroundColor=self._valueBoxBackgroundColor,
                                    borderWidth=self._valueBoxBorderWidth,
@@ -121,13 +133,13 @@ class Incrementer(AbstractGraphic):
         if not self._onlyDecrement:
             for i, x in enumerate(self._increments):
                 buttonWidth = max(TextBox(self._buttonText[i+len(self._increments)], (0,0),
-                                          self._font, (0,0,0)).getWidth() + \
+                                          self._buttonFont, (0,0,0)).getWidth() + \
                                   (2*self._buttonBorderWidth) + 6,
                                   self._buttonDims[0])
 
                 # Create the button
                 b = Button(self._buttonText[i+len(self._increments)], (button_x, button_y),
-                           self._font, self._buttonFontColor, self._incrementColor,
+                           self._buttonFont, self._buttonFontColor, self._incrementColor,
                        self._buttonDims[1], buttonWidth, borderWidth=self._buttonBorderWidth,
                            borderColor=self.shiftRGBValues(self._incrementColor, (-30,-30,-30)))
 
@@ -157,6 +169,9 @@ class Incrementer(AbstractGraphic):
         self._height = max(self._buttons[0][0].getHeight(), self._valueBox.getHeight()) + \
                        (2 * self._padding[1]) + (2 * self._borderWidth)
 
+        self._background = pygame.Surface((self._width, self._height))
+
+        self._displayUpdated = True
         self.updateGraphic()
 
     def increment(self, amount):
@@ -167,6 +182,9 @@ class Incrementer(AbstractGraphic):
     def setValue(self, value):
         value = min(self._maxValue, max(self._minValue, int(value)))
         self._valueBox.setText(str(value))
+
+    def getValue(self):
+        return self._valueBox.getInput()
 
     def draw(self, surface):
         super().draw(surface)
@@ -183,6 +201,9 @@ class Incrementer(AbstractGraphic):
 
     def center(self, surface=None, cen_point=(1/2,1/2), multisprite=False):
         super().center(surface, cen_point, multisprite)
-        self.updateDisplay()
+        if not self._displayUpdated:
+           self.updateDisplay()
+        self._displayUpdated = False
+            
 
         

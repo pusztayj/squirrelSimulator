@@ -14,7 +14,7 @@ combat,Heal,"(10, 200, 40)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRU
 combat,Retreat,"(206, 218, 46)",Times New Roman,20,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 playerItemManagement,Share with...,"(0, 102, 34)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 playerItemManagement,Gift to... ,"(0, 102, 34)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
-playerItemManagement,Trade,"(0, 102, 34)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
+playerItemManagement,Trade with…,"(0, 102, 34)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 playerItemManagement,Item Stats,"(0, 102, 34)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 packItemManagement,Borrow,"(34,67,120)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 packItemManagement,Request Ownership,"(34,67,120)",Arial,14,"(255, 255, 255)","(0,0,0)",2,TRUE,null
@@ -26,6 +26,6 @@ playerItemBorrowedManagement,Trade,"(78, 29, 117)",Arial,16,"(255, 255, 255)","(
 playerItemBorrowedManagement,Item Stats,"(78, 29, 117)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 packItemBorrowedManagement,Reclaim,"(220, 28, 28)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 packItemBorrowedManagement,Give Ownership,"(220, 28, 28)",Arial,14,"(255, 255, 255)","(0,0,0)",2,TRUE,null
-packItemBorrowedManagement,Trade,"(220, 28, 28)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
+packItemBorrowedManagement,Trade with…,"(220, 28, 28)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 packItemBorrowedManagement,Item Stats,"(220, 28, 28)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null
 dropDownTemplate,,"(84, 69, 69)",Arial,16,"(255, 255, 255)","(0,0,0)",2,TRUE,null

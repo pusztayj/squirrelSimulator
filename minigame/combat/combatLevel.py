@@ -248,7 +248,7 @@ class CombatLevel(Level):
                     if self._retreatScreen == None:
                         # are you sure? popup window should be drawn here
                         self._retreatScreen = RetreatScreen(self._player) 
-                    self._backWorld.handleEvent(event, self.setActive, False)
+                    self._backWorld.handleEvent(event, self.setActive, (False,))
                     if not self.isActive():
                         return (0,)    
         else:

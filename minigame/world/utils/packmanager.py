@@ -14,6 +14,7 @@ from economy.acorn import Acorn
 from player import Player
 import pygame, copy
 from graphics import ItemCard
+from graphics.tradeMenu import TradeMenu
 
 digitLen = {1:33, 2:38, 3:45, 4:55}
 
@@ -144,6 +145,8 @@ class MemberCard(Drawable, Window):
         self._exitButton = Button("X", (self._itemCardPos[0] + self._itemCardSize[1] - 40
                                         ,self._itemCardPos[1] + 10),
                                   self._font,(0,0,0),(100,100,100),25,25,(0,0,0), 1)
+
+        self._tradeMenu = None
         
     def setEntity(self, entity):
 
@@ -238,6 +241,8 @@ class MemberCard(Drawable, Window):
             if self._itemCard != None:
                 self._itemCard.draw(surf)
                 self._exitButton.draw(surf)
+            if self._tradeMenu != None and self._tradeMenu.getDisplay():
+                self._tradeMenu.draw(surf)
 
     def handleEvent(self, event):
         """"Handles events on the member card"""
@@ -247,6 +252,9 @@ class MemberCard(Drawable, Window):
             if self._itemCard != None:
                 self._itemCard.move(event)
                 self._exitButton.handleEvent(event, self.closeItemCard)
+
+            if self._tradeMenu != None and self._tradeMenu.getDisplay():
+                self._tradeMenu.handleEvent(event)
             
             if type(self._entity) != Player and self._itemMenu==None:
                 self._removeButton.handleEvent(event, self.remove)
@@ -257,7 +265,8 @@ class MemberCard(Drawable, Window):
                 e = self._itemMenu.handleEvent(event)
 
                 # Create the dropdown for sharing and gifting items
-                if e in (1, 2) and self._menuType=="playerItem":
+                if (e in (1, 2, 3) and self._menuType=="playerItem") or \
+                   (e == 3 and self._menuType=="itemBorrowedByPack"):
 
                    # Find the position of the new dropdown
                    dropdown_y = self._itemMenu.getButtonByPosition(e-1).getY()
@@ -316,7 +325,13 @@ class MemberCard(Drawable, Window):
                         self._item.setOwner(self._pack.getLeader())
                         self._itemMenu = None
                 if e == 3:
-                    print("trade")
+                    if self._menuType in ("playerItem", "itemBorrowedByPack"):
+                        self._dropType = "trade"
+                    else:
+                        self._tradeMenu = TradeMenu((50,50), (1050, 400), self._pack.getLeader(),
+                                                    self._item.getAttribute("owner"), self._item)
+                        self._tradeMenu.center()
+                        self._itemMenu = None
                 if e == 4:
                     self._itemCard = ItemCard(self._item, self._itemCardPos,
                                               self._itemCardSize).getCard()
@@ -362,6 +377,10 @@ class MemberCard(Drawable, Window):
                         self._pack.getLeader().getInventory().removeItem(self._item)
                         creature.getInventory().addItem(self._item)
                         self._item.setOwner(creature)
+                    elif self._dropType == "trade":
+                        self._tradeMenu = TradeMenu((50,50), (1050, 400), self._pack.getLeader(),
+                                                    creature, self._item)
+                        self._tradeMenu.center()
                     
                     self._dropdown = None
                     self._itemMenu = None
@@ -408,4 +427,16 @@ class MemberCard(Drawable, Window):
             self._healthBar.setProgress(self._entity.getHealth())
             self._hungerBar.setProgress(self._entity.getHunger())
             self._staminaBar.setProgress(self._entity.getStamina())
+
+             # Acorn Information
+            self._acorn = Acorn((0,0))
+            self._acorn.scale(.68)
+            self._acorn = self._acorn.getImage()
+
+            self._acornCount = TextBox("", (self._width-50, 4),
+                                        self._fontsmall, (0,0,0))
+            acorns = str(self._entity.getAcorns())
+            self._acornCount.setText(acorns)
+            acPos = ((self._width - (145 + digitLen[len(acorns)])) + self.getX(), 50 + self._avHeight + self.getY())
+            self._acornCount.setPosition(acPos)
         

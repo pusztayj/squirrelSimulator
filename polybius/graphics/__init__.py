@@ -12,6 +12,7 @@ from .components.textbox import TextBox
 from .components.textinput import TextInput
 from .components.particletext import ParticleText
 from .components.multilinetextbox import MultiLineTextBox
+from .components.incrementer import Incrementer
 
 from .ui.confirmationwindow import ConfirmationWindow
 from .ui.menu import Menu
@@ -30,7 +31,8 @@ __all__ = ["Banner","Button","Mask","MySurface","Popup","PopupWindow",
            "ProgressBar","ScrollBox","ScrollSelector","Tabs",
            "TextBox","TextInput","Window","ParticleText",
            "ConfirmationWindow","MultiLineTextBox", "Drawable",
-           "Animated", "Menu", "AbstractGraphic","TextGraphic"]
+           "Animated", "Menu", "AbstractGraphic","TextGraphic",
+           "Incrementer"]
 
 
 

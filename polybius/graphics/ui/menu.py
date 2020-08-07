@@ -104,7 +104,7 @@ class Menu(Drawable, Window):
     def handleEvent(self, event):
         """Handles events on the pause menu"""
         for b in self._buttons:
-            b[0].handleEvent(event,self.select,b)
+            b[0].handleEvent(event,self.select,(b,))
         return self.getSelection()
 
     def select(self, button):

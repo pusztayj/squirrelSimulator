@@ -4,14 +4,17 @@ import pygame, copy
 
 class ItemCard(object):
 
-    def __init__(self, item,position = (471,166),scrollBoxSize = (155,300)):
+    def __init__(self, item,position = (471,166),scrollBoxSize = (155,300),
+                 center=False):
         """
         Creates an item card for the object, this works for both items and GUIs.
 
         Defaults is set for the merchant GUI which needs to be changed.
         """
         self._item = item
+        self._center = center
         self._card = self.generate(item,position,scrollBoxSize)
+        
 
     def getItem(self):
         """
@@ -31,17 +34,30 @@ class ItemCard(object):
         """
         nameFont = pygame.font.SysFont("Times New Roman", 32)
         detailsFont = pygame.font.SysFont("Times New Roman", 16)
-        s = pygame.Surface((240,600))
-        s.fill((0,0,0))
+        
         a = copy.copy(entity)
         a.setWorldBound(False)
         a.setPosition((10,50))
         if a.isFlipped():
             a.flip()
         a.scale(4)
-        TextBox(a.getAttribute("name"), (10,10), nameFont, (255,255,255)).draw(s)
+        name = TextBox(a.getAttribute("name"), (10,10), nameFont, (255,255,255))
+        info = MultiLineTextBox(str(a), (10,200), detailsFont,
+                             (255,255,255), (0,0,0))
+
+        s_height = name.getHeight() + info.getHeight() + a.getHeight() + 50
+        s = pygame.Surface((scrollBoxSize[0],s_height))
+        s.fill((0,0,0))
+        
+        if self._center:
+            name.center(s, (1/2, None), False)
+            #a.center(s, (1/2, None), False)
+            a.setPosition(((scrollBoxSize[0] // 2) - (a.getWidth() // 2), 50))
+            info.center(s, (1/2,None), False)
+            
+        name.draw(s)
         a.draw(s)
-        MultiLineTextBox(str(a), (10,200), detailsFont,
-                             (255,255,255), (0,0,0)).draw(s)
+        info.draw(s)
+        
         s = MySurface(s)
         return ScrollBox(position, scrollBoxSize, s, borderWidth=2)
