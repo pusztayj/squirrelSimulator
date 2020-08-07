@@ -72,6 +72,8 @@ class Button(TextGraphic):
 
     def handleEvent(self, event, func, args=None, offset=(0,0)):
         """Handles events on the button"""
+        if args != None and type(args) not in (tuple, list):
+            args = (args,)
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
         if self._press.check(event):

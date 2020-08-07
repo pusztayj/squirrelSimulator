@@ -22,7 +22,7 @@ class TextInput(AbstractGraphic):
         self._width = dimensions[0]
         self._height = dimensions[1]
         self._defaultBorderWidth = borderWidth
-        self._borderColor = borderColor
+        self._defaultBorderColor = borderColor
         self._borderHighlight = borderHighlight
         self._defaultBackgroundColor = backgroundColor
         self._backgroundHighlight = backgroundHighlight
@@ -33,7 +33,7 @@ class TextInput(AbstractGraphic):
         self._clearOnActive = clearOnActive
         self._numerical = numerical
         self._allowNegative = allowNegative
-        self._currentBorderColor = self._borderColor
+        self._borderColor = self._defaultBorderColor
         self._borderWidth = borderWidth
         self._color = color
         self._highlightColor = highlightColor
@@ -42,7 +42,7 @@ class TextInput(AbstractGraphic):
 
     def displayActive(self):
         """Sets the display mode to active"""
-        self._currentBorderColor = self._borderHighlight
+        self._borderColor = self._borderHighlight
         self._borderWidth = self._defaultBorderWidth + 1
         self._backgroundColor = self._backgroundHighlight
         self._textbox.setFontColor(self._highlightColor)
@@ -52,7 +52,7 @@ class TextInput(AbstractGraphic):
 
     def displayPassive(self):
         """Sets the display mode to passive"""
-        self._currentBorderColor = self._borderColor
+        self._borderColor = self._defaultBorderColor
         self._borderWidth = self._defaultBorderWidth
         self._backgroundColor = self._defaultBackgroundColor
         self._textbox.setFontColor(self._color)

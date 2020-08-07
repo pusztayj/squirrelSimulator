@@ -39,7 +39,8 @@ class MerchantLevel(Level):
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
         # player
         self._player = player
-        self._player_items = [{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
+        self._player_items = [{"text": item.getAttribute("name"),
+                               "func": self.selectMerchantItem,"args":(item,)} \
                       for item in self._player.getInventory()]
         self._playerSelect = ScrollSelector((100,100),(250,300),30,self._player_items,(0,0,0))
         # merchant
@@ -47,7 +48,8 @@ class MerchantLevel(Level):
         self._merchant.flip()
         self._merchant.scale(1.5)
         self._merchantMind = merchant
-        self._merchant_items = [{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
+        self._merchant_items = [{"text": item.getAttribute("name"),
+                                 "func": self.selectMerchantItem,"args":(item,)} \
                       for item in self._merchantMind.getInventory()]
         self._merchantSelect = ScrollSelector((100,100),(250,300),30,self._merchant_items,(0,0,0))
         
@@ -193,7 +195,7 @@ class MerchantLevel(Level):
         if self._itemCard != None: # makes sure item card is displayed
             self._itemCard.getCard().move(event)
             if self._popup == None or not self._popup.getDisplay(): # makes sure not item card is not dispayed
-                self._executeTransaction.handleEvent(event, self.transaction,self._itemCard.getItem())
+                self._executeTransaction.handleEvent(event, self.transaction, self._itemCard.getItem())
                 self._cancelTransaction.handleEvent(event, self.cancelTransaction)
             self._playerSelect.updateSelections([{"text": item.getAttribute("name"),"func": self.selectMerchantItem,"args":item} \
                   for item in self._player.getInventory()])
