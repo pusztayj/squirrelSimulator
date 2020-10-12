@@ -117,6 +117,8 @@ class CombatLevel(Level):
         self._playerDone = False
         self._menuSelection = None
 
+        self._playerAttacked = False #Keep track of if the player has already attacked this turn
+
     def draw(self, screen):
         # what we always draw
         self._background.draw(screen)
@@ -189,7 +191,7 @@ class CombatLevel(Level):
                        creature in self._enemies.getTrueMembers():
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
                         if CONTROLS.get("select").check(event):
-                            if r.collidepoint(event.pos):
+                            if r.collidepoint(event.pos) and not self._playerAttacked:
                                 self._player.attackLogic([creature])
                                 attack(self._player,creature) # the model is changed here as told by the controller
                                 self._playerDone = True
@@ -198,6 +200,9 @@ class CombatLevel(Level):
                                 text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
                                 text = text.replace("You has", "You have")
                                 self._combatText.setText(text)
+
+                                # Set the player attacked flag to true
+                                self._playerAttacked = True
                                 
                     else:
                         animal = sprite.getAnimal()
@@ -290,6 +295,7 @@ class CombatLevel(Level):
                 self._current = self._combatOrder.getCurrent()
                 if self._current == self._player:
                     self._movesMenu.display()
+                    self._playerAttacked = False # Reset the player attack
                 self._creatureSpriteMap[self._current].select()
 
             if self._current != self._player:
