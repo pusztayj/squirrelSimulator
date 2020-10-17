@@ -281,3 +281,20 @@ class NPC(Animal, Animated):
         c.equipItem(self.getEquipItem())
         c.setInventory(self.getInventory())
         return c
+
+    def borrowItem(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to borrow an item.
+        """
+        if self.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return False
+        if self.getInventory().hasItem(item):
+            return False
+        
+        itemType = item.getAttribute("type")
+        
+
+    def loanItem(self,item,otherCreature):
+        pass
+        
