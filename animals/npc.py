@@ -287,14 +287,36 @@ class NPC(Animal, Animated):
         Returns boolean based on NPC's logic of wanting
         to borrow an item.
         """
+        if not item.isShareable():
+            return (False,"Item is not sharable")
         if self.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
-            return False
-        if self.getInventory().hasItem(item):
-            return False
-        
-        itemType = item.getAttribute("type")
-        
+            return (False,str(self.getName())+ " has no room in their inventory") 
+        if item.getAttribute("durability") < 20:
+            return (False,"Your " + str(item.getAttribute("name") + "'s durability is too low for " +str(self.getName()))
+        if item.getAttribute("utility") < 20:
+            return (False,"Your " + str(item.getAttribute("name") + "'s utility is too low for " +str(self.getName()))
+        return True     
 
     def loanItem(self,item,otherCreature):
-        pass
+        if not item.isShareable():
+            return (False,"Item is not sharable")
+        if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return (False,"You have no space in your inventory")
+        
+        allItems = self.getInventory().getItems() + [self.getequipItem()] + [self.getArmor()]
+        inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
+        numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
+        
+        if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
+            return (False,str(self.getName())+ " only has one " + str(x.getAttribute("type")) + " in their inventory")
+        
+        if item.getAttribute("item") == "healthPotion": # If health potion don't trade
+            return (False, "Health Potions are not loanable")
+        
+        if item.getAttribute("type") == "food": # If food don't trade
+            return (False, "Food is not loanable")
+
+        return True
+
+    
         
