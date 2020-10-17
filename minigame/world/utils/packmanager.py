@@ -296,33 +296,60 @@ class MemberCard(Drawable, Window):
                       self._dropdown = None
 
                 if e == 1:
+                    
                    if self._menuType == "playerItem":
                       self._dropType = "share"
+                      
                    elif self._menuType == "itemBorrowedByPlayer":
+                      tup = self._item.getAttribute("owner").reclaimItem(self._item,
+                                                                         self._entity)
                       # Player returns a borrowed item
-                      self._entity.getInventory().removeItem(self._item)
-                      self._item.getAttribute("owner").getInventory().addItem(self._item)
+                      if tup[0]:
+                          self._entity.getInventory().removeItem(self._item)
+                          self._item.getAttribute("owner").getInventory().addItem(self._item)
+                      print(tup[1])
                       self._itemMenu = None
-                   elif self._menuType in ("itemBorrowedByPack", "packItem"):
-                      # Player reclaims a borrowed item or
+                      
+                   elif self._menuType == "itemBorrowedByPack":
+                      # Player reclaims a borrowed item
+                      if self._pack.getLeader().getInventory().hasSpace():
+                          self._pack.getLeader().getInventory().addItem(self._item)
+                          self._entity.getInventory().removeItem(self._item)
+                      self._itemMenu = None
+
+                   elif self._menuType == "packItem":
                       # Player borrows an item from a pack member
-                      self._pack.getLeader().getInventory().addItem(self._item)
-                      self._entity.getInventory().removeItem(self._item)
+                      tup = self._entity.loanItem(self._item, self._pack.getLeader())
+                      if tup[0]:
+                          self._pack.getLeader().getInventory().addItem(self._item)
+                          self._entity.getInventory().removeItem(self._item)
+                      print(tup[1])
                       self._itemMenu = None
+                        
 
                 if e == 2:
                     if self._menuType == "playerItem":
                         self._dropType = "gift"
                     elif self._menuType in "itemBorrowedByPlayer":
-                        self._item.setOwner(self._pack.getLeader())
+                        tup = self._item.getAttribute("owner").giveOwnershipItem(self._item,
+                                                                                 self._pack.getLeader())
+                        if tup[0]:
+                            self._item.setOwner(self._pack.getLeader())
+                        print(tup[1])
                         self._itemMenu = None
                     elif self._menuType == "itemBorrowedByPack":
-                        self._item.setOwner(self._entity)
+                        tup = self._entity.takeOwnership(self._item, self._pack.getLeader())
+                        if tup[0]:
+                            self._item.setOwner(self._entity)
+                        print(tup[1])
                         self._itemMenu = None
                     elif self._menuType == "packItem":
-                        self._entity.getInventory().removeItem(self._item)
-                        self._pack.getLeader().getInventory().addItem(self._item)
-                        self._item.setOwner(self._pack.getLeader())
+                        tup = self._entity.giveOwnershipItem(self._item, self._pack.getLeader())
+                        if tup[0]:
+                            self._entity.getInventory().removeItem(self._item)
+                            self._pack.getLeader().getInventory().addItem(self._item)
+                            self._item.setOwner(self._pack.getLeader())
+                        print(tup[1])
                         self._itemMenu = None
                 if e == 3:
                     if self._menuType in ("playerItem", "itemBorrowedByPack"):
@@ -370,13 +397,19 @@ class MemberCard(Drawable, Window):
                                if not an == self._pack.getLeader()][de-1]
                     if self._dropType == "share":
                        # Share an item with a pack member
-                       self._pack.getLeader().getInventory().removeItem(self._item)
-                       creature.getInventory().addItem(self._item)
+                       tup = creature.borrowItem(self._item, self._pack.getLeader())
+                       if tup[0]:
+                           self._pack.getLeader().getInventory().removeItem(self._item)
+                           creature.getInventory().addItem(self._item)
+                       print(tup[1])
                     elif self._dropType == "gift":
-                        # Given an item to a pack member
-                        self._pack.getLeader().getInventory().removeItem(self._item)
-                        creature.getInventory().addItem(self._item)
-                        self._item.setOwner(creature)
+                        # Give an item to a pack member
+                        tup = creature.takeOwnership(self._item, self._pack.getLeader())
+                        if tup[0]:
+                            self._pack.getLeader().getInventory().removeItem(self._item)
+                            creature.getInventory().addItem(self._item)
+                            self._item.setOwner(creature)
+                        print(tup[1])
                     elif self._dropType == "trade":
                         self._tradeMenu = TradeMenu((50,50), (1050, 400), self._pack.getLeader(),
                                                     creature, self._item)

@@ -288,7 +288,7 @@ class NPC(Animal, Animated):
         to borrow an item.
         """
         if not item.isShareable():
-            return (False,"Item is not sharable")
+            return (False,"Item is not shareable")
         if self.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
             return (False,str(self.getName())+ " has no room in their inventory") 
         if item.getAttribute("durability") < 20:
@@ -303,16 +303,16 @@ class NPC(Animal, Animated):
         to loan an item. 
         """
         if not item.isShareable():
-            return (False,"Item is not sharable")
+            return (False,"Item is not shareable")
         if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
             return (False,"You have no space in your inventory")
         
-        allItems = self.getInventory().getItems() + [self.getequipItem()] + [self.getArmor()]
+        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
         inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
         
         if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
-            return (False,str(self.getName())+ " only has one " + str(x.getAttribute("type")) + " in their inventory")
+            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory")
         
         if item.getAttribute("item") == "healthPotion": # If health potion don't trade
             return (False, "Health Potions are not loanable")
@@ -328,7 +328,7 @@ class NPC(Animal, Animated):
         to reclaim an item.
         """
         if not item.isShareable():
-            return (False,"Item is not sharable")
+            return (False,"Item is not shareable")
         if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
             return (False,"You have no space in your inventory")
         return (True,str(self.getName()) + " has reclaimed the "+str(item.getAttribute("name")))
@@ -339,16 +339,18 @@ class NPC(Animal, Animated):
         to give ownership of an item to someone else.
         """
         if not item.isShareable():
-            return (False,"Item is not sharable")
-        if self.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return (False,"Item is not shareable")
+        # NPC inventory is full so they can't accept
+        if otherCreature.getInventory().hasSpace() == False and \
+           not (item in otherCreature.getInventory().getItems()): 
             return (False,str(self.getName())+ " has no room in their inventory")
 
-        allItems = self.getInventory().getItems() + [self.getequipItem()] + [self.getArmor()]
+        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
         inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
         
         if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
-            return (False,str(self.getName())+ " only has one " + str(x.getAttribute("type")) + " in their inventory. They will not give it.")
+            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory. They will not give it.")
 
         if item.getAttribute("durability") > 80:
             return (False,str(self.getName())+ " does not want to give ownership.")
@@ -362,7 +364,13 @@ class NPC(Animal, Animated):
         Returns boolean based on NPC's logic of wanting
         to take ownership of an item.
         """
-        return True
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        # NPC inventory is full so they can't accept
+        if self.getInventory().hasSpace() == False and \
+           not (item in self.getInventory().getItems()): 
+            return (False,str(self.getName())+ " has no room in their inventory")
+        return (True, ("%s has taken ownership of the item" % self.getName()))
 
     
         
