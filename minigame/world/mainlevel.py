@@ -204,14 +204,14 @@ class MainLevel(Level):
         self._player = self._playerPack.getLeader()
         self._packManager = PackManager(self._playerPack, self._screen_size)
 
-    def createPopupWindow(self):
+    def createConfirmationAndPopupWindows(self):
 
         # Set the fonts
         font = self._messageFont
         buttonFont = self._popupFont
 
         # Set the dimensions
-        width, height = 288, 100
+        width, height = 288, 150
         dimensions = (width, height)
         buttonWidth, buttonHeight = 40, 20
         buttonDimensions = (buttonWidth, buttonHeight)
@@ -226,27 +226,25 @@ class MainLevel(Level):
                                         backgroundColor, buttonColor, buttonDimensions,
                                         buttonFont,buttonFontColor, borderWidth=1)
         
+        self._confirmationWindow = ConfirmationWindow("", (0,0), dimensions, font, fontColor,
+                                            backgroundColor, buttonColor, buttonDimensions,
+                                            buttonFont, buttonFontColor, borderWidth=1)
+        
         # Position the window on the screen
         verticalCenter = 1/3 #from top of screen
         horizontalCenter = 1/2 #from left of screen
         self._popupWindow.center(cen_point=(horizontalCenter, verticalCenter))
+        self._confirmationWindow.center(cen_point=(horizontalCenter, verticalCenter))
 
         self._popupWindow.close()
+        self._confirmationWindow.close()
+        self._confirmationProceedure = None
 
     def setupUI(self):
         # Set the hover popup to None
         self._popup = None
 
-        self.createPopupWindow()
-
-        # Create the confirmation window
-        self._confirmationWindow = ConfirmationWindow("", (0,0), (288,150), self._messageFont,
-                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
-                                        self._popupFont,(255,255,255), borderWidth=1)
-        self._confirmationWindow.setPosition((self._screen_size[0]//2 - self._confirmationWindow.getWidth()//2,
-                                       self._screen_size[1]//3 - self._confirmationWindow.getHeight()//2))
-        self._confirmationWindow.close()
-        self._confirmationProceedure = None
+        self.createConfirmationAndPopupWindows()
 
         # Create the player's stats display
         self._stats = StatDisplay((5,5),self._player)
@@ -483,8 +481,6 @@ class MainLevel(Level):
                     p = Pack(clone)
                     self._packs.append(p)
                     clone.setPack(p)
-                    
-                    
 
             # Handle events on the interaction interface
             if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
