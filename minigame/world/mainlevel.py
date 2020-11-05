@@ -130,11 +130,11 @@ class MainLevel(Level):
         self._spawnedPiles = []
 
         # Create timers
-        self._acornSpawnTimer = random.randint(*CONSTANTS.get("acornSpawnTime"))
-        self._pileSpawnTimer = random.randint(*CONSTANTS.get("pileSpawnTime"))
-        self._acornLeakTimer = self._worldClock.getHourLength()
+        self._acornSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("acornSpawnTime")))
+        self._pileSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("pileSpawnTime")))
+        self._acornLeakTimer = Timer(self._worldClock.getHourLength())
         self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
-        self._starveTimer = 2 * self._worldClock.getHourLength()
+        self._starveTimer = Timer(2 * self._worldClock.getHourLength())
 
         self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
         self._interactionTimer = self._interactionDelay
@@ -596,7 +596,7 @@ class MainLevel(Level):
                                 if self._player.getCollideRect().colliderect(rect):
                                     self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
                                     self._popupWindow.display()
-                                    for k in self._player._movement.keys(): self._player._movement[k] = False
+                                    self._player.stop()
                                     self._fightFlag = (True, leader.getPack()) #Start Combat on okay
                                     self._graceTimer = self._gracePeriod
 
@@ -625,53 +625,46 @@ class MainLevel(Level):
                      name += "'s Shop"
                  return Popup(name, popup_pos, font)
 
-    def update(self, ticks):
-        """Updates the main level based on ticks from the game clock"""
-        
-        # Check if acorns have been collected or if they have despawned
-        for acorn in self._acorns:
-            if acorn.getCollideRect().colliderect(self._player.getCollideRect()) and \
-                self._player.getCheekCapacity() - self._player.getAcorns() > 0:
-                self._player.setAcorns(self._player.getAcorns()+1)
-                acorn.collected()
-            acorn.update(ticks)
+    def spawnAcorn(self):
+        """Spawn a new acorn on the map"""
+        x_coordinate = random.randint(0,self._world_size[0])
+        y_coordinate = random.randint(0,self._world_size[1])
+        position = (x_coordinate, y_coordinate)
+        self._acorns.append(Acorn(position))
 
-        # Update piles so that they can despawn
-        for pile in self._spawnedPiles:
-            pile.update(ticks)
+    def spawnAbandonedPile(self):
+        """Spawn a new abandoned pile on the map"""
+        x_coordinate = random.randint(0,self._world_size[0])
+        y_coordinate = random.randint(0,self._world_size[1])
+        position = (x_coordinate, y_coordinate)
+        name = "Abandoned Pile"
+        acornsInPile = random.randint(1,20)
+        d = DirtPile(position, name)
+        d.setAcorns(acornsInPile)
+        self._spawnedPiles.append(d)
 
-        # Spawn acorns around the map
-        self._acornSpawnTimer -= ticks
-        if self._acornSpawnTimer <= 0:
-            self._acorns.append(Acorn((random.randint(0,self._world_size[0]),
-                                       random.randint(0,self._world_size[1]))))
-            self._acornSpawnTimer = random.randint(2,5)
+    def takeStarveDamage(self):
+        """Apply negative effects to starving player"""
+        self._player.loseHealth(5)
+        self._player.loseStamina(5)
 
-        # Spawn Abandoned Piles around the map
-        self._pileSpawnTimer -= ticks
-        if self._pileSpawnTimer <=0:
-            d = DirtPile((random.randint(0,self._world_size[0]),
-                          random.randint(0,self._world_size[1])),
-                         "Abandoned Pile")
-            d.setAcorns(random.randint(1,20))
-            self._spawnedPiles.append(d)
-            self._pileSpawnTimer = random.randint(20,40)
+    def leakAcorns(self):
+        """Calculate and execute acorn leakage"""
+        percentLoss = random.randint(25,33) / 100 # Between 25 and 33 percent
+        overflowAcorns = self._player.getAcorns() - self._player.getCheekCapacity()
+        loss = round(overflowAcorns * percentLoss)
+        self._player.setAcorns(self._player.getAcorns() - loss)
 
-        # Decrement the hunger time and update hunger
+    def updateTimers(self, ticks):
+        """Update and maintain the in-game timers"""
+        self._acornSpawnTimer.update(ticks, self.spawnAcorn)
+        self._pileSpawnTimer.update(ticks, self.spawnAbandonedPile)
         self._hungerTimer.update(ticks, self._player.decrementHunger)
 
-        # Update the night filter's alpha values
-        self._nightFilter.setAlpha(round((-100*math.sin((math.pi /60)*(self._worldClock.getTime()-5)))+100))
-
-        # Control if a player is starving
         if self._player.isStarving():
-            self._starveTimer -= ticks
-            if self._starveTimer <= 0:
-                self._player.loseHealth(5)
-                self._player.loseStamina(5)
-                self._starveTimer = 2 * self._worldClock.getHourLength()
+            self._starveTimer.update(ticks, self.takeStarveDamage)
         else:
-            self._starveTimer = 2 * self._worldClock.getHourLength()
+            self._starveTimer.resetTimer()
 
         # Control acorn leakage if the player is carrying too many acorns
         if self._player.getAcorns() > self._player.getCheekCapacity():
@@ -679,21 +672,11 @@ class MainLevel(Level):
                 self._leak = True
                 self._popupWindow.setText("You are carrying too many acorns!\nStash them or you'll drop them")
                 self._popupWindow.display()
-                for k in self._player._movement.keys(): self._player._movement[k] = False
-            self._acornLeakTimer -= ticks
-            if self._acornLeakTimer <= 0:
-                percentLoss = random.randint(3,4)
-                overflowAcorns = self._player.getAcorns() - self._player.getCheekCapacity()
-                loss = (overflowAcorns // percentLoss) + random.randint(0,5)
-                self._player.setAcorns(self._player.getAcorns() - loss)
-                self._acornLeakTimer = self._worldClock.getHourLength()
+                self._player.stop()
+            self._acornLeakTimer.update(ticks, self.leakAcorns)         
         else:
-            self._acornLeakTimer = self._worldClock.getHourLength()
+            self._acornLeakTimer.resetTimer()
             self._leak = False
-
-        # Control merchant restocking
-        for merchant in self._merchants:
-            merchant.update(ticks)
 
         # Update the grace period between attacks
         self._graceTimer -= ticks
@@ -702,61 +685,87 @@ class MainLevel(Level):
         if  self._interaction != None and self._interaction.getDisplay() and self._interactionTimer >= 0:
             self._interactionTimer -= ticks
 
-        # Update the bribe window, if one exists
-        if self._bribeWindow != None and self._bribeWindow.getDisplay():
-            self._bribeWindow.update()
+    def updateAcorns(self, ticks):
+        for acorn in self._acorns:
+            playerTouchingAcorn = acorn.getCollideRect().colliderect(self._player.getCollideRect())
+            playerHasRoomToCollect = self._player.getAvailableCheekSpace() > 0
+            if  playerTouchingAcorn and playerHasRoomToCollect:
+                self._player.addAcorns(1)
+                acorn.collected()
+            acorn.update(ticks)
 
-        # Update the steal window, if one exists
-        if self._stealWindow != None and self._stealWindow.getDisplay():
-            self._stealWindow.update()
-
-        #Update the player's position
-        self._player.update(self._world_size, ticks)
-
-        # Update the players stats
-        self._stats.update()
-
-        #Update the offset based on the player's location
-        self._player.updateOffset(self._player, self._screen_size, self._world_size)
-
-        # Remove acorns from the world that have been collected
+        # Remove acorns that have been collected
         self._acorns = [acorn for acorn in self._acorns if not acorn.isCollected()]
 
-        #Update InGame Clock
-        self._worldClock.update(ticks)
+    def updateNightFilter(self):
+        currentTime = self._worldClock.getTime()
+        newAlpha = round((-100*math.sin((math.pi /60)*(currentTime-5)))+100)
+        self._nightFilter.setAlpha(newAlpha)
 
-        # Update the players inventory hud
-        self._hud.update(ticks)
+    def updateEnvironment(self, ticks):
+        self.updateAcorns(ticks)
+        for pile in self._spawnedPiles:
+            pile.update(ticks)
+        self.updateNightFilter()
 
-        # Update the current weapon and armor displays     
-        self._weapon.updateBlock()
-        self._armor.updateBlock()
-
-        # Update the player's pack
-        self._playerPack.update(self._world_size, ticks)
-
-        # Update the pack manager
-        self._packManager.update(ticks)
-
-        # Remove dead packs from the game
-        self._packs = [pack for pack in self._packs if not pack.isDead()]
-
-        # Spawn a new pack if the pack population has fallen below its default
-        if len(self._packs) < self._packPopulation:
-            pack = spawnPacks((self._world_size[0]-128, self._world_size[1]+128), 1,
-                              self._merchants + self._trees + [p.getLeader() for p in self._packs])
+    def checkAndMaintainPackPopulation(self):
+        """Spawn new packs if the pack population has fallen below the default"""
+        tooFewPacks = len(self._packs) < self._packPopulation
+        if tooFewPacks:
+            packsNeeded = self._packPopulation - len(self._packs)
+            x_coordinate = self._world_size[0]-128
+            y_coordinate = self._world_size[1]+128
+            position = (x_coordinate, y_coordinate)
+            entitiesToAvoidOverlapping = self._merchants + self._trees + [p.getLeader() for p in self._packs]
+            pack = spawnPacks(position, packsNeeded, entitiesToAvoidOverlapping)
             self._packs += pack
 
-        # Update packs
+    def removeDeadPacksFromGame(self):
+        self._packs = [pack for pack in self._packs if not pack.isDead()]
+
+    def updatePacks(self, ticks):
+        self.removeDeadPacksFromGame()
+        self.checkAndMaintainPackPopulation()
         for pack in self._packs: 
             pack.getLeader().wander(ticks)
             if pack.trueLen() > 1:
                 pack.update(self._world_size, ticks)
 
+    def updateEntities(self, ticks):
+        for merchant in self._merchants:
+            merchant.update(ticks)
+        self._player.update(self._world_size, ticks)
+        self.updatePacks(ticks)
+        self._playerPack.update(self._world_size, ticks)
+        
+    def updateUI(self, ticks):
+        if self._bribeWindow != None and self._bribeWindow.getDisplay():
+            self._bribeWindow.update()
+        if self._stealWindow != None and self._stealWindow.getDisplay():
+            self._stealWindow.update()
+        self._stats.update()
+        self._hud.update(ticks)
+        self._weapon.updateBlock()
+        self._armor.updateBlock()
+        self._packManager.update(ticks)
+
+    def updateViewOffset(self):
+        self._player.updateOffset(self._player, self._screen_size, self._world_size)
+
+    def onDayChange(self):
+        self._player.addXP(self._xpPerDay)
+
+    def update(self, ticks):
+        """Update the main level based on ticks from the game clock"""
+        self.updateEnvironment(ticks)
+        self.updateTimers(ticks)
+        self.updateEntities(ticks)
+        self.updateUI(ticks)
+        self._worldClock.update(ticks)
+        self.updateViewOffset()
         # Check if a day has passed in game time
         if self._worldClock.dayPassed():
-            self._player.setXP(self._player.getXP() + self._xpPerDay)
-
+            self.onDayChange()
         # Load and play a new song if the current song has ended
         SOUNDS.manageSongs("main")
         

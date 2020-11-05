@@ -66,6 +66,10 @@ class Player(Squirrel):
         """
         return self._xp
 
+    def addXP(self, amount):
+        """Add XP to the player's total"""
+        self._xp += amount
+
     def getAcorns(self):
         """Returns the acorns of the player."""
         return self._acorns
@@ -74,6 +78,10 @@ class Player(Squirrel):
         """Sets the acorns of the players."""
         self._acorns = acorns
 
+    def addAcorns(self, amount):
+        """Add acorns to the player's total"""
+        self._acorns += amount
+
     def getCheekCapacity(self):
         """Returns the cheek capacity."""
         return self._cheekCapacity
@@ -81,6 +89,10 @@ class Player(Squirrel):
     def setCheekCapacity(self, capacity):
         """Sets the cheek capacity of the player."""
         self._cheekCapacity = capacity
+
+    def getAvailableCheekSpace(self):
+        """Return the available cheek space of the player"""
+        return self.getCheekCapacity() - self.getAcorns()
 
     def getMemory(self):
         """Returns the memory of the player."""
@@ -225,7 +237,7 @@ class Player(Squirrel):
             if self._velocity.magnitude() > self._maxVelocity:
                 self._velocity.scale(self._maxVelocity)
 
-        #Update the position of the star based on its current velocity and ticks
+        #Update the position of the player based on its current velocity and ticks
         newPosition = self._position + (self._velocity * ticks)
         if newPosition[0] < 0 or \
            (newPosition[0] + self.getWidth()) > worldInfo[0]:
