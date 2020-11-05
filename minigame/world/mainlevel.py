@@ -2,6 +2,7 @@
 Author: Trevor Stalnaker
 File: mainlevel.py
 """
+from .timer import Timer
 import pygame, random, math
 from polybius.graphics import *
 from graphics import *
@@ -132,7 +133,7 @@ class MainLevel(Level):
         self._acornSpawnTimer = random.randint(*CONSTANTS.get("acornSpawnTime"))
         self._pileSpawnTimer = random.randint(*CONSTANTS.get("pileSpawnTime"))
         self._acornLeakTimer = self._worldClock.getHourLength()
-        self._hungerTimer = 2 * self._worldClock.getHourLength()
+        self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
         self._starveTimer = 2 * self._worldClock.getHourLength()
 
         self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
@@ -657,10 +658,7 @@ class MainLevel(Level):
             self._pileSpawnTimer = random.randint(20,40)
 
         # Decrement the hunger time and update hunger
-        self._hungerTimer -= ticks
-        if self._hungerTimer <= 0:
-            self._player.decrementHunger()
-            self._hungerTimer = 2 * self._worldClock.getHourLength()
+        self._hungerTimer.update(ticks, self._player.decrementHunger)
 
         # Update the night filter's alpha values
         self._nightFilter.setAlpha(round((-100*math.sin((math.pi /60)*(self._worldClock.getTime()-5)))+100))
