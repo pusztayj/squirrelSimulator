@@ -59,7 +59,7 @@ def spawnPacks(spawnRange, spawnCount, collidables):
             packs.append(e)
     return packs
 
-def spawn(spawnType, spawnRange, spawnCount, collidables, name=None, wanderer=False):
+def spawn(spawnType, spawnRange, spawnCount, collidables=[], name=None, wanderer=False):
     """Spawns a given number of entities into the world avoiding overlaps"""
     spawns = []
     while len(spawns) < spawnCount:
@@ -84,9 +84,28 @@ class MainLevel(Level):
 
         super().__init__()
 
+        self._playerPack = player_pack
+
+        self.setConstants()
+        self.setFonts()
+        self.setupGameElements()
+
+        self._cheatBox = cheatBox
+
+        self._stealWindow = None
+
+        # Set the fight flag to false initially
+        self._fightFlag = (False,)
+
+        # Initialize leak to False
+        self._leak = False # A boolean flag for leaking acorns
+
+        # Start playing music
+        SOUNDS.manageSongs("main")
+
+    def setConstants(self):
         self._screen_size = CONSTANTS.get("screen_size")
         self._world_size = CONSTANTS.get("world_size")
-
         self._xpPerDay = CONSTANTS.get("xpPerDay")
         
         # Friendscore at which animals begin to attack
@@ -98,57 +117,127 @@ class MainLevel(Level):
         # The number of packs in the game
         self._packPopulation = CONSTANTS.get("packPopulation")
 
-        self._cheatBox = cheatBox
-
-        # Fonts to be used in the main level
+    def setFonts(self):
         self._font = pygame.font.SysFont("Times New Roman", 32)
         self._popupFont = pygame.font.SysFont("Times New Roman", 16)
         self._messageFont = pygame.font.SysFont("Times New Roman", 20)
 
-        # Create a world clock
+    def setupGameElements(self):
         self._worldClock = WorldClock(self._screen_size[0])
+        self.setupTimers()
+        self.setupEnvironment()
+        self.setupEntities()
+        self.setupUI()
 
-        # Set the player pack
-        self._playerPack = player_pack
-        self._packManager = PackManager(self._playerPack, self._screen_size)
-        self._player = self._playerPack.getLeader()
-
-        # Create the ground
-        self._ground = Banner((0,0),CONSTANTS.get("groundColor"),
-                              (self._world_size[1],self._world_size[0]))
-        
-        # Spawn some acorns at start of the game
-        initialAcornRange = CONSTANTS.get("initialAcornRange")
-        self._acorns = [Acorn((random.randint(0,self._world_size[0]),
-                                       random.randint(0,self._world_size[1])))
-                        for x in range(random.randint(*initialAcornRange))]
-
-        # Create empty list for player dirt piles
-        self._dirtPiles = []
-
-        # Create empty list for abandoned piles
-        self._spawnedPiles = []
-
-        # Create timers
+    def setupTimers(self):
         self._acornSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("acornSpawnTime")))
         self._pileSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("pileSpawnTime")))
         self._acornLeakTimer = Timer(self._worldClock.getHourLength())
         self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
         self._starveTimer = Timer(2 * self._worldClock.getHourLength())
 
-        self._interactionDelay = 0.1 #Prevent buttons from being clicked when interaction opens
+        #Prevent buttons from being clicked when interaction opens
+        self._interactionDelay = 0.1 
         self._interactionTimer = self._interactionDelay
 
+        # Grace period (time between NPC attacks)
+        self._gracePeriod = CONSTANTS.get("gracePeriod")
+        self._graceTimer = self._gracePeriod
+
+    def setupEnvironment(self):
+        # Create the ground
+        dimensions = (self._world_size[1],self._world_size[0])
+        self._ground = Banner((0,0),CONSTANTS.get("groundColor"), dimensions)
+
+        # Create the night filter
+        self._nightFilter = Mask((0,0),self._screen_size,(20,20,50),150, False)
+        
+        # Spawn some acorns at start of the game
+        initialAcornRange = CONSTANTS.get("initialAcornRange")
+        initialAcornCount = random.randint(*initialAcornRange)
+        self._acorns = list()
+        for x in range(initialAcornCount): self.spawnAcorn()
+
+        # Create empty list for player dirt piles
+        self._dirtPiles = list()
+
+        # Create empty list for abandoned piles
+        self._spawnedPiles = list()
+
+        self.setupMerchants()
+        self.spawnTrees()
+        
+
+    def spawnTrees(self):
+        spawnRange = (self._world_size[0]-128, self._world_size[1]+128)
+        numberOfTreesToSpawn = 30
+        entitiesToAvoidOverlapping = self._merchants
+        self._trees = spawn(Drawable, spawnRange, numberOfTreesToSpawn,
+                            entitiesToAvoidOverlapping, name="tree.png")
+
+    def setupEntities(self):
+        self.setupPlayerPack()
+        self.setupPacks()
+
+    def setupPacks(self):
+        spawnRange = (self._world_size[0]-128, self._world_size[1]+128)
+        numberOfPacksToSpawn = self._packPopulation
+        entitiesToAvoidOverlapping = self._merchants + self._trees
+        self._packs = spawnPacks(spawnRange, numberOfPacksToSpawn,
+                                 entitiesToAvoidOverlapping)
+
+    def setupMerchants(self):
+        # Add merchants to the world
+        spawnRange = (self._world_size[0]-128, self._world_size[1]+128)
+        numberOfMerchantsToSpawn = random.randint(2,5)
+        self._merchants = spawn(Merchant, spawnRange, numberOfMerchantsToSpawn)
+
+        # Set the restocking rates for the merchants
+        dayLen = self._worldClock.getDayLength()
+        baseRestockTime = CONSTANTS.get("restockTime")
+        restockTime = random.randint(baseRestockTime[0]*dayLen,
+                                     baseRestockTime[1]*dayLen)
+        for merchant in self._merchants:
+            merchant.setRestockTimer(restockTime)
+
+    def setupPlayerPack(self):
+        self._player = self._playerPack.getLeader()
+        self._packManager = PackManager(self._playerPack, self._screen_size)
+
+    def createPopupWindow(self):
+
+        # Set the fonts
+        font = self._messageFont
+        buttonFont = self._popupFont
+
+        # Set the dimensions
+        width, height = 288, 100
+        dimensions = (width, height)
+        buttonWidth, buttonHeight = 40, 20
+        buttonDimensions = (buttonWidth, buttonHeight)
+
+        # Set the color scheme
+        fontColor = (255,255,255)
+        backgroundColor = (0,0,0)
+        buttonFontColor = (255,255,255)
+        buttonColor = (120,120,120)
+
+        self._popupWindow = PopupWindow("", (0,0), dimensions, font, fontColor,
+                                        backgroundColor, buttonColor, buttonDimensions,
+                                        buttonFont,buttonFontColor, borderWidth=1)
+        
+        # Position the window on the screen
+        verticalCenter = 1/3 #from top of screen
+        horizontalCenter = 1/2 #from left of screen
+        self._popupWindow.center(cen_point=(horizontalCenter, verticalCenter))
+
+        self._popupWindow.close()
+
+    def setupUI(self):
         # Set the hover popup to None
         self._popup = None
 
-        # Create the popup window
-        self._popupWindow = PopupWindow("", (0,0), (288,100), self._messageFont,
-                                        (255,255,255),(0,0,0), (120,120,120), (40,20),
-                                        self._popupFont,(255,255,255), borderWidth=1)
-        self._popupWindow.setPosition((self._screen_size[0]//2 - self._popupWindow.getWidth()//2,
-                                       self._screen_size[1]//3 - self._popupWindow.getHeight()//2))
-        self._popupWindow.close()
+        self.createPopupWindow()
 
         # Create the confirmation window
         self._confirmationWindow = ConfirmationWindow("", (0,0), (288,150), self._messageFont,
@@ -162,32 +251,9 @@ class MainLevel(Level):
         # Create the player's stats display
         self._stats = StatDisplay((5,5),self._player)
 
-        # Create the night filter
-        self._nightFilter = Mask((0,0),self._screen_size,(20,20,50),150, False)
-
         # Set ATM and Interaction windows to None
         self._atm = None
         self._interaction = None
-
-        # Add merchants to the world
-        self._merchants = spawn(Merchant, (self._world_size[0]-128, self._world_size[1]+128),
-                                random.randint(2,5), [])
-
-        # Set the restocking rates for the merchants
-        dayLen = self._worldClock.getDayLength()
-        restockTime = CONSTANTS.get("restockTime")
-        for merchant in self._merchants:
-            merchant.setRestockTimer(random.randint(restockTime[0]*dayLen,
-                                                    restockTime[1]*dayLen))
-
-        # Add trees to the world
-        self._trees = spawn(Drawable, (self._world_size[0]-128, self._world_size[1]+128),
-                            30, self._merchants, name="tree.png")
-
-        # Add packs to the world
-        self._packs = spawnPacks((self._world_size[0]-128, self._world_size[1]+128),
-                                 self._packPopulation,
-                                 self._merchants + self._trees)           
 
         # Create the player's inventory hud
         self._hud = InventoryHUD(((self._screen_size[0]//2)-350,
@@ -199,25 +265,12 @@ class MainLevel(Level):
 
         # Set the bribe and steal windows to None
         self._bribeWindow = None
-        self._stealWindow = None
-
-        # Set the fight flag to false initially
-        self._fightFlag = (False,)
-
-        # Initialize leak to False
-        self._leak = False # A boolean flag for leaking acorns
-
-        # Grace period (time between NPC attacks)
-        self._gracePeriod = CONSTANTS.get("gracePeriod")
-        self._graceTimer = self._gracePeriod
 
         # Create the XP Manager
         self._xpManager = XPManager((self._screen_size[0]//2 - 250//2, 80), self._player)
         self._xpManager.close()
-
-        # Start playing music
-        SOUNDS.manageSongs("main")
         
+ 
     def draw(self, screen):
         """Draws the level to the screen"""
         self.drawWorld(screen)

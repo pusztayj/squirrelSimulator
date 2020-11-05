@@ -6,20 +6,20 @@ A class that models and manages a pop up notification window
 """
 
 import pygame
-from polybius.graphics.basics.drawable import Drawable
+from polybius.graphics.utils.abstractgraphic import AbstractGraphic
 from polybius.graphics.utils.window import Window
 from polybius.graphics.components.textbox import TextBox
 from polybius.graphics.components.button import Button
 from polybius.graphics.components.multilinetextbox import MultiLineTextBox
 
-class PopupWindow(Drawable, Window):
+class PopupWindow(AbstractGraphic, Window):
 
     def __init__(self, text, position, dimensions, font, fontColor,
                  backgroundColor, buttonColor, buttonDimensions, buttonFont,
                  buttonFontColor, buttontext="OK", buttonBorderWidth=1,
                  buttonBorderColor=(0,0,0), borderWidth=0, borderColor=(0,0,0)):
         """Initializes the widget with a variety of parameters"""
-        Drawable.__init__(self, "", position, worldBound=False)
+        AbstractGraphic.__init__(self, position)
         Window.__init__(self)
         self._height = dimensions[1]
         self._width = dimensions[0]
@@ -34,32 +34,27 @@ class PopupWindow(Drawable, Window):
 
         self._confirmed = None
 
+        self._image = pygame.Surface((self._width, self._height))
+
         # Create the textbox
-##        self._t = TextBox(self._text, (0,0), self._font, self._fontColor)
         self._t = MultiLineTextBox(self._text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
-        y_pos = (self._height // 4) - (self._t.getHeight() // 2)
-        x_pos = (self._width // 2) - (self._t.getWidth() // 2)
-        self._t.setPosition((x_pos, y_pos))
+        self._t.center(surface=self, cen_point=(1/2,1/4))
         
         # Create the Okay button
         self._b = Button(buttontext, (0,0), buttonFont, buttonFontColor,
                          buttonColor,buttonDimensions[1],
                          buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
-        y_pos = (3*(self._height // 4)) - (self._b.getHeight() // 2)
-        x_pos = (self._width // 2) - (self._b.getWidth() // 2)
-        self._b.setPosition((x_pos, y_pos))
+        self._b.center(surface=self, cen_point=(1/2,3/4))
 
-        self.updateWindow()
+        self.updateGraphic()
 
     def setText(self, text):
         """Sets the text of the pop up and centers the new text"""
         self._t = MultiLineTextBox(text, (0,0), self._font,
                                        self._fontColor, self._backgroundColor)
-        y_pos = (self._height // 4) - (self._t.getHeight() // 2)
-        x_pos = (self._width // 2) - (self._t.getWidth() // 2)
-        self._t.setPosition((x_pos, y_pos))
-        self.updateWindow()
+        self._t.center(surface=self, cen_point=(1/2,1/4))
+        self.updateGraphic()
 
     def confirm(self):
         """Closes the window and sets the confirmed flag to true"""
@@ -76,16 +71,9 @@ class PopupWindow(Drawable, Window):
         """Handles events on the pop up window"""
         self._offset = self._position
         self._b.handleEvent(event,self.confirm,offset=self._offset)
-        self.updateWindow()
+        self.updateGraphic()
 
-    def updateWindow(self):
-        """Updates the attributes of the pop up window"""
-        surfBack = pygame.Surface((self._width, self._height))
-        surfBack.fill(self._borderColor)
-        surf = pygame.Surface((self._width-(self._borderWidth*2),
-                               self._height-(self._borderWidth*2)))
-        surf.fill(self._backgroundColor)       
+    def internalUpdate(self, surf):
+        """Updates the attributes of the pop up window"""      
         self._t.draw(surf)
-        self._b.draw(surf)        
-        surfBack.blit(surf, (self._borderWidth, self._borderWidth))
-        self._image = surfBack
+        self._b.draw(surf)
