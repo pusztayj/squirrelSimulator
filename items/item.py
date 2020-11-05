@@ -76,11 +76,11 @@ class Item(Drawable):
         """
         return self._attributes["sellable"]
 
-    def isSharable(self):
+    def isShareable(self):
         """
-        Returns if an item is sharable. 
+        Returns if an item is shareable. 
         """
-        return self._attributes["sharable"]
+        return self._attributes["shareable"]
 
     def checkRequirements(self, entity):
         """Determines if an entity is worthy of a given item"""

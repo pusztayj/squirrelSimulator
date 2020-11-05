@@ -1,4 +1,4 @@
-﻿item,name,type,image,value,strength,staminaCost,acornBoost,healthBoost,hungerBoost,durability,utility,buyable,sellable,sharable,requirements
+﻿item,name,type,image,value,strength,staminaCost,acornBoost,healthBoost,hungerBoost,durability,utility,buyable,sellable,shareable,requirements
 stick,Stick,weapon,stick.png,20,10,10,null,null,null,100,100,TRUE,TRUE,TRUE,null
 spear,Spear,weapon,spear.png,35,15,10,null,null,null,100,100,TRUE,TRUE,TRUE,null
 sword,Sword,weapon,sword.png,70,20,10,null,null,null,100,100,TRUE,TRUE,TRUE,null

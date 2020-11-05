@@ -52,7 +52,7 @@ class Inventory():
 
     def hasItem(self, item):
         """Return true if inventory contains item, false otherwise"""
-        return item in self._items
+        return any([i.getAttribute("item") == item.getAttribute("item") for i in self._items])
 
     def increaseMaxCapacity(self, increase):
         """Increases the max capacity of the inventory"""

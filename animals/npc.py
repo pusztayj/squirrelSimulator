@@ -281,3 +281,96 @@ class NPC(Animal, Animated):
         c.equipItem(self.getEquipItem())
         c.setInventory(self.getInventory())
         return c
+
+    def borrowItem(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to borrow an item.
+        """
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        if self.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return (False,str(self.getName())+ " has no room in their inventory") 
+        if item.getAttribute("durability") < 20:
+            return (False,"Your " + str(item.getAttribute("name")) + "'s durability is too low for " +str(self.getName()))
+        if item.getAttribute("utility") < 20:
+            return (False,"Your " + str(item.getAttribute("name")) + "'s utility is too low for " +str(self.getName()))
+        return (True,str(self.getName()) + " has borrowed the "+str(item.getAttribute("name")))
+
+    def loanItem(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to loan an item. 
+        """
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return (False,"You have no space in your inventory")
+        
+        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
+        inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
+        numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
+        
+        if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
+            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory")
+        
+        if item.getAttribute("item") == "healthPotion": # If health potion don't trade
+            return (False, "Health Potions are not loanable")
+        
+        if item.getAttribute("type") == "food": # If food don't trade
+            return (False, "Food is not loanable")
+
+        return (True,str(self.getName()) + " has loaned the "+ str(item.getAttribute("name")))
+
+    def reclaimItem(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to reclaim an item.
+        """
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+            return (False,"You have no space in your inventory")
+        return (True,str(self.getName()) + " has reclaimed the "+str(item.getAttribute("name")))
+
+    def giveOwnershipItem(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to give ownership of an item to someone else.
+        """
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        # NPC inventory is full so they can't accept
+        if otherCreature.getInventory().hasSpace() == False and \
+           not (item in otherCreature.getInventory().getItems()): 
+            return (False,str(self.getName())+ " has no room in their inventory")
+
+        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
+        inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
+        numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
+        
+        if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
+            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory. They will not give it.")
+
+        if item.getAttribute("durability") > 80:
+            return (False,str(self.getName())+ " does not want to give ownership.")
+        if item.getAttribute("utility") > 80:
+            return (False,str(self.getName())+ " does not want to give ownership.")
+        
+        return (True,str(self.getName()) + " has given the "+str(item.getAttribute("name")))
+
+    def takeOwnership(self,item,otherCreature):
+        """
+        Returns boolean based on NPC's logic of wanting
+        to take ownership of an item.
+        """
+        if not item.isShareable():
+            return (False,"Item is not shareable")
+        # NPC inventory is full so they can't accept
+        if self.getInventory().hasSpace() == False and \
+           not (item in self.getInventory().getItems()): 
+            return (False,str(self.getName())+ " has no room in their inventory")
+        return (True, ("%s has taken ownership of the item" % self.getName()))
+
+    
+        
