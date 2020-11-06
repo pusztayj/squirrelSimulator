@@ -42,7 +42,7 @@ class CheatBox():
         else:
             self._input._active = False
 
-    def isDisplayed(self):
+    def getDisplay(self):
         """Returns true if cheats are displayed, false otherwise"""
         return self._display
 

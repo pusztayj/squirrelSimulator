@@ -126,7 +126,7 @@ def main():
          if combatLevel != None and combatLevel.isActive():
             combatLevel.draw(screen)
 
-         if cheatBox.isDisplayed():
+         if cheatBox.getDisplay():
             cheatBox.draw(screen)
 
          if loading.isDisplayed():
@@ -179,7 +179,7 @@ def main():
                      endScreen = None
                      lag = True
                      nameInput = NameInput(player, SCREEN_SIZE)
-                     if cheatBox.isDisplayed():
+                     if cheatBox.getDisplay():
                         cheatBox.toggleDisplay()
                      titleScreen._displayed = True
                else:
@@ -219,7 +219,7 @@ def main():
                         cheatBox.toggleDisplay()
 
                   # Handle events on the cheat box
-                  if cheatBox.isDisplayed() and not loading.isDisplayed():
+                  if cheatBox.getDisplay() and not loading.isDisplayed():
                      cheatCode = cheatBox.handleEvent(event)
                      if cheatCode != None:
                         if cheatCode[0] in cheatBox.getCodesByType(1) and \
@@ -351,7 +351,7 @@ def main():
             combatLevel.update(ticks)
 
          # Update the cheat box
-         if cheatBox.isDisplayed():
+         if cheatBox.getDisplay():
             cheatBox.update(ticks)
 
          # Update the loading screen

@@ -338,197 +338,213 @@ class MainLevel(Level):
         if self._confirmationWindow.getDisplay():
             self._confirmationWindow.draw(screen)
 
-    def handleEvent(self, event):
-        """Handles events for the main level"""
-
-        # Handle events when various windows and displays are not open
-        if (self._atm == None or not self._atm.getDisplay()) and \
-           (self._interaction == None or not self._interaction.getDisplay()) and \
-           (not self._packManager.getDisplay()) and \
-           (not self._popupWindow.getDisplay()) and \
-           (not self._confirmationWindow.getDisplay()) and \
-           (not self._cheatBox.isDisplayed()):
-            self._hud.handleEvent(event)
-            self._player.move(event)
-            
-            # Allow the player to create dirt piles
-            if CONTROLS.get("bury").check(event):
-                # Check if the player can remember this new pile
-                if len(self._dirtPiles) < self._player.getMemory():
-                    self._player._fsm.changeState("bury")
-                    if self._player.isFlipped():
-                        dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)),
-                                      capacity=8+(self._player.getDiggingSkill()*2))
-                    else:
-                        dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)),
-                                      capacity=8+(self._player.getDiggingSkill()*2))
-                    self._dirtPiles.append(dp)
+    def handleCreateDirtPileEvent(self, event):
+        # Allow the player to create dirt piles
+        if CONTROLS.get("bury").check(event):
+            # Check if the player can remember this new pile
+            if len(self._dirtPiles) < self._player.getMemory():
+                self._player._fsm.changeState("bury")
+                if self._player.isFlipped():
+                    dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+                            self._player.getY() + (self._player.getHeight() // 3)),
+                                  capacity=8+(self._player.getDiggingSkill()*2))
                 else:
-                    self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
+                    dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                            self._player.getY() + (self._player.getHeight() // 3)),
+                                  capacity=8+(self._player.getDiggingSkill()*2))
+                self._dirtPiles.append(dp)
+            else:
+                self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
+                self._confirmationWindow.display()
+                self._confirmationProceedure = (1,) #Redirect neccessary information
+                # Stop the player's movement
+                self._player.stop()
+
+    def handleSelectDirtPileEvent(self, event):
+        # Check if the player has clicked on a dirtpile
+        for pile in self._dirtPiles:
+            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                      event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                self._atm = ATM(self._player, pile, self._screen_size)
+
+    def handleSelectCreatureEvent(self, event):
+        # Check if the player has clicked on a creature
+        for pack in self._packs:
+            for creature in pack:
+                if creature != None:
+                    x,y = creature.getPosition()
+                    for rect in creature.getCollideRects():
+                        r = rect.move(x,y)
+                        if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                            self._interaction = Interaction(creature)
+                            self._interactionTimer = self._interactionDelay
+                            self._player.stop()
+
+    def handleSelectMerchantEvent(self, event):
+        # Check if the player has clicked on a merchant
+        for merchant in self._merchants:
+            if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                return (1, merchant) # Set Game Mode to Merchant and provide merchant
+
+    def handleSelectionEvents(self, event):
+        if CONTROLS.get("select").check(event):
+            self.handleSelectDirtPileEvent(event)
+            self.handleSelectCreatureEvent(event)
+            code = self.handleSelectMerchantEvent(event)
+            if code != None: return code #Temporary refactoring code
+
+    def handleEatEvent(self, item):
+        self._player.getInventory().removeItem(item)
+        self._player.eat(item.getAttribute("hungerBoost"), item.getAttribute("healthBoost"))
+
+    def handleUseToolEvent(self, item):
+        for pile in self._spawnedPiles:
+            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                if self._player.getAcorns() + pile.getAcorns() > self._player.getCheekCapacity():
+                    self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
+                                                     " won't collect all the acorns")
                     self._confirmationWindow.display()
-                    self._confirmationProceedure = (1,) #Redirect neccessary information
+                    self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
                     # Stop the player's movement
                     self._player.stop()
+                else:
+                    self._spawnedPiles.remove(pile)
+                    # Determine the number of acorns the player can collect
+                    # based on the number in the pile and the tool being used
+                    acorns = round(pile.getAcorns() * item.acornModifier())
+                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+                
+        # Check if the player is trying to dig up their own pile
+        for pile in self._dirtPiles:
+            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
+                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
+                self._confirmationWindow.display()
+                self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
+                # Stop the player's movement
+                self._player.stop()
 
-            # Check if the left mouse button has been clicked
-            if CONTROLS.get("select").check(event):
+    def handleWeaponEquipEvent(self, item):
+        previous = self._weapon.getItem()
+        if previous != None:
+            self._player.getInventory().addItem(previous)
+        self._player.equipItem(item)
+        self._weapon.setItem(item)
+        self._player.getInventory().removeItem(item)
 
-                # Check if the player has clicked on a dirtpile
-                for pile in self._dirtPiles:
-                    if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                        self._atm = ATM(self._player, pile, self._screen_size)
+    def handleArmorEquipEvent(self, item):
+        previous = self._armor.getItem()
+        if previous != None:
+            self._player.getInventory().addItem(previous)
+        self._player.equipArmor(item)
+        self._armor.setItem(item)
+        self._player.getInventory().removeItem(item)
 
-                # Check if the player has clicked on a creature
-                for pack in self._packs:
-                    for creature in pack:
-                        if creature != None:
-                            x,y = creature.getPosition()
-                            for rect in creature.getCollideRects():
-                                r = rect.move(x,y)
-                                if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                                     event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                                    self._interaction = Interaction(creature)
-                                    self._interactionTimer = self._interactionDelay
-                                    self._player.stop()
+    def handleUsePotionEvent(self, item):
+        self._player.getInventory().removeItem(item)
+        self._player.heal(item.getAttribute("healthBoost"))
 
-                # Check if the player has clicked on a merchant
-                for merchant in self._merchants:
-                    if merchant.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                        return (1, merchant) # Set Game Mode to Merchant and provide merchant
+    def handleUseItemEvent(self, event):
+        if CONTROLS.get("use_item").check(event):
+            # Get the current active item in the hud
+            item = self._hud.getActiveItem()
+            if item != None:
+                itemType = item.getAttribute("type")
+                if itemType == "food":
+                    self.handleEatEvent(item)
+                elif itemType == "tool":
+                    self.handleUseToolEvent(item)
+                elif itemType == "weapon":
+                    self.handleWeaponEquipEvent(item)
+                elif itemType == "armor":
+                    self.handleArmorEquipEvent(item)
+                elif itemType == "potion":
+                    self.handleUsePotionEvent(item)
 
-            # Check for a right click event
-            if CONTROLS.get("use_item").check(event):
+    def handlePackManagerEvent(self, event):
+        if CONTROLS.get("open_pack_manager").check(event):
+            if self._packManager._display == False:
+                self._packManager.display()
+            else:
+                self._packManager.close()
+        else:
+            c = self._packManager.handleEvent(event)
+            if c != None and c[0] == 9:
+                self._playerPack.removeMember(c[1])
+                clone = c[1].clone()
+                clone.changeFriendScore(random.randint(-25,-5))
+                p = Pack(clone)
+                self._packs.append(p)
+                clone.setPack(p)
 
-                # Get the current active item in the hud
-                item = self._hud.getActiveItem()
+    def areActiveWindows(self):
+        windowStates = self.getWindowStates()
+        return any(windowStates.values())
 
-                # Player eats a food item
-                if item != None and item.getAttribute("type") == "food":
-                    self._player.getInventory().removeItem(item)
-                    self._player.eat(item.getAttribute("hungerBoost"), item.getAttribute("healthBoost"))
+    def getWindowStates(self):
+        windowsToCheck = [self._atm, self._interaction, self._bribeWindow,
+                          self._stealWindow, self._packManager, self._popupWindow,
+                          self._confirmationWindow, self._cheatBox, self._xpManager]
+        windowStates = {window:self.isActiveWindow(window) for window in windowsToCheck}
+        return windowStates
 
-                # Use a tool to dig up an acorn pile
-                if item != None and item.getAttribute("type") == "tool":
-                    for pile in self._spawnedPiles:
-                        if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                            if self._player.getAcorns() + pile.getAcorns() > self._player.getCheekCapacity():
-                                self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
-                                                                 " won't collect all the acorns")
-                                self._confirmationWindow.display()
-                                self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
-                                # Stop the player's movement
-                                self._player.stop()
-                            else:
-                                self._spawnedPiles.remove(pile)
-                                # Determine the number of acorns the player can collect
-                                # based on the number in the pile and the tool being used
-                                acorns = round(pile.getAcorns() * item.acornModifier())
-                                self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
-                            
-                    # Check if the player is trying to dig up their own pile
-                    for pile in self._dirtPiles:
-                        if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                              event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                            self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
-                            self._confirmationWindow.display()
-                            self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
-                            # Stop the player's movement
-                            self._player.stop()
-                            
-                # Sets the current weapon            
-                if item != None and item.getAttribute("type") == "weapon":
-                    previous = self._weapon.getItem()
-                    if previous != None:
-                        self._player.getInventory().addItem(previous)
-                    self._player.equipItem(item)
-                    self._weapon.setItem(item)
-                    self._player.getInventory().removeItem(item)
-
-                # Sets the current armor
-                if item != None and item.getAttribute("type") == "armor":
-                    previous = self._armor.getItem()
-                    if previous != None:
-                        self._player.getInventory().addItem(previous)
-                    self._player.equipArmor(item)
-                    self._armor.setItem(item)
-                    self._player.getInventory().removeItem(item)
-
-                # Applies a potion
-                if item != None and item.getAttribute("type") == "potion":
-                    self._player.getInventory().removeItem(item)
-                    self._player.heal(item.getAttribute("healthBoost"))
-
-        # If a variety of windows and interfaces are not displayed
-        if not self._popupWindow.getDisplay() and \
-           (self._bribeWindow==None or not self._bribeWindow.getDisplay()) and \
-           not self._confirmationWindow.getDisplay() and \
-           (self._stealWindow==None or not self._stealWindow.getDisplay()):
-            if self._atm != None and self._atm.getDisplay():
-                self._atm.handleEvent(event)
-
-            # Handle events on the pack manager
-            if self._packManager.getDisplay():
-                c = self._packManager.handleEvent(event)
-                if c != None and c[0] == 9:
-                    self._playerPack.removeMember(c[1])
-                    clone = c[1].clone()
-                    clone.changeFriendScore(random.randint(-25,-5))
-                    p = Pack(clone)
-                    self._packs.append(p)
-                    clone.setPack(p)
-
-            # Handle events on the interaction interface
-            if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
-                self._popup = None
-                code = self._interaction.handleEvent(event)
-                if (code == 1):
-                    enemyPack = self._interaction.getEntity().getPack()
-                    for e in enemyPack:
-                        if e != None:
-                            e.changeFriendScore(random.randint(-30,-10))
-                    self._interaction = None
-                    return (2,self._playerPack,enemyPack)
-                elif (code == 2):
-                    e = self._interaction.getEntity()
-                    if self._playerPack.trueLen() < 3:
-                        if e.getPack().trueLen() == 1:
-                            if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
-                                self._playerPack.addMember(e)
-                                self._packs.remove(e.getPack())
-                                e.setPack(self._playerPack)
-                                self._popupWindow.setText(e.getName() + " has joined your pack")
-                                self._popupWindow.display()
-                                self._interaction = None # Close the interaction window
-                            else:
-                                self._popupWindow.setText(e.getName() + " doesn't want\nto join your pack")
-                                self._popupWindow.display()
+    def isOnlyActiveWindow(self, window):
+        windowStates = self.getWindowStates()
+        if not self.isActiveWindow(window): return False
+        for w, s in windowStates.items():
+            if s and w != window:
+                return False
+        return True
+        
+    def handleInteractionWindowEvent(self, event):
+        if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
+            self._popup = None
+            code = self._interaction.handleEvent(event)
+            if (code == 1):
+                enemyPack = self._interaction.getEntity().getPack()
+                for e in enemyPack:
+                    if e != None:
+                        e.changeFriendScore(random.randint(-30,-10))
+                self._interaction = None
+                return (2,self._playerPack,enemyPack)
+            elif (code == 2):
+                e = self._interaction.getEntity()
+                if self._playerPack.trueLen() < 3:
+                    if e.getPack().trueLen() == 1:
+                        if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
+                            self._playerPack.addMember(e)
+                            self._packs.remove(e.getPack())
+                            e.setPack(self._playerPack)
+                            self._popupWindow.setText(e.getName() + " has joined your pack")
+                            self._popupWindow.display()
+                            self._interaction = None # Close the interaction window
                         else:
-                            self._popupWindow.setText(e.getName() + " is already part of a pack")
+                            self._popupWindow.setText(e.getName() + " doesn't want\nto join your pack")
                             self._popupWindow.display()
                     else:
-                        self._popupWindow.setText("Your pack is already full")
+                        self._popupWindow.setText(e.getName() + " is already part of a pack")
                         self._popupWindow.display()
-                elif (code == 3):
-                    e = self._interaction.getEntity()
-                    self._stealWindow = Steal(self._player, e, self._screen_size)
-                    self._stealWindow.display()
-                elif (code == 4):
-                    e = self._interaction.getEntity()
-                    self._bribeWindow = Bribe(self._player, e, self._screen_size)
-                    self._bribeWindow.display()
-                
+                else:
+                    self._popupWindow.setText("Your pack is already full")
+                    self._popupWindow.display()
+            elif (code == 3):
+                e = self._interaction.getEntity()
+                self._stealWindow = Steal(self._player, e, self._screen_size)
+                self._stealWindow.display()
+            elif (code == 4):
+                e = self._interaction.getEntity()
+                self._bribeWindow = Bribe(self._player, e, self._screen_size)
+                self._bribeWindow.display()
 
+    def createPopUpsOnHover(self):
         # Determine the relative position of the mouse
         mouse = pygame.mouse.get_pos()
         m_pos_offset = self._player.adjustMousePos(mouse)
         m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
         popup_pos = (mouse[0] + 5, mouse[1] + 5)
-
         # Create a list of current creatures in the game
         # for use with popup creation
         creatures = []
@@ -549,18 +565,33 @@ class MainLevel(Level):
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
-        # Check if the pack manager should be opened or closed
-        if (self._atm == None or not self._atm.getDisplay()) and \
-           (self._interaction == None or not self._interaction.getDisplay()) and \
-           (not self._popupWindow.getDisplay()) and \
-           not self._xpManager.getDisplay() and \
-           not self._confirmationWindow.getDisplay() and \
-           not self._cheatBox.isDisplayed():
-            if CONTROLS.get("open_pack_manager").check(event):
-                if self._packManager._timeSinceClosed > self._packManager._delay:
-                    self._packManager.display()
-                    self._player.stop()
+    def isActiveWindow(self, window):
+        return not(window == None) and window.getDisplay()
+        
+    def handleEvent(self, event):
+        """Handles events for the main level"""
 
+        if not self.areActiveWindows():
+
+            self._hud.handleEvent(event)
+            self._player.move(event)
+            self.handleCreateDirtPileEvent(event)
+            code = self.handleSelectionEvents(event)
+            if code != None: return code #Temporary refactoring code
+            self.handleUseItemEvent(event)
+            self.handlePackManagerEvent(event)
+
+        else:
+          
+            if self.isOnlyActiveWindow(self._atm):
+                self._atm.handleEvent(event)
+            if self.isOnlyActiveWindow(self._packManager):
+                self.handlePackManagerEvent(event)
+            if self.isOnlyActiveWindow(self._interaction):
+                code = self.handleInteractionWindowEvent(event)
+                if code != None: return code #Temporary refactoring code
+
+        self.createPopUpsOnHover()
 
         # Check if the XP Manager should be opened or closed
         if (self._atm == None or not self._atm.getDisplay()) and \
@@ -568,7 +599,7 @@ class MainLevel(Level):
            (not self._popupWindow.getDisplay()) and \
            not self._packManager.getDisplay() and \
            not self._confirmationWindow.getDisplay() and \
-           not self._cheatBox.isDisplayed():
+           not self._cheatBox.getDisplay():
             if CONTROLS.get("open_xp_manager").check(event):
                 if self._xpManager.getDisplay():
                     self._xpManager.close()

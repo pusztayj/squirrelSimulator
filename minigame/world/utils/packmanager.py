@@ -62,8 +62,6 @@ class PackManager(Drawable, Window):
             if tile.shouldRemove():
                 tile._remove = False
                 return (9, tile.getEntity())
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-            self.close()
         
     def draw(self, surface):
         """Draws the tiles of the packmanager to the screen"""
@@ -85,13 +83,6 @@ class PackManager(Drawable, Window):
     def redraw(self):
         for i, creature in enumerate(self._pack):
             self._tiles[i].setEntity(creature)
-
-##    def redraw(self):
-##        """Redraws the pack manager"""
-##        self._tiles = []
-##        for i, creature in enumerate(self._pack):
-##            self._tiles.append(MemberCard(creature, (self.getX() + (i * self._cardWidth),
-##                                                     self.getY())))
 
     def close(self):
         """Closes the pack manager interface"""
