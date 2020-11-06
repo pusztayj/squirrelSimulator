@@ -3,6 +3,7 @@ Author: Trevor Stalnaker
 File: mainlevel.py
 """
 from .timer import Timer
+from .pileManager import PileManager
 import pygame, random, math
 from polybius.graphics import *
 from graphics import *
@@ -158,16 +159,11 @@ class MainLevel(Level):
         self._acorns = list()
         for x in range(initialAcornCount): self.spawnAcorn()
 
-        # Create empty list for player dirt piles
-        self._dirtPiles = list()
-
-        # Create empty list for abandoned piles
-        self._spawnedPiles = list()
+        self._pileManager = PileManager()
 
         self.setupMerchants()
         self.spawnTrees()
         
-
     def spawnTrees(self):
         spawnRange = (self._world_size[0]-128, self._world_size[1]+128)
         numberOfTreesToSpawn = 30
@@ -282,12 +278,9 @@ class MainLevel(Level):
         for acorn in self._acorns:
             acorn.draw(screen)
 
-        for pile in self._dirtPiles:
+        for pile in self._pileManager.getAllPiles():
             pile.draw(screen)
-
-        for pile in self._spawnedPiles:
-            pile.draw(screen)
-            
+                    
         # Determine the layering of objects and 
         # draw them to the screen
         layering = self._trees + self._merchants + \
@@ -342,7 +335,10 @@ class MainLevel(Level):
         # Allow the player to create dirt piles
         if CONTROLS.get("bury").check(event):
             # Check if the player can remember this new pile
-            if len(self._dirtPiles) < self._player.getMemory():
+            currentPlayerPiles = self._pileManager.getNumberOfPlayerPiles()
+            playerMemory = self._player.getMemory()
+            playerCanRememberAnotherPile = currentPlayerPiles < playerMemory
+            if playerCanRememberAnotherPile:
                 self._player._fsm.changeState("bury")
                 if self._player.isFlipped():
                     dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
@@ -352,7 +348,7 @@ class MainLevel(Level):
                     dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
                             self._player.getY() + (self._player.getHeight() // 3)),
                                   capacity=8+(self._player.getDiggingSkill()*2))
-                self._dirtPiles.append(dp)
+                self._pileManager.addPlayerPile(dp)
             else:
                 self._confirmationWindow.setText("Are you sure you want to create\na new acorn pile?\nYou will forget an old one")
                 self._confirmationWindow.display()
@@ -362,9 +358,10 @@ class MainLevel(Level):
 
     def handleSelectDirtPileEvent(self, event):
         # Check if the player has clicked on a dirtpile
-        for pile in self._dirtPiles:
-            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                      event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+        for pile in self._pileManager.getPlayerPiles():
+            coords = self.getWorldCoordinatesFromRelativeEvent(event)
+            pileSelected = pile.getCollideRect().collidepoint(coords)
+            if pileSelected:
                 self._atm = ATM(self._player, pile, self._screen_size)
 
     def handleSelectCreatureEvent(self, event):
@@ -375,8 +372,9 @@ class MainLevel(Level):
                     x,y = creature.getPosition()
                     for rect in creature.getCollideRects():
                         r = rect.move(x,y)
-                        if r.collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                             event.pos[1] + Drawable.WINDOW_OFFSET[1])):
+                        coords = self.getWorldCoordinatesFromRelativeEvent(event)
+                        creatureSelected = r.collidepoint(coords)
+                        if creatureSelected:
                             self._interaction = Interaction(creature)
                             self._interactionTimer = self._interactionDelay
                             self._player.stop()
@@ -399,34 +397,59 @@ class MainLevel(Level):
         self._player.getInventory().removeItem(item)
         self._player.eat(item.getAttribute("hungerBoost"), item.getAttribute("healthBoost"))
 
-    def handleUseToolEvent(self, item):
-        for pile in self._spawnedPiles:
-            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                if self._player.getAcorns() + pile.getAcorns() > self._player.getCheekCapacity():
-                    self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
-                                                     " won't collect all the acorns")
-                    self._confirmationWindow.display()
-                    self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
-                    # Stop the player's movement
-                    self._player.stop()
-                else:
-                    self._spawnedPiles.remove(pile)
-                    # Determine the number of acorns the player can collect
-                    # based on the number in the pile and the tool being used
-                    acorns = round(pile.getAcorns() * item.acornModifier())
-                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
-                
-        # Check if the player is trying to dig up their own pile
-        for pile in self._dirtPiles:
-            if pile.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
-                self._confirmationWindow.display()
-                self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
-                # Stop the player's movement
-                self._player.stop()
+    def getWorldCoordinatesFromRelativeEvent(self, event):
+        relative_x = event.pos[0] + Drawable.WINDOW_OFFSET[0]
+        relative_y = event.pos[1] + Drawable.WINDOW_OFFSET[1]
+        worldCoordinateClicked = (relative_x, relative_y)
+        return worldCoordinateClicked
 
+    def tryToDigUpSpawnedPile(self, event, item):
+        for pile in self._pileManager.getSpawnedPiles():
+            coordinates = self.getWorldCoordinatesFromRelativeEvent(event)
+            pileClicked = pile.getCollideRect().collidepoint(coordinates)
+            if pileClicked:
+                notEnoughSpace = pile.getAcorns() > self._player.getAvailableCheekSpace()
+                if notEnoughSpace:
+                    self.confirmDiggingPileWithoutMaxAcornCollection(pile, item)
+                else:
+                    self._pileManager.removePile(pile)
+                    self.givePlayerAcornsFromSpawnedPile(pile)
+
+    def confirmDiggingPileWithoutMaxAcornCollection(self, pile, item):
+        self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
+                                         " won't collect all the acorns")
+        self._confirmationWindow.display()
+        self._confirmationProceedure = (2, pile, item) #Redirect neccessary information
+        self._player.stop()
+        
+    def givePlayerAcornsFromSpawnedPile(self, pile):
+        acornsNormallyCollected = round(pile.getAcorns() * item.acornModifier())
+        maxAcornsPlayerCanHold = self._player.getCheekCapacity()
+        potentialPlayerAcornTotal = self._player.getAcorns() + acornsCollectedNormally
+        acornsActuallyCollected = min(maxAcornsPlayerCanHold, potentialPlayerAcornTotal)
+        self._player.setAcorns(acornsActuallyCollected)
+
+    def tryToDigUpPlayerPile(self, event, item):
+        for pile in self._pileManager.getPlayerPiles():
+            coordinates = self.getWorldCoordinatesFromRelativeEvent(event)
+            pileClicked = pile.getCollideRect().collidepoint(coordinates)
+            if pileClicked:
+                notEnoughSpace = pile.getAcorns() > self._player.getAvailableCheekSpace()
+                if notEnoughSpace:
+                    self._confirmationWindow.setText("Are you sure you want to\n dig up this acorn pile?\nYou" + \
+                                         " won't collect all the acorns")
+                    self._confirmationWindow.display()
+                    self._confirmationProceedure = (3, pile,item) #Redirect neccessary information
+                else:
+                    self._confirmationWindow.setText("Are you sure you want to\n dig up your acorn pile?")
+                    self._confirmationWindow.display()
+                    self._confirmationProceedure = (0, pile,item) #Redirect neccessary information
+                self._player.stop()
+            
+    def handleUseToolEvent(self, event, item):
+        self.tryToDigUpSpawnedPile(event, item)
+        self.tryToDigUpPlayerPile(event, item)
+                
     def handleWeaponEquipEvent(self, item):
         previous = self._weapon.getItem()
         if previous != None:
@@ -456,7 +479,7 @@ class MainLevel(Level):
                 if itemType == "food":
                     self.handleEatEvent(item)
                 elif itemType == "tool":
-                    self.handleUseToolEvent(item)
+                    self.handleUseToolEvent(event, item)
                 elif itemType == "weapon":
                     self.handleWeaponEquipEvent(item)
                 elif itemType == "armor":
@@ -558,9 +581,8 @@ class MainLevel(Level):
         # Create the hover popups if the mouse is over an entity
         self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
         if self._popup==None:
-            self._popup = self.setPopup(self._dirtPiles, m_pos_offset, popup_pos, self._popupFont)
-        if self._popup==None:
-            self._popup = self.setPopup(self._spawnedPiles, m_pos_offset, popup_pos, self._popupFont)
+            piles = self._pileManager.getAllPiles()
+            self._popup = self.setPopup(piles, m_pos_offset, popup_pos, self._popupFont)
         if self._popup == None:
             self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
 
@@ -620,6 +642,8 @@ class MainLevel(Level):
                     self.digNewPile()
                 if self._confirmationProceedure[0] == 2:
                     self.collectSomeAcornsFromPile()
+                if self._confirmationProceedure[0] == 3:
+                    self.collectSomeAcornsFromPlayerPile()
 
     def handleEventsOnPopUpWindow(self, event):
         if self._popupWindow.getDisplay():
@@ -689,8 +713,8 @@ class MainLevel(Level):
     def digUpPlayerPile(self):
         pile = self._confirmationProceedure[1]
         item = self._confirmationProceedure[2]
-        self._dirtPiles.remove(pile)
-        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
+        self._pileManager.removePile(pile)
+        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.acornModifier()))
         self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
 
     def digNewPile(self):
@@ -703,18 +727,23 @@ class MainLevel(Level):
         else:
             dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
                     self._player.getY() + (self._player.getHeight() // 3)),
-                          capacity=8+(self._player.getDiggingSkill()*2))
-        lostPile = random.choice(self._dirtPiles)
-        self._dirtPiles.remove(lostPile)
-        lostPile.setName("Abandoned Pile")
-        self._spawnedPiles.append(lostPile)
-        self._dirtPiles.append(dp)
+                          capacity=8+(self._player.getDiggingSkill()*2)) 
+        lostPile = random.choice(self._pileManager.getPlayerPiles())
+        self._pileManager.addPlayerPile(dp)
+        self._pileManager.abandonPile(lostPile)
 
     def collectSomeAcornsFromPile(self):
         pile = self._confirmationProceedure[1]
         item = self._confirmationProceedure[2]
         self._spawnedPiles.remove(pile)
-        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
+        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.acornModifier()))
+        self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+
+    def collectSomeAcornsFromPlayerPile(self):
+        pile = self._confirmationProceedure[1]
+        item = self._confirmationProceedure[2]
+        self._pileManager.removePile(pile)
+        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.acornModifier()))
         self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                     
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
@@ -745,7 +774,7 @@ class MainLevel(Level):
         acornsInPile = random.randint(1,20)
         d = DirtPile(position, name)
         d.setAcorns(acornsInPile)
-        self._spawnedPiles.append(d)
+        self._pileManager.addSpawnedPile(d)
 
     def takeStarveDamage(self):
         """Apply negative effects to starving player"""
@@ -808,7 +837,7 @@ class MainLevel(Level):
 
     def updateEnvironment(self, ticks):
         self.updateAcorns(ticks)
-        for pile in self._spawnedPiles:
+        for pile in self._pileManager.getSpawnedPiles():
             pile.update(ticks)
         self.updateNightFilter()
 
