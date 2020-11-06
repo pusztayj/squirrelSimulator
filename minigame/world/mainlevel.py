@@ -465,20 +465,19 @@ class MainLevel(Level):
                     self.handleUsePotionEvent(item)
 
     def handlePackManagerEvent(self, event):
-        if CONTROLS.get("open_pack_manager").check(event):
-            if self._packManager._display == False:
-                self._packManager.display()
+        if self.isOnlyActiveWindow(self._packManager):
+            if CONTROLS.get("open_pack_manager").check(event) and \
+                self._packManager._display == True:
+                    self._packManager.close()
             else:
-                self._packManager.close()
-        else:
-            c = self._packManager.handleEvent(event)
-            if c != None and c[0] == 9:
-                self._playerPack.removeMember(c[1])
-                clone = c[1].clone()
-                clone.changeFriendScore(random.randint(-25,-5))
-                p = Pack(clone)
-                self._packs.append(p)
-                clone.setPack(p)
+                c = self._packManager.handleEvent(event)
+                if c != None and c[0] == 9:
+                    self._playerPack.removeMember(c[1])
+                    clone = c[1].clone()
+                    clone.changeFriendScore(random.randint(-25,-5))
+                    p = Pack(clone)
+                    self._packs.append(p)
+                    clone.setPack(p)
 
     def areActiveWindows(self):
         windowStates = self.getWindowStates()
@@ -500,7 +499,7 @@ class MainLevel(Level):
         return True
         
     def handleInteractionWindowEvent(self, event):
-        if self._interaction != None and self._interaction.getDisplay() and self._interactionTimer < 0:
+        if self.isOnlyActiveWindow(self._interaction) and self._interactionTimer < 0:
             self._popup = None
             code = self._interaction.handleEvent(event)
             if (code == 1):
@@ -567,87 +566,43 @@ class MainLevel(Level):
 
     def isActiveWindow(self, window):
         return not(window == None) and window.getDisplay()
-        
-    def handleEvent(self, event):
-        """Handles events for the main level"""
 
-        if not self.areActiveWindows():
+    def handleOpenWindowEvent(self, event, window, e):
+        if e.check(event) and not window.getDisplay():
+            window.display()
+            self._player.stop()
 
-            self._hud.handleEvent(event)
-            self._player.move(event)
-            self.handleCreateDirtPileEvent(event)
-            code = self.handleSelectionEvents(event)
-            if code != None: return code #Temporary refactoring code
-            self.handleUseItemEvent(event)
-            self.handlePackManagerEvent(event)
+    def handleOpenPackManagerEvent(self, event):
+        eventReference = CONTROLS.get("open_pack_manager")
+        window = self._packManager
+        self.handleOpenWindowEvent(event, window, eventReference)
 
-        else:
-          
-            if self.isOnlyActiveWindow(self._atm):
-                self._atm.handleEvent(event)
-            if self.isOnlyActiveWindow(self._packManager):
-                self.handlePackManagerEvent(event)
-            if self.isOnlyActiveWindow(self._interaction):
-                code = self.handleInteractionWindowEvent(event)
-                if code != None: return code #Temporary refactoring code
+    def handleOpenXPManagerEvent(self, event):
+        eventReference = CONTROLS.get("open_xp_manager")
+        window = self._xpManager
+        self.handleOpenWindowEvent(event, window, eventReference)
 
-        self.createPopUpsOnHover()
-
-        # Check if the XP Manager should be opened or closed
-        if (self._atm == None or not self._atm.getDisplay()) and \
-           (self._interaction == None or not self._interaction.getDisplay()) and \
-           (not self._popupWindow.getDisplay()) and \
-           not self._packManager.getDisplay() and \
-           not self._confirmationWindow.getDisplay() and \
-           not self._cheatBox.getDisplay():
+    def handleCloseXPManagerEvent(self, event):
+        if self.isOnlyActiveWindow(self._xpManager):
             if CONTROLS.get("open_xp_manager").check(event):
                 if self._xpManager.getDisplay():
                     self._xpManager.close()
-                else:
-                    self._xpManager.display()
-                    self._player.stop()
 
-        # Once the user confirms, dig up a pile or not
-        if self._confirmationWindow.getDisplay():
-            c = self._confirmationWindow.handleEvent(event)
-            if c == 1 and self._confirmationProceedure!=None:
-                # Dig up a players acorn pile
-                if self._confirmationProceedure[0] == 0:
-                    pile = self._confirmationProceedure[1]
-                    item = self._confirmationProceedure[2]
-                    self._dirtPiles.remove(pile)
-                    acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
-                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
-                # Create a new acorn pile and forget an old one
-                if self._confirmationProceedure[0] == 1:
-                    self._player._fsm.changeState("bury")
-                    if self._player.isFlipped():
-                        dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)),
-                                      capacity=8+(self._player.getDiggingSkill()*2))
-                    else:
-                        dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                                self._player.getY() + (self._player.getHeight() // 3)),
-                                      capacity=8+(self._player.getDiggingSkill()*2))
-                    lostPile = random.choice(self._dirtPiles)
-                    self._dirtPiles.remove(lostPile)
-                    lostPile.setName("Abandoned Pile")
-                    self._spawnedPiles.append(lostPile)
-                    self._dirtPiles.append(dp)
-                if self._confirmationProceedure[0] == 2:
-                    pile = self._confirmationProceedure[1]
-                    item = self._confirmationProceedure[2]
-                    self._spawnedPiles.remove(pile)
-                    acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
-                    self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+    def handleEventsOnXPManager(self, event):
+        if self.isOnlyActiveWindow(self._xpManager):
+            c = self._xpManager.handleEvent(event)
+            if c != None:
+                if c[0] == 0:
+                    self._popupWindow.setText("You do not have any XP")
+                    self._popupWindow.display()
 
-        # Handle events on the bribe interface
-        if self._bribeWindow != None and self._bribeWindow.getDisplay():
+    def handleEventsOnBribeWindow(self, event):
+        if self.isActiveWindow(self._bribeWindow):
             self._bribeWindow.handleEvent(event)
             self._interaction.updateInteraction()
 
-        # Handle events on the steal interface
-        if self._stealWindow != None and self._stealWindow.getDisplay():
+    def handleEventsOnStealWindow(self, event):
+        if self.isActiveWindow(self._stealWindow):
             bustedRobbery = self._stealWindow.handleEvent(event)
             self._interaction.updateInteraction()
             if bustedRobbery:
@@ -655,32 +610,18 @@ class MainLevel(Level):
                 self._popupWindow.display()
                 self._fightFlag = (True, self._interaction.getEntity().getPack()) #Start Combat on okay
 
-        # Handle events on the XP Manager
-        if self._xpManager.getDisplay() and not self._popupWindow.getDisplay() and \
-           not self._confirmationWindow.getDisplay():
-            c = self._xpManager.handleEvent(event)
-            if c != None:
-                if c[0] == 0:
-                    self._popupWindow.setText("You do not have any XP")
-                    self._popupWindow.display()
+    def handleEventsOnConfirmationWindow(self, event):
+        if self.isActiveWindow(self._confirmationWindow):
+            c = self._confirmationWindow.handleEvent(event)
+            if c == 1 and self._confirmationProceedure!=None:
+                if self._confirmationProceedure[0] == 0:
+                    self.digUpPlayerPile()
+                if self._confirmationProceedure[0] == 1:
+                    self.digNewPile()
+                if self._confirmationProceedure[0] == 2:
+                    self.collectSomeAcornsFromPile()
 
-        # Check to see if NPC creatures want to attack the player
-        if self._graceTimer <= 0:
-            for pack in self._packs:
-                leader = pack.getLeader()
-                rect = leader.getWanderRect()
-                for creature in pack:
-                    if creature != None:
-                        if creature.getFriendScore() < self._attackThreshold:
-                            if creature.getAggression() > self._aggressionThreshold:
-                                if self._player.getCollideRect().colliderect(rect):
-                                    self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
-                                    self._popupWindow.display()
-                                    self._player.stop()
-                                    self._fightFlag = (True, leader.getPack()) #Start Combat on okay
-                                    self._graceTimer = self._gracePeriod
-
-        # Display the combat window once the player confirms the popup window
+    def handleEventsOnPopUpWindow(self, event):
         if self._popupWindow.getDisplay():
             self._popupWindow.handleEvent(event)
             if self._popupWindow.getConfirmed() and self._fightFlag[0]:
@@ -692,6 +633,89 @@ class MainLevel(Level):
                     if e != None:
                         e.changeFriendScore(random.randint(-30,-10))
                 return (2,self._playerPack,enemyPack)
+
+    def handleNPCAttacks(self):
+        if self._graceTimer <= 0:
+            for pack in self._packs:
+                leader = pack.getLeader()
+                rect = leader.getWanderRect()
+                for c in pack.getTrueMembers():
+                    attackThresholdMet = c.getFriendScore() < self._attackThreshold
+                    aggressionThresholdMet = c.getAggression() > self._aggressionThreshold
+                    playerInEnemyTerritory = self._player.getCollideRect().colliderect(rect)
+                    if attackThresholdMet and aggressionThresholdMet and playerInEnemyTerritory:    
+                        self._popupWindow.setText("You entered enemy territory!\nPrepare for a fight")
+                        self._popupWindow.display()
+                        self._player.stop()
+                        self._fightFlag = (True, leader.getPack()) #Start Combat on okay
+                        self._graceTimer = self._gracePeriod
+
+    def manageEventsHandledAlways(self, event):
+        self.createPopUpsOnHover()
+        self.handleEventsOnConfirmationWindow(event)
+        self.handleEventsOnBribeWindow(event)
+        self.handleEventsOnStealWindow(event)
+        self.handleEventsOnXPManager(event)
+        self.handleNPCAttacks()
+        self.handleEventsOnPopUpWindow(event)
+
+    def manageEventsHandledWhenNoActiveWindows(self, event):
+        self._hud.handleEvent(event)
+        self._player.move(event)
+        self.handleCreateDirtPileEvent(event)
+        code = self.handleSelectionEvents(event)
+        if code != None: return code #Temporary refactoring code
+        self.handleUseItemEvent(event)
+        self.handleOpenPackManagerEvent(event)
+        self.handleOpenXPManagerEvent(event)
+
+    def manageEventsHandledWhenActiveWindows(self, event):
+        if self.isOnlyActiveWindow(self._atm):
+            self._atm.handleEvent(event)
+        self.handlePackManagerEvent(event)
+        code = self.handleInteractionWindowEvent(event)
+        if code != None: return code #Temporary refactoring code
+        self.handleCloseXPManagerEvent(event)
+        
+    def handleEvent(self, event):
+        """Handles events for the main level"""
+        if not self.areActiveWindows():
+            c = self.manageEventsHandledWhenNoActiveWindows(event)
+        else:
+            c = self.manageEventsHandledWhenActiveWindows(event)
+        if c != None: return c # Temporary refactoring code
+        self.manageEventsHandledAlways(event)
+
+    def digUpPlayerPile(self):
+        pile = self._confirmationProceedure[1]
+        item = self._confirmationProceedure[2]
+        self._dirtPiles.remove(pile)
+        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
+        self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
+
+    def digNewPile(self):
+        # Create a new acorn pile and forget an old one
+        self._player._fsm.changeState("bury")
+        if self._player.isFlipped():
+            dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
+                    self._player.getY() + (self._player.getHeight() // 3)),
+                          capacity=8+(self._player.getDiggingSkill()*2))
+        else:
+            dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
+                    self._player.getY() + (self._player.getHeight() // 3)),
+                          capacity=8+(self._player.getDiggingSkill()*2))
+        lostPile = random.choice(self._dirtPiles)
+        self._dirtPiles.remove(lostPile)
+        lostPile.setName("Abandoned Pile")
+        self._spawnedPiles.append(lostPile)
+        self._dirtPiles.append(dp)
+
+    def collectSomeAcornsFromPile(self):
+        pile = self._confirmationProceedure[1]
+        item = self._confirmationProceedure[2]
+        self._spawnedPiles.remove(pile)
+        acorns = round(pile.getAcorns() + (pile.getAcorns()*item.getAcornBoost()))
+        self._player.setAcorns(min(self._player.getCheekCapacity(), self._player.getAcorns() + acorns))
                     
     def setPopup(self, lyst, mouse_pos, popup_pos, font):
        """Creates and manages hover popups"""
