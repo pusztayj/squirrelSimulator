@@ -8,6 +8,7 @@ A class that models and manages a confirmation window
 import pygame
 from polybius.graphics.utils.textgraphic import TextGraphic
 from polybius.graphics.utils.window import Window
+from polybius.graphics.utils.callable import Callable
 from polybius.graphics.components.textbox import TextBox
 from polybius.graphics.components.button import Button
 from polybius.graphics.components.multilinetextbox import MultiLineTextBox
@@ -33,8 +34,7 @@ class ConfirmationWindow(TextGraphic, Window):
 
         self._offset = position
 
-        self._func = lambda: 0
-        self._args = tuple()
+        self._func = None
 
         # Create a temporary image to use for initial centering
         self._image = pygame.Surface((self._width, self._height))
@@ -54,8 +54,6 @@ class ConfirmationWindow(TextGraphic, Window):
                          buttonColor,buttonDimensions[1],
                          buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
         self._b2.keepCentered(self, (2/3,3/4))
-
-        self._sel = None
 
         self.updateGraphic()
 
@@ -86,29 +84,19 @@ class ConfirmationWindow(TextGraphic, Window):
         self._b1.handleEvent(event,self.confirm,offset=self._offset)
         self._b2.handleEvent(event,self.reject,offset=self._offset)
         self.updateGraphic()
-        return self.getSelection()
 
     def setConfirmFunction(self, func, args=tuple()):
         """Set the function to be executed if the user confirms"""
-        self._func = func
-        self._args = args
+        self._func = Callable(func, args)
 
     def confirm(self):
         """Sets selection to confirm and closes the window"""
         self.close()
-        self._func(*self._args)
-        self._sel = 1
+        self._func.call()
 
     def reject(self):
         """Sets selection to reject and closes the window"""
         self.close()
-        self._sel = 0
-
-    def getSelection(self):
-        """Returns the current selection and resets the selection to None"""
-        sel = self._sel
-        self._sel = None
-        return sel
 
     def internalUpdate(self, surf):
         """Update the window after parameters have been changed"""     

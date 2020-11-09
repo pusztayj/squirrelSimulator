@@ -88,6 +88,7 @@ class Menu(Drawable, Window):
                                   x+1, b["closeOnPress"], (b.get("toggleText",None),b["text"])))
 
         self._selection = None
+        self._funcs = None
 
         self.createDisplay()
 
@@ -118,6 +119,8 @@ class Menu(Drawable, Window):
                 b.setText(toggleText[1])
             else:
                 b.setText(toggleText[0])
+        if self._funcs != None:
+            self._funcs[selection-1][0](*self._funcs[selection-1][1])
         self._selection = selection
 
     def getSelection(self):
@@ -125,6 +128,10 @@ class Menu(Drawable, Window):
         sel = self._selection
         self._selection = None
         return sel
+
+    def setSelectionFunctions(self, funcs):
+        assert len(funcs) == len(self._buttons)
+        self._funcs = funcs
 
     def draw(self, screen):
         """Draws the menu on the screen"""

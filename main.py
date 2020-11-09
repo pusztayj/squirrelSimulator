@@ -80,6 +80,7 @@ def main():
    pause_commands = USER_INTERFACE.getControlsForMenu("pause")
    pauseMenu = Menu(((SCREEN_SIZE[0]//2 - pWidth//2), SCREEN_SIZE[1]//2 - pHeight//2),
              (pWidth, pHeight), pause_commands, (37,16), -1)
+   
    pauseMenu.close()
 
    # Create the controls scroll display
@@ -105,6 +106,13 @@ def main():
 
    # Set the initial game code to None
    code = None
+
+##   pauseMenu.setSelectionFunctions([
+##                        (level.setActive, True),
+##                        (SOUNDS.toggleMute, tuple()),
+##                        (tutorial.display, tuple()),
+##                        (controls.display, tuple()),
+##                        (lambda: 0)])
 
    while RUNNING:
 
@@ -238,6 +246,7 @@ def main():
                   # Handle events on the pause menu
                   if pauseMenu.getDisplay() and not controls.getDisplay():
                      sel = pauseMenu.handleEvent(event)
+                     
                      if sel == 1:
                         if merchantLevel == None or not merchantLevel.isActive():
                            level.setActive(True)

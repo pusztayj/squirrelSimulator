@@ -287,69 +287,31 @@ class MemberCard(Drawable, Window):
                       self._dropdown = None
 
                 if e == 1:
-                    
                    if self._menuType == "playerItem":
-                      self._dropType = "share"
-                      
+                      self._dropType = "share"     
                    elif self._menuType == "itemBorrowedByPlayer":
-                      tup = self._item.getAttribute("owner").reclaimItem(self._item,
-                                                                         self._entity)
-                      # Player returns a borrowed item
-                      if tup[0]:
-                          self._entity.getInventory().removeItem(self._item)
-                          self._item.getAttribute("owner").getInventory().addItem(self._item)
-                      print(tup[1])
-                      self._itemMenu = None
-                      
+                      self.playerReturnsBorrowedItem()    
                    elif self._menuType == "itemBorrowedByPack":
-                      # Player reclaims a borrowed item
-                      if self._pack.getLeader().getInventory().hasSpace():
-                          self._pack.getLeader().getInventory().addItem(self._item)
-                          self._entity.getInventory().removeItem(self._item)
-                      self._itemMenu = None
-
+                      self.playerReclaimsBorrowedItem()
                    elif self._menuType == "packItem":
-                      # Player borrows an item from a pack member
-                      tup = self._entity.loanItem(self._item, self._pack.getLeader())
-                      if tup[0]:
-                          self._pack.getLeader().getInventory().addItem(self._item)
-                          self._entity.getInventory().removeItem(self._item)
-                      print(tup[1])
-                      self._itemMenu = None
+                      self.playerBorrowsItem()
                         
-
                 if e == 2:
                     if self._menuType == "playerItem":
                         self._dropType = "gift"
                     elif self._menuType in "itemBorrowedByPlayer":
-                        tup = self._item.getAttribute("owner").giveOwnershipItem(self._item,
-                                                                                 self._pack.getLeader())
-                        if tup[0]:
-                            self._item.setOwner(self._pack.getLeader())
-                        print(tup[1])
-                        self._itemMenu = None
+                        self.playerTakesOwnershipOfItemAlreadyInInventory()
                     elif self._menuType == "itemBorrowedByPack":
-                        tup = self._entity.takeOwnership(self._item, self._pack.getLeader())
-                        if tup[0]:
-                            self._item.setOwner(self._entity)
-                        print(tup[1])
-                        self._itemMenu = None
+                        self.playerGivesOwnershipOfItemAlreadyInInventory()
                     elif self._menuType == "packItem":
-                        tup = self._entity.giveOwnershipItem(self._item, self._pack.getLeader())
-                        if tup[0]:
-                            self._entity.getInventory().removeItem(self._item)
-                            self._pack.getLeader().getInventory().addItem(self._item)
-                            self._item.setOwner(self._pack.getLeader())
-                        print(tup[1])
-                        self._itemMenu = None
+                        self.playerTakesOwnershipOfItem()
+                        
                 if e == 3:
                     if self._menuType in ("playerItem", "itemBorrowedByPack"):
                         self._dropType = "trade"
                     else:
-                        self._tradeMenu = TradeMenu((50,50), (1050, 400), self._pack.getLeader(),
-                                                    self._item.getAttribute("owner"), self._item)
-                        self._tradeMenu.center()
-                        self._itemMenu = None
+                        entityToTradeWith = self._item.getAttribute("owner")
+                        self.openTradeMenu(entityToTradeWith)
                 if e == 4:
                     self._itemCard = ItemCard(self._item, self._itemCardPos,
                                               self._itemCardSize).getCard()
@@ -386,25 +348,14 @@ class MemberCard(Drawable, Window):
                 if de != None:
                     creature = [an for an in self._pack.getTrueMembers()
                                if not an == self._pack.getLeader()][de-1]
+                    self._entity = creature
                     if self._dropType == "share":
-                       # Share an item with a pack member
-                       tup = creature.borrowItem(self._item, self._pack.getLeader())
-                       if tup[0]:
-                           self._pack.getLeader().getInventory().removeItem(self._item)
-                           creature.getInventory().addItem(self._item)
-                       print(tup[1])
+                        self.playerSharesItem()
                     elif self._dropType == "gift":
-                        # Give an item to a pack member
-                        tup = creature.takeOwnership(self._item, self._pack.getLeader())
-                        if tup[0]:
-                            self._pack.getLeader().getInventory().removeItem(self._item)
-                            creature.getInventory().addItem(self._item)
-                            self._item.setOwner(creature)
-                        print(tup[1])
+                        self.playerGiftsAnItem()
                     elif self._dropType == "trade":
-                        self._tradeMenu = TradeMenu((50,50), (1050, 400), self._pack.getLeader(),
-                                                    creature, self._item)
-                        self._tradeMenu.center()
+                        entityToTradeWith = self._entity
+                        self.openTradeMenu(entityToTradeWith)
                     
                     self._dropdown = None
                     self._itemMenu = None
@@ -415,6 +366,83 @@ class MemberCard(Drawable, Window):
                     if not self._itemMenu.getCollideRect().collidepoint(mouse_pos) and \
                        not self._dropdown.getCollideRect().collidepoint(mouse_pos):
                        self._dropdown = None
+
+    def playerSharesItem(self):
+        player = self._pack.getLeader()
+        shared, message = self._entity.borrowItem(self._item, player)
+        if shared:
+            player.getInventory().removeItem(self._item)
+            self._entity.getInventory().addItem(self._item)
+        print(message)
+
+    def playerGiftsAnItem(self):
+        player = self._pack.getLeader()
+        gifted, message = self._entity.takeOwnership(self._item, player)
+        if gifted:
+            player.getInventory().removeItem(self._item)
+            self._entity.getInventory().addItem(self._item)
+            self._item.setOwner(creature)
+        print(message)
+
+    def playerReturnsBorrowedItem(self):
+        itemOwner = self._item.getAttribute("owner")
+        reclaimed, message = itemOwner.reclaimItem(self._item, self._entity)
+        if reclaimed:
+            player = self._entity
+            player.getInventory().removeItem(self._item)
+            itemOwner.getInventory().addItem(self._item)
+        print(message)
+        self._itemMenu = None
+
+    def playerReclaimsBorrowedItem(self):
+        player = self._pack.getLeader()
+        playerInventory = player.getInventory()
+        if playerInventory.hasSpace():
+            playerInventory.addItem(self._item)
+            self._entity.getInventory().removeItem(self._item)
+        self._itemMenu = None
+
+    def playerBorrowsItem(self):
+        player = self._pack.getLeader()
+        borrowed, message = self._entity.loanItem(self._item, player)
+        if borrowed:
+            player.getInventory().addItem(self._item)
+            self._entity.getInventory().removeItem(self._item)
+        print(message)
+        self._itemMenu = None
+
+    def playerTakesOwnershipOfItemAlreadyInInventory(self):
+        player = self._pack.getLeader()
+        itemOwner = self._item.getAttribute("owner")
+        gifted, message = itemOwner.giveOwnershipItem(self._item, player)
+        if gifted:
+            self._item.setOwner(player)
+        print(message)
+        self._itemMenu = None
+
+    def playerGivesOwnershipOfItemAlreadyInInventory(self):
+        player = self._pack.getLeader()
+        gifted, message = self._entity.takeOwnership(self._item, player)
+        if gifted:
+            self._item.setOwner(self._entity)
+        print(message)
+        self._itemMenu = None
+
+    def playerTakesOwnershipOfItem(self):
+        player = self._pack.getLeader()
+        gifted, message = self._entity.giveOwnershipItem(self._item, player)
+        if gifted:
+            self._entity.getInventory().removeItem(self._item)
+            player.getInventory().addItem(self._item)
+            self._item.setOwner(player)
+        print(message)
+        self._itemMenu = None
+
+    def openTradeMenu(self, entity):
+        self._tradeMenu = TradeMenu((50,50), (1050, 400),
+                                    self._pack.getLeader(), entity, self._item)
+        self._tradeMenu.center()
+        self._itemMenu = None
 
     def remove(self):
         """Sets the remove flag to true"""

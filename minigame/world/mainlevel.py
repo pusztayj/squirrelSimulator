@@ -359,16 +359,15 @@ class MainLevel(Level):
     def handleSelectCreatureEvent(self, event):
         coords = self.getWorldCoordinatesFromRelativeEvent(event)
         for pack in self._packs:
-            for creature in pack:
-                if creature != None:
-                    x,y = creature.getPosition()
-                    for rect in creature.getCollideRects():
-                        r = rect.move(x,y)
-                        creatureSelected = r.collidepoint(coords)
-                        if creatureSelected:
-                            self._interaction = Interaction(creature)
-                            self._interactionTimer = self._interactionDelay
-                            self._player.stop()
+            for creature in pack.getTrueMembers():
+                x,y = creature.getPosition()
+                for rect in creature.getCollideRects():
+                    r = rect.move(x,y)
+                    creatureSelected = r.collidepoint(coords)
+                    if creatureSelected:
+                        self._interaction = Interaction(creature)
+                        self._interactionTimer = self._interactionDelay
+                        self._player.stop()
 
     def handleSelectMerchantEvent(self, event):
         coords = self.getWorldCoordinatesFromRelativeEvent(event)
@@ -509,46 +508,60 @@ class MainLevel(Level):
             if s and w != window:
                 return False
         return True
+
+    def initiateCombat(self):
+        enemyPack = self._interaction.getEntity().getPack()
+        for e in enemyPack.getTrueMembers():
+            e.changeFriendScore(random.randint(-30,-10))
+        self._interaction = None
+        return (2,self._playerPack,enemyPack)
+
+    def addEntityToPack(self, e):
+        self._playerPack.addMember(e)
+        self._packs.remove(e.getPack())
+        e.setPack(self._playerPack)
+        self._popupWindow.setText(e.getName() + " has joined your pack")
+        self._interaction = None # Close the interaction window
+
+    def executeBefriendLogic(self):
+        e = self._interaction.getEntity()
+        playerPackHasSpace = self._playerPack.trueLen() < 3
+        eIsNotInPack = e.getPack().trueLen() == 1
+        if playerPackHasSpace:
+            if eIsNotInPack:
+                if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
+                    self.addEntityToPack(e)
+                else:
+                    self._popupWindow.setText(e.getName() + " doesn't want\nto join your pack")
+            else:
+                self._popupWindow.setText(e.getName() + " is already part of a pack")   
+        else:
+            self._popupWindow.setText("Your pack is already full")
+        self._popupWindow.display()
+
+    def openStealDisplay(self):
+        e = self._interaction.getEntity()
+        self._stealWindow = Steal(self._player, e, self._screen_size)
+        self._stealWindow.display()
+
+    def openBribeDisplay(self):
+        e = self._interaction.getEntity()
+        self._bribeWindow = Bribe(self._player, e, self._screen_size)
+        self._bribeWindow.display()
         
     def handleInteractionWindowEvent(self, event):
         if self.isOnlyActiveWindow(self._interaction) and self._interactionTimer < 0:
             self._popup = None
             code = self._interaction.handleEvent(event)
             if (code == 1):
-                enemyPack = self._interaction.getEntity().getPack()
-                for e in enemyPack:
-                    if e != None:
-                        e.changeFriendScore(random.randint(-30,-10))
-                self._interaction = None
-                return (2,self._playerPack,enemyPack)
+                temp = self.initiateCombat()
+                if temp != None: return temp # Temporary refacoring code
             elif (code == 2):
-                e = self._interaction.getEntity()
-                if self._playerPack.trueLen() < 3:
-                    if e.getPack().trueLen() == 1:
-                        if e.getFriendScore() + (self._player.getCharisma() * .5) > 60:
-                            self._playerPack.addMember(e)
-                            self._packs.remove(e.getPack())
-                            e.setPack(self._playerPack)
-                            self._popupWindow.setText(e.getName() + " has joined your pack")
-                            self._popupWindow.display()
-                            self._interaction = None # Close the interaction window
-                        else:
-                            self._popupWindow.setText(e.getName() + " doesn't want\nto join your pack")
-                            self._popupWindow.display()
-                    else:
-                        self._popupWindow.setText(e.getName() + " is already part of a pack")
-                        self._popupWindow.display()
-                else:
-                    self._popupWindow.setText("Your pack is already full")
-                    self._popupWindow.display()
+                self.executeBefriendLogic()
             elif (code == 3):
-                e = self._interaction.getEntity()
-                self._stealWindow = Steal(self._player, e, self._screen_size)
-                self._stealWindow.display()
+                self.openStealDisplay()
             elif (code == 4):
-                e = self._interaction.getEntity()
-                self._bribeWindow = Bribe(self._player, e, self._screen_size)
-                self._bribeWindow.display()
+                self.openBribeDisplay()
 
     def createPopUpsOnHover(self):
         # Determine the relative position of the mouse
@@ -556,24 +569,26 @@ class MainLevel(Level):
         m_pos_offset = self._player.adjustMousePos(mouse)
         m_pos_offset = (m_pos_offset[0], m_pos_offset[1])   
         popup_pos = (mouse[0] + 5, mouse[1] + 5)
-        # Create a list of current creatures in the game
-        # for use with popup creation
+
         creatures = []
-        for pack in self._packs:
-            for creature in pack:
-                if creature != None:
-                    creatures.append(creature)
-        for creature in self._playerPack:
-            if creature != None:
+        for pack in self._packs + [self._playerPack]:
+            for creature in pack.getTrueMembers():
                 creatures.append(creature)
 
-        # Create the hover popups if the mouse is over an entity
-        self._popup = self.setPopup(creatures, m_pos_offset, popup_pos, self._popupFont)
-        if self._popup==None:
-            piles = self._pileManager.getAllPiles()
-            self._popup = self.setPopup(piles, m_pos_offset, popup_pos, self._popupFont)
-        if self._popup == None:
-            self._popup = self.setPopup(self._merchants, m_pos_offset, popup_pos, self._popupFont)
+        entities = creatures + self._pileManager.getAllPiles() + self._merchants
+        self._popup = self.setPopup(entities, m_pos_offset, popup_pos, self._popupFont)
+
+    def setPopup(self, lyst, mouse_pos, popup_pos, font):
+       """Creates and manages hover popups"""
+       for entity in lyst:
+          x,y = entity.getPosition()
+          for rect in entity.getCollideRects():
+             r = rect.move(x,y)
+             if r.collidepoint(mouse_pos):
+                 name = entity.getName()
+                 if type(entity) == Merchant:
+                     name += "'s Shop"
+                 return Popup(name, popup_pos, font)
 
     def isActiveWindow(self, window):
         return not(window == None) and window.getDisplay()
@@ -661,7 +676,8 @@ class MainLevel(Level):
         self.handleEventsOnStealWindow(event)
         self.handleEventsOnXPManager(event)
         self.handleNPCAttacks()
-        self.handleEventsOnPopUpWindow(event)
+        temp = self.handleEventsOnPopUpWindow(event)
+        if temp != None: return temp
 
     def manageEventsHandledWhenNoActiveWindows(self, event):
         self._hud.handleEvent(event)
@@ -688,7 +704,8 @@ class MainLevel(Level):
         else:
             c = self.manageEventsHandledWhenActiveWindows(event)
         if c != None: return c # Temporary refactoring code
-        self.manageEventsHandledAlways(event)
+        c = self.manageEventsHandledAlways(event)
+        if c != None: return c # Temporary refactoring code
 
     def digNewPile(self):
         self._player._fsm.changeState("bury")
@@ -706,18 +723,6 @@ class MainLevel(Level):
     def forgetOldPile(self):
         lostPile = random.choice(self._pileManager.getPlayerPiles())
         self._pileManager.abandonPile(lostPile)
-                  
-    def setPopup(self, lyst, mouse_pos, popup_pos, font):
-       """Creates and manages hover popups"""
-       for entity in lyst:
-          x,y = entity.getPosition()
-          for rect in entity.getCollideRects():
-             r = rect.move(x,y)
-             if r.collidepoint(mouse_pos):
-                 name = entity.getName()
-                 if type(entity) == Merchant:
-                     name += "'s Shop"
-                 return Popup(name, popup_pos, font)
 
     def spawnAcorn(self):
         """Spawn a new acorn on the map"""
@@ -863,5 +868,3 @@ class MainLevel(Level):
         # Load and play a new song if the current song has ended
         SOUNDS.manageSongs("main")
         
-
-

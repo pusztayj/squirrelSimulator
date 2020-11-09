@@ -50,7 +50,7 @@ class Interaction(Drawable, Window):
                            150+self._offset[1]+self._borderWidth),
                           (155, 170), commands, (15,0), 10, color=None,
                           borderWidth=0, orientation="vertical")
-        
+
         self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
                (0,0,0), 1)
 
