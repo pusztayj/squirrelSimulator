@@ -21,6 +21,7 @@ class DirtPile(Drawable):
         self._name = name
         self._acorns = 0
         self._capacity = capacity
+        self._owner = None
 
         self._despawned = False
         self._lifespan = random.randint(120,240)
@@ -32,6 +33,12 @@ class DirtPile(Drawable):
     def setName(self, name):
         """Set the name of the dirt pile"""
         self._name = name
+
+    def getOwner(self):
+        return self._owner
+
+    def setOwner(self, owner):
+        self._owner = owner
 
     def getCapacity(self):
         """Return the acorn capacity of the dirt pile"""

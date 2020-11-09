@@ -33,6 +33,9 @@ class ConfirmationWindow(TextGraphic, Window):
 
         self._offset = position
 
+        self._func = lambda: 0
+        self._args = tuple()
+
         # Create a temporary image to use for initial centering
         self._image = pygame.Surface((self._width, self._height))
 
@@ -85,9 +88,15 @@ class ConfirmationWindow(TextGraphic, Window):
         self.updateGraphic()
         return self.getSelection()
 
+    def setConfirmFunction(self, func, args=tuple()):
+        """Set the function to be executed if the user confirms"""
+        self._func = func
+        self._args = args
+
     def confirm(self):
         """Sets selection to confirm and closes the window"""
         self.close()
+        self._func(*self._args)
         self._sel = 1
 
     def reject(self):

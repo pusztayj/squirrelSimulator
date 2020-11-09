@@ -14,6 +14,7 @@ class PileManager():
     def abandonPile(self, pile):
         self._playerPiles.remove(pile)
         pile.setName("Abandoned Pile")
+        pile.setOwner(None)
         self._spawnedPiles.append(pile)
 
     def removePile(self, pile):
