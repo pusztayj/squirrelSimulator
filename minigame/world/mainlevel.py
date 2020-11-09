@@ -690,20 +690,16 @@ class MainLevel(Level):
         if c != None: return c # Temporary refactoring code
         self.manageEventsHandledAlways(event)
 
-
-
     def digNewPile(self):
-        # Create a new acorn pile and forget an old one
         self._player._fsm.changeState("bury")
+        yCoord = self._player.getY() + (self._player.getHeight() // 3)
+        pileCapacity = 8 + (self._player.getDiggingSkill()*2)
         if self._player.isFlipped():
-            dp = DirtPile((self._player.getX() - (3//4)*(self._player.getWidth() // 2),
-                    self._player.getY() + (self._player.getHeight() // 3)),
-                          capacity=8+(self._player.getDiggingSkill()*2))
+            xCoord = self._player.getX() - (3//4)*(self._player.getWidth() // 2)
         else:
-            dp = DirtPile((self._player.getX() + (self._player.getWidth() // 2),
-                    self._player.getY() + (self._player.getHeight() // 3)),
-                          capacity=8+(self._player.getDiggingSkill()*2)) 
-        
+            xCoord = self._player.getX() + (self._player.getWidth() // 2)
+        pos = (xCoord, yCoord)
+        dp = DirtPile(pos, capacity=pileCapacity)
         dp.setOwner(self._player)
         self._pileManager.addPlayerPile(dp)
         
