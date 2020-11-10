@@ -232,7 +232,6 @@ class MainLevel(Level):
 
         self._popupWindow.close()
         self._confirmationWindow.close()
-        self._confirmationProcedure = None
 
     def setupUI(self):
         # Set the hover popup to None

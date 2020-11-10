@@ -5,7 +5,8 @@ File: packmanager.py
 A user interface that allows the player to alter and adjust their pack
 """
 
-from polybius.graphics import Drawable, Window, Button, TextBox, ProgressBar, Menu
+from polybius.graphics import Drawable, Window, Button, TextBox, ProgressBar
+from polybius.graphics import Menu, PopupWindow
 from managers import USER_INTERFACE
 from polybius.managers import CONSTANTS
 from minigame.threexthreeinventory import threeXthreeInventory
@@ -138,6 +139,36 @@ class MemberCard(Drawable, Window):
                                   self._font,(0,0,0),(100,100,100),25,25,(0,0,0), 1)
 
         self._tradeMenu = None
+
+        self.initializePopupWindow()
+
+    def initializePopupWindow(self):
+
+        # Set the fonts
+        font = pygame.font.SysFont("Times New Roman", 20)
+        buttonFont = pygame.font.SysFont("Times New Roman", 16)
+
+        # Set the dimensions
+        width, height = 288, 150
+        dimensions = (width, height)
+        buttonWidth, buttonHeight = 40, 20
+        buttonDimensions = (buttonWidth, buttonHeight)
+
+        # Set the color scheme
+        fontColor = (255,255,255)
+        backgroundColor = (0,0,0)
+        buttonFontColor = (255,255,255)
+        buttonColor = (120,120,120)
+        
+        self._popupWindow = PopupWindow("", (0,0), dimensions, font, fontColor,
+                                backgroundColor, buttonColor, buttonDimensions,
+                                buttonFont,buttonFontColor, borderWidth=1)
+
+        verticalCenter = 1/3 #from top of screen
+        horizontalCenter = 1/2 #from left of screen
+        self._popupWindow.center(cen_point=(horizontalCenter, verticalCenter))
+
+        self._popupWindow.close()
         
     def setEntity(self, entity):
 
@@ -234,11 +265,16 @@ class MemberCard(Drawable, Window):
                 self._exitButton.draw(surf)
             if self._tradeMenu != None and self._tradeMenu.getDisplay():
                 self._tradeMenu.draw(surf)
+            if self._popupWindow.getDisplay():
+                self._popupWindow.draw(surf)
 
     def handleEvent(self, event):
         """"Handles events on the member card"""
         
         if self._entity != None:
+
+            if self._popupWindow.getDisplay():
+                self._popupWindow.handleEvent(event)
 
             if self._itemCard != None:
                 self._itemCard.move(event)
@@ -373,7 +409,8 @@ class MemberCard(Drawable, Window):
         if shared:
             player.getInventory().removeItem(self._item)
             self._entity.getInventory().addItem(self._item)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
 
     def playerGiftsAnItem(self):
         player = self._pack.getLeader()
@@ -382,7 +419,8 @@ class MemberCard(Drawable, Window):
             player.getInventory().removeItem(self._item)
             self._entity.getInventory().addItem(self._item)
             self._item.setOwner(creature)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
 
     def playerReturnsBorrowedItem(self):
         itemOwner = self._item.getAttribute("owner")
@@ -391,7 +429,8 @@ class MemberCard(Drawable, Window):
             player = self._entity
             player.getInventory().removeItem(self._item)
             itemOwner.getInventory().addItem(self._item)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
         self._itemMenu = None
 
     def playerReclaimsBorrowedItem(self):
@@ -408,7 +447,8 @@ class MemberCard(Drawable, Window):
         if borrowed:
             player.getInventory().addItem(self._item)
             self._entity.getInventory().removeItem(self._item)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
         self._itemMenu = None
 
     def playerTakesOwnershipOfItemAlreadyInInventory(self):
@@ -417,7 +457,8 @@ class MemberCard(Drawable, Window):
         gifted, message = itemOwner.giveOwnershipItem(self._item, player)
         if gifted:
             self._item.setOwner(player)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
         self._itemMenu = None
 
     def playerGivesOwnershipOfItemAlreadyInInventory(self):
@@ -425,7 +466,8 @@ class MemberCard(Drawable, Window):
         gifted, message = self._entity.takeOwnership(self._item, player)
         if gifted:
             self._item.setOwner(self._entity)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
         self._itemMenu = None
 
     def playerTakesOwnershipOfItem(self):
@@ -435,7 +477,8 @@ class MemberCard(Drawable, Window):
             self._entity.getInventory().removeItem(self._item)
             player.getInventory().addItem(self._item)
             self._item.setOwner(player)
-        print(message)
+        self._popupWindow.setText(message)
+        self._popupWindow.display()
         self._itemMenu = None
 
     def openTradeMenu(self, entity):

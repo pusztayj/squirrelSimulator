@@ -51,10 +51,16 @@ class PopupWindow(AbstractGraphic, Window):
 
     def setText(self, text):
         """Sets the text of the pop up and centers the new text"""
-        self._t = MultiLineTextBox(text, (0,0), self._font,
-                                       self._fontColor, self._backgroundColor)
+        alreadyFormatted = "\n" in text
+        self._t.setText(text)
+        if not alreadyFormatted:
+            self.formatText()
         self._t.center(surface=self, cen_point=(1/2,1/4))
         self.updateGraphic()
+##        self._t = MultiLineTextBox(text, (0,0), self._font,
+##                                       self._fontColor, self._backgroundColor)
+##        self._t.center(surface=self, cen_point=(1/2,1/4))
+##        self.updateGraphic()
 
     def confirm(self):
         """Closes the window and sets the confirmed flag to true"""
@@ -77,3 +83,27 @@ class PopupWindow(AbstractGraphic, Window):
         """Updates the attributes of the pop up window"""      
         self._t.draw(surf)
         self._b.draw(surf)
+
+    def formatText(self):
+        font = self._font
+        availableWidth = self._width * 0.8
+        words = self._t.getText().split()
+        retString = ""
+        pixelCount = 0
+        for i, w in enumerate(words):
+          if pixelCount + self.getPixelWidth(w) > availableWidth:
+             retString += "\n" + w
+             pixelCount = self.getPixelWidth(w)
+          else:
+             if i != 0:
+                retString += " "
+             retString += w
+             pixelCount += self.getPixelWidth(w + " ")
+        self._t.setText(retString)
+
+    def getPixelWidth(self, text):
+        font = self._font
+        width, height = font.size(text)
+        return width
+        
+        
