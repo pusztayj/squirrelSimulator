@@ -107,13 +107,6 @@ def main():
    # Set the initial game code to None
    code = None
 
-##   pauseMenu.setSelectionFunctions([
-##                        (level.setActive, True),
-##                        (SOUNDS.toggleMute, tuple()),
-##                        (tutorial.display, tuple()),
-##                        (controls.display, tuple()),
-##                        (lambda: 0)])
-
    while RUNNING:
 
       #Increment the clock

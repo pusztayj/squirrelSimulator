@@ -64,15 +64,6 @@ class DirtPile(Drawable):
         """Sets the number of acorns in the pile"""
         self._acorns = acorns
 
-    def handleEvent(self, event, player):
-        """Handle events on the dirt pile"""
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
-            if self.getCollideRect().collidepoint((event.pos[0] + Drawable.WINDOW_OFFSET[0],
-                                                  event.pos[1] + Drawable.WINDOW_OFFSET[1])):
-                if player.getCheekCapacity() - player.getAcorns() > 0:
-                    player.setAcorns(player.getAcorns() + self.getAcorns())
-                    self.setAcorns(0)
-
     def update(self, ticks):
         """Update the dirt pile to determine if it should be despawned"""
         if self._lifespan < 0:
