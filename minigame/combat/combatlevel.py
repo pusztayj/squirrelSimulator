@@ -11,9 +11,6 @@ from polybius.utils import Timer
 
 from minigame.itemselect import ItemSelect
 
-
-
-
 class CombatLevel(Level):
 
     def __init__(self,allies,enemies):
@@ -31,7 +28,6 @@ class CombatLevel(Level):
         self._npcTurnLength = 3
         self._npcTurnTimer = Timer(self._npcTurnLength)
 
-
         self._font = pygame.font.SysFont("Times New Roman", 20)
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
         self._popupFont = pygame.font.SysFont("Times New Roman", 14) 
@@ -40,50 +36,76 @@ class CombatLevel(Level):
         self._background = Drawable("merchantForest2.png",
                                     (0,0), worldBound=False)
 
-        SOUNDS.manageSongs("combat")
+        self.initializeWidgets()
 
-        # create the combat sprites
+        SOUNDS.manageSongs("combat")
+        self.initializeCombatSprites()
+        self._orbColor = (255,255,255)
+        self.initializeTextElements() 
+        self.initializeVictoryItems()
+        self.initializeRetreatItems()
+        self.initializeFlags()
+        self._menuSelection = None
+
+    def initializeFlags(self):
+        self._npcDone = False
+        self._playerDone = False
+        self._playerAttacked = False
+
+    def initializeCombatSprites(self):
+        allies = self._allies.getTrueMembers()
+        enemies = self._enemies.getTrueMembers()
+        allEntities = allies + enemies
+        
         self._combatSprites = createCombatSprites(self._allies, self._enemies, self._font)
 
-        self._creatureSpriteMap = dict(zip(self._allies.getTrueMembers()+self._enemies.getTrueMembers(),
-                                self._combatSprites))
+        self._creatureSpriteMap = dict(zip(allEntities, self._combatSprites))
 
-        self._spriteToCreatureMap = dict(zip(self._combatSprites, self._allies.getTrueMembers()+self._enemies.getTrueMembers()))
+        self._spriteToCreatureMap = dict(zip(self._combatSprites, allEntities))
         
         self._creatureSpriteMap[self._current].select()
 
-        combat_commands = USER_INTERFACE.getControlsForMenu("combat")
-        self._movesMenu = Menu((385,100),(430, 50), combat_commands, padding=(0,0), spacing=10,
-                     color=None, borderWidth=0, orientation="horizontal")   
-
-        # attack state and heal state go back button
+    def initializeWidgets(self):     
+        self.initializeMovesMenu()
         self._backToMenuButton = Button("Go Back",(550,100),self._font,
                                         (255,255,255),(0,0,0),50,100)
+        self.initializePotionSelect()
+        self._animalStats = None
+        self._popup = None
+        self._particleText = None
 
-        # puts the text indicating the next step in the appropriate place after clicking attack or heal
-        self._moveText = TextBox("",(0,0),self._textFont,(255,255,255))
+    def initializeMovesMenu(self):
+        combat_commands = USER_INTERFACE.getControlsForMenu("combat")
+        self._movesMenu = Menu((385,100),(430, 50), combat_commands, padding=(0,0), spacing=10,
+                     color=None, borderWidth=0, orientation="horizontal")
 
-        # text box that displays your turn
-        self._turnText = TextBox("Your turn",(0,470),self._font,(255,255,255))
-        self._turnText.keepCentered(cen_point=(1/2,None))
-
-        # combat text displaying what each NPC did
-        self._combatText = TextBox("",(600,100),self._textFont,(255,255,255))
-        self._combatText.keepCentered(cen_point=(1/2,None))
-
+    def initializePotionSelect(self):
         self._potions = [x for x in self._allies[0].getInventory() \
                    if x.getAttribute("type") == "potion"]
         self._potionSelect = ItemSelect((0,165),self._potions)
         self._potionSelect.keepCentered(cen_point=(1/2,None))
 
-        self._orbColor = (255,255,255)
+    def initializeVictoryItems(self):
+        self._victoryScreen = None
+        self._victoryScreenProper = VictoryScreen(self._enemies,self._player)
 
-        self._animalStats = None # animal stats menu
-        self._popup = None # collision pop up menu
+    def initializeRetreatItems(self):
+        self._retreatScreen = None
+        # should probably refactor to be inside victory and retreat screens
+        self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
+                            (124,252,0),80,150,borderWidth = 2)
 
-        # the textbox with the strength of the enemies and the allies
+    def initializeTextElements(self):
+
+        self._moveText = TextBox("",(0,0),self._textFont,(255,255,255))
+
+        self._turnText = TextBox("Your turn",(0,470),self._font,(255,255,255))
+        self._turnText.keepCentered(cen_point=(1/2,None))
+
+        self._combatText = TextBox("",(600,100),self._textFont,(255,255,255))
+        self._combatText.keepCentered(cen_point=(1/2,None))
         
-        ################################ ripe for refactoring ##############################################
+        ### RIPE FOR REFACTOR ###
         self._allyText = TextBox("You and your allies",(239,150),self._font,(255,255,255))
         x = self._allyText.getWidth()
         self._allyText.setPosition((239-(x//2),150))
@@ -101,92 +123,119 @@ class CombatLevel(Level):
                                       (239,150),self._font,(255,255,255))
         x = self._enemyStrength.getWidth()
         self._enemyStrength.setPosition((975-(x//2),175))
-        ################################ ripe for refactoring ##############################################
 
-        self._particleText = None 
+    def drawCombatSprites(self, screen):
+        for x in self._combatSprites:
+            x.draw(screen)
 
-        # victory GUI items
-        self._victoryScreen = None
-        self._victoryScreenProper = VictoryScreen(self._enemies,self._player)
-        
+    def drawTurnOrb(self, screen):
+        position = (600,435)
+        radius = 25
+        pygame.draw.circle(screen,self._orbColor,position,radius)
 
-        # retreat GUI Items
-        self._retreatScreen = None
+    def drawInfoElements(self, screen):
+        self._turnText.draw(screen)
+        self._allyText.draw(screen)
+        self._allyStrength.draw(screen)
+        self._enemyStrength.draw(screen)
+        self._enemyText.draw(screen)
+        if self._popup != None:
+            self._popup.draw(screen)
 
-        self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
-                            (124,252,0),80,150,borderWidth = 2) # should be inside victory and retreat screens
+    def drawAnimalStats(self, screen):
+        if self._animalStats != None:
+            self._animalStats.draw(screen)
 
-        self._npcDone = False
-        self._playerDone = False
-        self._menuSelection = None
+    def drawPlayerAttackState(self, screen):
+        self._backToMenuButton.draw(screen)
+        self._moveText.setText("Click on enemy animal to proceed with attack")
+        self._moveText.setPosition((0,200))
+        self._moveText.center(cen_point=(1/2,None))
+        self._moveText.draw(screen)
 
-        self._playerAttacked = False #Keep track of if the player has already attacked this turn
+    def drawPlayerHealState(self, screen):
+        if len(self._potions) > 0:
+            self._potionSelect.draw(screen)
+            self._moveText.setText("Click on a potion to heal")
+            self._moveText.setPosition((0,225))
+            self._moveText.center(cen_point=(1/2,None))
+            self._moveText.draw(screen)
+        else:
+            self._moveText.setText("You have no potions!")
+            self._moveText.setPosition((0,225))
+            self._moveText.center(cen_point=(1/2,None))
+            self._moveText.draw(screen)
+        self._backToMenuButton.draw(screen)
 
-   
-
-    def draw(self, screen):
-        # what we always draw
-        self._background.draw(screen)
-        
-        if self._retreatScreen == None and self._victoryScreen == None:
-
-            for x in self._combatSprites:
-                x.draw(screen)
-            pygame.draw.circle(screen,self._orbColor,(600,435),25)
-            self._turnText.draw(screen)
-            self._allyText.draw(screen)
-            self._allyStrength.draw(screen)
-            self._enemyStrength.draw(screen)
-            self._enemyText.draw(screen)
-            if self._popup != None:
-                self._popup.draw(screen)
-    
-            # here we draw the player turn state
-            if self._current == self._player:
-                if self._animalStats != None:
-                    self._animalStats.draw(screen)
-                if not self._movesMenu.getDisplay():
-                    if self._playerDone:
-                        self._combatText.draw(screen)
-                    elif self._menuSelection == 1: # draws what is seen after clicking attack button
-                        self._backToMenuButton.draw(screen)
-                        self._moveText.setText("Click on enemy animal to proceed with attack")
-                        self._moveText.setPosition((0,200))
-                        self._moveText.center(cen_point=(1/2,None))
-                        self._moveText.draw(screen)
-                    elif self._menuSelection == 3: # draws what is seen after clicking heal button
-                        if len(self._potions) > 0:
-                            self._potionSelect.draw(screen)
-                            self._moveText.setText("Click on a potion to heal")
-                            self._moveText.setPosition((0,225))
-                            self._moveText.center(cen_point=(1/2,None))
-                            self._moveText.draw(screen)
-                        else:
-                            self._moveText.setText("You have no potions!")
-                            self._moveText.setPosition((0,225))
-                            self._moveText.center(cen_point=(1/2,None))
-                            self._moveText.draw(screen)
-                        self._backToMenuButton.draw(screen)
-                else:
-                    self._movesMenu.draw(screen)
-            else:
+    def drawPlayerTurnState(self, screen):
+        self.drawAnimalStats(screen)
+        if not self._movesMenu.getDisplay():
+            if self._playerDone:
                 self._combatText.draw(screen)
+            elif self._menuSelection == 1:
+                self.drawPlayerAttackState(screen)
+            elif self._menuSelection == 3:
+                self.drawPlayerHealState(screen)
+        else:
+            self._movesMenu.draw(screen)
 
-            if self._particleText != None:
-                self._particleText.draw(screen)
-                
+    def drawRetreatScreen(self, screen):
         if self._retreatScreen != None:
             self._retreatScreen.draw(screen)
             self._backWorld.draw(screen)
 
+    def drawVictoryScreen(self, screen):
         if self._victoryScreen != None:
             self._victoryScreen.draw(screen)
             self._backWorld.draw(screen)
 
+    def drawParticleText(self, screen):
+        if self._particleText != None:
+            self._particleText.draw(screen)
+        
+    def draw(self, screen):
+        self._background.draw(screen)
+        if self._retreatScreen == None and self._victoryScreen == None:
+            self.drawCombatSprites(screen)
+            self.drawTurnOrb(screen)
+            self.drawInfoElements(screen)
+            self.drawParticleText(screen)
+            if self._current == self._player:
+                self.drawPlayerTurnState(screen)
+            else:
+                self._combatText.draw(screen)
+        self.drawRetreatScreen(screen)
+        self.drawVictoryScreen(screen)
 
-    def handleEvent(self, event):
-        self._popup = None
-        for sprite in self._combatSprites: # no need to check nones as they are no longer in list
+    def executePlayerAttack(self, creature):
+        self._player.attackLogic([creature])
+        attack(self._player,creature) # the model is changed here as told by the controller
+        self._playerDone = True
+
+        # Show the player's attack on the screen
+        text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
+        text = text.replace("You has", "You have")
+        self._combatText.setText(text)
+        self.createTextParticle()
+
+        # Set the player attacked flag to true
+        self._playerAttacked = True
+
+    def getHoverStats(self, animal):
+        if animal.isEquipped():
+            item = animal.getEquipItem().getAttribute("name")
+        else:
+            item = ""
+        if animal.hasArmor():
+            armor = animal.getArmor().getAttribute("name")
+        else:
+            armor = ""
+        return "Holding: " + item + \
+               "\nArmor: " + armor + \
+               "\nStrength: " + str(animal.getStrength())
+
+    def handleEventOnCombatSprite(self, event):
+        for sprite in self._combatSprites:
             x,y = sprite.getAnimalPosition()
             creature = self._spriteToCreatureMap[sprite]
             for rect in sprite.getCollideRects():
@@ -195,78 +244,74 @@ class CombatLevel(Level):
                     if r.collidepoint(event.pos):
                         self._animalStats = AnimalStats(sprite.getAnimal(),(400,220))
                 elif r.collidepoint(pygame.mouse.get_pos()):
-                    if (not self._movesMenu.getDisplay()) and self._menuSelection == 1 and \
-                       creature in self._enemies.getTrueMembers():
+                    movesMenuHidden = not self._movesMenu.getDisplay()
+                    inAttackState = self._menuSelection == 1
+                    hoveringOnEnemy = creature in self._enemies.getTrueMembers()
+                    if movesMenuHidden and inAttackState and hoveringOnEnemy:
                         text = "Potential Damage: " + str(attackComputation(self._allies[0],creature))
                         if CONTROLS.get("select").check(event):
-                            if r.collidepoint(event.pos) and not self._playerAttacked:
-                                self._player.attackLogic([creature])
-                                attack(self._player,creature) # the model is changed here as told by the controller
-                                self._playerDone = True
-
-                                # Show the player's attack on the screen
-                                text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
-                                text = text.replace("You has", "You have")
-                                self._combatText.setText(text)
-                                self.createTextParticle()
-
-                                # Set the player attacked flag to true
-                                self._playerAttacked = True
-                                
+                            playerHasntAttacked = not self._playerAttacked
+                            if r.collidepoint(event.pos) and playerHasntAttacked:
+                                self.executePlayerAttack(creature)            
                     else:
                         animal = sprite.getAnimal()
-                        if animal.isEquipped():
-                            item = sprite.getAnimal().getEquipItem().getAttribute("name")
-                        else:
-                            item = ""
-                        if animal.hasArmor():
-                            armor = sprite.getAnimal().getArmor().getAttribute("name")
-                        else:
-                            armor = ""
-                        text = "Holding: " + item + \
-                               "\nArmor: " + armor + \
-                               "\nStrength: " + str(sprite.getAnimal().getStrength())
+                        text = self.getHoverStats(animal)
+                        
                     self._popup = Popup(text,(pygame.mouse.get_pos()[0]+5,pygame.mouse.get_pos()[1]+5),
                                         self._popupFont,multiLine = True)
 
+    def handleEventOnAnimalStats(self, event):
+        if self._animalStats != None:
+            self._animalStats.handleEvent(event)
+            if self._animalStats.getDisplay() == False:
+                self._animalStats = None
+
+    def handleFortifyEvent(self):
+        fortify(self._player) # the model is changed here as told by the controller
+        self._playerDone = True
+        self._combatText.setText("You have fortified!")
+
+    def handleHealEvent(self, event):
+        self._backToMenuButton.handleEvent(event,self._movesMenu.display)
+        self._potionSelect.handleEvent(event)
+        potionPick = self._potionSelect.getItemSelected()
+        if potionPick != None:
+            heal(self._player,potionPick) # the model is changed here as told by the controller
+            self._playerDone = True
+            
+            # Show the player's move on the screen
+            self._combatText.setText("You healed with a potion!")
+            self._player._target = self._player
+            self.createTextParticle()
+
+    def handleRetreatEvent(self, event):
+        retreat(self._player)
+        if self._retreatScreen == None:
+            # are you sure? popup window should be drawn here
+            self._retreatScreen = RetreatScreen(self._player) 
+        self._backWorld.handleEvent(event, self.setActive, (False,))
+        if not self.isActive():
+            return (0,)  
+           
+    def handleEventOnPlayerTurn(self, event):
+        self.handleEventOnAnimalStats(event)
+        if self._movesMenu.getDisplay():
+            self._menuSelection = self._movesMenu.handleEvent(event)
+        else:
+            if self._menuSelection == 1: # handles attack 
+                self._backToMenuButton.handleEvent(event,self._movesMenu.display)
+            if self._menuSelection == 2: # handles fortify
+                self.handleFortifyEvent()
+            if self._menuSelection == 3: # handles heal
+                self.handleHealEvent(event)  
+            if self._menuSelection == 4: # handles retreat
+                self.handleRetreatEvent(event)
+        
+    def handleEvent(self, event):
+        self._popup = None
+        self.handleEventOnCombatSprite(event)
         if self._current == self._player:
-            if self._animalStats != None:
-                self._animalStats.handleEvent(event)
-                if self._animalStats.getDisplay() == False:
-                    self._animalStats = None
-            if self._movesMenu.getDisplay():
-                self._menuSelection = self._movesMenu.handleEvent(event)
-            else:
-                if self._menuSelection == 1: # handles attack 
-                    self._backToMenuButton.handleEvent(event,self._movesMenu.display)
-                if self._menuSelection == 2: # handles fortify
-                    fortify(self._player) # the model is changed here as told by the controller
-                    self._playerDone = True
-                    
-                    # Show the player's move on the screen
-                    self._combatText.setText("You have fortified!")
-                    
-                if self._menuSelection == 3: # handles heal
-                    self._backToMenuButton.handleEvent(event,self._movesMenu.display)
-                    self._potionSelect.handleEvent(event)
-                    potionPick = self._potionSelect.getItemSelected()
-                    if potionPick != None:
-                        heal(self._player,potionPick) # the model is changed here as told by the controller
-                        self._playerDone = True
-                        
-                        # Show the player's move on the screen
-                        self._combatText.setText("You healed with a potion!")
-                        self._player._target = self._player
-                        self.createTextParticle()
-                    
-                if self._menuSelection == 4: # handles retreat
-                    retreat(self._player)
-                    if self._retreatScreen == None:
-                        # are you sure? popup window should be drawn here
-                        self._retreatScreen = RetreatScreen(self._player) 
-                    self._backWorld.handleEvent(event, self.setActive, (False,))
-                    if not self.isActive():
-                        return (0,)    
+            self.handleEventOnPlayerTurn(event)
         else:
             self._animalStats = None # could be in update
 

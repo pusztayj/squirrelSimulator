@@ -3,10 +3,10 @@ class Timer:
     def __init__(self, initialTime):
 
         # Assert that the initialTime is an int or a function
-        assert type(initialTime) == int or callable(initialTime)
+        assert type(initialTime) in (int, float) or callable(initialTime)
 
         # If initialTime is a function, assert that it returns an int
-        assert not callable(initialTime) or type(initialTime()) == int
+        assert not callable(initialTime) or type(initialTime()) in (int, float)
 
         self._initialTime = initialTime
 
