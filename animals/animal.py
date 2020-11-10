@@ -84,7 +84,10 @@ class Animal():
         self._pack = None
         
         # string representation of what the animal did in combat
-        self._combatStatus = "" 
+        self._combatStatus = ""
+
+        # Variable holding the target of an attack if there was one
+        self._combatTarget = None
 
     def getPack(self):
         """
@@ -118,6 +121,9 @@ class Animal():
         """
         return self._combatStatus
 
+    def getCombatTarget(self):
+        return self._target # Refactor this and the combat logic...
+
     def healLogic(self,opponents):
         """
         Given a list of opponents this method returns a boolean
@@ -138,6 +144,7 @@ class Animal():
             for x in self._inventory:
                 if x.getAttribute("type") == "potions" and self._health <= 20:
                     self._combatStatus = self.getName() + " healed with a potion!"
+                    self._target = self
                     return True
                     
             return False
@@ -159,9 +166,11 @@ class Animal():
             if len(attacks) == len(opponents):
                 # checks to see if it can't do more than 5 damage to an animal
                 self._combatStatus = self.getName() + " has fortified!"
+                self._target = None
                 return True
             elif 6 < random.randint(0,9): # 33% random change of fortifying 
                 self._combatStatus = self.getName() + " has fortified!"
+                self._target = None
                 return True
             else:
                 return False
@@ -198,12 +207,14 @@ class Animal():
         if len(kills) > 0:
             a = kills[0][0]
             self._combatStatus = self.getName() + " has killed " + a.getName()
+            self._target = a
             return kills[0][0]
         else:
             damage.sort(key = lambda x: x[1])
             # sorts the damage from lowest to highest
             self._combatStatus = self.getName() + " did " + str(damage[-1][1])+ " damage to " + \
                                  (damage[-1][0]).getName()
+            self._target = damage[-1][0]
             return damage[-1][0] #returns the highest damage animal
         
     # Basic Stats

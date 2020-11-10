@@ -103,6 +103,8 @@ class CombatLevel(Level):
         self._enemyStrength.setPosition((975-(x//2),175))
         ################################ ripe for refactoring ##############################################
 
+        self._particleText = None 
+
         # victory GUI items
         self._victoryScreen = None
         self._victoryScreenProper = VictoryScreen(self._enemies,self._player)
@@ -120,10 +122,12 @@ class CombatLevel(Level):
 
         self._playerAttacked = False #Keep track of if the player has already attacked this turn
 
+   
+
     def draw(self, screen):
         # what we always draw
         self._background.draw(screen)
-
+        
         if self._retreatScreen == None and self._victoryScreen == None:
 
             for x in self._combatSprites:
@@ -167,6 +171,9 @@ class CombatLevel(Level):
                     self._movesMenu.draw(screen)
             else:
                 self._combatText.draw(screen)
+
+            if self._particleText != None:
+                self._particleText.draw(screen)
                 
         if self._retreatScreen != None:
             self._retreatScreen.draw(screen)
@@ -201,6 +208,7 @@ class CombatLevel(Level):
                                 text = self._player.getCombatStatus().replace(self._player.getName(),"You",1)
                                 text = text.replace("You has", "You have")
                                 self._combatText.setText(text)
+                                self.createTextParticle()
 
                                 # Set the player attacked flag to true
                                 self._playerAttacked = True
@@ -248,6 +256,8 @@ class CombatLevel(Level):
                         
                         # Show the player's move on the screen
                         self._combatText.setText("You healed with a potion!")
+                        self._player._target = self._player
+                        self.createTextParticle()
                     
                 if self._menuSelection == 4: # handles retreat
                     retreat(self._player)
@@ -345,9 +355,47 @@ class CombatLevel(Level):
             self.updateOrbOnNPCTurn()
             self.updateCombatText()
             self.updateTurnText()
+            self.createTextParticle()
             self._npcDone = True   
         self._npcTurnTimer.update(ticks, self.goToNextTurnFromNPC)
 
+    def createTextParticle(self):
+
+        ## The combat logic needs to be refactored for this to
+        ## work at its best!!!
+        
+        target = self._current.getCombatTarget()
+        if target != None:
+            combatSprite = self._creatureSpriteMap[target]
+            box = combatSprite._box
+
+            # Calculate the position of the particle
+            x, y = box._position
+            w, h = box._demensions
+            
+            if target in self._allies:
+                startPos = (x, y)
+                endPos = (x, y+(h//2))
+            else:
+                startPos = (x+w, y)
+                endPos = (x+w, y+(h//2))
+
+            # Set the font color
+            if target != self._current:
+                color = (255, 0, 0)
+                text = "--" # I want to replace this with the damage done
+            else:
+                color = (0, 255, 0)
+                text = "++" # I want to replace this with the health gained
+                #flip the direction of the animation
+                startPos, endPos = endPos, startPos
+
+            font = pygame.font.SysFont("Impact", 26)
+            
+            self._particleText = ParticleText(text, startPos, endPos, self._npcTurnLength,
+                                              font, color)
+
+            
     def updateDisplayForPlayerTurn(self):
         if self._potionSelect != None:
             self._potions = [x for x in self._player.getInventory() \
@@ -357,12 +405,19 @@ class CombatLevel(Level):
         self._turnText.setText("Your turn")
         self._orbColor = (255,255,255)
 
+    def manageParticleText(self, ticks):
+        if self._particleText != None:
+            self._particleText.update(ticks)
+            if self._particleText.finished():
+                self._particleText = None
+
     def update(self, ticks):
         
         self.updateUI()
         self.updateCombatSprites(ticks)
         self.updateDisplayedStrengths()
         self.updatePacks()
+        self.manageParticleText(ticks)
         
         allEnemiesDead = self._enemies.isDead()
         if not allEnemiesDead:
