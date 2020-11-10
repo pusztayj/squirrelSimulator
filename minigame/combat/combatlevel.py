@@ -7,6 +7,7 @@ from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
 from managers import USER_INTERFACE
 from polybius.graphics.ui.menu import Menu
 from polybius.graphics import *
+from polybius.utils import Timer
 
 from minigame.itemselect import ItemSelect
 
@@ -28,7 +29,7 @@ class CombatLevel(Level):
         self._current = self._combatOrder.getCurrent()
         
         self._npcTurnLength = 3
-        self._npcTurnTimer = self._npcTurnLength
+        self._npcTurnTimer = Timer(self._npcTurnLength)
 
 
         self._font = pygame.font.SysFont("Times New Roman", 20)
@@ -265,72 +266,121 @@ class CombatLevel(Level):
             if not self.isActive():
                 return (0,)
 
-    def update(self, ticks):
+    def removeDeadCombatSprites(self):
+        self._combatSprites = [sprite for sprite in self._combatSprites
+                                if not sprite.getAnimal().isDead()]
+
+    def updateCombatSprites(self, ticks):
+        self.removeDeadCombatSprites()
+        for sprite in self._combatSprites:
+            sprite.update(ticks)
+
+    def getTotalStrength(self, pack):
+        pack = pack.getTrueMembers()
+        totalPackStrength = sum([c.getStrength() for c in pack])
+        return totalPackStrength
+
+    def updateDisplayedStrengths(self):
+        enemyStrength = self.getTotalStrength(self._enemies)
+        self._enemyStrength.setText("Total Strength: " + str(enemyStrength))
+        allyStrength = self.getTotalStrength(self._allies)
+        self._allyStrength.setText("Total Strength: "+str(allyStrength))
+
+    def updatePacks(self):
+        self._allies.updatePack()
+        self._enemies.updatePack()
+
+    def goToNextTurnFromPlayer(self):
+        self._combatOrder.getNext()
+        self._playerDone = False
+        self._menuSelection = None
+
+    def goToNextTurnFromNPC(self):
+        self._combatOrder.getNext()
+        self._npcDone = False
+
+    def updateCurrent(self):
+        self._creatureSpriteMap[self._current].deselect()
+        self._current = self._combatOrder.getCurrent()
+        self._creatureSpriteMap[self._current].select()
+
+    def setToPlayerTurn(self):
+        self._movesMenu.display()
+        self._playerAttacked = False
+
+    def updateOrbOnNPCTurn(self):
+        if self._current in self._allies.getTrueMembers():
+            self._current.move(self._enemies.getTrueMembers())
+            self._orbColor = (15,245,107)
+        else:
+            self._current.move(self._allies.getTrueMembers())
+            self._orbColor = (222,44,44)
+
+    def replaceLastInstance(self, string, target, replacement):
+        s = string[::-1].replace(target[::-1], replacement[::-1], 1)[::-1]
+        return s
+
+    def updateCombatText(self):
+        text = self._current.getCombatStatus()
+        playerName = self._player.getName()
+        text = self.replaceLastInstance(text, playerName, "you")
+        self._combatText.setText(text)
+
+    def updateTurnText(self):
+        self._turnText.setText(self._current.getName()+"'s turn")
+
+    def manageTimeFollowingPlayersTurn(self, ticks):
+        self._npcTurnTimer.update(ticks, self.goToNextTurnFromPlayer)
+
+    def updateUI(self):
         if self._enemies.isDead() and self._victoryScreen == None:
             self._victoryScreen = self._victoryScreenProper
-  
-        self._combatSprites = [x for x in self._combatSprites if not x.getHealthBar().getEntity().isDead()] # the model is updated here as told by the controller
-        for x in self._combatSprites:
-            x.update(ticks)
-        self._enemyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._enemies if x!= None])))
-        self._allyStrength.setText("Total Strength: "+str(sum([x.getStrength() for x in self._allies if x!= None])))
-        self._allies.updatePack() # the model is updated here
-        self._enemies.updatePack() # the model is updated here
         if self._victoryScreen != None:
             self._victoryScreen.update()
         if self._animalStats != None:
             self._animalStats.update()
 
-        if not self._enemies.isDead():
+    def updateNPCTurn(self, ticks):
+        if not self._npcDone:
+            self.updateOrbOnNPCTurn()
+            self.updateCombatText()
+            self.updateTurnText()
+            self._npcDone = True   
+        self._npcTurnTimer.update(ticks, self.goToNextTurnFromNPC)
+
+    def updateDisplayForPlayerTurn(self):
+        if self._potionSelect != None:
+            self._potions = [x for x in self._player.getInventory() \
+                       if x.getAttribute("type") == "potion"]
+            self._potionSelect.resetItems(self._potions)
+            self._potionSelect.update()
+        self._turnText.setText("Your turn")
+        self._orbColor = (255,255,255)
+
+    def update(self, ticks):
+        
+        self.updateUI()
+        self.updateCombatSprites(ticks)
+        self.updateDisplayedStrengths()
+        self.updatePacks()
+        
+        allEnemiesDead = self._enemies.isDead()
+        if not allEnemiesDead:
             if self._playerDone:
-                self._npcTurnTimer -= ticks
-                if self._npcTurnTimer <= 0:
-                    self._npcTurnTimer = self._npcTurnLength
-                    self._combatOrder.getNext()
-                    self._playerDone = False
-                    self._menuSelection = None
-                
-            if self._current != self._combatOrder.getCurrent():
-                self._creatureSpriteMap[self._current].deselect()
-                self._current = self._combatOrder.getCurrent()
+                self.manageTimeFollowingPlayersTurn(ticks)
+
+            currentChanged = self._current != self._combatOrder.getCurrent()
+            if currentChanged:
+                self.updateCurrent()
                 if self._current == self._player:
-                    self._movesMenu.display()
-                    self._playerAttacked = False # Reset the player attack
-                self._creatureSpriteMap[self._current].select()
-
-            if self._current != self._player:
-                if not self._npcDone:
-                    if self._current in self._allies.getTrueMembers():
-                        self._current.move(self._enemies.getTrueMembers())
-                        self._orbColor = (15,245,107)
-                    else:
-                        self._current.move(self._allies.getTrueMembers())
-                        self._orbColor = (222,44,44)
-
-                    # Replace the player's name with you (use reverses to find the last instance of the name)
-                    text = self._current.getCombatStatus()
-                    text = text[::-1].replace(self._player.getName()[::-1], "you"[::-1], 1)[::-1]
-                    self._combatText.setText(text)
-                    
-                    self._turnText.setText(self._current.getName()+"'s turn")
-                    self._npcDone = True
-                self._npcTurnTimer -= ticks
-                if self._npcTurnTimer <= 0:
-                    self._npcTurnTimer = self._npcTurnLength
-                    self._combatOrder.getNext()
-                    self._npcDone = False
+                    self.setToPlayerTurn()
                 
-            
+            playersTurn = self._current == self._player
+            if playersTurn:
+                self.updateDisplayForPlayerTurn()
             else:
-                if self._potionSelect != None:
-                    self._potions = [x for x in self._player.getInventory() \
-                               if x.getAttribute("type") == "potion"]
-                    self._potionSelect.resetItems(self._potions)
-                    self._potionSelect.update()
-                self._turnText.setText("Your turn")
-                self._orbColor = (255,255,255)
-            
-                
+                self.updateNPCTurn(ticks)
+               
         SOUNDS.manageSongs("combat")
             
         

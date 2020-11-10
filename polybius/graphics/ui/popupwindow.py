@@ -57,10 +57,6 @@ class PopupWindow(AbstractGraphic, Window):
             self.formatText()
         self._t.center(surface=self, cen_point=(1/2,1/4))
         self.updateGraphic()
-##        self._t = MultiLineTextBox(text, (0,0), self._font,
-##                                       self._fontColor, self._backgroundColor)
-##        self._t.center(surface=self, cen_point=(1/2,1/4))
-##        self.updateGraphic()
 
     def confirm(self):
         """Closes the window and sets the confirmed flag to true"""
@@ -85,7 +81,6 @@ class PopupWindow(AbstractGraphic, Window):
         self._b.draw(surf)
 
     def formatText(self):
-        font = self._font
         availableWidth = self._width * 0.8
         words = self._t.getText().split()
         retString = ""

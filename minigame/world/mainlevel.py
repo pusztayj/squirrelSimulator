@@ -2,7 +2,7 @@
 Author: Trevor Stalnaker
 File: mainlevel.py
 """
-from .timer import Timer
+from polybius.utils.timer import Timer
 from .pileManager import PileManager
 import pygame, random, math
 from polybius.graphics import *
