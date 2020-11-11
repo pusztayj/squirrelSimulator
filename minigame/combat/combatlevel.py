@@ -47,6 +47,8 @@ class CombatLevel(Level):
         self.initializeFlags()
         self._menuSelection = None
 
+        self._exitCode = None
+
     def initializeFlags(self):
         self._npcDone = False
         self._playerDone = False
@@ -70,6 +72,7 @@ class CombatLevel(Level):
         self._backToMenuButton = Button("Go Back",(550,100),self._font,
                                         (255,255,255),(0,0,0),50,100)
         self.initializePotionSelect()
+        self.initializeConfirmationWindow()
         self._animalStats = None
         self._popup = None
         self._particleText = None
@@ -84,6 +87,36 @@ class CombatLevel(Level):
                    if x.getAttribute("type") == "potion"]
         self._potionSelect = ItemSelect((0,165),self._potions)
         self._potionSelect.keepCentered(cen_point=(1/2,None))
+
+    def initializeConfirmationWindow(self):
+
+        # Set the fonts
+        font = pygame.font.SysFont("Times New Roman", 20)
+        buttonFont = pygame.font.SysFont("Times New Roman", 16)
+
+        # Set the dimensions
+        width, height = 288, 150
+        dimensions = (width, height)
+        buttonWidth, buttonHeight = 40, 20
+        buttonDimensions = (buttonWidth, buttonHeight)
+
+        # Set the color scheme
+        fontColor = (255,255,255)
+        backgroundColor = (0,0,0)
+        buttonFontColor = (255,255,255)
+        buttonColor = (120,120,120)
+
+        self._confirmationWindow = ConfirmationWindow("", (0,0), dimensions,
+                                            font, fontColor, backgroundColor,
+                                            buttonColor, buttonDimensions,
+                                            buttonFont, buttonFontColor,
+                                            borderWidth=1)
+
+        verticalCenter = 1/3 #from top of screen
+        horizontalCenter = 1/2 #from left of screen
+        self._confirmationWindow.center(cen_point=(horizontalCenter, verticalCenter))
+        self._confirmationWindow.close()
+        
 
     def initializeVictoryItems(self):
         self._victoryScreen = None
@@ -192,6 +225,10 @@ class CombatLevel(Level):
     def drawParticleText(self, screen):
         if self._particleText != None:
             self._particleText.draw(screen)
+
+    def drawConfirmationWindow(self, screen):
+        if self._confirmationWindow.getDisplay():
+            self._confirmationWindow.draw(screen)
         
     def draw(self, screen):
         self._background.draw(screen)
@@ -204,6 +241,7 @@ class CombatLevel(Level):
                 self.drawPlayerTurnState(screen)
             else:
                 self._combatText.draw(screen)
+            self.drawConfirmationWindow(screen)
         self.drawRetreatScreen(screen)
         self.drawVictoryScreen(screen)
 
@@ -285,17 +323,21 @@ class CombatLevel(Level):
             self.createTextParticle()
 
     def handleRetreatEvent(self, event):
+        self._confirmationWindow.setText("Are you sure you want to retreat?")
+        self._confirmationWindow.setConfirmFunction(self.executeRetreat)
+        self._confirmationWindow.display()
+        self._menuSelection = None
+
+    def executeRetreat(self, event):
         retreat(self._player)
+        self._movesMenu.close()
         if self._retreatScreen == None:
-            # are you sure? popup window should be drawn here
             self._retreatScreen = RetreatScreen(self._player) 
-        self._backWorld.handleEvent(event, self.setActive, (False,))
-        if not self.isActive():
-            return (0,)  
-           
+               
     def handleEventOnPlayerTurn(self, event):
+        self.handleEventOnConfirmationWindow(event)
         self.handleEventOnAnimalStats(event)
-        if self._movesMenu.getDisplay():
+        if self._movesMenu.getDisplay() and not self._menuSelection == 4:
             self._menuSelection = self._movesMenu.handleEvent(event)
         else:
             if self._menuSelection == 1: # handles attack 
@@ -305,14 +347,24 @@ class CombatLevel(Level):
             if self._menuSelection == 3: # handles heal
                 self.handleHealEvent(event)  
             if self._menuSelection == 4: # handles retreat
-                return self.handleRetreatEvent(event)
+                self.handleRetreatEvent(event)
+
+    def isActiveWindow(self, window):
+        return not(window == None) and window.getDisplay()
+
+    def handleEventOnConfirmationWindow(self, event):
+        if self.isActiveWindow(self._confirmationWindow):
+            self._confirmationWindow.handleEvent(event)
+
+    def checkForExitCondition(self):
+        if self._exitCode != None:
+            return self._exitCode
         
     def handleEvent(self, event):
         self._popup = None
         self.handleEventOnCombatSprite(event)
         if self._current == self._player:
-            code = self.handleEventOnPlayerTurn(event)
-            if code != None: return code
+            self.handleEventOnPlayerTurn(event)
         else:
             self._animalStats = None # could be in update
 
@@ -320,7 +372,13 @@ class CombatLevel(Level):
             self._victoryScreen.handleEvent(event)
             self._backWorld.handleEvent(event, self.setActive, False)
             if not self.isActive():
-                return (0,)
+                self._exitCode = (0,)
+        if self._retreatScreen != None:
+            self._backWorld.handleEvent(event, self.setActive, (False,))
+            if not self.isActive():
+                self._exitCode = (0,)
+            
+        return self.checkForExitCondition()
 
     def removeDeadCombatSprites(self):
         self._combatSprites = [sprite for sprite in self._combatSprites
@@ -458,7 +516,7 @@ class CombatLevel(Level):
                 self._particleText = None
 
     def update(self, ticks):
-        
+
         self.updateUI()
         self.updateCombatSprites(ticks)
         self.updateDisplayedStrengths()
