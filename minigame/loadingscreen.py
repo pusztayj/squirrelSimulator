@@ -7,11 +7,14 @@ A class that is displayed between game levels, while the game loads
 
 import pygame
 from polybius.graphics import TextBox
+from polybius.managers import CONSTANTS
 
 class LoadingScreen():
 
-    def __init__(self, screensize, time):
+    def __init__(self, time):
         """Initializes a loading screen"""
+
+        screensize = CONSTANTS.get("screen_size")
 
         self._font = pygame.font.SysFont("Times New Roman", 28)
         self._text = TextBox("Loading", (0,0), self._font, (255,255,255))
@@ -32,7 +35,7 @@ class LoadingScreen():
         self._displayTime = time
         self._displayTimer = self._displayTime
 
-    def isDisplayed(self):
+    def getDisplay(self):
         """Returns true if displayed, false otherwise"""
         return self._displayed
 

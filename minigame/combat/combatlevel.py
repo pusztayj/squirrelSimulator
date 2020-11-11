@@ -328,7 +328,7 @@ class CombatLevel(Level):
         self._confirmationWindow.display()
         self._menuSelection = None
 
-    def executeRetreat(self, event):
+    def executeRetreat(self):
         retreat(self._player)
         self._movesMenu.close()
         if self._retreatScreen == None:

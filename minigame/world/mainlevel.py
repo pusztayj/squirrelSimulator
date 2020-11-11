@@ -80,18 +80,14 @@ def spawn(spawnType, spawnRange, spawnCount, collidables=[], name=None, wanderer
 
 class MainLevel(Level):
 
-    def __init__(self, player_pack, cheatBox):
+    def __init__(self):
         """Initializes the main level"""
 
         super().__init__()
 
-        self._playerPack = player_pack
-
         self.setConstants()
         self.setFonts()
         self.setupGameElements()
-
-        self._cheatBox = cheatBox
 
         # Set the fight flag to false initially
         self._fightFlag = (False,)
@@ -106,6 +102,7 @@ class MainLevel(Level):
         self._screen_size = CONSTANTS.get("screen_size")
         self._world_size = CONSTANTS.get("world_size")
         self._xpPerDay = CONSTANTS.get("xpPerDay")
+        self._cheatBox = CONSTANTS.get("cheatbox")
         
         # Friendscore at which animals begin to attack
         self._attackThreshold = CONSTANTS.get("attackThreshold")
@@ -195,7 +192,8 @@ class MainLevel(Level):
             merchant.setRestockTimer(restockTime)
 
     def setupPlayerPack(self):
-        self._player = self._playerPack.getLeader()
+        self._player = CONSTANTS.get("player")
+        self._playerPack = self._player.getPack()
         self._packManager = PackManager(self._playerPack, self._screen_size)
 
     def createConfirmationAndPopupWindows(self):

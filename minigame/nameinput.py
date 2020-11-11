@@ -8,15 +8,17 @@ An interface that allows the player to choose their own name
 import pygame, random
 from polybius.graphics import *
 from managers.nameManager import NAMES
+from polybius.managers import CONSTANTS
 
 class NameInput(Window):
 
-    def __init__(self, player, screenSize):
+    def __init__(self):
         """Initialize the interface"""
 
         Window.__init__(self)
         
-        self._player = player
+        self._player = CONSTANTS.get("player")
+        screenSize = CONSTANTS.get("screen_size")
         
         # Style Attributes
         self._font = pygame.font.SysFont("Times New Roman", 22)
@@ -38,7 +40,7 @@ class NameInput(Window):
         self._inPos = (self._position[0] + 20,
                       self._position[1] + 40)
         self._inputField = TextInput((0,0), self._font, (200,30),
-                                      defaultText=player.getName(),
+                                      defaultText=self._player.getName(),
                                       clearOnActive=True,
                                       maxLen=20, borderWidth=1)
         self._inPos = (screenSize[0]//2 - self._inputField.getWidth()//2,

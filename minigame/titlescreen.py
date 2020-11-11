@@ -6,14 +6,15 @@ The start screen of the game
 """
 
 import pygame
-from polybius.managers import FRAMES, CONTROLS
+from polybius.managers import FRAMES, CONTROLS, CONSTANTS
 from polybius.graphics import *
 
 class TitleScreen():
 
-    def __init__(self, screensize):
+    def __init__(self):
         """Initializes the title screen"""
 
+        screensize = CONSTANTS.get("screen_size")
         self._titleCard = FRAMES.getFrame("title.png")
         self._font = pygame.font.SysFont("Times New Roman", 28)
         self._text = TextBox("Press Space to Start", (0,0), self._font,
@@ -32,7 +33,7 @@ class TitleScreen():
 
         self._displayed = True
 
-    def isDisplayed(self):
+    def getDisplay(self):
         """Returns true if the title screen is displayed, false otherwise"""
         return self._displayed
 
