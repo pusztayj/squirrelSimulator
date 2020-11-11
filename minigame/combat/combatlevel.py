@@ -305,13 +305,14 @@ class CombatLevel(Level):
             if self._menuSelection == 3: # handles heal
                 self.handleHealEvent(event)  
             if self._menuSelection == 4: # handles retreat
-                self.handleRetreatEvent(event)
+                return self.handleRetreatEvent(event)
         
     def handleEvent(self, event):
         self._popup = None
         self.handleEventOnCombatSprite(event)
         if self._current == self._player:
-            self.handleEventOnPlayerTurn(event)
+            code = self.handleEventOnPlayerTurn(event)
+            if code != None: return code
         else:
             self._animalStats = None # could be in update
 
