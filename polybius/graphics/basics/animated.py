@@ -35,7 +35,6 @@ class Animated(Drawable):
    
    def startAnimation(self):
       self._animate = True
-   
-   
+     
    def stopAnimation(self):
       self._animate = False

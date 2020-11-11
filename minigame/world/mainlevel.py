@@ -20,6 +20,7 @@ from minigame.itemblock import ItemBlock
 from minigame.xpmanager import XPManager
 from managers import ANIMALS, ITEMS
 from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
+from .gameData import GameData
 
 def createPack(pos):
     """Creates a random pack of a size between 1 and 3"""
@@ -78,6 +79,11 @@ def spawn(spawnType, spawnRange, spawnCount, collidables=[], name=None, wanderer
                 spawns.append(e)
     return spawns
 
+def acornSpawnFunction():
+    return random.randint(*CONSTANTS.get("acornSpawnTime"))
+def pileSpawnFunction():
+    return random.randint(*CONSTANTS.get("pileSpawnTime"))
+
 class MainLevel(Level):
 
     def __init__(self):
@@ -126,8 +132,8 @@ class MainLevel(Level):
         self.setupUI()
 
     def setupTimers(self):
-        self._acornSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("acornSpawnTime")))
-        self._pileSpawnTimer = Timer(lambda: random.randint(*CONSTANTS.get("pileSpawnTime")))
+        self._acornSpawnTimer = Timer(acornSpawnFunction)
+        self._pileSpawnTimer = Timer(pileSpawnFunction)
         self._acornLeakTimer = Timer(self._worldClock.getHourLength())
         self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
         self._starveTimer = Timer(2 * self._worldClock.getHourLength())
@@ -864,4 +870,34 @@ class MainLevel(Level):
             self.onDayChange()
         # Load and play a new song if the current song has ended
         SOUNDS.manageSongs("main")
+
+    def exportData(self):
+        game_data = GameData()
+##        timers = {"acornSpawn":self._acornSpawnTimer,
+##                  "pileSpawn":self._pileSpawnTimer,
+##                  "acornLeak":self._acornLeakTimer,
+##                  "hunger":self._hungerTimer,
+##                  "starve":self._starveTimer}
+##        game_data.saveTimers(timers)
+        game_data.saveEntities(self._player, self._packs, self._merchants)
+        game_data.saveEnvironment(self._acorns, self._pileManager, self._trees,
+                                  self._worldClock)
+        return game_data
+
+    def importData(self, data):
+##        self._acornSpawnTimer = data._timers["acornSpawn"]
+##        self._pileSpawnTimer = data._timers["pileSpawn"]
+##        self._acornLeakTimer = data._timers["acornLeak"]
+##        self._hungerTimer = data._timers["hunger"]
+##        self._starveTimer = data._timers["starve"]
+        CONSTANTS.addConstant("player", data._player)
+        self.setupPlayerPack()
+        self._stats = StatDisplay((5,5),self._player)
+        self._packs = data._packs
+        self._merchants = data._merchants
+        self._acorns = data._acorns
+        self._pileManager = data._piles
+        self._trees = data._trees
+##        self._worldClock = data._clock
+        
         

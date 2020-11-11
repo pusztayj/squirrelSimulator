@@ -50,7 +50,12 @@ class Drawable():
             self._imageName = imageName
             self._image = FRAMES.getFrame(self._imageName, offset)
             self._defaultImage = self._image
+            self._defaultDims = (self._defaultImage.get_width(),
+                                 self._defaultImage.get_height())
             self._mask = pygame.mask.from_surface(self._image)
+        else:
+            self._defaultImage = None
+            self._mask = None
         self._position = Vector2(position[0], position[1])
         self._worldBound = worldBound
         self._isFlipped = False
@@ -165,11 +170,20 @@ class Drawable():
 
     def makePickleSafe(self):
         """Make the drawbale object pickle safe"""
+        self._storedDims = (self.getWidth(), self.getHeight())
         self._image = pygame.image.tostring(self._image, "RGBA")
+        if self._defaultImage != None:
+            self._defaultImage = pygame.image.tostring(self._defaultImage, "RGBA")
+        self._mask = None
 
     def undoPickleSafe(self):
         """Return the drawable object to its original form after pickling"""
         self._image = pygame.image.fromstring(self._image,
-                                              (self._width, self._height),
+                                              self._storedDims,
                                               "RGBA")
+        if self._defaultImage != None:
+            self._defaultImage = pygame.image.fromstring(self._defaultImage,
+                                              self._defaultDims,
+                                              "RGBA")
+        self._mask = pygame.mask.from_surface(self._image)
 

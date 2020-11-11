@@ -1,4 +1,4 @@
-import pygame, random, math, os
+import pygame, random, math, os, pickle
 from minigame import *
 from polybius.graphics.ui.menu import Menu
 from player import Player
@@ -242,6 +242,14 @@ class Game():
                 self._level._stats.update() 
                 self._tutorial.display()
 
+    def handleSaveGameEvent(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            self.saveGame()
+
+    def handleLoadGameEvent(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
+            self.loadGame()
+
     def handleEvents(self): 
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
@@ -260,6 +268,8 @@ class Game():
                         self.handleCheatBoxEvents(event)
                         self.handlePauseMenuEvents(event)
                         self.handleControlsMenuEvents(event)
+                        self.handleSaveGameEvent(event)
+                        self.handleLoadGameEvent(event)
                 else:
                      self.handleTutorialDisplayEvents(event)
                      self.handleNameInputEvents(event)
@@ -372,6 +382,20 @@ class Game():
                                 self._SCREEN_SIZE[1]//2-100),
                                instruct)
         self._tutorial.close()
+
+    def saveGame(self):
+        data = self._level.exportData()
+        data.makePickleSafe()
+        with open("saves/data.sqs", "wb") as file:
+            pickle.dump(data, file)
+        data.undoPickleSafe()
+
+    def loadGame(self):
+        with open("saves/data.sqs", "rb") as file:
+            data = pickle.load(file)
+            data.undoPickleSafe()
+            self._level.importData(data)
+        self._player = CONSTANTS.get("player")
 
     def initializeManagers(self):
         """A function that sets the resource paths for the various managers"""

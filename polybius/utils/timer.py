@@ -9,15 +9,14 @@ class Timer:
         assert not callable(initialTime) or type(initialTime()) in (int, float)
 
         self._initialTime = initialTime
-
-        # Wrap initialTime in a function if it's a number
-        if type(initialTime) in [int, float]:
-            self._initialTime = lambda: initialTime
             
-        self._timer = self._initialTime()
+        self.resetTimer()
 
     def resetTimer(self):
-        self._timer = self._initialTime()
+        if type(self._initialTime) in [int, float]:
+            self._timer = self._initialTime
+        if callable(self._initialTime):
+            self._timer = self._initialTime()
 
     def update(self, ticks, func):
         self._timer -= ticks
