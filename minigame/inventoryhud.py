@@ -8,15 +8,16 @@ A class modeling a heads up display for the player's inventory
 import pygame
 from polybius.graphics import Drawable, TextBox
 from .itemblock import ItemBlock
+from polybius.managers import CONSTANTS
 
 class InventoryHUD(Drawable):
 
-    def __init__(self, pos, dimensions, player):
+    def __init__(self, pos, dimensions):
         """Initializes the inventory hud"""
         super().__init__("", pos, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
-        self._player = player
+        self._player = CONSTANTS.get("player")
         self._items = [item for item in self._player.getInventory()]
         self._selected = 0
         self._blocks = []
@@ -94,6 +95,10 @@ class InventoryHUD(Drawable):
             return self._items[self._selected]
         else:
             return None
+
+    def updatePlayer(self, player):
+        self._player = CONSTANTS.get("player")
+        self.update()
         
     def draw(self, screen):
         """Draws the inventory hud to the screen"""

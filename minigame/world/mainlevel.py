@@ -254,7 +254,7 @@ class MainLevel(Level):
 
         # Create the player's inventory hud
         self._hud = InventoryHUD(((self._screen_size[0]//2)-350,
-                                  self._screen_size[1]-52), (700,50), self._player)
+                                  self._screen_size[1]-52), (700,50))
 
         # Create the player's armor and weapon display blocks
         self._weapon = ItemBlock((self._screen_size[0]-164,5))
@@ -265,7 +265,7 @@ class MainLevel(Level):
         self._stealWindow = None
 
         # Create the XP Manager
-        self._xpManager = XPManager((self._screen_size[0]//2 - 250//2, 80), self._player)
+        self._xpManager = XPManager((self._screen_size[0]//2 - 250//2, 80))
         self._xpManager.close()
         
  
@@ -895,7 +895,7 @@ class MainLevel(Level):
         self._starveTimer = data._timers["starve"]
         CONSTANTS.addConstant("player", data._player)
         self.setupPlayerPack()
-        self._stats = StatDisplay((5,5),self._player)
+        self.setupUI()
         self._packs = data._packs
         self._merchants = data._merchants
         self._acorns = data._acorns

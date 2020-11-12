@@ -7,28 +7,29 @@ The user interface for managing xp
 
 import pygame
 from polybius.graphics import *
+from polybius.managers import CONSTANTS
 
 class XPManager(Window):
 
-    def __init__(self, pos, player):
+    def __init__(self, pos):
         """Initializes the XP Manager interface"""
 
         Window.__init__(self)
 
-        self._player = player
+        self._player = CONSTANTS.get("player")
 
         font = pygame.font.SysFont("Times New Roman", 24)
 
         attributes = ["Memory","Charisma","Digging Skill","Cheek Capacity","Stealth"]
 
-        self._availXP = TextBox("Available XP: " + str(player.getXP()),
+        self._availXP = TextBox("Available XP: " + str(self._player.getXP()),
                                 (0,0), font, (0,0,0))
 
         attStartPos = (pos[0] + 10,pos[1] + 40)
         self._attrs = []
         for i, a in enumerate(attributes):
             self._attrs.append(AttributeManager((attStartPos[0],(i*52)+attStartPos[1]),
-                                                (230,50), a, player))
+                                                (230,50), a, self._player))
 
         self._availXP.setPosition(((pos[0] + self._attrs[0].getWidth()//2 -
                                     self._availXP.getWidth()//2) + 10,
