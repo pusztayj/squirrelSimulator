@@ -109,6 +109,8 @@ class MainLevel(Level):
         self._world_size = CONSTANTS.get("world_size")
         self._xpPerDay = CONSTANTS.get("xpPerDay")
         self._cheatBox = CONSTANTS.get("cheatbox")
+        self._loadMenu = CONSTANTS.get("loadMenu")
+        self._saveMenu = CONSTANTS.get("saveMenu")
         
         # Friendscore at which animals begin to attack
         self._attackThreshold = CONSTANTS.get("attackThreshold")
@@ -500,7 +502,8 @@ class MainLevel(Level):
     def getWindowStates(self):
         windowsToCheck = [self._atm, self._interaction, self._bribeWindow,
                           self._stealWindow, self._packManager, self._popupWindow,
-                          self._confirmationWindow, self._cheatBox, self._xpManager]
+                          self._confirmationWindow, self._cheatBox, self._xpManager,
+                          self._loadMenu, self._saveMenu]
         windowStates = {window:self.isActiveWindow(window) for window in windowsToCheck}
         return windowStates
 
@@ -873,23 +876,23 @@ class MainLevel(Level):
 
     def exportData(self):
         game_data = GameData()
-##        timers = {"acornSpawn":self._acornSpawnTimer,
-##                  "pileSpawn":self._pileSpawnTimer,
-##                  "acornLeak":self._acornLeakTimer,
-##                  "hunger":self._hungerTimer,
-##                  "starve":self._starveTimer}
-##        game_data.saveTimers(timers)
+        timers = {"acornSpawn":self._acornSpawnTimer,
+                  "pileSpawn":self._pileSpawnTimer,
+                  "acornLeak":self._acornLeakTimer,
+                  "hunger":self._hungerTimer,
+                  "starve":self._starveTimer}
+        game_data.saveTimers(timers)
         game_data.saveEntities(self._player, self._packs, self._merchants)
         game_data.saveEnvironment(self._acorns, self._pileManager, self._trees,
-                                  self._worldClock)
+                                  self._worldClock.getTime())
         return game_data
 
     def importData(self, data):
-##        self._acornSpawnTimer = data._timers["acornSpawn"]
-##        self._pileSpawnTimer = data._timers["pileSpawn"]
-##        self._acornLeakTimer = data._timers["acornLeak"]
-##        self._hungerTimer = data._timers["hunger"]
-##        self._starveTimer = data._timers["starve"]
+        self._acornSpawnTimer = data._timers["acornSpawn"]
+        self._pileSpawnTimer = data._timers["pileSpawn"]
+        self._acornLeakTimer = data._timers["acornLeak"]
+        self._hungerTimer = data._timers["hunger"]
+        self._starveTimer = data._timers["starve"]
         CONSTANTS.addConstant("player", data._player)
         self.setupPlayerPack()
         self._stats = StatDisplay((5,5),self._player)
@@ -898,6 +901,6 @@ class MainLevel(Level):
         self._acorns = data._acorns
         self._pileManager = data._piles
         self._trees = data._trees
-##        self._worldClock = data._clock
+        self._worldClock.setTime(data._time)
         
         

@@ -31,6 +31,7 @@ class Game():
 
         self.createPlayer()
         self.initializeCheatBox()
+        self.initializeFileMenus()
         self.initializeLevels()
         self.initializePauseMenu()
         
@@ -58,6 +59,13 @@ class Game():
         # Set the initial game code to None
         self._code = None
 
+        self._currentLevel = self._code
+
+        self._windows = [self._cheatBox, self._loading, self._pauseMenu,
+                       self._controls, self._tutorial, self._nameInput,
+                       self._titleScreen, self._loadMenu, self._saveMenu]
+        
+    def initializeFileMenus(self):
         self._loadMenu = FileMenu((self._SCREEN_SIZE[0]//2 - 250,self._SCREEN_SIZE[1]//2-150),
                        (500,300), "Load")
         self._loadMenu.close()
@@ -66,10 +74,8 @@ class Game():
                        (500,300), "Save")
         self._saveMenu.close()
 
-        self._windows = [self._cheatBox, self._loading, self._pauseMenu,
-                       self._controls, self._tutorial, self._nameInput,
-                       self._titleScreen, self._loadMenu, self._saveMenu]
-        
+        CONSTANTS.addConstant("loadMenu", self._loadMenu)
+        CONSTANTS.addConstant("saveMenu", self._saveMenu)
 
     def createPlayer(self):
         self._player = Player(pos=CONSTANTS.get("player_start_pos"))
@@ -255,18 +261,25 @@ class Game():
     def handleSaveGameEvent(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
             self._saveMenu.display()
+            self._level.setActive(False)
 
     def handleLoadGameEvent(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             self._loadMenu.display()
+            self._level.setActive(False)
 
     def handleFileManagerEvents(self, event):
         if self._loadMenu.getDisplay():
-            sel = self._loadMenu.handleEvent(event)
+            sel = self._loadMenu.handleEvent(event, self.unpauseGame)
             if sel != None: self.loadGame(sel)
         if self._saveMenu.getDisplay():
-            sel = self._saveMenu.handleEvent(event)
+            sel = self._saveMenu.handleEvent(event, self.unpauseGame)
             if sel != None: self.saveGame(sel)
+
+    def unpauseGame(self):
+        if not self.isActiveLevel(self._merchantLevel) and \
+            not self.isActiveLevel(self._combatLevel):
+                self._level.setActive(True)
 
     def handleEvents(self): 
         for event in pygame.event.get():
@@ -286,9 +299,11 @@ class Game():
                         self.handleCheatBoxEvents(event)
                         self.handlePauseMenuEvents(event)
                         self.handleControlsMenuEvents(event)
-                        self.handleSaveGameEvent(event)
-                        self.handleLoadGameEvent(event)
-                        self.handleFileManagerEvents(event)
+
+                        if not self.isActiveLevel(self._combatLevel):
+                            self.handleSaveGameEvent(event)
+                            self.handleLoadGameEvent(event)
+                            self.handleFileManagerEvents(event)
                 else:
                      self.handleTutorialDisplayEvents(event)
                      self.handleNameInputEvents(event)
@@ -301,6 +316,7 @@ class Game():
         self._code = None
         self._player.stop()
         self._loading.setDisplay(True)
+        
 
     def setGameModeToMain(self):
         SOUNDS.fadeOut(1000)
@@ -317,6 +333,7 @@ class Game():
         self._loading.setDisplay(True)
 
     def manageLevelTransitions(self):
+        self._currentLevel = self._code
         if self._code != None:
             if self._code[0] == 0:
                 self.setGameModeToMain()
@@ -409,6 +426,7 @@ class Game():
         with open(path, "wb") as file:
             pickle.dump(data, file)
         data.undoPickleSafe()
+        self.unpauseGame()
 
     def loadGame(self, fileName):
         path = os.path.join("saves",fileName+".sqs")
@@ -417,6 +435,8 @@ class Game():
             data.undoPickleSafe()
             self._level.importData(data)
         self._player = CONSTANTS.get("player")
+        self._code = (0,)
+        self.manageLevelTransitions()
 
     def initializeManagers(self):
         """A function that sets the resource paths for the various managers"""

@@ -62,6 +62,9 @@ class WorldClock(Drawable):
         """Returns the current time"""
         return self._time
 
+    def setTime(self, time):
+        self._time = time
+
     def dayPassed(self):
         """Returns true if a day has past since method was last called"""
         if self._dayTimer + self.getHourLength() >= self._day_length:

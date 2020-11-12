@@ -1,19 +1,19 @@
 
 class GameData():
 
-##    def saveTimers(self, timers):
-##        self._timers = timers
+    def saveTimers(self, timers):
+        self._timers = timers
 
     def saveEntities(self, player, packs, merchants):
         self._player = player
         self._packs = packs
         self._merchants = merchants
 
-    def saveEnvironment(self, acorns, piles, trees, clock):
+    def saveEnvironment(self, acorns, piles, trees, time):
         self._acorns = acorns
         self._piles = piles
         self._trees = trees
-##        self._clock = clock
+        self._time = time
 
     def makeCreaturePickleSafe(self, c):
         c.makePickleSafe()
@@ -49,7 +49,6 @@ class GameData():
             p.makePickleSafe()
         for t in self._trees:
             t.makePickleSafe()
-##        self._clock.makePickleSafe()
 
     def undoPickleSafe(self):
         for c in self._player.getPack().getTrueMembers():
@@ -67,4 +66,3 @@ class GameData():
             p.undoPickleSafe()
         for t in self._trees:
             t.undoPickleSafe()
-##        self._clock.undoPickleSafe()

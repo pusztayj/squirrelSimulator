@@ -10,7 +10,7 @@ class FileMenu(AbstractGraphic, Window):
         Window.__init__(self)
 
         self._type = menuType
-
+        self._pos = pos
         self._offset = (pos[0], pos[1])
 
         self._width  = dimensions[0]
@@ -22,42 +22,48 @@ class FileMenu(AbstractGraphic, Window):
         self._borderWidth = 2
         self._backgroundColor = (80,80,80)
 
-        buttonWidth  = 3 * (self._width // 4)
-        buttonHeight = (self._height-30) // 5
+        self._buttonWidth  = 3 * (self._width // 4)
+        self._buttonHeight = (self._height-30) // 5
 
-        buttonXpos = self._width//2 - buttonWidth // 2
-        buttonYpos = (self._height - buttonHeight) - 15
+        self._buttonXpos = self._width//2 - self._buttonWidth // 2
+        self._buttonYpos = (self._height - self._buttonHeight) - 15
 
-        self._loadButton = Button(menuType, (buttonXpos,buttonYpos),
+        self._loadButton = Button(menuType, (self._buttonXpos,self._buttonYpos),
                                     self._font, (0,0,0), (0,255,0),
-                                    buttonHeight, buttonWidth//2, (0,0,0), 2)
+                                    self._buttonHeight, self._buttonWidth//2, (0,0,0), 2)
 
-        self._cancelButton = Button("Cancel", (buttonXpos+buttonWidth//2, buttonYpos),
+        self._cancelButton = Button("Cancel", (self._buttonXpos+self._buttonWidth//2, self._buttonYpos),
                                     self._font, (0,0,0), (120,120,150),
-                                    buttonHeight, buttonWidth//2, (0,0,0), 2)
+                                    self._buttonHeight, self._buttonWidth//2, (0,0,0), 2)
 
-        filePath = "saves/"
-        fileExtension = ".sqs"
-        self._options = []
-        for file in glob.glob("saves/*"):
-            fileName = file[len(filePath):][:-len(fileExtension)]
-            d = {"text":fileName, "func":self.updateSelection, "args":fileName}
-            self._options.append(d)
-        self._levelSelect = ScrollSelector((pos[0]+3+buttonXpos,pos[1]+45),(buttonWidth,buttonHeight*2.75),
-                                           30,self._options,(0,0,0))
+        
 
-        self._textbox = TextInput((buttonXpos,buttonYpos - (25 + 10)),
-                                  self._smallFont, (buttonWidth, 25),
+        self._textbox = TextInput((self._buttonXpos,self._buttonYpos - (25 + 10)),
+                                  self._smallFont, (self._buttonWidth, 25),
                                   maxLen = 25)
         self._selection = None
 
         self.updateGraphic()
 
-    def handleEvent(self, event):
+    def createFileSelect(self):
+        filePath = "saves/"
+        fileExtension = ".sqs"
+        self._options = []
+        for file in glob.glob("saves/*.sqs"):
+            fileName = file[len(filePath):][:-len(fileExtension)]
+            d = {"text":fileName, "func":self.updateSelection, "args":fileName}
+            self._options.append(d)
+        xpos = self._pos[0]+3+self._buttonXpos
+        ypos = self._pos[1]+45
+        pos = (xpos, ypos)
+        dims = (self._buttonWidth,self._buttonHeight*2.75)
+        self._fileSelect = ScrollSelector(pos,dims,30,self._options,(0,0,0))
+
+    def handleEvent(self, event, cancelFunc=None):
         """Handles events on the pause menu"""
         self._loadButton.handleEvent(event, self.load, offset=self._offset)
-        self._cancelButton.handleEvent(event, self.cancel, offset=self._offset)
-        self._levelSelect.handleEvent(event)
+        self._cancelButton.handleEvent(event, self.cancel, args=(cancelFunc,), offset=self._offset)
+        self._fileSelect.handleEvent(event)
         if self._type == "Save":
             self._textbox.handleEvent(event, offset=self._offset)
         self.updateGraphic()
@@ -73,8 +79,13 @@ class FileMenu(AbstractGraphic, Window):
         self._textbox.setText("")
         self.close()
 
-    def cancel(self):
+    def display(self):
+        Window.display(self)
+        self.createFileSelect()
+
+    def cancel(self, func):
         """Sets the selecton to controls"""
+        func()
         self._textbox.setText("")
         self.close()
 
@@ -86,7 +97,7 @@ class FileMenu(AbstractGraphic, Window):
 
     def draw(self, surf):
         AbstractGraphic.draw(self, surf)
-        self._levelSelect.draw(surf)
+        self._fileSelect.draw(surf)
 
     def internalUpdate(self, surf):
         """Updates the display of the pause menu"""
