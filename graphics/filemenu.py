@@ -39,7 +39,7 @@ class FileMenu(AbstractGraphic, Window):
         
 
         self._textbox = TextInput((self._buttonXpos,self._buttonYpos - (25 + 10)),
-                                  self._smallFont, (self._buttonWidth, 25),
+                                  self._smallFont, (self._buttonWidth, 30),
                                   maxLen = 25)
         self._selection = None
 
@@ -54,7 +54,7 @@ class FileMenu(AbstractGraphic, Window):
             d = {"text":fileName, "func":self.updateSelection, "args":fileName}
             self._options.append(d)
         xpos = self._pos[0]+3+self._buttonXpos
-        ypos = self._pos[1]+45
+        ypos = self._pos[1]+40
         pos = (xpos, ypos)
         dims = (self._buttonWidth,self._buttonHeight*2.75)
         self._fileSelect = ScrollSelector(pos,dims,30,self._options,(0,0,0))

@@ -40,6 +40,7 @@ class TextInput(AbstractGraphic):
         self._color = color
         self._highlightColor = highlightColor
         self._antialias = antialias
+        self._allowSymbols = False
         
         self._pointer = 0
         self._cursorTimer = Timer(.5)
@@ -55,6 +56,7 @@ class TextInput(AbstractGraphic):
         self._textbox.setFontColor(self._highlightColor)
         if self._clearOnActive:
             self._textbox.setText("")
+            self._pointer = 0
         self.updateGraphic()
 
     def displayPassive(self):
@@ -81,8 +83,21 @@ class TextInput(AbstractGraphic):
                 self.displayPassive()
                 
         elif event.type == pygame.KEYDOWN and self._active:
+
+            # Check if backspace was pressed
+            if event.key == 8:
+                newText = text[:self._pointer-1] + text[self._pointer:]
+                self._textbox.setText(newText)
+                self._pointer = max(0,self._pointer - 1)
+
+            # Move the input cursor left and right
+            if event.key == pygame.K_RIGHT:
+                self._pointer = min(len(text), self._pointer+1)
+            if event.key == pygame.K_LEFT:
+                self._pointer = max(0, self._pointer-1)
             
             if len(text) < self._maxLen:
+                
                 newChar = ""
                 
                 alphaKey = 96 < event.key < 123
@@ -91,33 +106,26 @@ class TextInput(AbstractGraphic):
                 numPadKey = pygame.K_KP0 <= event.key <= pygame.K_KP9
                 minusKey = (event.key == pygame.K_KP_MINUS or \
                             event.key ==pygame.K_MINUS)
+                symbolKey = 33 < event.key <= 47 or 58 < event.key <= 64
+                underscoreKey = event.key == pygame.K_MINUS and \
+                                event.mod in [pygame.KMOD_LSHIFT,pygame.KMOD_RSHIFT]
                 if alphaKey and not self._numerical:
                     newChar = self.checkForLetters(event)
-                elif (spaceKey and not self._numerical) or numKey:
+                elif (spaceKey and not self._numerical) or numKey or \
+                     (symbolKey and self._allowSymbols):
                     newChar = chr(event.key)
                 elif numPadKey:
                     newChar = chr(event.key-208)
+                elif underscoreKey:
+                    newChar = "_"
                 elif minusKey and (not self._numerical or self._allowNegative):
                     newChar = "-"
-
-                    
+                   
                 if newChar != "":
                     newText = text[:self._pointer] + newChar + text[self._pointer:]
                     self._textbox.setText(newText)
                     self._pointer += 1
-                    
-            # Check if backspace was pressed
-            if event.key == 8:
-                newText = text[:self._pointer-1] + text[self._pointer:]
-                self._textbox.setText(newText)
-                self._pointer -= 1
-
-            # Move the input cursor left and right
-            if event.key == pygame.K_RIGHT:
-                self._pointer = min(len(text), self._pointer+1)
-            if event.key == pygame.K_LEFT:
-                self._pointer = max(0, self._pointer-1)
-                
+                     
             # Check if the enter key was pressed
             if event.key == 13 or event.key == pygame.K_KP_ENTER:
                 self._active = False
@@ -142,6 +150,7 @@ class TextInput(AbstractGraphic):
     def setText(self, text):
         """Set the text displayed in the input bar"""
         self._textbox.setText(text)
+        self._pointer = len(text)
         self.updateGraphic()
 
     def update(self, ticks):
@@ -162,6 +171,45 @@ class TextInput(AbstractGraphic):
         text = self._textbox.getText()[:self._pointer]
         x_pos = self._textbox.getX() + self.getPixelWidth(text)
         return ((x_pos, top),(x_pos, bottom))
+
+##    def calculatePointerPlacement(self, eventPos, rect):
+##        print("hello")
+##        eventx = eventPos[0]
+##        basex = rect.x
+##        text = self._textbox.getText()
+##        tbWidth = self._textbox.getWidth()
+##        checkedValues = []
+##        minPlacement = 0
+##        maxPlacement = len(text)
+##        while True:
+##            pointer = (minPlacement + maxPlacement) // 2
+##            normalx = basex + self.getPixelWidth(text[:pointer])
+##            pointerx = (basex + tbWidth)//2 - (normalx // 2)
+##            print(pointer)
+##            print("Px:", pointerx)
+##            print("Ex:",eventx)
+##            if eventx < pointerx:
+##                maxPlacement = pointer
+##            elif eventx > pointerx:
+##                minPlacement = pointer
+##            else:
+##                self._pointer = pointer
+##                print("here")
+##                break
+##            if pointer in checkedValues:
+##                self._pointer = pointer
+##                break
+####                # Find the closest pointer (one to the left and right of optimal)
+####                distances = [abs(self.findPointerXCoordinate(p, basex, text)-eventx)
+####                  for p in range(pointer-1, pointer+2)]
+####                minimum = min(distances)
+####                self._pointer = (pointer-1) + distances.index(minimum)
+####                "print woah"
+####                break
+##            checkedValues.append(pointer)
+
+##    def findPointerXCoordinate(self, pointer, basex, text):
+##        return basex + self.getPixelWidth(text[:pointer-1])
 
     def internalUpdate(self, surf):
         """Update the widget's display"""
