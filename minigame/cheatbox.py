@@ -15,7 +15,7 @@ class CheatBox():
     def __init__(self, screenDimensions):
         """Initializes the cheat interface"""
         self._font = pygame.font.SysFont("Times New Roman", 16)
-        textDimensions = (200,30)
+        textDimensions = (225,30)
         self._input = TextInput((0,screenDimensions[1]-textDimensions[1]),
                                 self._font, textDimensions, maxLen=30)
         self._code = None
@@ -88,6 +88,7 @@ class CheatBox():
         """Updates the delay on the cheat input"""
         if self._delay >= 0:
             self._delay -= ticks
+        self._input.update(ticks)
 
     def execute(self, tup):
        """Execute a provided cheat code"""

@@ -367,6 +367,10 @@ class Game():
 
     def updateCombatLevel(self, ticks):
         self.updateAbstractLevel(self._combatLevel, ticks)
+
+    def updateNameInput(self, ticks):
+        if self._nameInput.getDisplay():
+            self._nameInput.update(ticks)
             
     def update(self):
         
@@ -388,6 +392,7 @@ class Game():
         # Load the level briefly to create a display behind the tutorial
         elif self._tutorial.getDisplay() or self._nameInput.getDisplay():
             self.blitLevelForDisplay(ticks)
+            self.updateNameInput(ticks)
             
         else:
             self.updateMainLevel(ticks)

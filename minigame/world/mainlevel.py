@@ -523,8 +523,7 @@ class MainLevel(Level):
             borrowedFromExile.remove(item)
             self.swapItem(item, exile)
             executeAtLeastOnce = False
-            
-                
+                           
     def getItemsBorrowedFrom(self, owner):           
         allBorrowed = []
         for creature in self._playerPack.getTrueMembers():

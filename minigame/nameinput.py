@@ -115,3 +115,6 @@ class NameInput(Window):
         if self._popupWindow.getDisplay():
             self._popupWindow.draw(screen)
 
+    def update(self, ticks):
+        self._inputField.update(ticks)
+
