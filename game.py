@@ -259,14 +259,16 @@ class Game():
                 self._tutorial.display()
 
     def handleSaveGameEvent(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+        if CONTROLS.get("save").check(event):
             self._saveMenu.display()
             self._level.setActive(False)
+            self._player.stop()
 
     def handleLoadGameEvent(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
+        if CONTROLS.get("load").check(event):
             self._loadMenu.display()
             self._level.setActive(False)
+            self._player.stop()
 
     def handleFileManagerEvents(self, event):
         if self._loadMenu.getDisplay():

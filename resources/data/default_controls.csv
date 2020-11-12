@@ -1,4 +1,4 @@
-﻿action,event_type,event_key,event_mods
+action,event_type,event_key,event_mods
 start,KEYDOWN,K_SPACE,
 pause,KEYDOWN,K_ESCAPE,
 display_cheat_box,KEYDOWN,K_c,"KMOD_CTRL,KMOD_SHIFT"
@@ -13,3 +13,5 @@ walk_left,KEYDOWN,K_a,
 walk_right,KEYDOWN,K_d,
 walk_down,KEYDOWN,K_s,
 eat,KEYDOWN,K_SPACE,
+save,KEYDOWN,K_s,KMOD_CTRL
+load,KEYDOWN,K_o,KMOD_CTRL
