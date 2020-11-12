@@ -488,12 +488,24 @@ class MainLevel(Level):
             else:
                 c = self._packManager.handleEvent(event)
                 if c != None and c[0] == 9:
-                    self._playerPack.removeMember(c[1])
-                    clone = c[1].clone()
-                    clone.changeFriendScore(random.randint(-25,-5))
-                    p = Pack(clone)
-                    self._packs.append(p)
-                    clone.setPack(p)
+                    member = c[1]
+                    self.confirmRemovePackMember(member)
+
+    def confirmRemovePackMember(self, member):
+        memberName = member.getName()
+        prompt = ("Are you sure you want to\n remove %s from your pack?" % memberName)
+        self._confirmationWindow.setText(prompt)
+        self._confirmationWindow.setConfirmFunction(self.removeMemberFromPlayerPack, (member,))
+        self._confirmationWindow.display()
+                    
+
+    def removeMemberFromPlayerPack(self, member):
+        self._playerPack.removeMember(member)
+        clone = member.clone()
+        clone.changeFriendScore(random.randint(-25,-5))
+        p = Pack(clone)
+        self._packs.append(p)
+        clone.setPack(p)
 
     def areActiveWindows(self):
         windowStates = self.getWindowStates()
