@@ -421,9 +421,14 @@ class Game():
                                instruct)
         self._tutorial.close()
 
+    def makeSavesFolder(self):
+        if not os.path.exists('saves'):
+            os.makedirs('saves')
+
     def saveGame(self, fileName):
         data = self._level.exportData()
         data.makePickleSafe()
+        self.makeSavesFolder()
         path = os.path.join("saves", fileName+".sqs")
         with open(path, "wb") as file:
             pickle.dump(data, file)
