@@ -172,14 +172,14 @@ class MemberCard(Drawable, Window):
         
     def setEntity(self, entity):
 
-        self._entity = entity
+        self._displayEntity = entity
         
-        if self._entity != None:
+        if self._displayEntity != None:
 
-            self._pack = entity.getPack()
+            self._pack = self._displayEntity.getPack()
 
-            self._avatar = entity.getDefaultImage()
-            self._imHeight = entity.getHeight()
+            self._avatar = self._displayEntity.getDefaultImage()
+            self._imHeight = self._displayEntity.getHeight()
 
             self._offset = self.getPosition()
 
@@ -193,27 +193,27 @@ class MemberCard(Drawable, Window):
             self._inventory = threeXthreeInventory(invPos, (175,175), entity)
 
             weapPos = (190 + self.getX(), 80 + self._avHeight + self.getY())
-            self._weapon = ItemBlock(weapPos,(50,50), item=entity.getEquipItem())
+            self._weapon = ItemBlock(weapPos,(50,50), item=self._displayEntity.getEquipItem())
 
             armPos = (190 + self.getX(), 140 + self._avHeight + self.getY())
-            self._armor = ItemBlock(armPos,(50,50), item=entity.getArmor())
+            self._armor = ItemBlock(armPos,(50,50), item=self._displayEntity.getArmor())
 
             # Progress Bars
             healthBarPos = (10 + self.getX(), 45 + self._avHeight + self.getY())
             self._healthBar = ProgressBar(healthBarPos, self._width//4,
-                                          entity.getBaseHealth(),
-                                          entity.getHealth(),
+                                          self._displayEntity.getBaseHealth(),
+                                          self._displayEntity.getHealth(),
                                           height=5)
             hungerBarPos = (10 + self.getX(), 55 + self._avHeight + self.getY())
             self._hungerBar = ProgressBar(hungerBarPos, self._width//4,
-                                          entity.getBaseHunger(),
-                                          entity.getHunger(),
+                                          self._displayEntity.getBaseHunger(),
+                                          self._displayEntity.getHunger(),
                                           barColor=(235,125,52),
                                           height=5)
             staminaBarPos = (10 + self.getX(), 65 + self._avHeight + self.getY())
             self._staminaBar = ProgressBar(staminaBarPos, self._width//4,
-                                          entity.getBaseStamina(),
-                                          entity.getStamina(),
+                                          self._displayEntity.getBaseStamina(),
+                                          self._displayEntity.getStamina(),
                                           barColor=(0,0,255),
                                           height=5)
 
@@ -237,7 +237,7 @@ class MemberCard(Drawable, Window):
 
         Drawable.draw(self, surf)
         
-        if self._entity != None:
+        if self._displayEntity != None:
             # Draw widgets
             self._name.draw(surf)
             self._inventory.draw(surf)
@@ -246,7 +246,7 @@ class MemberCard(Drawable, Window):
             self._healthBar.draw(surf)
             self._hungerBar.draw(surf)
             self._staminaBar.draw(surf)
-            if type(self._entity) != Player:
+            if type(self._displayEntity) != Player:
                 self._removeButton.draw(surf)
             self._acornCount.draw(surf)
 
@@ -254,7 +254,7 @@ class MemberCard(Drawable, Window):
             surf.blit(self._acorn, (self.getX() + (self._width-160), 50 + self._avHeight + self.getY()))
 
     def drawPopups(self, surf):
-        if self._entity != None:
+        if self._displayEntity != None:
             # Item management menus
             if self._itemMenu != None:
                 self._itemMenu.draw(surf)
@@ -271,7 +271,7 @@ class MemberCard(Drawable, Window):
     def handleEvent(self, event):
         """"Handles events on the member card"""
         
-        if self._entity != None:
+        if self._displayEntity != None:
 
             if self._popupWindow.getDisplay():
                 self._popupWindow.handleEvent(event)
@@ -283,7 +283,7 @@ class MemberCard(Drawable, Window):
             if self._tradeMenu != None and self._tradeMenu.getDisplay():
                 self._tradeMenu.handleEvent(event)
             
-            if type(self._entity) != Player and self._itemMenu==None:
+            if type(self._displayEntity) != Player and self._itemMenu==None:
                 self._removeButton.handleEvent(event, self.remove)
             self.updateCard()
 
@@ -496,7 +496,7 @@ class MemberCard(Drawable, Window):
         return self._remove
 
     def getEntity(self):
-        return self._entity
+        return self._displayEntity
 
     def closeItemCard(self):
         self._itemCard = None
@@ -517,11 +517,11 @@ class MemberCard(Drawable, Window):
         
     def updateCard(self):
         """Updates the member card display"""
-        if self._entity != None:
+        if self._displayEntity != None:
             self._inventory.update()
-            self._healthBar.setProgress(self._entity.getHealth())
-            self._hungerBar.setProgress(self._entity.getHunger())
-            self._staminaBar.setProgress(self._entity.getStamina())
+            self._healthBar.setProgress(self._displayEntity.getHealth())
+            self._hungerBar.setProgress(self._displayEntity.getHunger())
+            self._staminaBar.setProgress(self._displayEntity.getStamina())
 
              # Acorn Information
             self._acorn = Acorn((0,0))
@@ -530,7 +530,7 @@ class MemberCard(Drawable, Window):
 
             self._acornCount = TextBox("", (self._width-50, 4),
                                         self._fontsmall, (0,0,0))
-            acorns = str(self._entity.getAcorns())
+            acorns = str(self._displayEntity.getAcorns())
             self._acornCount.setText(acorns)
             acPos = ((self._width - (145 + digitLen[len(acorns)])) + self.getX(), 50 + self._avHeight + self.getY())
             self._acornCount.setPosition(acPos)
