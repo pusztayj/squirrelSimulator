@@ -60,10 +60,12 @@ class ScrollSelector(Drawable):
             b.draw(surf)
         return surf
 
-    def handleEvent(self, event):
+    def handleEvent(self, event, offset=(0,0)):
         """Handle events on the scroll selector"""
         self._scrollBox.move(event)
-        offset = (self._position[0], self._position[1] + self._scrollBox.getOffset())
+        x_offset = self._position[0] + offset[0]
+        y_offset = self._position[1] + offset[1] + self._scrollBox.getOffset()
+        offset = (x_offset, y_offset)
         if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP)\
            and event.button==1:
             if self._scrollBox.getCollideRect().collidepoint(event.pos):

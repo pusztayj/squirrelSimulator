@@ -1,6 +1,7 @@
 import pygame, random, math, os, pickle
 from minigame import *
 from polybius.graphics.ui.menu import Menu
+from graphics import FileMenu
 from player import Player
 from animals import *
 from polybius.managers import CONSTANTS, SOUNDS, FRAMES, CONTROLS
@@ -57,9 +58,18 @@ class Game():
         # Set the initial game code to None
         self._code = None
 
+        self._loadMenu = FileMenu((self._SCREEN_SIZE[0]//2 - 250,self._SCREEN_SIZE[1]//2-150),
+                       (500,300), "Load")
+        self._loadMenu.close()
+
+        self._saveMenu = FileMenu((self._SCREEN_SIZE[0]//2 - 250,self._SCREEN_SIZE[1]//2-150),
+                       (500,300), "Save")
+        self._saveMenu.close()
+
         self._windows = [self._cheatBox, self._loading, self._pauseMenu,
                        self._controls, self._tutorial, self._nameInput,
-                       self._titleScreen]
+                       self._titleScreen, self._loadMenu, self._saveMenu]
+        
 
     def createPlayer(self):
         self._player = Player(pos=CONSTANTS.get("player_start_pos"))
@@ -244,11 +254,19 @@ class Game():
 
     def handleSaveGameEvent(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-            self.saveGame()
+            self._saveMenu.display()
 
     def handleLoadGameEvent(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
-            self.loadGame()
+            self._loadMenu.display()
+
+    def handleFileManagerEvents(self, event):
+        if self._loadMenu.getDisplay():
+            sel = self._loadMenu.handleEvent(event)
+            if sel != None: self.loadGame(sel)
+        if self._saveMenu.getDisplay():
+            sel = self._saveMenu.handleEvent(event)
+            if sel != None: self.saveGame(sel)
 
     def handleEvents(self): 
         for event in pygame.event.get():
@@ -270,6 +288,7 @@ class Game():
                         self.handleControlsMenuEvents(event)
                         self.handleSaveGameEvent(event)
                         self.handleLoadGameEvent(event)
+                        self.handleFileManagerEvents(event)
                 else:
                      self.handleTutorialDisplayEvents(event)
                      self.handleNameInputEvents(event)
@@ -383,15 +402,17 @@ class Game():
                                instruct)
         self._tutorial.close()
 
-    def saveGame(self):
+    def saveGame(self, fileName):
         data = self._level.exportData()
         data.makePickleSafe()
-        with open("saves/data.sqs", "wb") as file:
+        path = os.path.join("saves", fileName+".sqs")
+        with open(path, "wb") as file:
             pickle.dump(data, file)
         data.undoPickleSafe()
 
-    def loadGame(self):
-        with open("saves/data.sqs", "rb") as file:
+    def loadGame(self, fileName):
+        path = os.path.join("saves",fileName+".sqs")
+        with open(path, "rb") as file:
             data = pickle.load(file)
             data.undoPickleSafe()
             self._level.importData(data)
