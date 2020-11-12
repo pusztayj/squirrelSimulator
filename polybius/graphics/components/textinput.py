@@ -134,6 +134,7 @@ class TextInput(AbstractGraphic):
                     func(*args)
                 if clearOnEnter:
                     self._textbox.setText("")
+                    self._pointer = 0
             self.updateGraphic()
 
     def checkForLetters(self, event):

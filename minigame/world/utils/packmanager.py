@@ -418,7 +418,7 @@ class MemberCard(Drawable, Window):
         if gifted:
             player.getInventory().removeItem(self._item)
             self._entity.getInventory().addItem(self._item)
-            self._item.setOwner(creature)
+            self._item.setOwner(self._entity)
         self._popupWindow.setText(message)
         self._popupWindow.display()
 
@@ -426,7 +426,7 @@ class MemberCard(Drawable, Window):
         itemOwner = self._item.getAttribute("owner")
         reclaimed, message = itemOwner.reclaimItem(self._item, self._entity)
         if reclaimed:
-            player = self._entity
+            player = self._pack.getLeader()
             player.getInventory().removeItem(self._item)
             itemOwner.getInventory().addItem(self._item)
         self._popupWindow.setText(message)

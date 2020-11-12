@@ -280,6 +280,9 @@ class NPC(Animal, Animated):
         c.equipArmor(self.getArmor())
         c.equipItem(self.getEquipItem())
         c.setInventory(self.getInventory())
+        for item in c.getInventory().getItems():
+            if item.getAttribute("owner") == self:
+                item.setOwner(c)
         return c
 
     def borrowItem(self,item,otherCreature):

@@ -499,7 +499,7 @@ class MainLevel(Level):
         self._confirmationWindow.display()
                     
     def removeMemberFromPlayerPack(self, member):
-        #self.returnItems(member)
+        self.returnItems(member)
         self._playerPack.removeMember(member)
         clone = member.clone()
         clone.changeFriendScore(random.randint(-25,-5))
@@ -507,43 +507,50 @@ class MainLevel(Level):
         self._packs.append(p)
         clone.setPack(p)
 
-    def returnItems(self):
-        executeAtLeastOnce = True
-        borrowedFromExile = self.getItemsBorrowedFrom(exile)
-        borrowedByExile   = self.getItemsBorrowedBy(exile)
-        random.shuffle(borrowedByExile)
-        exileInv = exile.getInventory()
-        while (len(borrowedFromExile) > 0 and exileInv.getAvailableSpace()) or \
-              executeAtLeastOnce:
-            for item in borrowedByExile:
-                owner = item.getAttribute("owner")
-                if owner.getInventory.hasSpace():
-                    self.swapItem(item,owner)
-            item = random.choice(borrowedFromExile)
-            borrowedFromExile.remove(item)
-            self.swapItem(item, exile)
-            executeAtLeastOnce = False
-                           
-    def getItemsBorrowedFrom(self, owner):           
-        allBorrowed = []
+    def returnItems(self, exile):
+        items = self.getPileOfBorrowedItems(exile)
+        self.removeBorrowedItemsFromInventories(items)
+        self.returnBorrowedItems(items)
+
+    def getPileOfBorrowedItems(self, exile):
+        borrowed = []
         for creature in self._playerPack.getTrueMembers():
-            if creature != exile:
-                items = creature.getInventory.getItems()
-                borrowedItems = [i for i in items
-                                 if i.getAttribute("owner") == exile]
-                allBorrowed += borrowedItems
-        return allBorrowed
+            items = creature.getInventory().getItems()
+            if creature == exile:
+                borrowed += [(i, exile) for i in items
+                            if i.getAttribute("owner") != exile]
+            else:
+                borrowed += [(i, creature) for i in items
+                            if i.getAttribute("owner") == exile]
+        return borrowed
 
-    def getItemsBorrowedBy(self, borrower):
-        items = creature.getInventory.getItems()
-        borrowedItems = [i for i in items
-                        if i.getAttribute("owner") != borrower]
-        return borrowedItems
+    def removeBorrowedItemsFromInventories(self, items):
+        for i in items:
+            item = i[0]
+            currentHolder = i[1]
+            currentHolder.getInventory().removeItem(item)
 
-    def swapItem(self, item, newOwner):
-        currentOwner = item.getAttribute("owner")
-        currentOwner.getInventory().removeItem(item)
-        newOwner.getInventory().addItem(item)               
+    def returnBorrowedItems(self, items):
+        random.shuffle(items)
+        leftovers = []
+        # Return as many items as possible to owners
+        for i in items:
+            item = i[0]
+            currentHolder = i[1]
+            owner = item.getAttribute("owner")
+            ownerInv = owner.getInventory()
+            if ownerInv.hasSpace():
+                ownerInv.addItem(item)
+            else:
+                leftovers.append(i)
+        # Leave leftovers with borrowers
+        for i in leftovers:
+            item = i[0]
+            currentHolder = i[1]
+            currentInv = currentHolder.getInventory()
+            if currentInv.hasSpace():
+                currentInv.addItem(item)
+                item.setOwner(currentHolder)             
                         
     def areActiveWindows(self):
         windowStates = self.getWindowStates()
