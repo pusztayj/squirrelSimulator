@@ -506,7 +506,7 @@ class MainLevel(Level):
     def getPileOfBorrowedItems(self, exile):
         borrowed = []
         for creature in self._playerPack.getTrueMembers():
-            items = creature.getInventory().getItems()
+            items = creature.getAllItems()
             if creature == exile:
                 borrowed += [(i, exile) for i in items
                             if i.getAttribute("owner") != exile]
@@ -520,6 +520,10 @@ class MainLevel(Level):
             item = i[0]
             currentHolder = i[1]
             currentHolder.getInventory().removeItem(item)
+            if currentHolder.getArmor() == item:
+                currentHolder.equipArmor(None)
+            if currentHolder.getEquipItem() == item:
+                currentHolder.equipItem(None)
 
     def returnBorrowedItems(self, items):
         random.shuffle(items)
@@ -533,7 +537,14 @@ class MainLevel(Level):
             if ownerInv.hasSpace():
                 ownerInv.addItem(item)
             else:
-                leftovers.append(i)
+                if item.getAttribute("holdable") and \
+                     not owner.isEquipped():
+                    owner.equipItem(item)
+                elif item.getAttribute("type") == "armor" and \
+                     not owner.hasArmor():
+                    owner.equipArmor(item)
+                else:
+                    leftovers.append(i)
         # Leave leftovers with borrowers
         for i in leftovers:
             item = i[0]
@@ -541,7 +552,17 @@ class MainLevel(Level):
             currentInv = currentHolder.getInventory()
             if currentInv.hasSpace():
                 currentInv.addItem(item)
-                item.setOwner(currentHolder)             
+                item.setOwner(currentHolder)
+            else:
+                if item.getAttribute("holdable") and \
+                     not currentHolder.isEquipped():
+                    currentHolder.equipItem(item)
+                    item.setOwner(currentHolder)
+                elif item.getAttribute("type") == "armor" and \
+                     not currentHolder.hasArmor():
+                    currentHolder.equipArmor(item)
+                    item.setOwner(currentHolder)
+                
                         
     def areActiveWindows(self):
         windowStates = self.getWindowStates()

@@ -618,9 +618,9 @@ class Animal():
         """Return all items the animal is currently holding"""
         items = self._inventory.getItems()
         if self.hasArmor():
-            items += self.getArmor()
+            items.append(self.getArmor())
         if self.isEquipped():
-            items += self.getEquipItem()
+            items.append(self.getEquipItem())
         return items
          
 
