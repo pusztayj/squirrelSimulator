@@ -345,10 +345,10 @@ class NPC(Animal, Animated):
             return (False,"Item is not shareable")
         # NPC inventory is full so they can't accept
         if otherCreature.getInventory().hasSpace() == False and \
-           not (item in otherCreature.getInventory().getItems()): 
+           not (item in otherCreature.getAllItems()): 
             return (False,str(self.getName())+ " has no room in their inventory")
 
-        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
+        allItems = self.getAllItems()
         inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
         
