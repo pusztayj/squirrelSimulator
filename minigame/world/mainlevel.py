@@ -21,6 +21,7 @@ from minigame.xpmanager import XPManager
 from managers import ANIMALS, ITEMS
 from polybius.managers import CONSTANTS, SOUNDS, CONTROLS
 from .gameData import GameData
+from minigame.inventorygui import InventoryGUI
 
 def createPack(pos):
     """Creates a random pack of a size between 1 and 3"""
@@ -253,12 +254,7 @@ class MainLevel(Level):
         self._interaction = None
 
         # Create the player's inventory hud
-        self._hud = InventoryHUD(((self._screen_size[0]//2)-350,
-                                  self._screen_size[1]-52), (700,50))
-
-        # Create the player's armor and weapon display blocks
-        self._weapon = ItemBlock((self._screen_size[0]-164,5))
-        self._armor = ItemBlock((self._screen_size[0]-82,5))
+        self._invGUI = InventoryGUI()
 
         # Set the bribe and steal windows to None
         self._bribeWindow = None
@@ -315,10 +311,7 @@ class MainLevel(Level):
         if self._packManager.getDisplay():
             self._packManager.draw(screen)
 
-        self._hud.draw(screen)
-
-        self._armor.draw(screen)
-        self._weapon.draw(screen)
+        self._invGUI.draw(screen)
 
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.draw(screen)
@@ -444,19 +437,17 @@ class MainLevel(Level):
         self.tryToDigUpPile(event, item)
                 
     def handleWeaponEquipEvent(self, item):
-        previous = self._weapon.getItem()
+        previous = self._invGUI.getInHand()
         if previous != None:
             self._player.getInventory().addItem(previous)
         self._player.equipItem(item)
-        self._weapon.setItem(item)
         self._player.getInventory().removeItem(item)
 
     def handleArmorEquipEvent(self, item):
-        previous = self._armor.getItem()
+        previous = self._invGUI.getArmor()
         if previous != None:
             self._player.getInventory().addItem(previous)
         self._player.equipArmor(item)
-        self._armor.setItem(item)
         self._player.getInventory().removeItem(item)
 
     def handleUsePotionEvent(self, item):
@@ -466,7 +457,7 @@ class MainLevel(Level):
     def handleUseItemEvent(self, event):
         if CONTROLS.get("use_item").check(event):
             # Get the current active item in the hud
-            item = self._hud.getActiveItem()
+            item = self._invGUI.getActiveHUDItem()
             if item != None:
                 itemType = item.getAttribute("type")
                 if itemType == "food":
@@ -743,7 +734,7 @@ class MainLevel(Level):
         if temp != None: return temp
 
     def manageEventsHandledWhenNoActiveWindows(self, event):
-        self._hud.handleEvent(event)
+        self._invGUI.handleEvent(event)
         self._player.move(event)
         self.handleCreateDirtPileEvent(event)
         code = self.handleSelectionEvents(event)
@@ -906,9 +897,7 @@ class MainLevel(Level):
         if self._stealWindow != None and self._stealWindow.getDisplay():
             self._stealWindow.update()
         self._stats.update()
-        self._hud.update(ticks)
-        self._weapon.updateBlock()
-        self._armor.updateBlock()
+        self._invGUI.update(ticks)
         self._packManager.update(ticks)
 
     def updateViewOffset(self):

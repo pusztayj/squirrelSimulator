@@ -614,6 +614,16 @@ class Animal():
         """        
         return 0
 
+    def getAllItems(self):
+        """Return all items the animal is currently holding"""
+        items = self._inventory.getItems()
+        if self.hasArmor():
+            items += self.getArmor()
+        if self.isEquipped():
+            items += self.getEquipItem()
+        return items
+         
+
     def __repr__(self):
         """
         Returns a string representation of the animal.

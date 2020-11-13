@@ -101,9 +101,7 @@ class MemberCard(Drawable, Window):
 
         Drawable.__init__(self, "", pos, worldBound=False)
         Window.__init__(self)
-
-        self._entity = entity
-
+        
         self._avHeight = 75 # Height of largest sprite
 
         # Style Attributes
@@ -116,7 +114,7 @@ class MemberCard(Drawable, Window):
         self._height = 275 + self._avHeight
         self._backgroundColor = (139,79,59)
 
-        self.setEntity(self._entity)
+        self.setEntity(entity)
 
         self._remove = False
 
@@ -174,12 +172,12 @@ class MemberCard(Drawable, Window):
 
         self._displayEntity = entity
         
-        if self._displayEntity != None:
+        if entity != None:
 
-            self._pack = self._displayEntity.getPack()
+            self._pack = entity.getPack()
 
-            self._avatar = self._displayEntity.getDefaultImage()
-            self._imHeight = self._displayEntity.getHeight()
+            self._avatar = entity.getDefaultImage()
+            self._imHeight = entity.getHeight()
 
             self._offset = self.getPosition()
 
@@ -193,27 +191,27 @@ class MemberCard(Drawable, Window):
             self._inventory = threeXthreeInventory(invPos, (175,175), entity)
 
             weapPos = (190 + self.getX(), 80 + self._avHeight + self.getY())
-            self._weapon = ItemBlock(weapPos,(50,50), item=self._displayEntity.getEquipItem())
+            self._weapon = ItemBlock(weapPos,(50,50), item=entity.getEquipItem())
 
             armPos = (190 + self.getX(), 140 + self._avHeight + self.getY())
-            self._armor = ItemBlock(armPos,(50,50), item=self._displayEntity.getArmor())
+            self._armor = ItemBlock(armPos,(50,50), item=entity.getArmor())
 
             # Progress Bars
             healthBarPos = (10 + self.getX(), 45 + self._avHeight + self.getY())
             self._healthBar = ProgressBar(healthBarPos, self._width//4,
-                                          self._displayEntity.getBaseHealth(),
-                                          self._displayEntity.getHealth(),
+                                          entity.getBaseHealth(),
+                                          entity.getHealth(),
                                           height=5)
             hungerBarPos = (10 + self.getX(), 55 + self._avHeight + self.getY())
             self._hungerBar = ProgressBar(hungerBarPos, self._width//4,
-                                          self._displayEntity.getBaseHunger(),
-                                          self._displayEntity.getHunger(),
+                                          entity.getBaseHunger(),
+                                          entity.getHunger(),
                                           barColor=(235,125,52),
                                           height=5)
             staminaBarPos = (10 + self.getX(), 65 + self._avHeight + self.getY())
             self._staminaBar = ProgressBar(staminaBarPos, self._width//4,
-                                          self._displayEntity.getBaseStamina(),
-                                          self._displayEntity.getStamina(),
+                                          entity.getBaseStamina(),
+                                          entity.getStamina(),
                                           barColor=(0,0,255),
                                           height=5)
 
@@ -353,10 +351,15 @@ class MemberCard(Drawable, Window):
                                               self._itemCardSize).getCard()
                     self._itemMenu = None
 
-            item = self._inventory.handleEvent(event)
-            if item != None and self._itemCard == None:
+            # Get the item in question
+            item, stored = self.getItemClicked(event)
+            thereIsAnItem = item != None
+            noItemCard = self._itemCard == None
+            noPopup = self._popupWindow == None or not self._popupWindow.getDisplay()
+            if thereIsAnItem and noItemCard:
 
                self._item = item
+               self._stored = stored
                
                mouse_pos = pygame.mouse.get_pos()
 
@@ -403,11 +406,31 @@ class MemberCard(Drawable, Window):
                        not self._dropdown.getCollideRect().collidepoint(mouse_pos):
                        self._dropdown = None
 
+    def getItemClicked(self, event):
+        item = self._inventory.handleEvent(event)
+        stored = None
+        if item != None:
+            stored = "inventory"
+        else:
+            item = self._armor.handleEvent(event)
+            if item != None:
+                stored = "armor"
+            else:
+                item = self._weapon.handleEvent(event)
+                if item != None:
+                    stored = "hand"
+        return (item, stored)
+            
     def playerSharesItem(self):
         player = self._pack.getLeader()
         shared, message = self._entity.borrowItem(self._item, player)
         if shared:
-            player.getInventory().removeItem(self._item)
+            if self._stored == "inventory":
+                player.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                player.equipArmor(None)
+            elif self._stored == "hand":
+                player.equipItem(None)
             self._entity.getInventory().addItem(self._item)
         self._popupWindow.setText(message)
         self._popupWindow.display()
@@ -416,18 +439,28 @@ class MemberCard(Drawable, Window):
         player = self._pack.getLeader()
         gifted, message = self._entity.takeOwnership(self._item, player)
         if gifted:
-            player.getInventory().removeItem(self._item)
+            if self._stored == "inventory":
+                player.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                player.equipArmor(None)
+            elif self._stored == "hand":
+                player.equipItem(None)
             self._entity.getInventory().addItem(self._item)
             self._item.setOwner(self._entity)
         self._popupWindow.setText(message)
         self._popupWindow.display()
 
     def playerReturnsBorrowedItem(self):
+        player = self._pack.getLeader()
         itemOwner = self._item.getAttribute("owner")
         reclaimed, message = itemOwner.reclaimItem(self._item, self._entity)
         if reclaimed:
-            player = self._pack.getLeader()
-            player.getInventory().removeItem(self._item)
+            if self._stored == "inventory":
+                player.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                player.equipArmor(None)
+            elif self._stored == "hand":
+                player.equipItem(None)
             itemOwner.getInventory().addItem(self._item)
         self._popupWindow.setText(message)
         self._popupWindow.display()
@@ -435,18 +468,30 @@ class MemberCard(Drawable, Window):
 
     def playerReclaimsBorrowedItem(self):
         player = self._pack.getLeader()
+        borrower = self._displayEntity
         playerInventory = player.getInventory()
         if playerInventory.hasSpace():
+            if self._stored == "inventory":
+                borrower.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                borrower.equipArmor(None)
+            elif self._stored == "hand":
+                borrower.equipItem(None)
             playerInventory.addItem(self._item)
-            self._entity.getInventory().removeItem(self._item)
         self._itemMenu = None
 
     def playerBorrowsItem(self):
         player = self._pack.getLeader()
-        borrowed, message = self._entity.loanItem(self._item, player)
+        owner = self._item.getAttribute("owner")
+        borrowed, message = owner.loanItem(self._item, player)
         if borrowed:
+            if self._stored == "inventory":
+                owner.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                owner.equipArmor(None)
+            elif self._stored == "hand":
+                owner.equipItem(None)
             player.getInventory().addItem(self._item)
-            self._entity.getInventory().removeItem(self._item)
         self._popupWindow.setText(message)
         self._popupWindow.display()
         self._itemMenu = None
@@ -472,9 +517,15 @@ class MemberCard(Drawable, Window):
 
     def playerTakesOwnershipOfItem(self):
         player = self._pack.getLeader()
-        gifted, message = self._entity.giveOwnershipItem(self._item, player)
+        owner = self._item.getAttribute("owner")
+        gifted, message = owner.giveOwnershipItem(self._item, player)
         if gifted:
-            self._entity.getInventory().removeItem(self._item)
+            if self._stored == "inventory":
+                owner.getInventory().removeItem(self._item)
+            elif self._stored == "armor":
+                owner.equipArmor(None)
+            elif self._stored == "hand":
+                owner.equipItem(None)
             player.getInventory().addItem(self._item)
             self._item.setOwner(player)
         self._popupWindow.setText(message)
@@ -519,6 +570,8 @@ class MemberCard(Drawable, Window):
         """Updates the member card display"""
         if self._displayEntity != None:
             self._inventory.update()
+            self._armor.setItem(self._displayEntity.getArmor())
+            self._weapon.setItem(self._displayEntity.getEquipItem())
             self._healthBar.setProgress(self._displayEntity.getHealth())
             self._hungerBar.setProgress(self._displayEntity.getHunger())
             self._staminaBar.setProgress(self._displayEntity.getStamina())

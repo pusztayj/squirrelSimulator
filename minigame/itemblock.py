@@ -32,10 +32,16 @@ class ItemBlock(Drawable):
     def setItem(self, item):
         """Sets the item in the item block"""
         self._item = item
+        self.updateBlock()
 
     def getItem(self):
         """Returns the item linked to the block"""
         return self._item
+
+    def handleEvent(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            if self.getCollideRect().collidepoint(pygame.mouse.get_pos()):
+                return self.getItem()
 
     def updateBlock(self):
         """Update the display of the item block"""
