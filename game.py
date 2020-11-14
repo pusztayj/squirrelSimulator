@@ -157,10 +157,15 @@ class Game():
         self.createPlayer()
         self.initializeLevels()
         self._lag = True
-        self._nameInput = NameInput()
+        self.createNewNameInput()
         if self._cheatBox.getDisplay():
             self._cheatBox.toggleDisplay()
         self._titleScreen._displayed = True
+
+    def createNewNameInput(self):
+        i = self._windows.index(self._nameInput)
+        self._nameInput = NameInput()
+        self._windows[i] = self._nameInput
 
     def handleTogglingOfPauseMenu(self, event):
         pauseEvent = CONTROLS.get("pause").check(event)
@@ -319,7 +324,6 @@ class Game():
         self._player.stop()
         self._loading.setDisplay(True)
         
-
     def setGameModeToMain(self):
         SOUNDS.fadeOut(1000)
         self._level.setActive(True)
