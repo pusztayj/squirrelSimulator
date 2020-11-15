@@ -167,17 +167,15 @@ class Pack():
         Handles the updates for each animal in the pack that is not the leader
         and calls the respective follow player. 
         """
-        if type(self.getLeader()) == Player:
-            flank = 1
-            for animal in self._members:
-                if animal != None and not self.isLeader(animal):
+        flank = 1
+        for animal in self.getTrueMembers():
+            if not type(animal) == Player:
+                animal.manageEquippedItems()
+            if not self.isLeader(animal):
+                if type(self.getLeader()) == Player:
                     animal.followPlayer(ticks, self.getLeader(), flank)
                     flank += 1
-        else:
-            flank = 1
-            for animal in self._members:
-                if animal != None and not self.isLeader(animal):
+                else:
                     animal.follow(ticks, self.getLeader())
-                    flank += 1
 
             

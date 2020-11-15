@@ -375,5 +375,51 @@ class NPC(Animal, Animated):
             return (False,str(self.getName())+ " has no room in their inventory")
         return (True, ("%s has taken ownership of the item" % self.getName()))
 
+    def manageEquippedItems(self):
+        bestWeapon = None
+        bestArmor = None
+        # Find the best armor and weapons
+        for i in self.getAllItems():
+            if i.getAttribute("holdable"): #Eventually allow for tools
+                if i.getAttribute("type") == "weapon":
+                    if bestWeapon == None:
+                        bestWeapon = i
+                    else:
+                        itemStrength = i.getAttribute("strength")
+                        bestStrength = bestWeapon.getAttribute("strength")
+                        if itemStrength > bestStrength:
+                            bestWeapon = i
+            elif i.getAttribute("type") == "armor":
+                if bestArmor == None:
+                    bestArmor = i
+                else:
+                    itemStrength = i.getAttribute("strength")
+                    bestStrength = bestArmor.getAttribute("strength")
+                    if itemStrength > bestStrength:
+                        bestArmor = i
+                        
+        if bestWeapon != None:
+            if not self.isEquipped():
+                print(self.getName(), bestWeapon.getAttribute("name"))
+                self.equipItem(bestWeapon)
+                self.getInventory().removeItem(bestWeapon)
+##            elif self.getEquipItem() != bestWeapon:
+##                print(self.getName(), bestWeapon.getAttribute("name"))
+##                oldItem = self.getEquipItem()
+##                self.getInventory().removeItem(bestWeapon)
+##                self.getInventory().addItem(oldItem)
+##                self.equipItem(bestWeapon)
+##        if bestArmor != None:
+##            if not self.hasArmor():
+##                self.equipArmor(bestArmor)
+##                self.getInventory().removeItem(bestArmor)
+##            else:
+##                if self.getArmor() != bestArmor:
+##                    oldItem = self.getArmor()
+##                    self.getInventory().removeItem(bestArmor)
+##                    self.getInventory().addItem(oldItem)
+##                    self.equipArmor(bestArmor)
+                
+
     
         

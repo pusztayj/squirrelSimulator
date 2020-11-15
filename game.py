@@ -222,7 +222,7 @@ class Game():
                                  cheatCode[2], cheatCode[3])
                     self._cheatBox.execute(instructions)
                 if isType4Code and len(cheatCode)==3:
-                    instructions = (codeCommand, player, cheatCode[1],
+                    instructions = (codeCommand, self._player, cheatCode[1],
                                  cheatCode[2])
                     self._cheatBox.execute(instructions)
 
