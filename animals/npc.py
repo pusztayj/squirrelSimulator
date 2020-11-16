@@ -379,14 +379,14 @@ class NPC(Animal, Animated):
         # Find the best armor and weapons
         for i in self.getAllItems():
             if i.getAttribute("holdable"): #Eventually allow for tools
-                if i.getAttribute("type") == "weapon":
-                    if bestWeapon == None:
+                #if i.getAttribute("type") == "weapon":
+                if bestWeapon == None:
+                    bestWeapon = i
+                else:
+                    itemStrength = i.getAttribute("strength")
+                    bestStrength = bestWeapon.getAttribute("strength")
+                    if itemStrength > bestStrength:
                         bestWeapon = i
-                    else:
-                        itemStrength = i.getAttribute("strength")
-                        bestStrength = bestWeapon.getAttribute("strength")
-                        if itemStrength > bestStrength:
-                            bestWeapon = i
             elif i.getAttribute("type") == "armor":
                 if bestArmor == None:
                     bestArmor = i

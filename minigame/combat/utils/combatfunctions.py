@@ -41,14 +41,14 @@ def attackComputation(attacker,defender):
     Calculates the damage dealt between an attacker and a defender.
     """
     attacker.resetDefenseModifers()
-    if attacker.getEquipItem() != None:
+    if attacker.isEquipped():
         attack_strength = (attacker.getStrength() + \
                                (attacker.getEquipItem().getAttribute("strength"))) * \
                                attacker.getAttackModifers()        
     else:
         attack_strength = attacker.getStrength()*attacker.getAttackModifers()
 
-    if defender.getArmor() != None:
+    if defender.hasArmor():
         defense_strength = (defender.getStrength() + \
                            (defender.getArmor().getAttribute("strength"))) * \
                            defender.getDefenseModifers()
