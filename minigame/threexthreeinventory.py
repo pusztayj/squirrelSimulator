@@ -35,7 +35,7 @@ class threeXthreeInventory(Drawable):
         else:
             self._toggleItemColors = False
             for animal in entity.getPack().getTrueMembers():
-                self._colorKey[animal] = (100,100,100)
+                self._colorKey[animal] = CONSTANTS.get("defaultItemHighlight")
             
 
         self.createItemBlocks()

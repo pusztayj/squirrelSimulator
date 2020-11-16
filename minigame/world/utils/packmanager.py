@@ -248,7 +248,7 @@ class MemberCard(Drawable, Window):
 
         armor =  self._displayEntity.getArmor()
         if armor == None:
-            itemHighlight = (100,100,100)
+            itemHighlight = CONSTANTS.get("defaultItemHighlight")
         else:
             itemHighlight = self._colorKey[armor.getAttribute("owner")]
         armPos = (190 + self.getX(), 140 + self._avHeight + self.getY())

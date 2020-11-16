@@ -66,7 +66,7 @@ def attackComputation(attacker,defender):
     if defender.hasArmor():
         current_durability = defender.getArmor().getAttribute("durability")
         print("Defender Current Durability: ",current_durability)
-        delta = deltaDurability(ratio,attacker.getArmor())
+        delta = deltaDurability(ratio,defender.getArmor())
         new_durability = current_durability - delta + randomDurabilityChange(delta)
         defender.getArmor().setDurability(max(0,new_durability))
         print("Defender Durability: ",new_durability)

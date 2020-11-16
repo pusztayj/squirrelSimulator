@@ -7,8 +7,8 @@ inventory themed classes or used on its own as an item frame
 """
 
 import pygame
-from polybius.graphics import Drawable
-from polybius.graphics import ProgressBar
+from polybius.graphics import Drawable, ProgressBar
+from polybius.managers import CONSTANTS
 
 class ItemBlock(Drawable):
 
