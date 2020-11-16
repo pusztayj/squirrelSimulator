@@ -40,6 +40,8 @@ def attackComputation(attacker,defender):
     """
     Calculates the damage dealt between an attacker and a defender.
     """
+    ### Can't drop item durability level here!!! ###
+    ### This is called to determine the potential damage that can be done ###
     attacker.resetDefenseModifers()
     if attacker.isEquipped():
         attack_strength = (attacker.getStrength() + \
