@@ -373,6 +373,10 @@ class NPC(Animal, Animated):
             return (False,str(self.getName())+ " has no room in their inventory")
         return (True, ("%s has taken ownership of the item" % self.getName()))
 
+    def manageItems(self):
+        self.manageEquippedItems()
+        self.manageHealthRestoreItems()
+
     def manageEquippedItems(self):
         bestWeapon = None
         bestArmor = None
@@ -414,6 +418,30 @@ class NPC(Animal, Animated):
                 self.getInventory().removeItem(bestArmor)
                 self.getInventory().addItem(oldItem)
                 self.equipArmor(bestArmor)
+
+    def manageHealthRestoreItems(self):
+        currentHealthLevel = self.getHealth()
+        damageSustained = self.getBaseHealth() - currentHealthLevel
+        healingItems = []
+        for i in self.getInventory():
+            try:
+                healthBoost = i.getAttribute("healthBoost")
+                healingItems.append((i, healthBoost))
+            except: 1
+        healingItems.sort(key=lambda x: x[1])
+        if currentHealthLevel < int(self.getBaseHealth() * .8):
+            choosenItem = None
+            for i in healingItems:
+                healthBoost = i[1] 
+                if healthBoost > damageSustained:
+                    break
+                else:
+                    choosenItem = i[0]
+            if choosenItem != None:
+                self.getInventory().removeItem(choosenItem)
+                self.heal(choosenItem.getAttribute("healthBoost"))
+                
+
                 
 
     

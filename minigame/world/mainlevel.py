@@ -905,13 +905,13 @@ class MainLevel(Level):
             if pack.trueLen() > 1:
                 pack.update(self._world_size, ticks)
             for animal in pack.getTrueMembers():
-                animal.manageEquippedItems()
+                animal.manageItems()
 
     def updatePlayerPack(self, ticks):
         self._playerPack.update(self._world_size, ticks)
         for animal in self._playerPack.getTrueMembers():
             if animal != self._player:
-                animal.manageEquippedItems()
+                animal.manageItems()
 
     def updateEntities(self, ticks):
         for merchant in self._merchants:
