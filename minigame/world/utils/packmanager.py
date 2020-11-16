@@ -453,7 +453,7 @@ class MemberCard(Drawable, Window):
     def playerReturnsBorrowedItem(self):
         player = self._pack.getLeader()
         itemOwner = self._item.getAttribute("owner")
-        reclaimed, message = itemOwner.reclaimItem(self._item, self._entity)
+        reclaimed, message = itemOwner.reclaimItem(self._item, itemOwner)
         if reclaimed:
             if self._stored == "inventory":
                 player.getInventory().removeItem(self._item)

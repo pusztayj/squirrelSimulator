@@ -310,8 +310,7 @@ class NPC(Animal, Animated):
         if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
             return (False,"You have no space in your inventory")
         
-        allItems = self.getInventory().getItems() + [self.getEquipItem()] + [self.getArmor()]
-        inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
+        inventoryTypes = [x.getAttribute("type") for x in self.getAllItems() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
         
         if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
@@ -348,8 +347,7 @@ class NPC(Animal, Animated):
            not (item in otherCreature.getAllItems()): 
             return (False,str(self.getName())+ " has no room in their inventory")
 
-        allItems = self.getAllItems()
-        inventoryTypes = [x.getAttribute("type") for x in self.getInventory() if x != None]
+        inventoryTypes = [x.getAttribute("type") for x in self.getAllItems() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
         
         if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
@@ -410,12 +408,11 @@ class NPC(Animal, Animated):
             if not self.hasArmor():
                 self.equipArmor(bestArmor)
                 self.getInventory().removeItem(bestArmor)
-            else:
-                if self.getArmor() != bestArmor:
-                    oldItem = self.getArmor()
-                    self.getInventory().removeItem(bestArmor)
-                    self.getInventory().addItem(oldItem)
-                    self.equipArmor(bestArmor)
+            elif self.getArmor() != bestArmor:
+                oldItem = self.getArmor()
+                self.getInventory().removeItem(bestArmor)
+                self.getInventory().addItem(oldItem)
+                self.equipArmor(bestArmor)
                 
 
     
