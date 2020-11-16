@@ -363,7 +363,7 @@ class CombatLevel(Level):
     def handleEvent(self, event):
         self._popup = None
         self.handleEventOnCombatSprite(event)
-        if self._current == self._player:
+        if self._current == self._player and not self._playerDone:
             self.handleEventOnPlayerTurn(event)
         else:
             self._animalStats = None # could be in update

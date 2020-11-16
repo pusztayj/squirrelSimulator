@@ -169,7 +169,7 @@ class Game():
 
     def handleTogglingOfPauseMenu(self, event):
         pauseEvent = CONTROLS.get("pause").check(event)
-        atmNotOpen = self._level._atm == None or not self._level.atm.getDisplay()
+        atmNotOpen = self._level._atm == None or not self._level._atm.getDisplay()
         notLoading = not self._loading.getDisplay()
         controlsDisplayClosed = not self._controls.getDisplay()  
         if pauseEvent and atmNotOpen and notLoading and controlsDisplayClosed:
