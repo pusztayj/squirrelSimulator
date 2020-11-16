@@ -399,7 +399,8 @@ class NPC(Animal, Animated):
             if not self.isEquipped():
                 self.equipItem(bestWeapon)
                 self.getInventory().removeItem(bestWeapon)
-            elif self.getEquipItem() != bestWeapon:
+            elif self.getEquipItem().getAttribute("item") != \
+                 bestWeapon.getAttribute("item"):
                 oldItem = self.getEquipItem()
                 self.getInventory().removeItem(bestWeapon)
                 self.getInventory().addItem(oldItem)
@@ -408,7 +409,8 @@ class NPC(Animal, Animated):
             if not self.hasArmor():
                 self.equipArmor(bestArmor)
                 self.getInventory().removeItem(bestArmor)
-            elif self.getArmor() != bestArmor:
+            elif self.getArmor().getAttribute("item") != \
+                 bestArmor.getAttribute("item"):
                 oldItem = self.getArmor()
                 self.getInventory().removeItem(bestArmor)
                 self.getInventory().addItem(oldItem)
