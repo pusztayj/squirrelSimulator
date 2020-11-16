@@ -36,7 +36,7 @@ class Inventory():
         """Adds an item to the inventory if possible"""
         if self.hasSpace():
             self._items.append(item)
-            self._currentCapacity += 1
+            self._currentCapacity += 1    
 
     def addItems(self, items):
         """Adds multiple items"""
@@ -60,7 +60,7 @@ class Inventory():
 
     def getItems(self):
         """Return a list of all the items in the inventory"""
-        return self._items
+        return list(self._items)
 
     def clear(self):
         """Clears the inventory."""

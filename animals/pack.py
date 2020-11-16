@@ -168,9 +168,7 @@ class Pack():
         and calls the respective follow player. 
         """
         flank = 1
-        for animal in self.getTrueMembers():
-            if not type(animal) == Player:
-                animal.manageEquippedItems()
+        for animal in self.getTrueMembers(): 
             if not self.isLeader(animal):
                 if type(self.getLeader()) == Player:
                     animal.followPlayer(ticks, self.getLeader(), flank)

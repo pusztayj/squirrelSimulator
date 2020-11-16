@@ -904,13 +904,22 @@ class MainLevel(Level):
             pack.getLeader().wander(ticks)
             if pack.trueLen() > 1:
                 pack.update(self._world_size, ticks)
+            for animal in pack.getTrueMembers():
+                animal.manageEquippedItems()
+
+    def updatePlayerPack(self, ticks):
+        self._playerPack.update(self._world_size, ticks)
+        for animal in self._playerPack.getTrueMembers():
+            if animal != self._player:
+                animal.manageEquippedItems()
 
     def updateEntities(self, ticks):
         for merchant in self._merchants:
             merchant.update(ticks)
         self._player.update(self._world_size, ticks)
         self.updatePacks(ticks)
-        self._playerPack.update(self._world_size, ticks)
+        self.updatePlayerPack(ticks)
+        
         
     def updateUI(self, ticks):
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
