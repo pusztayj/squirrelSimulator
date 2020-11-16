@@ -307,20 +307,20 @@ class NPC(Animal, Animated):
         """
         if not item.isShareable():
             return (False,"Item is not shareable")
-        if otherCreature.getInventory().hasSpace() == False: # NPC inventory is full so they can't accept
+        if otherCreature.getInventory().hasSpace() == False: # Other inventory is full so they can't accept
             return (False,"You have no space in your inventory")
         
         inventoryTypes = [x.getAttribute("type") for x in self.getAllItems() if x != None]
         numOfTypes = {x:inventoryTypes.count(x) for x in inventoryTypes}
-        
-        if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
-            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory")
-        
+
         if item.getAttribute("item") == "healthPotion": # If health potion don't trade
             return (False, "Health Potions are not loanable")
         
         if item.getAttribute("type") == "food": # If food don't trade
             return (False, "Food is not loanable")
+        
+        if numOfTypes[item.getAttribute("type")] == 1: # NPC will not trade item if they only have 1 of that type
+            return (False,str(self.getName())+ " only has one " + str(item.getAttribute("type")) + " in their inventory")
 
         return (True,str(self.getName()) + " has loaned the "+ str(item.getAttribute("name")))
 
@@ -378,8 +378,7 @@ class NPC(Animal, Animated):
         bestArmor = None
         # Find the best armor and weapons
         for i in self.getAllItems():
-            if i.getAttribute("holdable"): #Eventually allow for tools
-                #if i.getAttribute("type") == "weapon":
+            if i.getAttribute("holdable"):
                 if bestWeapon == None:
                     bestWeapon = i
                 else:
