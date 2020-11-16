@@ -8,10 +8,12 @@ inventory themed classes or used on its own as an item frame
 
 import pygame
 from polybius.graphics import Drawable
+from polybius.graphics import ProgressBar
 
 class ItemBlock(Drawable):
 
-    def __init__(self, pos, dimensions=(77,50), item=None, selected=False):
+    def __init__(self, pos, dimensions=(77,50), item=None,
+                 selected=False, showDurability=True):
         """Initializes an item block"""
         super().__init__("", pos, worldBound = False)
         self._item = item
@@ -27,11 +29,27 @@ class ItemBlock(Drawable):
 
         self._selected = selected
 
+        self._showDurability = showDurability
+        if self._item != None:
+            self.initializeDurabilityDisplay()
+
         self.updateBlock()
 
+    def initializeDurabilityDisplay(self):
+        length = 3 * self._width // 4
+        x_pos = (self._width//2) - (length + 2)//2
+        y_pos = self._height - 10
+        maxStat = self._item.getAttribute("maxDurability")
+        actStat = self._item.getAttribute("durability")
+        height = 4
+        self._durBar = ProgressBar((x_pos, y_pos), length, maxStat, actStat,
+                                   height=height)
+        
     def setItem(self, item):
         """Sets the item in the item block"""
         self._item = item
+        if self._item != None:
+            self.initializeDurabilityDisplay()
         self.updateBlock()
 
     def getItem(self):
@@ -60,8 +78,14 @@ class ItemBlock(Drawable):
 
         if self._item != None:
             image = self._item.getImage()
-            surf.blit(image,(self._width//2 - self._item.getWidth()//2,
-                             self._height//2 - self._item.getHeight()//2))
+            centerX = self._width//2 - self._item.getWidth()//2
+            centerY = self._height//2 - self._item.getHeight()//2
+            surf.blit(image,(centerX,centerY))
+
+            itemHasDurability = self._item.getAttribute("type") != "potion"
+            if self._showDurability and itemHasDurability:
+                self._durBar.setProgress(self._item.getAttribute("durability"))
+                self._durBar.draw(surf)
         
         surfBack.blit(surf, (self._borderWidth, self._borderWidth))
         self._image = surfBack

@@ -188,7 +188,7 @@ class MemberCard(Drawable, Window):
 
             # Inventory Items
             invPos = (10 + self.getX(), 80 + self._avHeight + self.getY())
-            self._inventory = threeXthreeInventory(invPos, (175,175), entity)
+            self._inventory = threeXthreeInventory(invPos, (175,175), entity, True)
 
             weapPos = (190 + self.getX(), 80 + self._avHeight + self.getY())
             self._weapon = ItemBlock(weapPos,(50,50), item=entity.getEquipItem())

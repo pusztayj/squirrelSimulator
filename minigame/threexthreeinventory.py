@@ -11,12 +11,13 @@ from .itemblock import ItemBlock
 
 class threeXthreeInventory(Drawable):
 
-    def __init__(self, pos, dimensions, entity):
+    def __init__(self, pos, dimensions, entity, showDurability=False):
         """Initializes the 3 x 3 inventory block"""
         super().__init__("", pos, worldBound=False)
         self._width = dimensions[0]
         self._height = dimensions[1]
         self._entity = entity
+        self._showDurability = showDurability
         self._items = [item for item in self._entity.getInventory()]
         self._blocks = []
         count = 0
@@ -25,11 +26,13 @@ class threeXthreeInventory(Drawable):
                 if count < len(self._items):
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
-                              (self._width//3,self._height//3),item=self._items[count])
+                              (self._width//3,self._height//3),item=self._items[count],
+                                  showDurability=self._showDurability)
                 else:
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
-                              (self._width//3,self._height//3),item=None)
+                              (self._width//3,self._height//3),item=None,
+                                  showDurability=self._showDurability)
                 self._blocks.append(i)
                 count += 1
 
@@ -50,11 +53,13 @@ class threeXthreeInventory(Drawable):
                 if count < len(self._items):
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
-                              (self._width//3,self._height//3),item=self._items[count])
+                              (self._width//3,self._height//3),item=self._items[count],
+                                  showDurability=self._showDurability)
                 else:
                     i = ItemBlock((self._position[0]+(x*(self._width//3)),
                                (y*(self._height//3))+self._position[1]),
-                              (self._width//3,self._height//3),item=None)
+                              (self._width//3,self._height//3),item=None,
+                                  showDurability=self._showDurability)
                 self._blocks.append(i)
                 count += 1
 
