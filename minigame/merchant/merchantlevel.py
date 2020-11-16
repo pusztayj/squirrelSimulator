@@ -39,9 +39,11 @@ class MerchantLevel(Level):
         self._textFont = pygame.font.SysFont("Times New Roman", 28)
         # player
         self._player = player
+        itemsOwnedByPlayerInInventory = [i for i in self._player.getInventory()
+                                         if i.getAttribute("owner")==self._player]
         self._player_items = [{"text": item.getAttribute("name"),
                                "func": self.selectMerchantItem,"args":(item,)} \
-                      for item in self._player.getInventory()]
+                      for item in itemsOwnedByPlayerInInventory]
         self._playerSelect = ScrollSelector((100,100),(250,300),30,self._player_items,(0,0,0))
 
         # merchant
