@@ -1,4 +1,4 @@
-﻿variable,value,description
+variable,value,description
 screen_size,"(1200, 500)",The width and height of the screen
 world_size,"(4000, 2000)",The width and height of the world
 player_start_pos,"(200, 200)",The in-world start position of the player
@@ -14,3 +14,6 @@ hungerTimer,2,Number of hours before dropping in hunger
 starveTimer,2,Number of hours before taking another starvation hit
 restockTime,(2-4),Range of possible time in days that it can take merchants to restock
 gracePeriod,5,Grace period in seconds after retreating from a fight
+playerItemHighlight,"(88, 167, 129)",Background color of item's owned by the player
+firstPackMemberItemHighlight,"(70, 153, 185)",Background color of item's owned by the first member of player pack
+secondPackMemberItemHighlight,"(177, 78, 88)",Background color of item's owned by the second member of player pack

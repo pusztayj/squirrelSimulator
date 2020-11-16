@@ -13,7 +13,8 @@ from polybius.graphics import ProgressBar
 class ItemBlock(Drawable):
 
     def __init__(self, pos, dimensions=(77,50), item=None,
-                 selected=False, showDurability=True):
+                 selected=False, showDurability=True,
+                 backgroundColor=(100,100,100)):
         """Initializes an item block"""
         super().__init__("", pos, worldBound = False)
         self._item = item
@@ -22,7 +23,7 @@ class ItemBlock(Drawable):
 
         self._borderColor = (0,0,0)
         self._selectedBorder = (150,150,150)
-        self._backgroundColor = (100,100,100)
+        self._backgroundColor = backgroundColor
         self._borderWidth = 1
 
         self._transparency = 200

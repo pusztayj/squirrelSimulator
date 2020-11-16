@@ -188,13 +188,18 @@ class MemberCard(Drawable, Window):
 
             # Inventory Items
             invPos = (10 + self.getX(), 80 + self._avHeight + self.getY())
-            self._inventory = threeXthreeInventory(invPos, (175,175), entity, True)
+            self._inventory = threeXthreeInventory(invPos, (175,175), entity)
 
-            weapPos = (190 + self.getX(), 80 + self._avHeight + self.getY())
-            self._weapon = ItemBlock(weapPos,(50,50), item=entity.getEquipItem())
+            self._colorKey = {self._pack.getLeader():CONSTANTS.get("playerItemHighlight")}
+            colors = [CONSTANTS.get("firstPackMemberItemHighlight"),
+                      CONSTANTS.get("secondPackMemberItemHighlight")]
+            for animal in self._pack.getTrueMembers():
+                if animal != self._pack.getLeader():
+                    newColor = colors[0]
+                    self._colorKey[animal] = newColor
+                    colors.remove(newColor)
 
-            armPos = (190 + self.getX(), 140 + self._avHeight + self.getY())
-            self._armor = ItemBlock(armPos,(50,50), item=entity.getArmor())
+            self.setEquippedItemBlocks()
 
             # Progress Bars
             healthBarPos = (10 + self.getX(), 45 + self._avHeight + self.getY())
@@ -230,6 +235,25 @@ class MemberCard(Drawable, Window):
             self._acornCount.setText(acorns)
             acPos = ((self._width - (145 + digitLen[len(acorns)])) + self.getX(), 50 + self._avHeight + self.getY())
             self._acornCount.setPosition(acPos)
+
+    def setEquippedItemBlocks(self):
+        itemInHand = self._displayEntity.getEquipItem()
+        if itemInHand == None:
+            itemHighlight = (100,100,100)
+        else:
+            itemHighlight = self._colorKey[itemInHand.getAttribute("owner")]
+        weapPos = (190 + self.getX(), 80 + self._avHeight + self.getY())
+        self._weapon = ItemBlock(weapPos,(50,50), item=itemInHand,
+                                 backgroundColor=itemHighlight)
+
+        armor =  self._displayEntity.getArmor()
+        if armor == None:
+            itemHighlight = (100,100,100)
+        else:
+            itemHighlight = self._colorKey[armor.getAttribute("owner")]
+        armPos = (190 + self.getX(), 140 + self._avHeight + self.getY())
+        self._armor = ItemBlock(armPos,(50,50), item=armor,
+                                backgroundColor=itemHighlight)
 
     def draw(self, surf):
 
@@ -570,8 +594,7 @@ class MemberCard(Drawable, Window):
         """Updates the member card display"""
         if self._displayEntity != None:
             self._inventory.update()
-            self._armor.setItem(self._displayEntity.getArmor())
-            self._weapon.setItem(self._displayEntity.getEquipItem())
+            self.setEquippedItemBlocks()
             self._healthBar.setProgress(self._displayEntity.getHealth())
             self._hungerBar.setProgress(self._displayEntity.getHunger())
             self._staminaBar.setProgress(self._displayEntity.getStamina())
