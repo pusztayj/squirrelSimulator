@@ -886,8 +886,31 @@ class MainLevel(Level):
     def removeDeadPacksFromGame(self):
         self._packs = [pack for pack in self._packs if not pack.isDead()]
 
+    def removeDeadCreaturesFromPacks(self):
+        for p in self._packs:
+            died = []
+            for animal in p.getTrueMembers():
+                if animal.getHealth() <= 0:
+                    died.append(animal)
+            for death in died:
+                p.removeMember(death)
+
+    def removeDeadCreaturesFromPlayerPack(self):
+        died = []
+        for animal in self._playerPack.getTrueMembers():
+            if animal.getHealth() <= 0:
+                died.append(animal)
+        for death in died:
+            self._playerPack.removeMember(death)
+            self._popupWindow.setText("Your pack member "death.getName() + " has died")
+            self._popupWindow.display()
+            self._player.stop()
+        
+
     def updatePacks(self, ticks):
         self.removeDeadPacksFromGame()
+        self.removeDeadCreaturesFromPacks()
+        self.removeDeadCreaturesFromPlayerPack()
         self.checkAndMaintainPackPopulation()
         for pack in self._packs: 
             pack.getLeader().wander(ticks)
@@ -908,8 +931,7 @@ class MainLevel(Level):
         self._player.update(self._world_size, ticks)
         self.updatePacks(ticks)
         self.updatePlayerPack(ticks)
-        
-        
+               
     def updateUI(self, ticks):
         if self._bribeWindow != None and self._bribeWindow.getDisplay():
             self._bribeWindow.update()

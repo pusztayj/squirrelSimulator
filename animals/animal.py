@@ -95,8 +95,8 @@ class Animal():
         hourLen = CONSTANTS.get("worldClock").getHourLength()
         hungerTime = CONSTANTS.get("hungerTime") * hourLen
         starveTime = CONSTANTS.get("starveTime") * hourLen
-        self._hungerTimer = Timer(2 * hourLen)
-        self._starveTimer = Timer(2 * hourLen)
+        self._hungerTimer = Timer(hungerTime)
+        self._starveTimer = Timer(starveTime)
 
     def getPack(self):
         """
@@ -644,8 +644,8 @@ class Animal():
 
     def takeStarveDamage(self):
         """Apply negative effects of starving"""
-        self.loseHealth(5)
-        self.loseStamina(5)
+        self.loseHealth(CONSTANTS.get("starveDamage"))
+        self.loseStamina(CONSTANTS.get("starveStaminaHit"))
 
     def __repr__(self):
         """

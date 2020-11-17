@@ -20,3 +20,5 @@ secondPackMemberItemHighlight,"(177, 78, 88)",Background color of item's owned b
 defaultItemHighlight,"(100, 100, 100)",Background color of item's by default
 hourLen,5,Length of an in-game hour specified in real world seconds
 seasonLen,20,Length of an in-game hour specified in in-game days
+starveDamage,5,Health points lost for every iteration of the starve timer
+starveStaminaHit,5,Drop in stamina for every iteration of the starve timer
