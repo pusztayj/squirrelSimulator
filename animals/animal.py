@@ -369,6 +369,9 @@ class Animal():
         """
         return self._hunger == 0
 
+    def isHungry(self):
+        return self._hunger < self.getBaseHunger()
+
     def getSpeed(self):
         """
         Returns the speed of the animal.

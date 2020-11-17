@@ -373,7 +373,8 @@ class NPC(Animal, Animated):
             return (False,str(self.getName())+ " has no room in their inventory")
         return (True, ("%s has taken ownership of the item" % self.getName()))
 
-    def manageItems(self):
+    def manageState(self):
+        self.manageHunger()
         self.manageEquippedItems()
         self.manageHealthRestoreItems()
 
@@ -440,6 +441,13 @@ class NPC(Animal, Animated):
             if choosenItem != None:
                 self.getInventory().removeItem(choosenItem)
                 self.heal(choosenItem.getAttribute("healthBoost"))
+
+    def manageHunger(self):
+        hasAcorns = self.getAcorns() > 0
+        if self.isHungry() and hasAcorns:
+            self._acorns -= 1
+            self.increaseHunger()
+            
                 
 
                 
