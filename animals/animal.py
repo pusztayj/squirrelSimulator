@@ -93,6 +93,8 @@ class Animal():
 
         # Create timers
         hourLen = CONSTANTS.get("worldClock").getHourLength()
+        hungerTime = CONSTANTS.get("hungerTime") * hourLen
+        starveTime = CONSTANTS.get("starveTime") * hourLen
         self._hungerTimer = Timer(2 * hourLen)
         self._starveTimer = Timer(2 * hourLen)
 

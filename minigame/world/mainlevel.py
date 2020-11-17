@@ -826,7 +826,8 @@ class MainLevel(Level):
         """Update and maintain the in-game timers"""
         self._acornSpawnTimer.update(ticks, self.spawnAcorn)
         self._pileSpawnTimer.update(ticks, self.spawnAbandonedPile)
-        self._player.manageHungerTimers(ticks)
+        for animal in self._playerPack.getTrueMembers():
+            animal.manageHungerTimers(ticks)
 
         # Control acorn leakage if the player is carrying too many acorns
         if self._player.getAcorns() > self._player.getCheekCapacity():
