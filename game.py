@@ -218,6 +218,7 @@ class Game():
                 isType2Code = codeCommand in self._cheatBox.getCodesByType(2)
                 isType3Code = codeCommand in self._cheatBox.getCodesByType(3)
                 isType4Code = codeCommand in self._cheatBox.getCodesByType(4)
+                isType5Code = codeCommand in self._cheatBox.getCodesByType(5)
                 if isType1Code and len(cheatCode)==2:
                     instructions = (codeCommand, self._player, cheatCode[1])
                     self._cheatBox.execute(instructions) 
@@ -231,6 +232,9 @@ class Game():
                 if isType4Code and len(cheatCode)==3:
                     instructions = (codeCommand, self._player, cheatCode[1],
                                  cheatCode[2])
+                    self._cheatBox.execute(instructions)
+                if isType5Code:
+                    instructions = (codeCommand, cheatCode[1])
                     self._cheatBox.execute(instructions)
 
     def handlePauseMenuEvents(self, event):

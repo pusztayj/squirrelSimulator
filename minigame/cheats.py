@@ -50,4 +50,4 @@ codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
          7:giveItem}
 
 # Group codes into types by their inputs
-types = {1:(1,2,4,5,7), 2:(3), 3:(6,), 4:(7,)}
+types = {1:(1,2,5,7), 2:(3,), 3:(6,), 4:(7,), 5:(4,)}

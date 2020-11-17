@@ -60,7 +60,7 @@ class WorldClock(Drawable):
 
     def setSeasonLength(self, seasonLen):
         self._season_length = seasonLen
-        self.calculateLengthOfMeasure()
+        self.calculateLengthsOfMeasure()
 
     def getHourLength(self):
         """Returns the hour length"""

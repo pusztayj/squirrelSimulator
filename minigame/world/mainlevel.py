@@ -138,8 +138,6 @@ class MainLevel(Level):
         self._acornSpawnTimer = Timer(acornSpawnFunction)
         self._pileSpawnTimer = Timer(pileSpawnFunction)
         self._acornLeakTimer = Timer(self._worldClock.getHourLength())
-##        self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
-##        self._starveTimer = Timer(2 * self._worldClock.getHourLength())
 
         #Prevent buttons from being clicked when interaction opens
         self._interactionDelay = 0.1 
@@ -817,11 +815,6 @@ class MainLevel(Level):
         d.setAcorns(acornsInPile)
         self._pileManager.addSpawnedPile(d)
 
-##    def takeStarveDamage(self):
-##        """Apply negative effects to starving player"""
-##        self._player.loseHealth(5)
-##        self._player.loseStamina(5)
-
     def leakAcorns(self):
         """Calculate and execute acorn leakage"""
         percentLoss = random.randint(25,33) / 100 # Between 25 and 33 percent
@@ -834,12 +827,6 @@ class MainLevel(Level):
         self._acornSpawnTimer.update(ticks, self.spawnAcorn)
         self._pileSpawnTimer.update(ticks, self.spawnAbandonedPile)
         self._player.manageHungerTimers(ticks)
-##        self._hungerTimer.update(ticks, self._player.decrementHunger)
-##
-##        if self._player.isStarving():
-##            self._starveTimer.update(ticks, self.takeStarveDamage)
-##        else:
-##            self._starveTimer.resetTimer()
 
         # Control acorn leakage if the player is carrying too many acorns
         if self._player.getAcorns() > self._player.getCheekCapacity():
