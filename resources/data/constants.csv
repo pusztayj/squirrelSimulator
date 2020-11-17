@@ -18,3 +18,5 @@ playerItemHighlight,"(88, 167, 129)",Background color of item's owned by the pla
 firstPackMemberItemHighlight,"(70, 153, 185)",Background color of item's owned by the first member of player pack
 secondPackMemberItemHighlight,"(177, 78, 88)",Background color of item's owned by the second member of player pack
 defaultItemHighlight,"(100, 100, 100)",Background color of item's by default
+hourLen,5,Length of an in-game hour specified in real world seconds
+seasonLen,20,Length of an in-game hour specified in in-game days

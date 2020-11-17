@@ -6,6 +6,7 @@ from player import Player
 from animals import *
 from polybius.managers import CONSTANTS, SOUNDS, FRAMES, CONTROLS
 from managers import USER_INTERFACE, NAMES, ANIMALS, ITEMS
+from minigame.world.utils.worldclock import WorldClock
 
 class Game():
 
@@ -28,7 +29,7 @@ class Game():
 
         # Create an instance of the game clock
         self._gameClock = pygame.time.Clock()
-
+        self.initializeWorldClock()
         self.createPlayer()
         self.initializeCheatBox()
         self.initializeFileMenus()
@@ -101,6 +102,12 @@ class Game():
         self._pauseMenu = Menu(((self._SCREEN_SIZE[0]//2 - pWidth//2), self._SCREEN_SIZE[1]//2 - pHeight//2),
                  (pWidth, pHeight), pause_commands, (37,16), -1)
         self._pauseMenu.close()
+
+    def initializeWorldClock(self):
+        hourLen = CONSTANTS.get("hourLen")
+        seasonLen = CONSTANTS.get("seasonLen")
+        clock = WorldClock(hourLen, seasonLen)
+        CONSTANTS.addConstant("worldClock", clock)
 
     def initializeControlsDisplay(self):
         pos = (self._SCREEN_SIZE[0]//2 - 209, self._SCREEN_SIZE[1]//2 - 100)

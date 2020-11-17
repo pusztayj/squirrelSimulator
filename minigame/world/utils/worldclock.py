@@ -7,14 +7,17 @@ A class that maintains and displays the in-game clock
 
 import pygame
 from polybius.graphics import Drawable, TextBox
+from polybius.managers import CONSTANTS
 
 class WorldClock(Drawable):
 
-    def __init__(self, screenWidth, hourLength=5, seasonLength=20):
+    def __init__(self, hourLength=5, seasonLength=20):
         """Initializes the world clock"""
 
         self._width = 225
         self._height = 25
+
+        screenWidth = CONSTANTS.get("screen_size")[0]
 
         position = ((screenWidth//2)-(self._width//2),5)
 
@@ -30,10 +33,8 @@ class WorldClock(Drawable):
 
         # Establish lengths for measure
         self._hour_length = hourLength # ticks / seconds
-        self._day_length = 24 * self._hour_length
-        self._minute_length = self._hour_length / 60
         self._season_length = seasonLength #days
-        self._year_length = self._season_length * 4
+        self.calculateLengthsOfMeasure()
 
         self._current_season = 0
 
@@ -46,9 +47,27 @@ class WorldClock(Drawable):
 
         self.update()
 
+    def calculateLengthsOfMeasure(self):
+        """Calcuates the length of different periods of time
+        based off of the hour length and season length"""
+        self._day_length = 24 * self._hour_length
+        self._minute_length = self._hour_length / 60
+        self._year_length = self._season_length * 4
+
+    def setHourLength(self, hourLen):
+        self._hour_length = hourLen
+        self.calculateLengthsOfMeasure()
+
+    def setSeasonLength(self, seasonLen):
+        self._season_length = seasonLen
+        self.calculateLengthOfMeasure()
+
     def getHourLength(self):
         """Returns the hour length"""
         return self._hour_length
+
+    def getSeasonLength(self):
+        return self._season_length
 
     def getDayLength(self):
         """Returns the day length"""

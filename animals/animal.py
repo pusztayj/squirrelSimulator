@@ -23,10 +23,12 @@ squirrelSimulator/animals/pack.py.
 
 import random, re
 from inventory import Inventory
+from polybius.utils.timer import Timer
 from items.item import Item
 from minigame.combat.utils import *
 from minigame.combat.utils.combatfunctions import attackComputation
 from managers.nameManager import NAMES
+from polybius.managers import CONSTANTS
 
 class Animal():
 
@@ -88,6 +90,11 @@ class Animal():
 
         # Variable holding the target of an attack if there was one
         self._combatTarget = None
+
+        # Create timers
+        hourLen = CONSTANTS.get("worldClock").getHourLength()
+        self._hungerTimer = Timer(2 * hourLen)
+        self._starveTimer = Timer(2 * hourLen)
 
     def getPack(self):
         """
@@ -622,7 +629,18 @@ class Animal():
         if self.isEquipped():
             items.append(self.getEquipItem())
         return items
-         
+
+    def manageHungerTimers(self, ticks):
+        self._hungerTimer.update(ticks, self.decrementHunger)
+        if self.isStarving():
+            self._starveTimer.update(ticks, self.takeStarveDamage)
+        else:
+            self._starveTimer.resetTimer()
+
+    def takeStarveDamage(self):
+        """Apply negative effects of starving"""
+        self.loseHealth(5)
+        self.loseStamina(5)
 
     def __repr__(self):
         """

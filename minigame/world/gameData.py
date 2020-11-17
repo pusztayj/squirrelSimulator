@@ -9,11 +9,15 @@ class GameData():
         self._packs = packs
         self._merchants = merchants
 
-    def saveEnvironment(self, acorns, piles, trees, time):
+    def saveEnvironment(self, acorns, piles, trees):
         self._acorns = acorns
         self._piles = piles
         self._trees = trees
+
+    def saveTimeData(self, time, hourLen, seasonLen):
         self._time = time
+        self._hourLen = hourLen
+        self._seasonLen = seasonLen
 
     def makeCreaturePickleSafe(self, c):
         c.makePickleSafe()

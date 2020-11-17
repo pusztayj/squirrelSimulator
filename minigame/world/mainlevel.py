@@ -128,7 +128,7 @@ class MainLevel(Level):
         self._messageFont = pygame.font.SysFont("Times New Roman", 20)
 
     def setupGameElements(self):
-        self._worldClock = WorldClock(self._screen_size[0])
+        self._worldClock = CONSTANTS.get("worldClock")
         self.setupTimers()
         self.setupEnvironment()
         self.setupEntities()
@@ -138,8 +138,8 @@ class MainLevel(Level):
         self._acornSpawnTimer = Timer(acornSpawnFunction)
         self._pileSpawnTimer = Timer(pileSpawnFunction)
         self._acornLeakTimer = Timer(self._worldClock.getHourLength())
-        self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
-        self._starveTimer = Timer(2 * self._worldClock.getHourLength())
+##        self._hungerTimer = Timer(2 * self._worldClock.getHourLength())
+##        self._starveTimer = Timer(2 * self._worldClock.getHourLength())
 
         #Prevent buttons from being clicked when interaction opens
         self._interactionDelay = 0.1 
@@ -817,10 +817,10 @@ class MainLevel(Level):
         d.setAcorns(acornsInPile)
         self._pileManager.addSpawnedPile(d)
 
-    def takeStarveDamage(self):
-        """Apply negative effects to starving player"""
-        self._player.loseHealth(5)
-        self._player.loseStamina(5)
+##    def takeStarveDamage(self):
+##        """Apply negative effects to starving player"""
+##        self._player.loseHealth(5)
+##        self._player.loseStamina(5)
 
     def leakAcorns(self):
         """Calculate and execute acorn leakage"""
@@ -833,12 +833,13 @@ class MainLevel(Level):
         """Update and maintain the in-game timers"""
         self._acornSpawnTimer.update(ticks, self.spawnAcorn)
         self._pileSpawnTimer.update(ticks, self.spawnAbandonedPile)
-        self._hungerTimer.update(ticks, self._player.decrementHunger)
-
-        if self._player.isStarving():
-            self._starveTimer.update(ticks, self.takeStarveDamage)
-        else:
-            self._starveTimer.resetTimer()
+        self._player.manageHungerTimers(ticks)
+##        self._hungerTimer.update(ticks, self._player.decrementHunger)
+##
+##        if self._player.isStarving():
+##            self._starveTimer.update(ticks, self.takeStarveDamage)
+##        else:
+##            self._starveTimer.resetTimer()
 
         # Control acorn leakage if the player is carrying too many acorns
         if self._player.getAcorns() > self._player.getCheekCapacity():
@@ -954,21 +955,23 @@ class MainLevel(Level):
         game_data = GameData()
         timers = {"acornSpawn":self._acornSpawnTimer,
                   "pileSpawn":self._pileSpawnTimer,
-                  "acornLeak":self._acornLeakTimer,
-                  "hunger":self._hungerTimer,
-                  "starve":self._starveTimer}
+                  "acornLeak":self._acornLeakTimer}
+##                  "hunger":self._hungerTimer,
+##                  "starve":self._starveTimer}
         game_data.saveTimers(timers)
         game_data.saveEntities(self._player, self._packs, self._merchants)
-        game_data.saveEnvironment(self._acorns, self._pileManager, self._trees,
-                                  self._worldClock.getTime())
+        game_data.saveEnvironment(self._acorns, self._pileManager, self._trees)
+        game_data.saveTimeData(self._worldClock.getTime(),
+                               self._worldClock.getHourLength(),
+                               self._worldClock.getSeasonLength())
         return game_data
 
     def importData(self, data):
         self._acornSpawnTimer = data._timers["acornSpawn"]
         self._pileSpawnTimer = data._timers["pileSpawn"]
         self._acornLeakTimer = data._timers["acornLeak"]
-        self._hungerTimer = data._timers["hunger"]
-        self._starveTimer = data._timers["starve"]
+##        self._hungerTimer = data._timers["hunger"]
+##        self._starveTimer = data._timers["starve"]
         CONSTANTS.addConstant("player", data._player)
         self.setupPlayerPack()
         self.setupUI()
@@ -978,5 +981,7 @@ class MainLevel(Level):
         self._pileManager = data._piles
         self._trees = data._trees
         self._worldClock.setTime(data._time)
+        self._worldClock.setHourLength(data._hourLen)
+        self._worldClock.setSeasonLength(data._seasonLen)
         
         

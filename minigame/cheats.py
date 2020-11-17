@@ -15,14 +15,15 @@ def spawnMerchant(mainGame, position):
    """Spawns a merchant at a given position"""
    mainGame._merchants.append(Merchant(pos=position))
 
-def fastForward(mainGame, amount):
+def fastForward(amount):
    """Fastforwards the game clock by a given amount"""
-   hourLen = mainGame._worldClock.getHourLength()
+   clock = CONSTANTS.get("worldClock")
+   hourLen = clock.getHourLength()
    time, mode = amount
    if mode == "hours":
-      mainGame._worldClock._time += (time*hourLen)
+      clock._time += (time*hourLen)
    if mode == "days":
-      mainGame._worldClock._time += (time*hourLen*24)
+      clock._time += (time*hourLen*24)
 
 def setHealth(entity, amount):
    """Sets an entity's health to a given amount"""
@@ -49,4 +50,4 @@ codes = {1:giveAcorns,2:giveXP,3:spawnMerchant,
          7:giveItem}
 
 # Group codes into types by their inputs
-types = {1:(1,2,5,7), 2:(3,4), 3:(6,), 4:(7,)}
+types = {1:(1,2,4,5,7), 2:(3), 3:(6,), 4:(7,)}
