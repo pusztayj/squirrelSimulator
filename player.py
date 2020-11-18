@@ -264,5 +264,6 @@ class Player(Squirrel):
         self.manageAnimations(ticks)
         self.manageMovement()
         self.updatePosition(ticks, worldInfo)
+        self.manageFoodSpoilage(ticks)
         
         

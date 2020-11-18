@@ -172,6 +172,7 @@ class Pack():
             if not self.isLeader(animal):
                 if type(self.getLeader()) == Player:
                     animal.followPlayer(ticks, self.getLeader(), flank)
+                    animal.manageFoodSpoilage(ticks)
                     flank += 1
                 else:
                     animal.follow(ticks, self.getLeader())

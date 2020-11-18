@@ -8,6 +8,8 @@ durability, utility, whether or not the item is buyable or sellable.
 import random, math, copy
 from polybius.graphics import Drawable
 from managers.itemManager import ITEMS
+from polybius.utils import Timer
+from polybius.managers import CONSTANTS
 
 class Item(Drawable):
 
@@ -25,6 +27,11 @@ class Item(Drawable):
         self._attributes["level"] = level
         self._attributes["maxDurability"] = self._attributes["durability"]
         self._attributes["maxUtility"] = 100
+
+        if self.getAttribute("type") == "food":
+            hourLen = CONSTANTS.get("worldClock").getHourLength()
+            hourTilSpoil = self.getAttribute("spoilTimer")
+            self._spoilTimer = Timer(hourLen * hourTilSpoil)
 
     def getAttribute(self, attribute):
         if (attribute in list(self._attributes.keys()) \
@@ -53,6 +60,15 @@ class Item(Drawable):
         else:
             raise Exception(self._attributes["item"] + \
                             " has no attribute acornBoost")
+
+    def updateSpoilage(self, ticks):
+        self._spoilTimer.update(ticks, self.spoil)
+
+    def spoil(self):
+        spoilageAmount = random.randint(*self.getAttribute("spoilAmount"))
+        currentDurability = self.getAttribute("durability")
+        newDur =  max(0, currentDurability - spoilageAmount)
+        self.setDurability(newDur)
 
     def setOwner(self, new):
         """

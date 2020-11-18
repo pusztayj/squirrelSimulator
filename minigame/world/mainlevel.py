@@ -902,7 +902,13 @@ class MainLevel(Level):
                 died.append(animal)
         for death in died:
             self._playerPack.removeMember(death)
-            self._popupWindow.setText("Your pack member "death.getName() + " has died")
+        if len(died) > 0:
+            if len(died) == 1:
+                self._popupWindow.setText("Your pack member " + died[0].getName() + " has died")
+            elif len(died) == 2:
+                names = (died[0].getName(), died[1].getName())
+                text = ("Your pack members %s and %s have died" % names)
+                self._popupWindow.setText(text)
             self._popupWindow.display()
             self._player.stop()
         

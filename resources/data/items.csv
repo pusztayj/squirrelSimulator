@@ -1,15 +1,15 @@
-item,name,type,holdable,image,value,strength,staminaCost,acornBoost,healthBoost,hungerBoost,durability,utility,buyable,sellable,shareable,requirements,decayWeight
-stick,Stick,weapon,TRUE,stick.png,20,10,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-spear,Spear,weapon,TRUE,spear.png,35,15,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-sword,Sword,weapon,TRUE,sword.png,70,20,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-hideArmor,Hide Armor,armor,FALSE,hide_armor.png,30,8,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-leatherArmor,Leather Armor,armor,FALSE,leather_armor.png,45,12,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-ironArmor,Iron Armor,armor,FALSE,iron_armor.png,80,17,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6
-berries,Berries,food,FALSE,berries.png,15,null,null,null,5,2,100,100,TRUE,TRUE,TRUE,null,null
-nutSoup,Nut Soup,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null
-acornChowder,Acorn Chowder,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null
-pecanPie,Pecan Pie,food,FALSE,pecanpie.png,45,null,null,null,13,6,100,100,TRUE,TRUE,TRUE,null,null
-shovel,Shovel,tool,TRUE,shovel.png,50,3,10,0.2,null,null,100,100,TRUE,TRUE,TRUE,null,6
-pickaxe,Pickaxe,tool,TRUE,pickax.png,60,5,10,0.3,null,null,100,100,TRUE,TRUE,TRUE,null,6
-hoe,Hoe,tool,TRUE,crowbar.png,40,8,10,0.1,null,null,100,100,TRUE,TRUE,TRUE,null,6
-healthPotion,Health Potion,potion,FALSE,healthpotion.png,100,null,null,null,50,null,100,85,TRUE,TRUE,TRUE,null,null
+item,name,type,holdable,image,value,strength,staminaCost,acornBoost,healthBoost,hungerBoost,durability,utility,buyable,sellable,shareable,requirements,decayWeight,spoilTimer,spoilAmount
+stick,Stick,weapon,TRUE,stick.png,20,10,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+spear,Spear,weapon,TRUE,spear.png,35,15,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+sword,Sword,weapon,TRUE,sword.png,70,20,10,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+hideArmor,Hide Armor,armor,FALSE,hide_armor.png,30,8,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+leatherArmor,Leather Armor,armor,FALSE,leather_armor.png,45,12,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+ironArmor,Iron Armor,armor,FALSE,iron_armor.png,80,17,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+berries,Berries,food,FALSE,berries.png,15,null,null,null,5,2,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
+nutSoup,Nut Soup,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
+acornChowder,Acorn Chowder,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
+pecanPie,Pecan Pie,food,FALSE,pecanpie.png,45,null,null,null,13,6,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
+shovel,Shovel,tool,TRUE,shovel.png,50,3,10,0.2,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+pickaxe,Pickaxe,tool,TRUE,pickax.png,60,5,10,0.3,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+hoe,Hoe,tool,TRUE,crowbar.png,40,8,10,0.1,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+healthPotion,Health Potion,potion,FALSE,healthpotion.png,100,null,null,null,50,null,100,85,TRUE,TRUE,TRUE,null,null,null,null

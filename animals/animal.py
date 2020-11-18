@@ -647,6 +647,11 @@ class Animal():
         self.loseHealth(CONSTANTS.get("starveDamage"))
         self.loseStamina(CONSTANTS.get("starveStaminaHit"))
 
+    def manageFoodSpoilage(self, ticks):
+        for item in self.getInventory():
+            if item.getAttribute("type") == "food":
+                item.updateSpoilage(ticks)
+
     def __repr__(self):
         """
         Returns a string representation of the animal.
