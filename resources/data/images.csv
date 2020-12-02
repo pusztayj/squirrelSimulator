@@ -1,4 +1,4 @@
-﻿image,frame_dimensions,color_key
+image,frame_dimensions,color_key
 acorn.png,"(32 ,32)",TRUE
 berries.png,"(32 ,32)",TRUE
 crowbar.png,"(32 ,32)",TRUE
@@ -35,3 +35,4 @@ title.png,null,FALSE
 tradeDesk.png,null,TRUE
 tree.png,"(128, 128)",TRUE
 turtle.png,"(128, 128)",TRUE
+grapes.png,"(32, 32)",TRUE

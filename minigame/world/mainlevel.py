@@ -898,7 +898,7 @@ class MainLevel(Level):
     def removeDeadCreaturesFromPlayerPack(self):
         died = []
         for animal in self._playerPack.getTrueMembers():
-            if animal.getHealth() <= 0:
+            if animal.getHealth() <= 0 and animal != self._player:
                 died.append(animal)
         for death in died:
             self._playerPack.removeMember(death)

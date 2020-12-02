@@ -5,6 +5,7 @@ sword,Sword,weapon,TRUE,sword.png,70,20,10,null,null,null,100,100,TRUE,TRUE,TRUE
 hideArmor,Hide Armor,armor,FALSE,hide_armor.png,30,8,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
 leatherArmor,Leather Armor,armor,FALSE,leather_armor.png,45,12,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
 ironArmor,Iron Armor,armor,FALSE,iron_armor.png,80,17,null,null,null,null,100,100,TRUE,TRUE,TRUE,null,6,null,null
+grapes,Grapes,food,FALSE,grapes.png,15,null,null,null,5,2,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
 berries,Berries,food,FALSE,berries.png,15,null,null,null,5,2,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
 nutSoup,Nut Soup,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
 acornChowder,Acorn Chowder,food,FALSE,nutsoup.png,20,null,null,null,8,4,100,100,TRUE,TRUE,TRUE,null,null,3,(5-10)
