@@ -121,9 +121,9 @@ class MultiLineTextBox(TextGraphic):
         
         # Apply the background color or make transparent
         if self._backgroundColor == None:
-            surf.fill((0,0,0))
-            surf.set_colorkey((0,0,0))
+            surf = pygame.Surface((self._width, self._height), pygame.SRCALPHA)
         else:
+            surf = pygame.Surface((self._width, self._height))
             surf.fill(self._backgroundColor)
             
         p = (0,self._vpadding)
