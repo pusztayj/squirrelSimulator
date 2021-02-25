@@ -39,12 +39,21 @@ class ATM(Drawable, Window):
         self._acorn2 = Acorn((250,105), worldBound=False)
         
         # Buttons
-        self._withdrawButton = Button("Withdraw", (10,50), self._font,(0,0,0),
-                                      (0,255,0),35,125,(0,0,0), 2)
-        self._depositButton = Button("Deposit", (10,100), self._font,(0,0,0),
-                                      (233,97,80),35,125,(0,0,0), 2)
-        self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
-               (0,0,0), 1)
+        self._withdrawButton = Button("Withdraw", (10,50), self._font,
+                                      backgroundColor=(0,255,0),
+                                      dims=(125,35),
+                                      borderColor=(0,0,0),
+                                      borderWidth=2)
+        self._depositButton = Button("Deposit", (10,100), self._font,
+                                     backgroundColor=(233,97,80),
+                                     dims=(125,35),
+                                     borderColor=(0,0,0),
+                                     borderWidth=2)
+        self._exitButton = Button("X", (self._width-45,10),self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(25,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
         # Text Inputs
         self._holeName = TextInput((0,10), self._font,(200,30),maxLen=15,
                                    defaultText=self._hole.getName(),

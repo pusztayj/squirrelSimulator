@@ -36,8 +36,10 @@ class ScrollSelector(Drawable):
         font = pygame.font.SysFont("Times New Roman", 16)        
         ypos = 0
         for sel in self._selections:
-            b = Button(sel["text"], (0,ypos), font,(255,255,255),self._backgroundColor,
-                   self._selectionHeight-2, self._width-self._scrollBarWidth-2,
+            b = Button(sel["text"], (0,ypos), font,
+                       fontColor=(255,255,255),
+                       backgroundColor=self._backgroundColor,
+                       dims=(self._width-self._scrollBarWidth-2, self._selectionHeight-2),
                        borderWidth=0)
             b.draw(surf)
             self._buttons.append(b)

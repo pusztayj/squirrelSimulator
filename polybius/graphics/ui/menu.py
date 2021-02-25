@@ -60,13 +60,12 @@ class Menu(Drawable, Window):
         
             for x, b in enumerate(commands):
                 font = pygame.font.SysFont(b["font"], b["fontSize"])
-                self._buttons.append((Button(b["text"],
-                                         (xStart + self._offset[0],
-                                          yStart + (x*buttonHeight) + \
-                                          (x*spacing) + self._offset[1]),
-                                    font, b["fontColor"], b["color"],
-                                    buttonHeight, buttonWidth, b["borderColor"],
-                                         b["borderWidth"]),
+                x_pos = xStart + self._offset[0]
+                y_pos = yStart + (x*buttonHeight) + (x*spacing) + self._offset[1]
+                self._buttons.append((Button(b["text"], (x_pos, y_pos),
+                                    font, fontColor=b["fontColor"], backgroundColor=b["color"],
+                                    dims=(buttonWidth, buttonHeight), borderColor=b["borderColor"],
+                                         borderWidth=b["borderWidth"]),
                                   x+1, b["closeOnPress"], (b.get("toggleText",None),b["text"])))
 
         # Create buttons with a horizontal configuration
@@ -78,13 +77,12 @@ class Menu(Drawable, Window):
             
             for x, b in enumerate(commands):
                 font = pygame.font.SysFont(b["font"], b["fontSize"])
-                self._buttons.append((Button(b["text"],
-                                         (xStart + self._offset[0] +\
-                                          (x*buttonWidth) + (x*spacing),
-                                          yStart + self._offset[1]),
-                                    font, b["fontColor"], b["color"],
-                                    buttonHeight, buttonWidth, b["borderColor"],
-                                         b["borderWidth"]),
+                x_pos = xStart + self._offset[0] + (x*buttonWidth) + (x*spacing)
+                y_pos = yStart + self._offset[1]
+                self._buttons.append((Button(b["text"], (x_pos, y_pos), font,
+                                             fontColor=b["fontColor"], backgroundColor=b["color"],
+                                             dims=(buttonWidth, buttonHeight), borderColor=b["borderColor"],
+                                             borderWidth=b["borderWidth"]),
                                   x+1, b["closeOnPress"], (b.get("toggleText",None),b["text"])))
 
         self._selection = None

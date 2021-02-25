@@ -53,12 +53,18 @@ class EndScreen(object):
                                (600,150+y+5),self._font,(255,255,255))
 
         # Buttons
-
-        self._restartButton = Button("Restart",((SCREEN_SIZE[0]//4)-30,400),self._font,
-                                     (255,255,255),(222,44,44),50,100,
+        restartPos = ((SCREEN_SIZE[0]//4)-30,400)
+        self._restartButton = Button("Restart", restartPos, self._font,
+                                     fontColor=(255,255,255),
+                                     backgroundColor=(222,44,44),
+                                     dims=(100,50),
                                      borderWidth = 2)
-        self._exitButton = Button("Exit",((((SCREEN_SIZE[0]//4)+250)-120),400),self._font,(255,255,255),
-                                     (46,46,218), 50,100,borderWidth = 2)
+        exitPos = ((((SCREEN_SIZE[0]//4)+250)-120),400)
+        self._exitButton = Button("Exit", exitPos, self._font,
+                                  fontColor=(255,255,255),
+                                  backgroundColor=(46,46,218),
+                                  dims=(100,50),
+                                  borderWidth=2)
 
         self._selection = None
 

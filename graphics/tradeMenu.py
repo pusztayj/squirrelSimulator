@@ -281,17 +281,26 @@ class TradeMenu(AbstractGraphic, Window):
         buttonFont = pygame.font.SysFont("Times New Roman", 18)
         
         button_y = self._itemCard.getHeight() + self._itemCard.getY() + 20
-        self._moveItemButton = Button("Add Item To Trade",(0,button_y),buttonFont,(255,255,255),
-                                          (34,67,120),35,210,borderWidth=3,
-                                          borderColor=self.shiftRGBValues((34,67,120), (-30,-30,-30)))
+        self._moveItemButton = Button("Add Item To Trade",(0,button_y),buttonFont,
+                                      fontColor=(255,255,255),
+                                      backgroundColor=(34,67,120),
+                                      dims=(210,35),
+                                      borderWidth=3,
+                                      borderColor=self.shiftRGBValues((34,67,120), (-30,-30,-30)))
         self._moveItemButton.center(self._itemCard, (1/2,None), True)
 
         button_y = ((self.getHeight() - 35) - 15) + self.getY()
-        self._proposeTradeButton = Button("Propose Trade",(0,button_y),buttonFont,(255,255,255),
-                                          (25,130,30),35,120,borderWidth=3,
+        self._proposeTradeButton = Button("Propose Trade",(0,button_y),buttonFont,
+                                          fontColor=(255,255,255),
+                                          backgroundColor=(25,130,30),
+                                          dims=(120,35),
+                                          borderWidth=3,
                                           borderColor=self.shiftRGBValues((25,130,30), (-30,-30,-30)))
-        self._cancelButton = Button("Cancel Trade",(0,button_y),buttonFont,(255,255,255),
-                                    (255,0,0),35,110,borderWidth=3,
+        self._cancelButton = Button("Cancel Trade",(0,button_y),buttonFont,
+                                    fontColor=(255,255,255),
+                                    backgroundColor=(255,0,0),
+                                    dims=(110,35),
+                                    borderWidth=3,
                                     borderColor=self.shiftRGBValues((255,0,0), (-30,-30,-30)))
         
         self._proposeTradeButton.center(self._itemCard, (1/5,None), True)

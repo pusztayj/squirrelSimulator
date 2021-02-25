@@ -29,12 +29,14 @@ class FileMenu(AbstractGraphic, Window):
         self._buttonYpos = (self._height - self._buttonHeight) - 15
 
         self._loadButton = Button(menuType, (self._buttonXpos,self._buttonYpos),
-                                    self._font, (0,0,0), (0,255,0),
-                                    self._buttonHeight, self._buttonWidth//2, (0,0,0), 2)
+                                    self._font, backgroundColor=(0,255,0),
+                                    dims=(self._buttonWidth//2, self._buttonHeight),
+                                    borderColor=(0,0,0), borderWidth=2)
 
         self._cancelButton = Button("Cancel", (self._buttonXpos+self._buttonWidth//2, self._buttonYpos),
-                                    self._font, (0,0,0), (120,120,150),
-                                    self._buttonHeight, self._buttonWidth//2, (0,0,0), 2)
+                                    self._font, backgroundColor=(120,120,150),
+                                    dims=(self._buttonWidth//2, self._buttonHeight),
+                                    borderColor=(0,0,0), borderWidth=2)
 
         
 

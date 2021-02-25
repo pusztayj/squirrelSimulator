@@ -45,14 +45,16 @@ class ConfirmationWindow(TextGraphic, Window):
         self._t.keepCentered(self, (1/2, 1/4))
         
         # Create the buttons
-        self._b1 = Button(confirmationText, (0,0), buttonFont, buttonFontColor,
-                         buttonColor,buttonDimensions[1],
-                         buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
+        self._b1 = Button(confirmationText, (0,0), buttonFont,
+                          fontColor=buttonFontColor, backgroundColor=buttonColor,
+                          dims=buttonDimensions, borderColor=buttonBorderColor,
+                          borderWidth = buttonBorderWidth)
         self._b1.keepCentered(self, (1/3,3/4))
         
-        self._b2 = Button(denialText, (0,0), buttonFont, buttonFontColor,
-                         buttonColor,buttonDimensions[1],
-                         buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
+        self._b2 = Button(denialText, (0,0), buttonFont,
+                          fontColor=buttonFontColor, backgroundColor=buttonColor,
+                          dims=buttonDimensions, borderColor=buttonBorderColor,
+                          borderWidth = buttonBorderWidth)
         self._b2.keepCentered(self, (2/3,3/4))
 
         self.updateGraphic()

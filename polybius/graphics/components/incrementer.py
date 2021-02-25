@@ -97,8 +97,8 @@ class Incrementer(AbstractGraphic):
 
                 # Create the button
                 b = Button(self._buttonText[i], (button_x, button_y), self._buttonFont,
-                           self._buttonFontColor, self._decrementColor,
-                       self._buttonDims[1], buttonWidth, borderWidth=self._buttonBorderWidth,
+                           fontColor=self._buttonFontColor, backgroundColor=self._decrementColor,
+                       dims=(buttonWidth, self._buttonDims[1]), borderWidth=self._buttonBorderWidth,
                            borderColor=self.shiftRGBValues(self._decrementColor, (-30,-30,-30)))
 
                 # Save the function and arguments for the button
@@ -139,8 +139,9 @@ class Incrementer(AbstractGraphic):
 
                 # Create the button
                 b = Button(self._buttonText[i+len(self._increments)], (button_x, button_y),
-                           self._buttonFont, self._buttonFontColor, self._incrementColor,
-                       self._buttonDims[1], buttonWidth, borderWidth=self._buttonBorderWidth,
+                           self._buttonFont, fontColor=self._buttonFontColor,
+                           backgroundColor=self._incrementColor, dims=(buttonWidth,self._buttonDims[1]), 
+                           borderWidth=self._buttonBorderWidth,
                            borderColor=self.shiftRGBValues(self._incrementColor, (-30,-30,-30)))
 
                 # Save the function and arguments for the button

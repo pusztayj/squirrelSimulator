@@ -53,7 +53,10 @@ class Controls(Window):
         self._header = TextBox("Controls", (pos[0]+5, pos[1]-20),self._font, self._fontColor)
 
         self._closeButton = Button("X", (pos[0] + width - 19,pos[1] - 21),self._font,
-                                   (0,0,0),(100,100,100),18,18,(0,0,0), 1)
+                                   backgroundColor=(100,100,100),
+                                   dims=(18,18),
+                                   borderColor=(0,0,0),
+                                   borderWidth=1)
 
         self._banner = Banner((pos[0], pos[1]-23),(0,0,0), (21, width), (255,255,255), 1)
 

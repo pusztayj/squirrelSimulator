@@ -7,21 +7,22 @@ A class that creates and manages a button object
 
 import pygame
 from polybius.graphics.utils.textgraphic import TextGraphic
+from .multilinetextbox import MultiLineTextBox
 from .textbox import TextBox
 from polybius.utils.eventwrapper import EventWrapper
 
 class Button(TextGraphic):
 
-    def __init__(self, text, position, font, fontColor, backgroundColor,
-                 height, width, borderColor=(0,0,0), borderWidth=0, antialias=True,
+    def __init__(self, text, position, font, backgroundColor=(255,255,255),
+                 padding=(0,0), fontColor=(0,0,0), borderColor=(0,0,0),
+                 borderWidth=0, antialias=True,
                  control=EventWrapper(pygame.MOUSEBUTTONDOWN, 1, []),
-                 curser=pygame.mouse):
+                 cursor=pygame.mouse, dims=None):
         """Initializes the widget with a variety of parameters"""
  
         super().__init__(position, text, font, fontColor, antialias)
-        
-        self._width = width
-        self._height = height
+
+        self.setButtonDimensions(font, text, dims, padding)
         
         self._backgroundColor = backgroundColor
         self._borderColor = borderColor
@@ -37,9 +38,28 @@ class Button(TextGraphic):
                                      self._press.getKey, [])
         
         # Set the item that interacts with the button (the mouse by default)
-        self._curser = curser
+        self._cursor = cursor
 
         self.updateGraphic()
+
+    def setButtonDimensions(self, font, text, dims, padding):
+        # No dimensions provided by designer
+        if dims == None:
+            t = text.split("\n")
+            height = 0
+            width = 0
+            for line in t:
+                w, h = font.size(line)
+                height += h
+                width = max(width, w)
+            self._width = width + (padding[0] * 2)
+            self._height = height + (padding[1] * 2)
+            self._padding = padding
+        # Dimensions specified by designer
+        else:
+            self._width = dims[0]
+            self._height = dims[1]
+            self._padding = padding
 
     def setBackgroundColor(self, backgroundColor):
         """Sets the button's background color"""
@@ -77,7 +97,7 @@ class Button(TextGraphic):
         rect = self.getCollideRect()
         rect = rect.move(offset[0],offset[1])
         if self._press.check(event):
-            if rect.collidepoint(self._curser.get_pos()):
+            if rect.collidepoint(self._cursor.get_pos()):
                 self.buttonPressed()
                 if args == None:
                     func()
@@ -85,7 +105,7 @@ class Button(TextGraphic):
                     func(*args)
         elif self._release.check(event):
                 self.setToDefaultStyling()
-        elif rect.collidepoint(self._curser.get_pos()):
+        elif rect.collidepoint(self._cursor.get_pos()):
             self.setHover()
         else:
             self.setToDefaultStyling()
@@ -103,8 +123,21 @@ class Button(TextGraphic):
         surf.fill(self._currentBackgroundColor)
 
         # Create and draw the internal textbox
-        t = TextBox(self._text, (0,0), self._font,
+        t = MultiLineTextBox(self._text, (0,0), self._font,
                     self._currentFontColor, antialias=self._antialias)
         t.center(surf)
         t.draw(surf)
 
+##    def __repr__(self):
+##        pos = ("(%d,%d)" % (self._position[0], self._position[1]))
+##        padding = ("(%d,%d)" % self._padding)
+##        fontColor = ("(%d,%d,%d)" % self._fontColor)
+##        backgroundColor = ("(%d,%d,%d)" % self._backgroundColor)
+##        borderColor = ("(%d,%d,%d)" % self._borderColor)
+##        return ("""Button("%s", %s, font, %s,
+##                 padding=%s, fontColor=%s, borderColor=%s,
+##                 borderWidth=%d, antialias=%r,
+##                 control=%s, cursor=%s)""" % (self._text, pos, backgroundColor,
+##                                  padding, fontColor, borderColor,
+##                                  self._borderWidth, self._antialias,
+##                                  repr(self._press), "pygame.mouse"))

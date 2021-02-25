@@ -51,8 +51,11 @@ class Interaction(Drawable, Window):
                           (155, 170), commands, (15,0), 10, color=None,
                           borderWidth=0, orientation="vertical")
 
-        self._exitButton = Button("X", (self._width-45,10),self._font,(0,0,0),(100,100,100),25,25,
-               (0,0,0), 1)
+        self._exitButton = Button("X", (self._width-45,10),self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(25,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
 
         self._selection = None
 

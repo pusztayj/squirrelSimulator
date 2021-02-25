@@ -29,11 +29,16 @@ class Bribe(Window):
         self._backgroundColor = (139,79,59)
 
         givePos = (self._position[0] + 30, self._position[1] + 55)
-        self._giveButton = Button("Give", givePos, self._font, (0,0,0),
-                                  (0,120,0), 25, 75, (0,0,0), 2)
+        self._giveButton = Button("Give", givePos, self._font,
+                                  backgroundColor=(0,120,0),
+                                  dims=(75,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=2)
         cancelPos = (self._position[0] + 115, self._position[1] + 55)
-        self._cancelButton = Button("Cancel", cancelPos, self._font, (0,0,0),
-                                  (200,0,0), 25, 75, (0,0,0), 2)
+        self._cancelButton = Button("Cancel", cancelPos, self._font,
+                                    backgroundColor=(200,0,0),dims=(75,25),
+                                    borderColor=(0,0,0),
+                                    borderWidth=2)
         acornPos = (self._position[0] + 25, self._position[1] + 20)
         self._acorns = TextBox("Acorns: ", acornPos, self._font, (0,0,0))
         acornAvailPos = (self._position[0] + 165, self._position[1] + 20)

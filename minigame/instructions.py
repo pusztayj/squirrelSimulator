@@ -34,15 +34,26 @@ class Instructions(Drawable, Window):
         # Create the buttons
 
         self._previous = Button("<<<", (25,self._height - (20+15)),
-                            self._font, self._fontColor,
-                            (80,80,80), 20, 40, (120,120,120), 1)
+                                self._font,
+                                fontColor=self._fontColor,
+                                backgroundColor=(80,80,80),
+                                dims=(40,20),
+                                borderColor=(120,120,120),
+                                borderWidth=1)
         self._next = Button(">>>", (self._width - (40 + 25),
                                     self._height - (20+15)),
-                            self._font, self._fontColor,
-                            (80,80,80), 20, 40, (120,120,120), 1)
+                            self._font,
+                            fontColor=self._fontColor,
+                            backgroundColor=(80,80,80),
+                            dims=(40,20),
+                            borderColor=(120,120,120),
+                            borderWidth=1)
 
-        self._exitButton = Button("X", (self._width-21,2),self._font,(0,0,0),
-                                  (100,100,100),15,15,(255,255,255), 1)
+        self._exitButton = Button("X", (self._width-21,2),self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(15,15),
+                                  borderColor=(255,255,255),
+                                  borderWidth=1)
 
         # Create the page count display
 

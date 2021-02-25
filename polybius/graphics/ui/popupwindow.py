@@ -42,9 +42,12 @@ class PopupWindow(AbstractGraphic, Window):
         self._t.center(surface=self, cen_point=(1/2,1/4))
         
         # Create the Okay button
-        self._b = Button(buttontext, (0,0), buttonFont, buttonFontColor,
-                         buttonColor,buttonDimensions[1],
-                         buttonDimensions[0],buttonBorderColor, buttonBorderWidth)
+        self._b = Button(buttontext, (0,0), buttonFont,
+                         fontColor=buttonFontColor,
+                         backgroundColor=buttonColor,
+                         dims=buttonDimensions,
+                         borderColor=buttonBorderColor,
+                         borderWidth=buttonBorderWidth)
         self._b.center(surface=self, cen_point=(1/2,3/4))
 
         self.updateGraphic()

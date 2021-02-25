@@ -62,8 +62,11 @@ class AnimalStats(Window):
 
         # Exit Button
         self._exitButton = Button("X",(self._xpos + 400,self._ypos),
-                                  self._font,(0,0,0),(100,100,100),25,25,
-                           (0,0,0), 1)
+                                  self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(25,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
 
         # Inventory Items
         text_y += self._acornsText.getHeight() + 10

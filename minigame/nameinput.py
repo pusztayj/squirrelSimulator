@@ -46,14 +46,21 @@ class NameInput(Window):
         self._inPos = (screenSize[0]//2 - self._inputField.getWidth()//2,
                       self._position[1] + 40)
         self._inputField.setPosition(self._inPos)
-        self._randButton = Button("Random", (0,0), self._font, (0,0,0),
-                                  (0,120,0), 28, 85, (0,0,0), 2)
+        self._randButton = Button("Random", (0,0), self._font,
+                                  backgroundColor=(0,120,0),
+                                  dims=(85,28),
+                                  borderColor=(0,0,0),
+                                  borderWidth=2)
         randPos = (self._position[0] +
                    (self._width//3 - self._randButton.getWidth()//2),
                    self._position[1] + 80)
         self._randButton.setPosition(randPos)
-        self._contButton = Button("Continue", (0,0), self._font, (0,0,0),
-                                  (0,120,0), 28, 85, (0,0,0), 2)
+        self._contButton = Button("Continue", (0,0), self._font,
+                                  backgroundColor=(0,120,0),
+                                  dims=(85,28),
+                                  borderColor=(0,0,0),
+                                  borderWidth=2)
+        print(self._contButton._font.get_bold())
         contPos = (self._position[0] +
                    (2*(self._width//3) - self._contButton.getWidth()//2),
                    self._position[1] + 80)

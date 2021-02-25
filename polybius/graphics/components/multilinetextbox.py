@@ -110,22 +110,19 @@ class MultiLineTextBox(TextGraphic):
     def updateGraphic(self):
         """Update the textbox after parameters have been changed"""
         
-        self._lineHeight = self._font.get_height() + self._lineSpacing
-        
-        self._width = TextBox(max(self._lines, key=len),
-                              (0,0), self._font,
-                              self._fontColor).getWidth() + \
+        lines = self._text.split("\n")
+        self._lineHeight = self._font.get_height() + self._lineSpacing 
+        self._width = self._font.size(max(lines, key=len))[0] + \
                       (self._hpadding * 2)
         self._height = (self._lineHeight * len(self._lines)) + \
                        (self._vpadding * 2)
         
-        lines = self._text.split("\n")
         surf = pygame.Surface((self._width, self._height))
         
         # Apply the background color or make transparent
         if self._backgroundColor == None:
-            surf.fill((1,1,1))
-            surf.set_colorkey((1,1,1))
+            surf.fill((0,0,0))
+            surf.set_colorkey((0,0,0))
         else:
             surf.fill(self._backgroundColor)
             

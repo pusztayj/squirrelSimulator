@@ -82,8 +82,11 @@ class AttributeManager(Drawable):
         self._buttonDim = 20
         
         self._plusButton = Button("+", (200,(self._height//2 - self._buttonDim//2)-2),
-                                  self._font, (0,0,0), (0,255,0),
-                                  self._buttonDim,self._buttonDim,(0,0,0),1)
+                                  self._font,
+                                  backgroundColor=(0,255,0),
+                                  dims=(self._buttonDim,self._buttonDim),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
         self._text = TextBox(attribute, (0,0), self._font, (0,0,0))
         self._text.setPosition((5, self._height//2 - self._text.getHeight()//2))
         self._current = TextBox(str(eval("player.get"+attribute.title().replace(" ","")+"()")),

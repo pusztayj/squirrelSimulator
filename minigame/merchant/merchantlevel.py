@@ -68,11 +68,17 @@ class MerchantLevel(Level):
 
 
         # tranasction button
-        self._executeTransaction = Button("Execute Transaction",(471,375),
-                                         self._font,(255,255,255),(34,139,34),50,145,borderWidth = 2)
+        self._executeTransaction = Button("Execute Transaction",(471,375), self._font,
+                                          fontColor=(255,255,255),
+                                          backgroundColor=(34,139,34),
+                                          dims=(145,50),
+                                          borderWidth = 2)
 
-        self._cancelTransaction = Button("Cancel Transaction",(627,375),
-                                         self._font,(255,255,255),(207,51,17),50,145,borderWidth = 2)
+        self._cancelTransaction = Button("Cancel Transaction",(627,375), self._font,
+                                         fontColor=(255,255,255),
+                                         backgroundColor=(207,51,17),
+                                         dims=(145,50),
+                                         borderWidth = 2)
         # trade desk
         self._tradeDesk = TradeDesk()
 
@@ -86,8 +92,11 @@ class MerchantLevel(Level):
         self._merchantMoney = TextBox(self._merchantMind.getName() + "'s money: $" + str(self._merchantMind.getAcorns()),
                             (795,410), self._textFont, (255,255,255))
 
-        self._exitButton = Button("X", (self._screen_size[0]-45,10),self._font,(0,0,0),
-                          (100,100,100),25,25,(0,0,0), 1)
+        self._exitButton = Button("X", (self._screen_size[0]-45,10),self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(25,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
 
         # Start playing song at initialization for good a transition
         SOUNDS.manageSongs("merchant")

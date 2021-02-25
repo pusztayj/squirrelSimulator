@@ -78,13 +78,25 @@ class VictoryScreen(object):
         self._y = y
 
         self._executePickUp = Button("Pick up Item",(450,self._y+25-50),
-                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
-
+                                     self._font,
+                                     fontColor=(255,255,255),
+                                     backgroundColor=(34,139,34),
+                                     dims=(140,48),
+                                     borderWidth=2)
+        
         self._executeDrop = Button("Drop Item",(450,self._y+25-50),
-                                         self._font,(255,255,255),(34,139,34),48,140,borderWidth = 2)
+                                   self._font,
+                                   fontColor=(255,255,255),
+                                   backgroundColor=(34,139,34),
+                                   dims=(140, 48),
+                                   borderWidth = 2)
 
         self._cancelTransaction = Button("Cancel Transaction",(450+156,self._y+25-50),
-                                         self._font,(255,255,255),(207,51,17),48,140,borderWidth = 2)
+                                         self._font,
+                                         fontColor=(255,255,255),
+                                         backgroundColor=(207,51,17),
+                                         dims=(140, 48),
+                                         borderWidth = 2)
 
     def selectItem(self,item):
         """

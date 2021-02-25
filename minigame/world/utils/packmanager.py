@@ -132,9 +132,12 @@ class MemberCard(Drawable, Window):
         self._itemCardSize = CONSTANTS.get("itemCardSize")
         self._itemCardPos = CONSTANTS.get("itemCardPos")
 
-        self._exitButton = Button("X", (self._itemCardPos[0] + self._itemCardSize[1] - 40
-                                        ,self._itemCardPos[1] + 10),
-                                  self._font,(0,0,0),(100,100,100),25,25,(0,0,0), 1)
+        exitPos = (self._itemCardPos[0] + self._itemCardSize[1] - 40, self._itemCardPos[1] + 10)
+        self._exitButton = Button("X", exitPos, self._font,
+                                  backgroundColor=(100,100,100),
+                                  dims=(25,25),
+                                  borderColor=(0,0,0),
+                                  borderWidth=1)
 
         self._tradeMenu = None
 
@@ -183,8 +186,11 @@ class MemberCard(Drawable, Window):
 
             # Buttons
             removePos = (190 + self.getX(), 207 + self._avHeight + self.getY())
-            self._removeButton = Button("Remove", removePos, self._font, (0,0,0),
-                                       (255,0,0), 35, 100, (0,0,0), 1)
+            self._removeButton = Button("Remove", removePos, self._font,
+                                       backgroundColor=(255,0,0),
+                                        dims=(100,35),
+                                        borderColor=(0,0,0),
+                                        borderWidth=1)
 
             # Inventory Items
             invPos = (10 + self.getX(), 80 + self._avHeight + self.getY())

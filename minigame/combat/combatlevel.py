@@ -70,7 +70,9 @@ class CombatLevel(Level):
     def initializeWidgets(self):     
         self.initializeMovesMenu()
         self._backToMenuButton = Button("Go Back",(550,100),self._font,
-                                        (255,255,255),(0,0,0),50,100)
+                                        fontColor=(255,255,255),
+                                        backgroundColor=(0,0,0),
+                                        dims=(100,50))
         self.initializePotionSelect()
         self.initializeConfirmationWindow()
         self._animalStats = None
@@ -125,8 +127,10 @@ class CombatLevel(Level):
     def initializeRetreatItems(self):
         self._retreatScreen = None
         # should probably refactor to be inside victory and retreat screens
-        self._backWorld = Button("Back to World",(875,210),self._font,(0,0,0),
-                            (124,252,0),80,150,borderWidth = 2)
+        self._backWorld = Button("Back to World",(875,210),self._font,
+                                 backgroundColor=(124,252,0),
+                                 dims=(150,80),
+                                 borderWidth = 2)
 
     def initializeTextElements(self):
 
