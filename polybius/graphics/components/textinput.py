@@ -214,9 +214,7 @@ class TextInput(AbstractGraphic):
 
     def internalUpdate(self, surf):
         """Update the widget's display"""
-        y_pos = (self._height // 2) - (self._textbox.getHeight() // 2)
-        x_pos = (self._width // 2) - (self._textbox.getWidth() // 2)
-        self._textbox.setPosition((x_pos, y_pos))
+        self._textbox.center(surf, (1/2,1/2))
         self._textbox.draw(surf)
         if self._displayCursor and self._active:
             top, bottom = self.calculateCursorPosition()
