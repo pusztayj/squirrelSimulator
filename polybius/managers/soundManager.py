@@ -61,8 +61,9 @@ class SoundManager():
             raise AttributeError("The folder path for sfx has not been defined")
          # Plays the requested sound effect, default only once
          if fileName not in self._sounds.keys():
-            self._load(fileName)     
-         return self._sounds[fileName].play(loop)
+            self._load(fileName)
+         if not self._mute:
+            return self._sounds[fileName].play(loop)
       
       def playMusic(self, fileName):
          if self._music_folder == None:
