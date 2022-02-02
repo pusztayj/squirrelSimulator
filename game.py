@@ -320,8 +320,8 @@ class Game():
                         self.handleControlsMenuEvents(event)
 
                         if not self.isActiveLevel(self._combatLevel):
-                            self.handleSaveGameEvent(event)
-                            self.handleLoadGameEvent(event)
+                            #self.handleSaveGameEvent(event)
+                            #self.handleLoadGameEvent(event)
                             self.handleFileManagerEvents(event)
                 else:
                      self.handleTutorialDisplayEvents(event)
