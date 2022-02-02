@@ -60,18 +60,18 @@ def attackComputation(attacker,defender):
     ratio = (round((attack_strength/defense_strength) * 4))/ 4
     if attacker.isEquipped():
         current_durability = attacker.getEquipItem().getAttribute("durability")
-        print("Attacker Current Durability: ",current_durability)
+##        print("Attacker Current Durability: ",current_durability)
         delta = deltaDurability(ratio,attacker.getEquipItem())
         new_durability = current_durability - delta + randomDurabilityChange(delta)
-        print("Attacker Durability: ",new_durability)
+##        print("Attacker Durability: ",new_durability)
         attacker.getEquipItem().setDurability(max(0,new_durability))
     if defender.hasArmor():
         current_durability = defender.getArmor().getAttribute("durability")
-        print("Defender Current Durability: ",current_durability)
+##        print("Defender Current Durability: ",current_durability)
         delta = deltaDurability(ratio,defender.getArmor())
         new_durability = current_durability - delta + randomDurabilityChange(delta)
         defender.getArmor().setDurability(max(0,new_durability))
-        print("Defender Durability: ",new_durability)
+##        print("Defender Durability: ",new_durability)
                 
     if ratio > 3:
         damage = 95
