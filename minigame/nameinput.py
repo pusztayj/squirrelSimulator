@@ -60,7 +60,7 @@ class NameInput(Window):
                                   dims=(85,28),
                                   borderColor=(0,0,0),
                                   borderWidth=2)
-        print(self._contButton._font.get_bold())
+
         contPos = (self._position[0] +
                    (2*(self._width//3) - self._contButton.getWidth()//2),
                    self._position[1] + 80)
