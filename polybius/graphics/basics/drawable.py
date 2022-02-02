@@ -64,6 +64,8 @@ class Drawable():
         self._isScaled = False
         self._scaleValue = 1
 
+        self._isPickleSafe = False
+
         # Create wrappers for getWidth and getHeight
         # to make them more consistent with pygame
         self.get_width = self.getWidth
@@ -175,6 +177,7 @@ class Drawable():
         if self._defaultImage != None:
             self._defaultImage = pygame.image.tostring(self._defaultImage, "RGBA")
         self._mask = None
+        self._isPickleSafe = True
 
     def undoPickleSafe(self):
         """Return the drawable object to its original form after pickling"""
@@ -186,4 +189,8 @@ class Drawable():
                                               self._defaultDims,
                                               "RGBA")
         self._mask = pygame.mask.from_surface(self._image)
+        self._isPickleSafe = False
+
+    def isPickleSafe(self):
+        return self._isPickleSafe
 
