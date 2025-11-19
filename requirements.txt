@@ -1,2 +1,2 @@
 pygame==2.1.2
-numpy==3.4
+numpy
